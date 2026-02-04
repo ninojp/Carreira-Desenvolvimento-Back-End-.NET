@@ -209,8 +209,70 @@ Hoje, aprendemos que, ao decompor um problema, temos uma demanda grande que cheg
 
 Encerramos por aqui. Até a próxima.
 
-### Aula 2 -  - Video 2
-### Aula 2 -  - Video 3
+### Aula 2 - Para saber mais: Pensamento computacional vai além da tecnologia
+
+O pensamento computacional pode ser aplicado em qualquer contexto que envolva organização, análise e solução de problemas.
+
+Na educação, ajuda a estruturar aulas e projetos. Na saúde, apoia a criação de protocolos e rotinas de atendimento. Em logística, permite organizar rotas e processos. No marketing, contribui para planejar campanhas e testar estratégias.
+
+> Sempre que você divide um problema em partes, identifica padrões ou cria um passo a passo, está pensando computacionalmente.
+
+Repare nas situações do seu cotidiano em que você já pensa dessa forma e reflita sobre como essa abordagem pode ser aplicada em muitas áreas para otimizar a realização de tarefas.
+
+### Aula 2 - Reconhecendo padrões - Video 2
+
+Transcrição  
+Após decompormos nosso problema maior em pequenas partes para conseguirmos resolvê-lo passo a passo, com o tempo e recursos disponíveis, é o momento de buscar o reconhecimento de padrões. O que é esse reconhecimento de padrões? Trata-se de identificar algumas semelhanças entre as diferentes partes do problema.
+
+Por que buscamos essas semelhanças? Vamos considerar um caso prático, como um setor de atendimento ao cliente. Nesse setor, muitas questões costumam se repetir. O que podemos fazer? Será que devemos direcionar nosso time para responder essas questões repetitivas da mesma forma todos os dias? Não. Devemos reconhecer padrões de questões comuns e criar um banco de respostas para esses padrões, permitindo que possamos reutilizá-las, automatizando o processo de respostas e ganhando produtividade.
+
+Implementando soluções automatizadas  
+Dessa forma, conseguimos, por exemplo, construir um chatbot que auxilia na triagem de algumas questões antes de demandar a intervenção de uma pessoa do setor de atendimento ao cliente. Às vezes, trata-se de uma questão simples, um passo a passo que a pessoa usuária não entendeu corretamente. Um chatbot pode listar e explicar de forma didática, levando a pessoa a perceber o que estava faltando. Ela testa, verifica e não precisa da presença de um analista ou agente de atendimento para ajudar. Com isso, poupamos recursos.
+
+Reconhecer padrões é automatizar e contribuir para o ganho de produtividade. Ao mesmo tempo, se estamos desenvolvendo uma solução e buscamos por soluções já existentes, podemos reconhecer padrões, entender como essas soluções resolveram partes similares do problema e encaminhar soluções semelhantes. Assim, reutilizamos conhecimentos prévios e agilizamos o processo de construção da solução.
+
+Reutilizando soluções no desenvolvimento de software  
+No mundo do software, isso ocorre frequentemente. Muitas funcionalidades que implementamos seguem lógicas semelhantes. Podemos reutilizar ou adaptar soluções já existentes, criando estruturas reutilizáveis, até mesmo dentro de uma empresa.
+
+Às vezes, trabalhamos em um projeto de uma aplicação específica que pode ter algumas partes semelhantes às de outro time que está atendendo a uma aplicação de outro cliente. Podemos reutilizar essas partes, poupando tempo, melhorando a produtividade e agilizando a entrega da nossa solução.
+
+Criando websites com padrões reutilizáveis  
+Na implementação de um website, por exemplo, se quisermos criar um blog para postar sobre nossa jornada de aprendizado no mundo da tecnologia, não precisamos construir um website do zero. Não é necessário aprender a programar todo o front-end para implementar cada componente, como botões, campos para inserir novas postagens ou campos de comentários. O que podemos fazer é dividir o problema grande, que é criar um website, em pequenas partes. Queremos uma seção para postar artigos, outra para códigos e uma seção para interação, como um mini-fórum para os visitantes do blog.
+
+A partir desses pequenos problemas, podemos reconhecer alguns padrões. Identificamos websites, projetos abertos ou padrões de websites que oferecem templates e ferramentas para construir blogs de forma simples e rápida. Não precisamos desenvolver tudo; podemos utilizar um padrão. O Google Sites, por exemplo, é uma ferramenta que nos permite criar websites pessoais na internet de maneira ágil, reutilizando componentes e adaptando-os às funcionalidades desejadas no nosso website.
+
+Aplicando conhecimentos prévios e práticas anteriores  
+Com a decomposição do problema, conseguimos reconhecer padrões entre as pequenas partes, comparando com outros projetos e soluções já existentes. Podemos aplicar conhecimentos prévios, experimentos e práticas anteriores, considerando tanto resultados positivos, que valem a pena ser utilizados, quanto resultados negativos, que indicam caminhos a evitar. Isso nos ajuda a abordar soluções mais promissoras para cada uma das pequenas partes e demandas que enfrentamos.
+
+Da mesma forma, podemos pensar em problemas práticos do dia a dia. Se quisermos consertar um vazamento em casa, podemos dividir o problema em pequenas partes, reconhecer padrões e procurar soluções ou descrições de soluções existentes na internet. Após o reconhecimento de padrões, qual é o próximo passo? Vamos ver na sequência.
+
+### Aula 2 - Utilizando abstração - Video 3
+
+Transcrição  
+Nossa abordagem de pensamento computacional começa com a decomposição de um problema grande em partes menores. A partir dessa decomposição, buscamos reconhecer padrões entre essas pequenas partes ou até mesmo entre essas partes e soluções já existentes. Isso nos permite reutilizar conhecimentos e experiências prévias, agilizando a busca por uma solução mais eficiente para o problema que estamos abordando. Essa abordagem é aplicável tanto no mundo do software quanto no mundo médico, como no caso de um diagnóstico clínico, ou até mesmo na solução de um vazamento em casa. Por exemplo, ao identificar uma infiltração, podemos reconhecer um padrão que indica que o problema vem do apartamento de cima. Com o reconhecimento de padrões, conseguimos encaminhar uma solução mais pertinente para o problema.
+
+Explorando a abstração no transporte urbano  
+O próximo passo, ou terceira etapa dessa abordagem de pensamento, é a abstração. A abstração pode causar dúvidas, mas não é tão complexa quanto parece. Vamos a um exemplo prático: ao chegar em uma cidade grande como São Paulo, uma das primeiras preocupações é como se locomover de um ponto a outro. Uma forma de fazer isso, se estamos próximos ou não tão próximos de estações de metrô e queremos percorrer grandes distâncias em pouco tempo, é utilizando o sistema de transporte sob trilhos, como metrô, trem, ou até mesmo corredores de ônibus integrados a esses sistemas. Para utilizar esse sistema, precisamos entender como os diferentes modais estão integrados, qual estação entrar, onde fazer integração com outra linha de metrô e, eventualmente, pegar um ônibus, de acordo com o ponto de saída e destino.
+
+Uma maneira de identificar essa rota mais facilmente é utilizando uma abstração presente em muitos sites e estações de metrô: o mapa dos meios de transporte da região metropolitana. Esse mapa não segue exatamente a geografia da cidade e não inclui informações geográficas como ruas e avenidas ao redor das estações. Ele apresenta um mapa com cores designando as diferentes linhas de metrô e trem, suas estações e a direção que seguem (sul, norte, leste ou oeste). Detalhes que podem ser importantes são ocultados dessa representação. Isso é uma prática de abstração: destacamos apenas as informações relevantes para a demanda do usuário, que é identificar a estação atual, a estação de destino e o caminho a seguir. Se o mapa incluísse muitas informações geográficas, seria complexo e as pessoas levariam muito tempo para entender, muitas vezes precisando de ajuda para saber onde embarcar e desembarcar. Com essa representação abstraída do sistema de transporte metropolitano, conseguimos nos locomover de maneira ágil e simples. Mesmo pessoas sem muita experiência com esse tipo de modal conseguem, com uma ajuda prévia, transitar pela cidade com facilidade.
+
+Aplicando a abstração no cotidiano e no software  
+Outro exemplo prático de abstração presente no nosso dia a dia é fazer um café coado ao acordar. Ao preparar o café, ignoramos detalhes como o processo de fervura da água ou como o café é moído. Utilizamos o café moído padrão vendido em supermercados e padarias, colocamos a quantidade de pó de acordo com o número de xícaras desejadas, fervemos a água até aparecerem as primeiras bolhas no fundo do bule, apagamos o fogo e passamos o café.
+
+Quando criamos um conjunto mental de passos chamado "fazer café", abstraímos uma série de detalhes do dia a dia. Não paramos para pensar em como a água ferve ou como o café foi moído. Seguimos um padrão, independentemente do tipo de café utilizado. Claro, algumas pessoas são mais exigentes e seguem diferentes caminhos de acordo com o café que está sendo utilizado. Abstrair é ocultar a complexidade de uma atividade e expor apenas o necessário para realizá-la. Focamos no essencial e criamos representações simplificadas, como no caso do mapa de transporte metropolitano ou do passo a passo mental de como fazer um café coado. Isso facilita a organização e criação de grandes sistemas.
+
+No mundo do software, ao abstrair, lidamos com um conjunto grande de funcionalidades. Como implementar essas funcionalidades? O computador precisa interpretar isso como uma operação lógica ou aritmética. Abstraímos e focamos apenas no essencial. Muitas vezes, as próprias linguagens que utilizamos para implementar instruções fazem abstrações para permitir que foquemos na construção da funcionalidade. Com isso, conseguimos criar e escalar grandes sistemas.
+
+Utilizando abstração em aplicações web e hardware  
+Por exemplo, ao criar uma aplicação web, podemos pensar numa abstração comum: o botão de enviar. Ele é usado em várias partes da aplicação, mas com diferentes objetivos. Podemos enviar dados para o banco de dados, uma solicitação de atendimento ao cliente, ou um artigo por e-mail. O botão de enviar é uma abstração; sua aparência e comportamento básico estão prontos, mas a funcionalidade depende do contexto em que o inserimos na aplicação.
+
+A abstração nos permite transformar partes complexas de um problema em blocos de fácil entendimento e reutilização. Utilizamos muito esse recurso ao trabalhar com hardware. Os recursos de hardware são gerenciados de forma simples por meio da abstração. Imagine um computador com muitos circuitos eletrônicos. Como gerenciar o uso desses circuitos por diferentes softwares em execução simultânea? Utilizamos recursos de abstração para realizar isso de forma simples. O sistema operacional, que gerencia os recursos de hardware, abstrai o funcionamento dos circuitos eletrônicos, permitindo que foquemos no essencial: utilizar interfaces amigáveis para interagir com diferentes aplicações simultaneamente.
+
+Hoje em dia, é comum utilizarmos várias aplicações simultâneas no ambiente de trabalho, como Teams, um banco de dados, um dashboard, um editor de texto e uma planilha eletrônica. Fazemos isso usando apenas um único hardware por meio da abstração, fornecida pelo sistema operacional. A abstração está muito presente no mundo da computação.
+
+Explorando a abstração em ambientes de nuvem  
+Por exemplo, ao lidar com aplicações em ambiente de nuvem ou infraestrutura local, utilizamos a abstração para que a mesma infraestrutura execute múltiplas aplicações, armazene e hospede múltiplos websites simultaneamente, permitindo que diferentes usuários acessem essas aplicações. A abstração é essencial no nosso dia a dia e, principalmente, no mundo da computação.
+
 ### Aula 2 -  - Video 4
 ### Aula 2 -  - Video 5
 ### Aula 2 -  - Video 6
