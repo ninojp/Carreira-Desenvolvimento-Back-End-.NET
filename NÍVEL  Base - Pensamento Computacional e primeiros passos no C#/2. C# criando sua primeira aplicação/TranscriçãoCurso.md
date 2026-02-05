@@ -512,4 +512,585 @@ Utilizamos do comando Console.WriteLine para exibir informações na tela e ver 
 Na próxima aula:  
 Vamos seguir as boas práticas de programação evitando código duplicado e aprender de forma prática como trabalhar com variáveis de tipos diferentes!
 
-### Aula 1 -  - Vídeo 9
+## Aula 2 - Tipos e Funções em C#
+
+### Aula 2 - Isolando o código com funções - Vídeo 1
+
+Transcrição  
+Guilherme: O programa ficou interessante, pois conseguimos alterar o texto do "Hello, World" utilizando uma variável, resultando na seguinte mensagem no console:
+
+Boas vindas ao Screen Sound
+
+Apesar de ser uma aplicação de console que será exibida apenas no terminal, seria interessante melhorar sua aparência. Vamos adicionar asteriscos acima e abaixo da frase para deixá-la mais agradável visualmente.
+
+Na linha 4 do arquivo Program.cs, adicionamos um Console.WriteLine("") contendo vários asteriscos. Vamos copiar e colar essa linha logo abaixo da mensagem de boas-vindas.
+
+Program.cs
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+Console.WriteLine("**************************");
+Console.WriteLine(mensagemDeBoasVindas);
+Console.WriteLine("**************************");
+```
+
+Depois clicamos no botão "▶" na parte superior.
+
+No console, obtemos:
+
+```C#
+***************************
+Boas vindas ao Screen Sound
+***************************
+```
+
+Agora está mais interessante.
+
+Uma observação relevante é que, ao executarmos o programa com esses asteriscos, ele adquire uma nova aparência. No entanto, essa aparência ainda não é visualmente atraente. Essa mensagem de boas-vindas será exibida em diferentes momentos da nossa aplicação, e um conceito bem conhecido na programação é a capacidade de isolar um código para ser reutilizado em outros momentos, evitando a necessidade de copiá-lo.
+
+Uma abordagem que podemos utilizar para isolar nosso código é criar uma função.
+
+Daniel: A fim de aproveitar o código de forma mais eficiente, é importante notar que vamos mencionar bastante a importância do reuso de código, evitando repetições e tornando o código mais conciso. Isso nos permite utilizá-lo em diferentes momentos, sem a necessidade de recriá-lo constantemente.
+
+Guilherme: Criaremos uma função para reutilizar as três instruções do nosso código. Para começar, precisamos determinar se a função terá ou não um valor de retorno.
+
+Quando a função não tem um valor de retorno, ou seja, realiza ações sem retornar um resultado, usamos a palavra reservada void (em português, "vazio").
+
+Program.cs
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+void 
+Console.WriteLine("**************************");
+Console.WriteLine(mensagemDeBoasVindas);
+Console.WriteLine("**************************");
+```
+
+Daniel: Apenas um adendo, Gui. É importante observar que, ao mencionarmos a palavra reservada, o compilador nos fornece uma indicação visual por meio da cor azul. Observe que as palavras "string" e "void" estão em azul, o que significa que são palavras reservadas.
+
+Guilherme: Legal, Daniel.
+
+Prosseguindo, utilizamos o void para indicar que a função terá um comportamento específico, mas não esperamos que ela retorne algum valor. Nomearemos essa função como ExibirMensagemDeBoasVindas(). Para encapsular as três linhas de código, utilizamos as chaves de abertura e fechamento: {}.
+
+A formatação utilizada na função ExibirMensagemDeBoasVindas() é um padrão visual amplamente adotado em C#: o nome da função seguido por parênteses vazios na mesma linha e, na linha seguinte, o uso das chaves de abertura e fechamento.
+
+Depois podemos copiar as linhas das nossas instruções e colar dentro da função:
+
+Program.cs
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+void ExibirMensagemDeBoasVindas()
+{
+         Console.WriteLine("**************************");
+         Console.WriteLine(mensagemDeBoasVindas);
+         Console.WriteLine("**************************");
+}
+```
+
+Daniel: É importante notarmos que diferente da nomenclatura da variável mensagemDeBoasVindas o nome dessa função ExibirMensagemDeBoasVindas() utiliza outra convenção conhecida como PascalCase, em que a primeira palavra inicia com letra maiúscula.
+
+O padrão PascalCase é adotado na nomenclatura de funções
+
+Guilherme: Existem dois padrões a serem seguidos: o CamelCase para nomear variáveis e o PascalCase para nomear funções. Vamos executar clicando em "▶" e analisando no console nada foi exibido.
+
+Isso ocorre porque declaramos a função, porém, não a chamamos para ser executada.
+
+Daniel: Inclusive, há uma indiciação visual no código. Abaixo da função ExibirMensagemDeBoasVindas() há uma sublinhado na cor verde.
+
+Guilherme: Exatamente, e colocando o mouse por cima da função, temos a seguinte mensagem:
+
+A função local 'ExibirMensagemDeBoasVindas' está declarada, mas nunca é usada.
+
+Para usarmos uma função, depois dela nós a chamamos pelo nome e abrimos e fechamos parênteses.
+
+Program.cs
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+void ExibirMensagemDeBoasVindas()
+{
+         Console.WriteLine("**************************");
+         Console.WriteLine(mensagemDeBoasVindas);
+         Console.WriteLine("**************************");
+}
+ExibirMensagemDeBoasVindas();
+```
+
+Novamente clicamos em "▶" e analisando no console, obtemos a mensagem:
+
+```C#
+***************************
+Boas vindas ao Screen Sound
+***************************
+```
+
+Isso significa que a função está sendo exibida.
+
+Vamos melhorar o visual dessa mensagem no próximo vídeo. Até mais!
+
+Daniel: Até, pessoal!
+
+### Aula 2 - Variáveis do tipo texto - Vídeo 2
+
+Transcrição  
+Daniel: Gui, sinceramente, o resultado não está bonito. Sei que você se esforçou, mas precisa melhorar isso.
+
+Guilherme: Amizade é isso, pessoal, é sinceridade.
+
+Eu confesso que tentei, tem aqui os asteriscos de boas-vindas, mas não está bonito. Posso tentar deixar mais bonito?
+
+Vou acessar uma aplicação no [navegador chamada FSymbols](https://fsymbols.com/pt/geradores/) na seção de geradores.
+
+Nela podemos escrever, por exemplo, Screensound, que é o nome da nossa aplicação, e ele vai mostrar diversas formas de exibir esse nome. Nós podemos escolher um desses e copiar.
+
+Lembrando que nem todos vão funcionar. Além disso, se você quiser colocar outro nome no programa que você está desenvolvendo junto conosco, você pode.
+
+Texto "screen sound" desenhado com caracteres especiais.
+
+Nós temos a mensagem de boas-vindas com os asteriscos que o Daniel odiou. Acima dela, criaremos um console.WriteLine() e, dentro dos parênteses, colaremos o conteúdo copiado do FSymbols. Devido ao tamanho do "texto", ele não será exibido corretamente, se uma outra pessoa trabalhar nessa aplicação ela poderá pensar que é um erro.
+
+Entretanto, executando a aplicação, teremos no terminal o Screen Sound sendo exibido corretamente. Acho que os asteriscos até não fazem mais sentido e podemos tirá-los.
+
+Executando mais uma vez, o visual ficou melhor. Ficou bonito pra caramba. É assim que a gente cresce na vida, vem alguém e fala que aquilo que você fez não está bom, você melhora e continua. Momento autoajuda do curso.
+
+Daniel: Gui, pra ajudar a próxima pessoa desenvolvedora que for pegar o código, podemos fazer uma melhoria lá naquela string.
+
+Guilherme: É verdade. Nós melhoramos a parte do console, mas uma pessoa desenvolvedora que chega em um projeto assim provavelmente removeria esse console.Write(), pois está difícil identificar o que ele faz.
+
+Como que nós podemos melhorar a exibição dessa string, que é muito longa, para que a próxima pessoa que for trabalhar nesse projeto saiba o que é?
+
+Daniel: O que precisamos é exibir a string como ela vai ficar. Para isso, vamos usar um símbolo antes de começar as aspas, que é o arroba (@).
+
+Podemos apagar tudo que está dentro da string e colar de novo, porque a partir desse momento ela será exibida literalmente como deveria ficar.
+
+Guilherme: Se queremos exibir a string literal, nós abrimos aspas após o arroba, damos dois "Enter" e colamos a string copiada.
+
+```C#
+﻿// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"};  
+
+void ExibirLogo()
+{
+    Console.WriteLine(@"
+
+░██████╗░█████╗░██████╗░███████╗███████╗███╗░░██╗  ░██████╗░█████╗░██╗░░░██╗███╗░░██╗██████╗░
+██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝████╗░██║  ██╔════╝██╔══██╗██║░░░██║████╗░██║██╔══██╗
+╚█████╗░██║░░╚═╝██████╔╝█████╗░░█████╗░░██╔██╗██║  ╚█████╗░██║░░██║██║░░░██║██╔██╗██║██║░░██║
+░╚═══██╗██║░░██╗██╔══██╗██╔══╝░░██╔══╝░░██║╚████║  ░╚═══██╗██║░░██║██║░░░██║██║╚████║██║░░██║
+██████╔╝╚█████╔╝██║░░██║███████╗███████╗██║░╚███║  ██████╔╝╚█████╔╝╚██████╔╝██║░╚███║██████╔╝
+╚═════╝░░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝╚═╝░░╚══╝  ╚═════╝░░╚════╝░░╚═════╝░╚═╝░░╚══╝╚═════╝░
+");
+    Console.WriteLine(mensagemDeBoasVindas);
+}
+```
+
+Agora a pessoa que vai trabalhar sabe que se trata do logo do screen sound. Executando, nós temos o menu. Bem melhor.
+
+Daniel: Lembrando que esse recurso com arroba que começa um texto é chamado de verbatim literal. É basicamente você colocar a string do jeito que você quer que ela apareça na função.
+
+Guilherme: No botão de "menos" à esquerda (-), eu consigo também minimizar esse trecho no Visual Studio, para não precisar ficar exibindo toda aquela string.
+
+Quando nós executamos o programa, ele mostra o screen sound bem bonito.
+
+Seria legal se nós pudéssemos exibir um menu de opções. Vamos criar esse menu?
+
+Acho que, para organizar o nosso código, faz mais sentido criarmos uma função. Será uma função void chamada ExibirOpcoesDoMenu(), seguida de parênteses e chaves.
+
+```C#
+void ExibirOpcoesDoMenu()
+{
+
+}
+```
+
+Podemos colocar essas opções de maneira enumerada. Começaremos com um Console.WriteLine() com a mensagem "Digite 1 para registrar uma banda". Como nós estamos trabalhando com back-end, as pessoas vão registrar e listar bandas na nossa aplicação.
+
+Teremos um segundo Console.WriteLine() com o texto "Digite 2 para mostrar todas as bandas", e um terceiro com "Digite 3 para avaliar uma banda"
+
+Daniel: Também podemos exibir a média de avaliações, "Digite 4 para exibir a média de uma banda". E nós podemos fazer uma opção para sair, por exemplo "Digite -1 para sair".
+
+```C#
+void ExibirOpcoesDoMenu()
+{
+    Console.WriteLine("Digite 1 para registrar uma banda");
+    Console.WriteLine("Digite 2 para mostrar todas as bandas");
+    Console.WriteLine("Digite 3 para avaliar uma banda");
+    Console.WriteLine("Digite 4 para exibir a média de uma banda");
+    Console.WriteLine("Digite -1 para sair");
+}
+```
+
+Guilherme: Essas opções do menu vamos exibir embaixo do "Boas-vindas". Na linha 28, nós executamos o ExibirMensagemDeBoasVindas() e na linha 29 eu peço para exibir as opções com ExibirOpcoesDoMenu().
+
+```C#
+ExibirMensagemDeBoasVindas();
+ExibirOpcoesDoMenu();
+```
+
+Daniel: Executando, agora temos o nosso projeto definido com as suas funções específicas.
+
+Guilherme: Repara que aqui no "Digite 1", onde de fato nós temos as opções, seria legal se nós tivéssemos um espaç para conseguir visualizar melhor.
+
+Daniel: Para isso, podemos incluir um Console.WriteLine() com uma string vazia, ou usar o \n que inclusive utilizamos anteriormente na outra opção da logo.
+
+Guilherme: No Console.WriteLine() da primeira opção, na linha 20, vou adicionar esse \n e executar novamente.
+
+```C#
+void ExibirOpcoesDoMenu()
+{
+    Console.WriteLine("\nDigite 1 para registrar uma banda");
+    Console.WriteLine("Digite 2 para mostrar todas as bandas");
+    Console.WriteLine("Digite 3 para avaliar uma banda");
+    Console.WriteLine("Digite 4 para exibir a média de uma banda");
+    Console.WriteLine("Digite -1 para sair");
+}
+```
+
+Assim temos a mensagem de boas-vindas e em seguida as opções. Nosso próximo passo será trabalhar cada uma das opções.
+
+Daniel: Certo, precisamos capturar a opção que a pessoa usuária digitar, esse é o próximo passo.
+
+### Aula 2 - Variáveis do tipo inteiro - Vídeo 3
+
+Transcrição  
+Guilherme: Nosso programa está legal em partes. Vamos executá-lo, clicando no botão "Play" da aba do arquivo Program.cs. Com isso, é exibido no terminal o título "SCREEN SOUND" com letras em caixa alta estilizadas, uma mensagem de boas-vindas e as opções do menu.
+
+Mas, se pressionamos qualquer tecla, não acontece mais nada — nosso programa acaba. Mostramos as opções, mas não deixamos a pessoa selecionar a desejada pelas teclas.
+
+Daniel: Portanto, não há opção nenhuma.
+
+Guilherme: Então, de alguma forma, precisamos capturar a opção que a pessoa digitou, certo? Seja para registrar uma banda, mostrar a média e assim por diante.
+
+Daniel: Acho que podemos fazer uma pergunta primeiro, com um texto do tipo "qual é a sua escolha?".
+
+Guilherme: Excelente. Então, na linha 26 do código, dentro da função ExibirOpcoesDoMenu() vamos escrever essa mensagem com o Console.WriteLine, pulando uma linha no programa usando \n e inserindo um espaço ao final do texto para a pessoa digitar:
+
+Program.cs
+
+> Console.WriteLine("\nDigite a sua opção: ");
+
+Esse código vai exibir a mensagem "Digite a sua opção", mas, teoricamente, só isso vai acontecer. Precisamos, de alguma forma, pegar o valor que a pessoa vai digitar nesse menu. Como fazemos isso?
+
+Capturando o comando da pessoa usuária  
+Daniel: Usamos o método Console.WriteLine() para escrever mensagens, e usaremos o Console.ReadLine() para ler esse valor. Usando o ReadLine(), esperamos que a pessoa usuária digite a opção e aperte "Enter" também.
+
+Guilherme: Escrevendo Console.Read, recebemos algumas opções diferentes, como apenas Read e ReadKey. Vamos selecionar ReadLine():
+
+```C#
+Console.WriteLine("\nDigite a sua opção: ");
+Console.ReadLine();
+```
+
+Mas, precisamos armazenar em algum lugar o que a pessoa digitar. Vamos executar o programa agora em seu estado atual, pressionando "Ctrl + F5", para entender o que está acontecendo.
+
+No terminal aberto com o programa, podemos notar que a mensagem "Digite a sua opção: " está sendo exibida abaixo do menu, e o cursor para digitar está posicionado abaixo da frase. Queríamos que o cursor estivesse na mesma linha da frase, afinal, deixamos um espaço para isso depois dos dois pontos.
+
+Daniel: Nesse caso, ao invés de usar o WriteLine(), podemos usar apenas o Write(). Assim, o programa escreverá o texto que está no argumento da função sem pular linha depois.
+
+Guilherme: Certo, então vamos apagar o Line da linha 26:
+
+```C#
+Console.Write("\nDigite a sua opção: ");
+Console.ReadLine();
+```
+
+Vamos executar mais uma vez para conferir. No programa, o cursor para digitar a opção está sendo exibido ao lado da frase "Digite a sua opção: ".
+
+Vamos digitar "1" no programa, para registrar uma banda, e pressionar "Enter". Novamente, o programa é encerrado porque não criamos mais nada em relação a isso.
+
+Daniel: Vamos armazenar essa opção digitada pela pessoa em uma variável.
+
+Guilherme: Certo. Para isso, vamos criar uma string chamada opcaoEscolhida que receberá o Console.ReadLine():
+
+```C#
+Console.Write("\nDigite a sua opção: ");
+string opcaoEscolhida = Console.ReadLine();
+```
+
+Com isso, notaremos um sublinhado em verde no Console.ReadLine() que nos avisa que esse método pode retornar um valor nulo. Não queremos trabalhar com valor nulo no nosso programa, porque é necessário que esse valor seja uma string.
+
+Para resolver isso, podemos inserir um sinal de exclamação ao final do método: Console.ReadLine()!. Ao fazer isso, o sublinhado verde some.
+
+```C#
+Console.Write("\nDigite a sua opção: ");
+string opcaoEscolhida = Console.ReadLine()!;
+```
+
+Agora temos esse valor armazenado em uma variável. Em seguida, precisamos verificar qual foi a opção digitada: se foi a opção 1, se foi a opção 2, e assim por diante.
+
+Condição para retorno  
+Daniel: Então, entra agora uma condição: se a pessoa digitou "1", realizamos determinada ação; se digitou "2", outra ação, e assim vai.
+
+Guilherme: Sim. Para isso, temos um if similar ao dos cursos de lógica de programação. Escrevemos if e, entre parênteses, inserimos a nossa condição. O VSCode até sugere a condição opcaoEscolhida == null, mas não é isso que queremos.
+
+Na verdade, queremos dizer o seguinte: "se a opção escolhida for igual a 1, por exemplo, realizaremos a seguinte ação entre chaves". Então trocamos o null para 1 e adicionamos as chaves em seguida.
+
+Essa ação pode ser, por exemplo, escrever a mensagem "Você digitou a opção x": ConsoleWriteLine("Você digitou a opção x"). No lugar desse x, queremos colocar o valor da variável opcaoEscolhida. Como fazer isso?
+
+No JavaScript, colocamos um espaço entre a última palavra da frase e as aspas e depois inserimos o sinal de adição e o nome da variável, por exemplo: + opcaoEscolhida. Aqui funciona assim também:
+
+```C#
+// código omitido
+if (opcaoEscolhida == 1)
+{
+        ConsoleWriteLine("Você digitou a opção " + opcaoEscolhida)
+}
+```
+
+Mas, temos um problema na própria variável opcaoEscolhida que, sublinhada em vermelho, nos indica que seu valor não é nulo dentro desse if. Estamos usando o operador == para comparar uma string, que é tudo o que digitamos e recebemos com o ReadLine(), com o valor 1 que é um inteiro e não uma string. Não é possível fazer isso.
+
+Daniel: Algum desses valores precisa ser convertido.
+
+Guilherme: Exatamente: ou convertemos o 1 para string, o que não faz muito sentido; ou convertemos o opcaoEscolhida que digitamos, uma string, para um valor inteiro. O que você acha melhor?
+
+Daniel: Acho melhor converter a opcaoEscolhida em uma nova variável de tipo inteiro. Em vez de colocar a palavra reservada string antes da declaração da variável, usaremos o int — outra palavra reservada que indica o tipo inteiro.
+
+Convertendo string em inteiro  
+Guilherme: Abaixo da variável opcaoEscolhida e antes do if, vamos criar uma nova variável de tipo int. Vamos chamá-la de opcaoEscolhidaNumerica, por exemplo, para explicitar a conversão em número. Ela receberá a variável opcaoEscolhida convertida para inteiro.
+
+Daniel: Há algumas funções para realizar essa conversão. Podemos usar primeiro uma função que fica dentro de um tipo chamado int, chamada Parse(), que pega um texto e tenta converter para valor inteiro. Então, escrevemos int.Parse() e passamos opcaoEscolhida como parâmetro. Nossa variável nova fica assim:
+
+```C#
+int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
+```
+
+Guilherme: Sendo assim, precisamos mudar a variável que passamos no if. Repare que ainda temos uma marcação em vermelho nele por estar usando o valor da variável opcaoEscolhida, que é uma string. O que queremos fazer agora é usar a variável de tipo inteiro, opcaoEscolhidaNumerica:
+
+```C#
+// código omitido
+if (opcaoEscolhidaNumerica == 1)
+{
+        ConsoleWriteLine("Você digitou a opção " + opcaoEscolhida)
+}
+```
+
+Não temos mais nenhuma marcação de erro, parece que funcionou! Vamos executar o programa novamente e testar a opção 1, a única que criamos até agora, digitando "1" no terminal e pressionando "Enter". O retorno surge logo abaixo:
+
+Você digitou a opção 1
+
+### Aula 2 - Uso de if/else e switch/case - Vídeo 4
+
+Transcrição  
+Daniel: Vamos continuar trabalhando nas opções escolhidas.
+
+Guilherme: Como a opção 2 terá praticamente o mesmo código da opção 1, podemos copiá-lo (da linha 29 até a linha 32) e colar logo depois do fechamento do if, com um else antes para indicar "senão".
+
+Se a opção escolhida for a 2 (opcaoEscolhidaNumerica == 2), exibimos a mensagem "Você digitou a opção 2":
+
+Program.cs
+
+```C#
+// código omitido
+if (opcaoEscolhidaNumerica == 1)
+{
+    ConsoleWriteLine("Você digitou a opção " + opcaoEscolhida)
+} else if (opcaoEscolhidaNumerica == 2)
+{
+    ConsoleWriteLine("Você digitou a opção " + opcaoEscolhida)
+}
+```
+
+Vamos executar o programa novamente para testar as duas opções. Com o programa aberto no terminal, digitamos a opção "1", que nós já testamos, ao lado da frase "Digite a sua opção" e pressionamos "Enter". Recebemos o retorno "Você digitou a opção 1". Tudo certo.
+
+Vamos fechar o terminal e rodar o programa mais uma vez. Agora vamos digitar a opção "2" e pressionar "Enter". Recebemos o retorno correto: "Você digitou a opção 2".
+
+Então o programa está, de fato, capturando essas opções!
+
+Agora, fazemos o mesmo para a opção 3, 4 e -1?
+
+Daniel: Na verdade, podemos usar outro recurso. Quando temos vários condicionais associados, relacionados logicamente, nós usamos o switch.
+
+Guilherme: Então podemos remover os ifs?
+
+Daniel: Podemos.
+
+Switch  
+Guilherme: Vamos apagar os ifs (da linha 30 até a linha 36) e, no lugar, escrever aqui switch. Ao lado, entre parênteses, colocamos o que queremos verificar — no caso, a variável opcaoEscolhidaNumerica. Abrimos e fechamos chaves em seguida e, dentro delas, vamos começar as opções.
+
+Caso a opção escolhida seja 1, então nós colocamos um case 1 e, depois dos dois pontos (:), a mensagem de retorno com o Console.WriteLine(). Podemos inserir a mesma mensagem de antes: "Você escolheu a opção " + opcaoEscolhidaNumerica. Ao fim dessa linha, colocamos um ponto e vírgula (;).
+
+Daniel: Também precisamos colocar a palavra reservada break na linha de baixo para finalizar esse caso, seguido de um ponto e vírgula novamente.
+
+Guilherme: Certo. Pulando para a linha de baixo, o Visual Studio sugere o case 2 para a segunda opção. Vamos repetir o que fizemos acima para todas as outras opções — 3, 4 e -1 — copiando o mesmo método e texto:
+
+```C#
+switch (opcaoEscolhidaNumerica) 
+{
+    case 1:
+        Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+        break;
+    case 2:
+        Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+        break;
+    case 3:
+        Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+        break;
+    case 4:
+        Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+        break;
+    case -1:
+        Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+        break;
+}
+```
+
+Temos todas as opções, de 1 a 4, e também a opção -1. Trabalhamos com case e break para cada opção.
+
+Por enquanto estamos usando a mensagem, mas adiante vamos criar uma função que vai, de fato, executar cada opção: salvar uma nova banda, registrar a banda, exibir a média da banda e assim por diante.
+
+Daniel: Há uma última possibilidade a adicionar dentro do switch: se o usuário não digitar nenhuma dessas opções, é necessário exibir uma mensagem de opção inválida. Para isso, usamos uma palavra reservada chamada default. Ou seja: se nenhum desses casos aconteceu, caímos nesse default.
+
+Guilherme: Então, por exemplo, a mensagem do default pode ser "Opção inválida!". O default também leva o break:
+
+```C#
+switch (opcaoEscolhidaNumerica) 
+{
+// código omitido
+    default:
+        Console.WriteLine("Opção inválida");
+        break;
+}
+```
+
+Vamos testar todas essas opções agora. Para isso, executaremos nosso programa algumas vezes.
+
+Começando, na primeira execução, vamos testar a opção 1 digitando "1" ao lado de "Digite a sua opção:" e pressionando "Enter". O retorno recebido é: "Você escolheu a opção 1". Deu certo.
+
+Vamos fechar, executar o programa novamente e escolher a opção "2" no terminal. Retorno: "Você escolheu a opção 2". Certo novamente.
+
+Repetindo esse processo para as opções 3 e 4, recebemos as mensagens de retorno corretas de cada um: "Você escolheu a opção 3" e "Você escolheu a opção 4", respectivamente.
+
+A opção "-1" serve para encerrar o programa, o que teoricamente já está acontecendo. Não precisamos mudar nada nessa função, a não ser a mensagem de retorno — algo como "Obrigado. Tchau.". Vamos fazer isso daqui a pouco também.
+
+Por fim, testamos uma opção inválida, como o "99". Com isso, recebemos a mensagem "Opção inválida" e o programa encerra também.
+
+Então, vamos alterar a mensagem do -1, quando encerramos o programa. Queremos uma mensagem bem bonita. Pode ser um "Tchau tchau" com um emoji feliz ":)".
+
+```C#
+switch (opcaoEscolhidaNumerica) 
+{
+// código omitido
+    case -1:
+        Console.WriteLine("Tchau tchau :)");
+        break;
+}
+// código omitido
+```
+
+Vamos testar, executando novamente o programa. Vamos digitar a opção "-1" e pressionar "Enter". Recebemos a mensagem: "Tchau tchau :)". Fechou! Ficou lindo!
+
+Daniel: Concluindo: nós conhecemos a opção condicional, o if e o if else. Em seguida aprendemos que, quando temos um cenário com muitos casos, podemos usar também o recurso switch, com a construção switch case que aplicamos.
+
+### Aula 2 - Hello world personalizado - Exercício
+
+Uma pessoa desenvolveu um programa que solicita o nome e exibe uma mensagem de saudação dizendo Olá seguido do nome digitado pela pessoa, como mostra o código abaixo:
+
+```C#
+Console.WriteLine("Qual é o seu nome?");
+string nome = Console.ReadLine();
+Console.WriteLine("Olá, " + nome + "!");
+```
+
+Sabendo disso, analise as afirmações e selecione a alternativa na qual a saída do console será a mesma:
+
+Respostas corretas:
+
+> Console.WriteLine($"Olá, {nome}!");
+
+Isso aí! Neste caso usamos a sintaxe de interpolação de string que nos permite incluir variáveis diretamente em uma string usando chaves {}. Ao colocar o sinal $ antes da string, indicamos ao compilador que ela deve ser interpolação de string.
+
+> Console.WriteLine("Olá, {0}!", nome);
+
+Isso aí! Neste caso, usamos um formato de string que nos permite substituir marcadores de posição {0}, {1}, etc. por valores específicos. Ao passar a variável nome como segundo argumento para o método Console.WriteLine, ela será substituída no marcador de posição {0}.
+
+### Aula 2 - Comparando tipos - Exercício
+
+Uma pessoa que estava estudando C# desenvolveu o seguinte código:
+
+```C#
+int nota = 6;
+string musica = "Yesterday";
+if (nota <= "6")
+{
+    Console.WriteLine(musica + " -> essa música não é tão boa");
+}
+else
+{
+    Console.WriteLine(musica + " -> essa música é ótima");
+}
+```
+
+Com base no código acima, analise as afirmações abaixo e selecione apenas a verdadeira:
+
+Resposta correta:  
+Ao executar esse programa, um erro será exibido no console.
+
+> Isso aí! O erro informará que não podemos aplicar operador <= em tipos diferentes como int para nota e a string "6". Para corrigir esse erro, podemos remover as aspas da instrução if, como ilustra o código abaixo:
+> if (nota <= 6)
+
+### Aula 2 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar então?
+
+1. Criar uma variável chamada notaMedia e atribua um valor inteiro a ela. Caso seu valor seja maior ou igual a 5, escreva na tela "Nota suficiente para aprovação".
+2. Criar uma lista de linguagens de programação, com as linguagens C#, Java e JavaScript.
+3. Exibir o valor "C#" no console, utilizando a lista criada no exercício anterior.
+4. Criar um programa que, dado a entrada de dados de um número n inteiro, a partir do teclado, exibir a n-ésima posição de uma lista.
+
+Dica: Em caso de dúvidas para resolver os exercícios, recorra a Luri (Inteligência Artificial da Alura) ou a nossa comunidade no Fórum.
+
+Resolução dos desafios:
+
+Desafio 1:
+
+```C#
+int media = 5;
+if(media >= 5)
+{
+    Console.WriteLine("Nota suficiente para aprovação");
+}
+```
+
+Desafio 2:
+
+```C#
+List<string> linguagens = new List<string> { "C#", "Java", "JavaScript" };
+```
+
+Desafio 3:
+
+```C#
+Console.WriteLine(linguagens[0]);
+```
+
+Desafio 4:
+
+```C#
+Console.WriteLine("Digite a posição desejada: ");
+int posicao = int.Parse(Console.ReadLine());
+
+Console.WriteLine(linguagens[posicao]);
+```
+
+### Aula 2 - O que aprendemos?
+
+Nesta aula:
+
+- Criamos variáveis de tipos diferentes como string e int para armazenar diferentes tipos de dados;
+
+- Desenvolvemos o menu personalizado exibindo as opções da nossa aplicação e criamos uma forma na qual o usuário pode escolher a ação que deseja;
+
+- Aprendemos como utilizar de forma prática estruturas condicionais no C#, o que possibilita que nosso programa execute diferentes comandos de acordo com as condições estabelecidas pelas entradas de usuários.
+
+Na próxima aula:  
+Vamos aplicar em nosso projeto uma estrutura de dados muito usada no dia a dia de quem trabalha com desenvolvimento de software!
+
+### Aula 2 -  - Vídeo 9
