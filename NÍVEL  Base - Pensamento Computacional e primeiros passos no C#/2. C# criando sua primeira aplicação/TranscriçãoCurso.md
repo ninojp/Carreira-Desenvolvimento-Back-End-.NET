@@ -673,7 +673,7 @@ Guilherme: Se queremos exibir a string literal, nós abrimos aspas após o arrob
 ```C#
 ﻿// Screen Sound
 string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
-List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"};  
+List`<string>` listaDasBandas = new List`<string>` { "U2", "The Beatles", "Calypso"};  
 
 void ExibirLogo()
 {
@@ -1062,7 +1062,7 @@ if(media >= 5)
 Desafio 2:
 
 ```C#
-List<string> linguagens = new List<string> { "C#", "Java", "JavaScript" };
+List`<string>` linguagens = new List`<string>` { "C#", "Java", "JavaScript" };
 ```
 
 Desafio 3:
@@ -1093,4 +1093,707 @@ Nesta aula:
 Na próxima aula:  
 Vamos aplicar em nosso projeto uma estrutura de dados muito usada no dia a dia de quem trabalha com desenvolvimento de software!
 
-### Aula 2 -  - Vídeo 9
+## Aula 3 - Listas e Loops no C#
+
+### Aula 3 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da aula 02](https://github.com/alura-cursos/csharp-01/archive/refs/heads/aula_2.zip) ou acessar os [arquivos no Github](https://github.com/alura-cursos/csharp-01/tree/aula_2)!
+
+### Aula 3 - Criando a lista de músicas - Vídeo 1
+
+Transcrição  
+Guilherme: Chegamos a um momento incrível da nossa aplicação, vamos trabalhar de fato em cada uma dessas opções!
+
+Case 1 - Registro de bandas  
+A primeira opção é o registro de bandas. No case 1 colocamos só uma mensagem de teste. Mas agora removeremos essa mensagem para chamar uma determinada função. Podemos chamar, por exemplo, a função RegistrarBanda().
+
+```C#
+case1: RegistrarBanda();
+```
+
+O editor informou que essa função ainda não existe no contexto atual. Vamos criar a função RegistrarBanda() agora.
+
+Na linha 47, criaremos uma função void.
+
+```C#
+void RegistrarBanda()
+{
+
+}
+```
+
+Lembre-se que a linguagem do C# é case sensitive, sensível a letras maiúsculas e minúsculas. Precisamos nos atentar a isso.
+
+Guilherme: Então, o caso 1 vai executar a função RegistrarBanda().
+
+O que queremos fazer? Primeiro, assim que rodamos a aplicação podíamos limpar o nosso console. Uma forma de limpar o console é com o Console.Clear(). Dessa forma, não teremos nenhum texto sendo exibido no console.
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     
+}
+```
+
+Em seguida, podemos exibir no console o texto "Registro de bandas", por exemplo, usando um Console.WriteLine().
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     
+}
+```
+
+Podemos começar dando uma mensagem como "Digite o nome da banda que você deseja registrar". Mas não usaremos o Console.WriteLine() porque queremos que fique na mesma linha da mensagem que estamos passando e não embaixo. Usaremos o Console.Write().
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     Console.Write("Digite o nome da banda que deseja registrar: ")
+}
+```
+
+Daniel: Legal que estamos aproveitando os conceitos que vimos anteriormente. Criamos função, agora escrevemos na tela e depois vamos capturar isso em uma variável.
+
+Guilherme: Agora, precisamos pegar o nome da banda. Colocaremos uma string nomeDaBanda igual a Console.ReadLine()!. A exclamação depois dos parênteses é para indicar que não queremos trabalhar com valor nulo.
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     Console.Write("Digite o nome da banda que deseja registrar: ")
+     string nomeDaBanda = Console.ReadLine()!;
+}
+```
+
+Interpolação de strings  
+Agora, Daniel, eu quero criar uma mensagem assim, digamos que eu digitei "Pink Floyd", quero uma mensagem que diga: "A banda Pink Floyd foi registrada com sucesso".
+
+Como colocar esse valor "Pink Floyd" no meio do texto que está sendo exibido? Quero colocar a variável nomeDaBanda no meio da frase "A banda foi registrada com sucesso!".
+
+Daniel: Poderíamos usar a concatenação com sinal de +, porém ficaria um pouco confuso com muitos sinais de +. Vamos usar outro recurso do C# que é a interpolação de string. Inicia a string com cifrão e envolve a variável que queremos referenciar com chaves.
+
+```C#
+Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+```
+
+Até agora nosso código está assim:
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     Console.Write("Digite o nome da banda que deseja registrar: ")
+     string nomeDaBanda = Console.ReadLine()!;
+     Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+}
+```
+
+Guilherme: Legal, até muda a cor da variável quando ela está entre chaves.
+
+Depois disso, queremos esperar um pouco para dar aquele suspense na aplicação. Colocaremos um Thread.Sleep(), essa função espera em milissegundos, vamos colocar 2000 milissegundos. Depois, queremos voltar ao menu principal.
+
+Em seguida, vamos limpar o console e inserir um ExibirOpcoesDoMenu() para voltarmos ao menu principal.
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     Console.Write("Digite o nome da banda que deseja registrar: ");
+     string nomeDaBanda = Console.ReadLine()!;
+     Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");	 
+     Thread.Sleep(2000);
+     Console.Clear();
+     ExibirOpcoesDoMenu();
+}
+```
+
+Vamos testar a opção 1! Queremos digitar o nome da banda e visualizar a mensagem informando que ela foi registrada. Podemos executar o projeto.
+
+Escolhemos a opção 1, pressionei "Enter".
+
+Registro de bandas
+
+Digite o nome da banda que deseja registrar:
+
+Vamos inserir a banda "Pink Floyd" e pressionar "Enter". Ele exibiu a mensagem:
+
+A banda Pink Floyd foi registrada com sucesso!
+
+E volta ao menu principal.
+
+Daniel: Faltou exibir logo do projeto.
+
+Guilherme: De volta ao código, vamos refatorar o código e renomear a função ExibirMensagemDeBoasVindas() para ExibirLogo(). Esse ExibirLogo() vai ficar dentro do ExibirOpcoesDoMenu(). O menu sempre terá o logo.
+
+```C#
+void ExibirOpcoesDoMenu()
+{
+    ExibirLogo();
+
+// código omitido
+```
+
+Podemos executar o programa para testar novamente a opção 1. Agora está funcionando como esperado e voltando para o menu principal com o logo sendo exibido acima dele.
+
+Daniel: Está legal. Mas e se tentarmos registrar uma nova banda? Aquela primeira banda que registramos sumiu, não está mais sendo exibida. Porque estamos usando uma única variável que só está existindo dentro do corpo da função RegistrarBanda(). No próximo vídeo vamos resolver isso.
+
+### Aula 3 - Adicionando músicas na lista - Vídeo 2
+
+Transcrição  
+Daniel: Agora precisamos guardar as bandas que estamos registrando em algum recurso, alguma estrutura, para que consigamos fazer a opção 2, que é mostrar as bandas cadastradas.
+
+Guilherme: E esse recurso não pode existir apenas no RegistrarBanda(), deve estar em um escopo global da nossa aplicação. O que você sugere?
+
+Daniel: Acho que a melhor opção é uma coleção onde o nome da cada banda fique registrado. Uma lista.
+
+Lista  
+Guilherme: Pensando até no mundo real. Se alguém perguntar quais as cinco bandas que você mais gosta de ouvir, você já imagina uma lista com essas cinco bandas. No nosso projeto teremos algo muito parecido com isso.
+
+E, se no C# tudo é fortemente tipado, uma lista não é exceção. Precisaremos definir também essa lista.
+
+Para criar uma lista no C# vamos escrever List<>. Note que temos o sinal de maior que e o sinal de menor que. Isso significa que dentro desses sinais indicaremos o tipo dessa lista, se é uma lista de inteiros, de números decimais, de string, etc.
+
+No nosso caso, como queremos guardar o nome de diversas bandas, queremos uma lista de strings.
+
+> List`<string>`
+
+E já apareceu um autocomplete de código para lista de strings. Vamos pressionar "Tab" para aceitar essa sugestão.
+
+> List`<string>` strings = new List`<string>`();
+
+Vamos fazer a alteração do nome da lista, será listaDasBandas.
+
+> List`<string>` listaDasBandas = new List`<string>`();
+
+Daniel: Sim, precisamos dar nomes significativos para o negócio que estamos desenvolvendo. Não podem ser nomes muito genéricos. Com nomes mais específicos, como listaDasBandas, fica mais fácil para qualquer pessoa que ler esse código saber o que está acontecendo.
+
+Mais adiante falaremos mais sobre essa sintaxe gerada para listas, o que importa agora é que criamos uma lista vazia e poderemos colocar bandas dentro dessa lista.
+
+Guilherme: Agora, no RegistrarBanda(), a partir do momento que temos o nome da banda que a pessoa digitou, queremos adicionar esse nome na listaDasBandas. Para isso, usaremos o .Add(nomeDaBanda).
+
+listaDasBandas.Add(nomeDaBanda);
+
+a função RegistrarBanda() ficou assim:
+
+```C#
+void RegistrarBanda()
+{
+   Console.Clear();
+     Console.WriteLine("Registro de bandas");
+     Console.Write("Digite o nome da banda que deseja registrar: ")
+     string nomeDaBanda = Console.ReadLine()!;
+     listaDasBandas.Add(nomeDaBanda);
+     Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+     Console.Clear();
+     Thread.Sleep(2000);
+     ExibirOpcoesDoMenu();
+}
+```
+
+Vamos executar o programa, selecionar a opção 1 e adicionar duas bandas "Black Sabbath" e "Beatles".
+
+Conseguimos adicionar a duas bandas, não apareceu erro. Mas o que colocaria à prova essa nossa lista, para verificar se ela está realmente funcionando, é a execução da opção 2 que exibe todas as bandas.
+
+Então, no próximo vídeo vamos implementar o código para a opção 2 funcionar.
+
+### Aula 3 - Estrutura de repetição for - Vídeo 3
+
+Transcrição  
+Guilherme: Já temos uma lista chamada listaDasBandas e registramos as bandas com a função RegistraBanda(). Porém, ainda não exibimos as bandas. Inclusive, temos a segunda opção dedicada a mostrar todas as bandas na função ExibirOpcoesDoMenu().
+
+Mostrar bandas registradas  
+Guilherme: No switch(), vamos tirar o Console.WriteLine() que está após o case 2 na linha 36. No lugar, vamos digitar MostrarBandasRegistradas() que será a função do registro das bandas que vamos criar.
+
+Program.cs:
+
+```C#
+void Exibir OpcoesDoMenu()
+{
+
+// código omitido…
+
+    switch (opcaoEscolhidaNumerica)
+    {
+        case 1: RegistrarBanda();
+            break;
+        case 2: MostrarBandasRegistradas();
+            break;
+        case 3: Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+            break;
+        case 4: Console.WriteLine("Você escolheu a opção " + opcaoEscolhidaNumerica);
+            break;
+        case -1: Console.WriteLine("Tchau tchau :)");
+            break;
+        default: Console.WriteLine("Opção inválida");
+            break;
+    }
+}
+```
+
+Agora, vamos desenvolver a função MostrarBandasRegistradas() com essa responsabilidade. Vamos criar uma nova função na linha 61, após RegistrarBanda().
+
+Também será uma função void responsável apenas por MostrarBandasRegistradas(). O Visual Studio sugeriu um Console.Clear(). Faz sentido, queremos limpar o console e ter um comportamento parecido com RegistrarBanda().
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+}
+```
+
+Inclusive, o Daniel comentou sobre os asteriscos anteriormente. Vamos colocar uma linha de asteriscos com Console.Write() após Console.Clear() na função RegistrarBanda()? Vai ficar visualmente mais bonito. Também vamos adicionar outra linha de asteriscos após Console.Write("Registro de bandas").
+
+```C#
+void RegistrarBanda()
+{
+    Console.Clear();
+    Console.WriteLine("**********************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("**********************");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+
+// código omitido…
+
+}
+```
+
+Queremos esse mesmo comportamento para a função que vai exibir as bandas. Por isso, adicionamos em MostrarBandasRegistradas() um Console.WriteLine() de asteriscos, outro com a string Exibindo todas as bandas registradas e mais um Console.WriteLine() com a linha de asteriscos do mesmo comprimento da frase.
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    Console.WriteLine("************************************");
+    Console.WriteLine("Exibindo todas as bandas registradas");
+    Console.WriteLine("************************************");
+}
+```
+
+Agora, o desafio é o seguinte: precisamos pegar a listaDasBandas e exibir na tela cada banda que temos dentro dessa lista.
+
+Daniel: Isto é, precisamos percorrer a lista.
+
+Estrutura de repetição for
+
+Guilherme: Para isso, podemos usar o for. Assim, para cada banda que temos dentro da listaDasBandas, vamos exibi-las no console.
+
+Daniel: Vamos fazer um loop, certo?
+
+Guilherme: Exatamente. Em MostrarBandasRegistradas(), vamos escrever o for após o Console.WriteLine() de asteriscos. Esse for é muito simular ao for do JavaScript e Java. Entre parênteses, vamos declarar uma variável int chamada i que vai ser igual à 0.
+
+Vamos percorrer toda a lista, ou seja, deve-se continuar a executar as instruções enquanto tiver bandas. Para isso, após a inicialização, colocamos a condição i menor que listaDasBandas.Count. Assim, vamos contar todas as bandas e enquanto tiver bandas, vamos continuar a executar o for.
+
+A cada repetição que executamos, vamos incrementar 1 na variável i. Ou seja, a expressão de iteração do for será i++.
+
+No corpo do for, vamos colocar um Console.WriteLine() com a interpolação de string. Para isso, digitamos cifrão e abrimos e fechamos aspas. Entre as aspas, escrevemos Banda: seguido do nome da banda.
+
+Mas, vamos precisar pegar o nome de banda por banda. Por isso, entre chaves, colocamos listaDasBandas[] no índice i.
+
+```C#
+void MostrarBandasRegistradas()
+{
+
+// código omitido…
+
+    for (int i = 0; i < listaDasBandas.Count; i++)
+    {
+        Console.WriteLine($"Banda: {listaDasBandas[i]}");
+    }
+}
+```
+
+Essa forma de escrita de chaves para acessar uma determinada variável seguido dos colchetes é parecido a outras linguagens.
+
+Daniel: Inclusive, o incremento da variável i com i++ também é similar.
+
+Voltando ao menu principal  
+Guilherme: Depois que exibimos as bandas, esperamos que a pessoa digite algo para voltar ao menu principal. Para isso, após o for, vamos escrever a mensagem Digite uma tecla para voltar ao menu principal com Console.WriteLine().
+
+Em seguida, podemos usar um conceito diferente com o Console.ReadKey().
+
+Daniel: Assim, qualquer tecla que for digitada levará ao menu principal. Depois, vamos exibir todas as opções novamente.
+
+Guilherme: Certo. Após a pessoa digitar, vamos limpar o console com Console.Clear() e chamar o ExibirOpcoesDoMenu().
+
+```C#
+void MostrarBandasRegistradas()
+{
+
+// código omitido…
+
+    Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Daniel: Para não ter que registrar uma banda toda hora, você já pode colocar alguns valores na lista inicial.
+
+Guilherme: O que você acha de fazer dois testes? Vamos registrar duas bandas com a lista vazia e, logo em seguida, criar alguns elementos na lista. Conforme desenvolvemos, vamos querer testar funcionalidades com algumas bandas. Por isso, é interessante já começar com uma lista com alguns valores.
+
+Executamos o Program.cs para abrir o Screen Sound no terminal com a mensagem de boas-vindas e as opções do menu. Como queremos registrar duas bandas, escolhemos a opção 1.
+
+Digite a sua opção: 1
+
+Ficou muito legal os asteriscos entre o título "Registro de bandas". Primeiro, digitamos o nome da banda U2
+
+```C#
+**********************
+Registro de bandas
+**********************
+Digite o nome da banda que deseja registrar: U2
+```
+
+Após pressionar o "Enter", recebemos o aviso que a banda foi registrada com sucesso.
+
+A banda U2 foi registrada com sucesso!
+
+O programa volta ao menu principal. E digitamos 1 novamente para registrar mais uma banda.
+
+Digite a sua opção: 1
+
+Daniel: Podemos registrar os Beatles.
+
+```C#
+**********************
+Registro de bandas
+**********************
+Digite o nome da banda que deseja registrar: Beatles
+```
+
+A banda Beatles foi registrada com sucesso!
+
+Guilherme: Agora, vamos para a parte crucial do teste da aplicação. No menu principal, vamos digitar o 2 para escolher a opção de mostrar todas as bandas.
+
+Digite a sua opção: 2
+
+Após apertar "Enter", são listadas todas as bandas que registramos, U2 e Beatles.
+
+```C#
+**********************
+Exibindo todas as bandas registradas
+**********************
+Banda: U2
+Banda: Beatles
+Digite uma tecla para voltar ao menu principal
+```
+
+Pressionamos a tecla "Enter" para voltar ao menu principal.
+
+Acho que podemos ter um espaço entre o asterisco e as bandas e também entre as bandas e o Console.WriteLine() da frase "Digite uma tecla para voltar ao menu principal".
+
+Daniel: Mas, já confirmamos que a listaDasBandas está armazenando como deveria. Pois, havíamos criado a lista, mas não conseguíamos ver o conteúdo da lista. Agora, conseguimos mostrar esse conteúdo.
+
+Pular linhas
+
+Guilherme: Vamos fazer esses pequenos ajustes na função MostrarBandasRegistradas(). Assim que o loop for acaba, vamos pular uma linha. Para isso, acrescentamos um \n antes da frase "Digite uma tecla para voltar ao menu principal" dentro do Console.WriteLine().
+
+Além disso, vamos acrescentar o \n após os asteriscos do terceiro Console.WriteLine(). Assim, temos o cabeçalho e pulamos uma linha.
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    Console.WriteLine("************************************");
+    Console.WriteLine("Exibindo todas as bandas registradas");
+    Console.WriteLine("************************************\n");
+
+    for (int i = 0; i < listaDasBandas.Count; i++)
+    {
+        Console.WriteLine($"Banda: {listaDasBandas[i]}");
+    }
+
+    Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+
+}
+```
+
+Vamos fazer essa mesma alteração para a função de cima, RegistrarBanda(). Colocamos um \n após os asteriscos do terceiro Console.WriteLine().
+
+```C#
+void RegistrarBanda()
+{
+    Console.Clear();
+    Console.WriteLine("**********************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("**********************\n");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    listaDasBandas.Add(nomeDaBanda);
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Executar com bandas já registradas  
+Guilherme: Inclusive, já podemos rodar com o segundo teste. Se sempre executamos o programa com a lista vazia, não vamos ter nenhuma banda registrada e vamos sempre ter que registrar uma banda para testar.
+
+Daniel: Para fins de testes, já podemos começar com bandas já registradas.
+
+Guilherme: No começo do arquivo onde instanciamos listaDasBandas, vamos apagar os parênteses após new List<string>. No lugar, vamos colocar os sinais de abre e fecha chaves. Entre as chaves, colocamos o nome de cada banda entre aspas e separadas por vírgula. Colocamos U2, The Beatles e Calypso, a banda preferida do Daniel.
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"}; 
+```
+
+Executamos a aplicação para abrir o Screen Sound no terminal. No menu principal, colocamos a opção 2 para visualizar as bandas que temos já registradas.
+
+Digite a sua opção: 2
+
+Após dar "Enter", temos as bandas U2, The Beatles e Calypso.
+
+```C#
+**********************
+Exibindo todas as bandas registradas
+**********************
+
+Banda: U2
+Banda: The Beatles
+Banda: Calypso
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Digitamos qualquer tecla e voltamos ao menu principal, onde vamos registrar uma nova banda com a opção 1. Registramos a banda Iron Maiden com sucesso. No menu principal, escolhemos a opção 2 para mostrar todas as bandas e a lista foi atualizada!
+
+Daniel: Nesse vídeo, aprendemos fazer um loop no C# com o for tradicional. No próximo, vamos conhecer outro recurso de loop.
+
+### Aula 3 - Foreach para cada música - Vídeo 4
+
+Transcrição  
+Daniel: Agora vamos conhecer uma maneira diferente de escrever o for.
+
+Guilherme: É outra função do C# não tão verbosa, sem precisar declarar um inteiro para fazer um loop como fizemos no for tradicional.
+
+Primeiro, vamos comentar o trecho do for na função MostrarBandasRegistradas() para mantê-lo como referência. Para isso, colocamos o // antes de toda linha da instrução for.
+
+E como fazemos essa outra manipulação, Daniel?
+
+Daniel: O recurso se chama for each ("para cada"). Assim, conseguimos passar por cada elemento da lista. O foreach é uma palavra reserva escrita toda junta e em minúsculas.
+
+Loop foreach  
+Guilherme: Após o trecho comentado do for, escrevemos foreach() em uma nova linha para começar a verificação.
+
+Daniel: Dentro dos parênteses, vamos declarar uma variável que vai representar o elemento da lista.
+
+Guilherme: Por exemplo, podemos escrever uma string de banda. Já que vamos verificar banda por banda.
+
+Daniel: Após benda, colocamos a palavra reserva in seguido da variável que representa a coleção, ou seja, a lista chamada listaDasBandas.
+
+Guilherme: Até a leitura fica mais clara: string banda in listaDasBandas seria "para cada banda na lista de bandas". Também fica mais claro visualmente para entender do que o for tradicional com sua inicialização, condição e expressão de iteração.
+
+Queremos exibir o mesmo console no corpo do foreach. Por isso, entre colchetes, escrevemos Console.WriteLine() passando cifrão e a string Banda: seguido da {banda}. Não usamos mais a listaDasBandas, porque para cada banda vamos ter um Console.WriteLine().
+
+Program.cs:
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    Console.WriteLine("************************************");
+    Console.WriteLine("Exibindo todas as bandas registradas");
+    Console.WriteLine("************************************\n");
+    
+    //for (int i = 0; i < listaDasBandas.Count; i++)
+    //{
+        //Console.WriteLine($"Banda: {listaDasBandas[i]}");
+    //}
+
+    foreach (string banda in listaDasBandas)
+    {
+        Console.WriteLine($"Banda: {banda}");
+    }
+
+    Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+    
+}
+```
+
+Já podemos testar. Executamos o programa que se abre no terminal. No menu principal do Screen Sound, vamos colocar o número 2 para exibir todas as bandas com o foreach.
+
+Digite a sua opção: 2
+
+Após pressionar "Enter", temos o mesmo resultado anterior. Isto é, as bandas U2, The Beatles e Calypso.
+
+```C#
+**********************
+Exibindo todas as bandas registradas
+**********************
+
+Banda: U2
+Banda: Beatles
+Banda: Calypso
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Podemos digitar qualquer tecla para voltar ao menu principal.
+
+Para garantir que o código funciona, vamos registrar mais uma banda. Digitamos o número 1 para entrar na opção de registro de bandas, onde cadastramos a banda Ira.
+
+A banda Ira foi registrada com sucesso!
+
+Novamente no menu principal, escolhemos a opção 2 para exibir as bandas registradas.
+
+```C#
+**********************
+Exibindo todas as bandas registradas
+**********************
+
+Banda: U2
+Banda: Beatles
+Banda: Calypso
+Banda: Ira
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Temos a banda Ira na cartela de bandas registradas.
+
+Daniel: Conhecemos mais um recurso muito utilizado: o foreach. Com ele, guardamos o valor do elemento em uma variável para conseguir percorrer a lista. A desvantagem é que não temos o índice do for tradicional, caso seja preciso usá-lo.
+
+Por isso, você precisa considerar o que você quer fazer com o loop.
+
+Guilherme: Visualmente, o comprimento da linha de asteriscos está maior do que a frase "Exibindo todas as bandas registradas". Podemos arrumá-lo na função MostrarBandasRegistradas(), caso queiramos.
+
+### Aula 3 - AC/DC, Metallica, for e foreach - Exercício
+
+Durante os estudos de C#, uma pessoa decidiu criar um programa que armazena as bandas que mais gosta. Confira abaixo:
+
+> List`<string>` bandas = new List`<string>` { "Metallica", "AC/DC", "Iron Maiden", "Guns N' Roses", "Led Zeppelin" };
+
+Para exibir as bandas no console, ele utilizou o seguinte código:
+
+```C#
+foreach (string banda in bandas)
+{
+    Console.WriteLine(banda);
+}
+```
+
+Ao executar esse código a saída no console seria, na sequência:
+
+Metallica
+AC/DC
+Iron Maiden
+Guns N' Roses
+Led Zeppelin
+
+O for e o foreach são dois tipos de laços de repetição em C# que podem ser utilizados para percorrer e manipular coleções de elementos, tais como arrays (listas por exemplo), como ilustra o código acima. Sabendo disso, analise as informações abaixo e selecione apenas aquela onde a saída no console usa a estrutura for será igual ao foreach.
+
+Resposta:
+
+```C#
+for (int i = 0; i < bandas.Count; i++) { Console.WriteLine(bandas[i]); }
+```
+
+> Isso aí! Com esse código, a saída no console será a mesma do foreach mostrado acima. A variável de controle foi definida como int e iniciado com o valor 0 para exibir o primeiro elemento da lista. Em seguida, o controle do fluxo para quando i for menor que o valor de elementos da lista e a cada repetição, incrementamos 1 ao valor de i.
+
+### Aula 3 - Desafio: hora da prática
+ Próxima Atividade
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Escrever uma função que a partir de dois números de ponto flutuante a e b exiba no console o resultado de suas quatro operações básicas (adição, subtração, divisão e multiplicação), utilizando interpolação de strings.
+2. Criar uma lista de bandas vazia e adicionar suas bandas prediletas em seguida.
+3. Utilizar a estrutura 'for' para mostrar todas as suas bandas preferidas, listadas na lista do exercício anterior, no console.
+4. Criar um programa que calcula a soma de todos os elementos inteiros em uma lista.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma [lista com as possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-1-aula-3).
+
+Boa sorte nos estudos!
+
+### Aula 3 - Faça como eu fiz
+
+Crie uma lista de inteiros utilizando o List``<int>`` e utilize o for e o foreach para iterar sobre essa lista e exibir apenas os números pares.
+
+No for, comece o índice em 0 e incremente a cada iteração. Defina a condição de continuação do loop como i < numeros.Count, ou seja, o loop continuará enquanto o valor de i for menor do que o número de elementos na lista. Acesse o valor de cada elemento utilizando a sintaxe numeros[i].
+
+Já no foreach, ao invés de utilizar um loop for com um contador i e acessar os elementos da lista através do índice i, é utilizado o foreach para percorrer a lista e acessar diretamente cada elemento com a variável número. Em seguida, é verificado se o número é par utilizando o operador de módulo (%) e, caso seja, o número é impresso no console.
+
+Opinião do instrutor
+
+for
+
+Criando a lista de números:
+
+> List`<int>` numeros = new List`<int>` { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+Agora com a lista criada, vamos verificar se o número é par antes de imprimi-lo. Podemos fazer isso usando o operador módulo % para verificar se o número é divisível por 2. Se o resultado for 0, significa que é par e pode ser impresso.
+
+```C#
+for (int i = 0; i < numeros.Count; i++)
+{
+    if (numeros[i] % 2 == 0) // Verifica se o número é par
+    {
+        Console.WriteLine(numeros[i]);
+    }
+> }
+```
+
+foreach
+
+Vamos verificar se o número é par, também utilizando o operador de módulo (%) e, caso seja, o número é impresso no console.
+
+```C#
+foreach (int numero in numeros)
+{
+    if (numero % 2 == 0) {
+        Console.WriteLine(numero);
+    }
+> }
+```
+
+Qual usar? for ou foreach?
+
+Geralmente, é recomendado utilizar o foreach quando se deseja apenas iterar sobre os elementos de uma coleção, sem a necessidade de acessar um índice numérico específico. Isso torna o código mais legível e menos propenso a erros, além de ser mais simples de implementar.
+
+Já o for é recomendado quando é necessário acessar elementos em posições específicas da coleção ou quando se deseja iterar utilizando um índice numérico específico.
+
+### Aula 3 - O que aprendemos?
+
+Desafio proposto pela Luri, a IA da Alura.
+
+Explique com suas próprias palavras os principais conceitos que você aprendeu nesta aula.
+
+Resposta:  
+Nesta aula aprendemos como criar e percorer uma lista de determinado tipo de dado. Para leitura e listagem dos elementos da lista usamos o laço de repetição (loop) FOR () {};, onde obtemos o indice e o elemento e o FOREACH () {}.
+
+> Parabéns pela dedicação aos estudos! Você mencionou que aprendeu a criar e percorrer uma lista de determinado tipo de dado, o que é fundamental para trabalhar com estruturas de dados. Além disso, você destacou o uso dos laços de repetição `for` e `foreach`, que são essenciais para iterar sobre os elementos da lista. No entanto, também vimos como instanciar e adicionar elementos à lista utilizando o método `.Add`, que é uma parte importante do processo de manipulação de listas. Esse método permite que você acrescente novos itens à sua lista, como as músicas que você mencionou. Além disso, é interessante notar que o uso do `foreach` é especialmente útil quando você não precisa do índice dos elementos, tornando o código mais limpo e fácil de entender. Continue estudando e praticando!
+
+## Aula 4 - Dicionários e avaliação das bandas
+
+### Aula 4 -  - Vídeo 1
+### Aula 4 -  - Vídeo 2
+### Aula 4 -  - Vídeo 3
+### Aula 4 -  - Vídeo 4
+### Aula 4 -  - Vídeo 5
+### Aula 4 -  - Vídeo 6
+### Aula 4 -  - Vídeo 7
+### Aula 4 -  - Vídeo 8
+### Aula 4 -  - Vídeo 9

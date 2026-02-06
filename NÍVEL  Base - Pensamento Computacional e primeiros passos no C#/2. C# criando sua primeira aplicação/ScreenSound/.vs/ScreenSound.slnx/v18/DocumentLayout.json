@@ -3,14 +3,20 @@
   "WorkspaceRootPath": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ScreenSound\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{904AFA03-AC0B-4C59-84A7-C157A83EFD5F}|..\\ExerciciosPraticos\\ExerciciosPraticos.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\exerciciospraticos\\praticando2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{904AFA03-AC0B-4C59-84A7-C157A83EFD5F}|..\\ExerciciosPraticos\\ExerciciosPraticos.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\exerciciospraticos\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{904AFA03-AC0B-4C59-84A7-C157A83EFD5F}|..\\ExerciciosPraticos\\ExerciciosPraticos.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\exerciciospraticos\\praticando.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{904AFA03-AC0B-4C59-84A7-C157A83EFD5F}|..\\ExerciciosPraticos\\ExerciciosPraticos.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\exerciciospraticos\\jogonumeroscreto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\screensound\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{904AFA03-AC0B-4C59-84A7-C157A83EFD5F}|..\\ExerciciosPraticos\\ExerciciosPraticos.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base - pensamento computacional e primeiros passos no c#\\2. c# criando sua primeira aplica\u00E7\u00E3o\\exerciciospraticos\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -20,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -48,13 +54,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ScreenSound\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ScreenSound\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEAAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAMwFgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-04T07:41:48.987Z",
               "EditorCaption": ""
@@ -62,27 +68,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Program.cs",
-              "RelativeDocumentMoniker": "..\\ExerciciosPraticos\\Program.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Program.cs",
-              "RelativeToolTip": "..\\ExerciciosPraticos\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-05T07:20:18.63Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "Praticando.cs",
               "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Praticando.cs",
               "RelativeDocumentMoniker": "..\\ExerciciosPraticos\\Praticando.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Praticando.cs",
               "RelativeToolTip": "..\\ExerciciosPraticos\\Praticando.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAA0wBEAAABiAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-05T07:23:46.313Z",
+              "WhenOpened": "2026-02-06T21:04:43.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "JogoNumeroScreto.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\JogoNumeroScreto.cs",
+              "RelativeDocumentMoniker": "..\\ExerciciosPraticos\\JogoNumeroScreto.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\JogoNumeroScreto.cs",
+              "RelativeToolTip": "..\\ExerciciosPraticos\\JogoNumeroScreto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-06T21:07:33.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Program.cs",
+              "RelativeDocumentMoniker": "..\\ExerciciosPraticos\\Program.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Program.cs",
+              "RelativeToolTip": "..\\ExerciciosPraticos\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-06T21:05:30.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Praticando2.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Praticando2.cs",
+              "RelativeDocumentMoniker": "..\\ExerciciosPraticos\\Praticando2.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base - Pensamento Computacional e primeiros passos no C#\\2. C# criando sua primeira aplica\u00E7\u00E3o\\ExerciciosPraticos\\Praticando2.cs",
+              "RelativeToolTip": "..\\ExerciciosPraticos\\Praticando2.cs",
+              "ViewState": "AgIAAGkAAAAAAAAAAAAowIAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-06T21:33:28.579Z",
               "EditorCaption": ""
             }
           ]
