@@ -1,4 +1,4 @@
-# Curso Alura - C#: criando sua primeira aplicação
+# Curso Alura C#: Criando sua primeira aplicação
 
 ## Aula 1 - Criando o primeiro programa
 
@@ -2694,15 +2694,196 @@ Na próxima aula:
 
 Você terá a chance de colocar todo o conhecimento que adquiriu em prática resolvendo um desafio que o professor Daniel preparou. Até lá!
 
-## Aula 5 - 
+## Aula 5 - Desafios
 
-### Aula 5 -  - Vídeo 1
-### Aula 5 -  - Vídeo 2
-### Aula 5 -  - Vídeo 3
-### Aula 5 -  - Vídeo 4
-### Aula 5 -  - Vídeo 5
-### Aula 5 -  - Vídeo 6
-### Aula 5 -  - Vídeo 7
-### Aula 5 -  - Vídeo 8
-### Aula 5 -  - Vídeo 9
-### Aula 5 -  - Vídeo 0
+### Aula 5 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da aula 04](https://github.com/alura-cursos/csharp-01/archive/refs/heads/aula_4.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-01/tree/aula_4)
+
+### Aula 5 - Apresentação do desafio - Vídeo 1
+
+Transcrição  
+Guilherme: Chegou a hora de colocar o que aprendemos nesse treinamento em prática. Agora é com você!
+
+O seu desafio será criar a nossa opção 4, que deverá exibir a média de uma banda. Para isso, será necessário criar uma função com essa responsabilidade, assim como fizemos nas ações anteriores.
+
+Nela, você deverá limpar o terminal, exibir o título (com os asteriscos, assim como fizemos anteriormente) e perguntar para a pessoa que estiver usando a aplicação qual banda ela deseja consultar a média das notas.
+
+Será necessário verificar se a banda consultada de fato está presente em nosso dicionário e, em caso positivo, realizar o cálculo da média com base na quantidade de notas que aquela banda possui.
+
+Boa sorte no desafio! Caso encontre alguma dificuldade, nos próximos vídeos irei mostrar como resolver esse desafio passo a passo.
+
+### Aula 5 - Resolvendo o desafio #1 - Vídeo 2
+
+Transcrição  
+Daniel: Aproveitando a saída do Gui, vou tentar resolver ao menos uma parte do código, a parte mais difícil para ele.
+
+Precisamos fazer a opção 4, que consiste em exibir a média de uma banda. Com a opção 3, já vimos que precisamos primeiro obter o nome da banda e verificar dentro do dicionário se ela existe. Em caso positivo, nós calculamos a média; do contrário, voltamos ao menu principal.
+
+Vamos fazer as mesmas coisas que fizemos nas outras opções, começando pela criação de uma função chamada ExibirMedia() na linha 125.
+
+```C#
+void ExibirMedia() {
+  // código aqui
+}
+```
+
+Faremos o mesmo passo a passo que fizemos nas outras opções. Primeiro, limparemos a tela e exibiremos um título; em seguida, digitaremos o nome da banda que queremos ver a média; e, então, verificaremos se a banda existe no dicionário.
+
+Vou copiar o código das linhas 102 até 105, que limpa o console e exibe o título da opção, alterando esse título para "Exibir média da banda". Lembrando que, às vezes, copiar e colar código não é uma boa prática.
+
+Também alteraremos o texto para "Digite o nome da banda que deseja exibir a média:".
+
+```C#
+void ExibirMedia() {
+    Console.Clear();
+    ExibirTituloDaOpcao("Exibir média da banda");
+    Console.Write("Digite o nome da banda que deseja exibir a média: ");
+    string nomeDaBanda = Console.ReadLine();
+}
+```
+
+Vamos capturar o nomeDaBanda por meio do console.ReadLine() e, em seguida, faremos um if verificando se a chave nomeDaBanda existe em nosso dicionário bandasRegistradas. O que será feito nesse if deixaremos para o Guilherme desenvolver.
+
+```C#
+if (BandasRegistradas.ContainsKey(nomeBanda)) {
+    // Gui, se vira aí
+} else {
+    // código para informar que a banda não foi encontrada
+}
+```
+
+No caso else, vamos exibir uma informação de que essa banda não existe. Novamente, copiaremos um trecho de código que criamos anteriormente, entre as linhas 117 e 121.
+
+```C#
+else {
+  Console.WriteLine($"\n A banda {nomeDaBanda} não foi encontrada.");
+  Console.WriteLine("Digite ma tecla para voltar ao menu principal.");
+  Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Após salvar o código, acredito que já podemos testar, porque a função ExibirMedia() já está sendo chamada nas opções. Vamos executar a aplicação e digitar a opção 4, começando por testar uma banda que não existe, por exemplo, The Bea.
+
+Como resultado, receberemos a mensagem "A banda não foi encontrada", o que significa que nossa validação está funcionando corretamente. Vamos continuar a parte de exibir a média com a ajuda do Guilherme.
+
+### Aula 5 - Resolvendo o desafio #2 - Vídeo 3
+
+Transcrição  
+Guilherme: Caramba, hein? O Daniel deixou a parte mais difícil para mim. Não vou esquecer isso!
+
+Vamos resolver a parte do desafio em que mostraremos, de fato, a média da banda.
+
+Primeira coisa que vamos fazer é pegar todas as notas da banda que foi registrada. Por quê? Se a banda registrada estiver no nosso dicionário, ou seja, aquela banda existe e já tem algumas notas, precisaremos pegar a lista daquelas notas.
+
+Criaremos uma lista de valores inteiros chamada notasDaBanda que será igual ao nosso dicionário, bandasRegistradas com a chave com o nome da banda que queremos, de fato, visualizar todas as notas, nesse caso [nomeDaBanda].
+
+```C#
+List<int> notasDaBanda = bandasRegistradas[nomeDaBanda];
+```
+
+Assim, pegamos toda aquela lista de notas de uma banda que existe no nosso dicionário e atribuímos a essa variável chamada notasDaBanda. Agora vamos exibir com Console.WriteLine. Mas como, se não fizemos nenhum cálculo para saber os valores ou a quantidade de notas, e todo o cálculo envolvido na média?
+
+Existem várias funções no C# que permitem fazer cálculos a partir de uma lista de inteiros, como Count() (para contar) e Sum() (para somar todos os valores). Existe, inclusive, uma função para exibir a média de um determinado valor: notasDaBanda.Average().
+
+```C#
+Console.WriteLine(notasDaBanda.Average());
+```
+
+Com isso, já exibimos a média das notas. Mas não queremos exibir só a média, mas também uma mensagem informativa. Para isso, usaremos uma interpolação de string com o sinal$ e, para deixar visualmente mais agradável, adicionaremos um \n no início da mensagem, enviando-a para a linha de baixo.
+
+```C#
+List<int> notasDaBanda = bandasRegistradas[nomeDaBanda];
+Console.WriteLine($"\nA média da banda {nomeDaBanda} é {notasDaBanda.Average()}.");
+```
+
+Adicionaremos um Console.WriteLine() com a mensagem "Digite uma tecla para voltar ao menu principal." e um Console.ReadKey() que completa essa ação. Depois que a pessoa pressionou alguma tecla, limparemos nosso console com Console.Clear() e voltaremos para o menu principal com ExibirOpcoesDoMenu().
+
+```C#
+Console.WriteLine("Digite uma tecla para voltar ao menu principal.");
+Console.ReadKey();
+Console.Clear();
+ExibirOpcoesDoMenu();
+```
+
+O código completo ficará assim:
+
+```C#
+List<int> notasDaBanda = bandasRegistradas[nomeDaBanda];
+Console.WriteLine($"\nA média da banda {nomeDaBanda} é {notasDaBanda.Average()}.");
+Console.WriteLine("Digite uma tecla para voltar ao menu principal.");
+Console.ReadKey();
+Console.Clear();
+ExibirOpcoesDoMenu();
+```
+
+Então, o que fizemos? Vamos utilizar o cálculo da média, algo muito comum de acontecer em diversos programas e, por isso, já existe uma função na linguagem. Não preciso, por exemplo, somar as notas com notasDaBanda.Sum() e contar a quantidade de notas com notasDaBanda.Count() para então calcular a média, já temos um método que faz esse cálculo.
+
+Aqui temos uma lição importante. Sempre que formos utilizar um método que é muito comum, como calcular média, calcular quantos elementos existem em uma lista, geralmente vai existir na documentação oficial algum método que já faz isso.
+
+Vamos executar esse programa. Selecionaremos a opção 4 e, após o prompt "Digite o nome da banda que deseja exibir a média:" passaremos "Linkin Park", que já tem algumas notas cadastradas. Pressionando Enter, teremos a mensagem "A média da banda Linkin Park é 8".
+
+Vamos atribuir mais uma nota para o Linkin Park para verificar se esse cálculo está sendo realizado de forma correta. Para avaliar uma banda usamos a opção 3. Após o prompt "Digite o nome da banda que você deseja avaliar:" passaremos novamente o Linkin Park seguido de uma nota 9.
+
+Pressionando "Enter!, teremos a mensagem "A nota 9 foi registrada com sucesso para a banda Linkin Park".
+
+Acessaremos mais uma vez a opção 4, passaremos o Linkin Park para exibir a média, com o retorno 8,25. Temos então a média das bandas sendo exibida na nossa aplicação.
+
+### Aula 5 - Projeto final
+
+Aqui você pode [baixar o zip da aula 05](https://github.com/alura-cursos/csharp-01/archive/refs/heads/aula_5.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-01/tree/aula_5)
+
+### Aula 5 - Parabéns!
+
+Chegou o momento de celebrar sua grande conquista!
+
+Neste curso de C#, todas as barreiras foram vencidas e você aprofundou ainda mais seus conhecimentos em programação orientada a objetos, estruturas de dados, algoritmos e muito mais.
+
+Você aprendeu desde a instalação do ambiente de desenvolvimento até a criação de programas completos com telas de interação.
+
+E o melhor de tudo é que agora você faz parte da comunidade de pessoas desenvolvedoras C# e tem acesso a um vasto ecossistema de ferramentas, documentação e suporte técnico.
+
+Nossa… Quanta coisa legal!
+
+"A persistência é o caminho do êxito." (Charles Chaplin)
+
+Agora, dê uma nota para o curso, faça download do seu certificado e comemore bastante essa conquista.
+
+### Aula 5 - Referências
+
+1. [O que é o C#](https://www.hipsters.tech/o-que-e-o-c/) (gratuito, português, vídeo)
+
+> Vídeo que introduz informações sobre a linguagem desenvolvida pela Microsoft como parte da plataforma .NET.
+
+2. [Guia de Carreira em C#](https://youtu.be/RtwvUNvabPA?si=h3pWE9MJO01xKKq1) (gratuito, português, vídeo)
+
+> Vídeo que apresenta conceitos sobre a linguagem de programação C#, como pode ser utilizada e um guia de estudos
+
+3. [Um tour pela linguagem C#](https://learn.microsoft.com/pt-br/dotnet/csharp/tour-of-csharp/) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta um guia inicial da linguagem C#, recursos básicos e primeiras informações.
+
+4. [Tipos e membros de C#](https://learn.microsoft.com/pt-br/dotnet/csharp/fundamentals/types/) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta um guia sobre os tipos mais utilizados no C# e exemplos de implementação.
+
+5. [Instruções e loops em C#](https://learn.microsoft.com/pt-br/dotnet/csharp/tour-of-csharp/tutorials/branches-and-loops-local) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre loops e exemplos de implementação.
+
+### Aula 5 - Conclusão - Vídeo
+
+Transcrição  
+Guilherme: Parabéns por finalizar mais um curso da Alura! Vocês viram que o Daniel deixou a parte mais difícil do desafio para mim, não é?
+
+Daniel: Foi uma brincadeira, não façam isso com outras pessoas!
+
+Guilherme: Daniel, com os conhecimentos que tivemos nesse curso, o que somos capazes de desenvolver e aplicar? E quais são os próximos passos em C#?
+
+Daniel: Falamos um pouco sobre isso anteriormente. O ecossistema .NET é muito abrangente, então você poderá, na sua carreira, desenvolver para celular, web, console ou desktops. O próximo passo agora é o aprendizado de orientação a objetos.
+
+Guilherme: Não deixe de acessar o Discord da Alura, interagir com outras pessoas que estão aprendendo e se desenvolvendo, além de pessoas que já são seniors e trabalham com C#. Assim, você aprofundará ainda mais os seus conhecimentos aqui com a gente!
+
+Bons estudos!
