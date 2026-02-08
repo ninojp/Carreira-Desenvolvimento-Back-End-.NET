@@ -1,5 +1,25 @@
-﻿ExerciciosPraticos.PraticandoAula3.Main();
+﻿void ExibirLogo()
+{
+    Console.WriteLine("\n");
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine(@"Curso Alura C#: criando sua primeira aplicação - Exercícios práticos!
 
-ExerciciosPraticos.Praticando.Main();
+    ██████╗░██████╗░░█████╗░████████╗██╗░█████╗░░█████╗░███╗░░██╗██████╗░░█████╗░  ░█████╗░░░░██╗░██╗░
+    ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║██╔══██╗██╔══██╗████╗░██║██╔══██╗██╔══██╗  ██╔══██╗██████████╗
+    ██████╔╝██████╔╝███████║░░░██║░░░██║██║░░╚═╝███████║██╔██╗██║██║░░██║██║░░██║  ██║░░╚═╝╚═██╔═██╔═╝
+    ██╔═══╝░██╔══██╗██╔══██║░░░██║░░░██║██║░░██╗██╔══██║██║╚████║██║░░██║██║░░██║  ██║░░██╗██████████╗
+    ██║░░░░░██║░░██║██║░░██║░░░██║░░░██║╚█████╔╝██║░░██║██║░╚███║██████╔╝╚█████╔╝  ╚█████╔╝╚██╔═██╔══╝
+    ╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═════╝░░╚════╝░  ░╚════╝░░╚═╝░╚═╝░░░
 
-JogoDoNumeroSecreto.Jogar();
+    ");
+    Console.ResetColor();
+}
+ExibirLogo();
+//=======================================================================================================
+//ExerciciosPraticos.PraticandoAula2.Main();
+
+//JogoDoNumeroSecreto.Jogar();
+
+//ExerciciosPraticos.PraticandoAula3.Main();
+
+ExerciciosPraticos.PraticandoAula4.Main();

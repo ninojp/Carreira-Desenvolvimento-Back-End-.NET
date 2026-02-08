@@ -6,20 +6,10 @@ using System.Threading.Tasks;
 
 namespace ExerciciosPraticos
 {
-    internal class Praticando
+    internal class PraticandoAula2
     {
         public static void Main()
         {
-            Console.WriteLine("\n");
-            Console.WriteLine(@"Arquivo de exercícios práticos! Aula 2
-
-██████╗░██████╗░░█████╗░████████╗██╗░█████╗░░█████╗░███╗░░██╗██████╗░░█████╗░  ░█████╗░░░░██╗░██╗░
-██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║██╔══██╗██╔══██╗████╗░██║██╔══██╗██╔══██╗  ██╔══██╗██████████╗
-██████╔╝██████╔╝███████║░░░██║░░░██║██║░░╚═╝███████║██╔██╗██║██║░░██║██║░░██║  ██║░░╚═╝╚═██╔═██╔═╝
-██╔═══╝░██╔══██╗██╔══██║░░░██║░░░██║██║░░██╗██╔══██║██║╚████║██║░░██║██║░░██║  ██║░░██╗██████████╗
-██║░░░░░██║░░██║██║░░██║░░░██║░░░██║╚█████╔╝██║░░██║██║░╚███║██████╔╝╚█████╔╝  ╚█████╔╝╚██╔═██╔══╝
-╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═════╝░░╚════╝░  ░╚════╝░░╚═╝░╚═╝░░░
-             ");
             //1. Criar uma variável chamada notaMedia e atribua um valor inteiro a ela. Caso seu valor seja maior ou igual a 5, escreva na tela "Nota suficiente para aprovação".
             int notaMedia = 5;
             if (notaMedia >= 5)

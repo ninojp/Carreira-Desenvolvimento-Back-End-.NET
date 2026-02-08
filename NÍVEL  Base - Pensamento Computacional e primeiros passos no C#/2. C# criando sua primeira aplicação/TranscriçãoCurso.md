@@ -1093,7 +1093,7 @@ Nesta aula:
 Na próxima aula:  
 Vamos aplicar em nosso projeto uma estrutura de dados muito usada no dia a dia de quem trabalha com desenvolvimento de software!
 
-## Aula 3 - Listas e Loops no C#
+## Aula 3 - Listas e Loops no C`#`
 
 ### Aula 3 - Projeto da aula anterior
 
@@ -1209,7 +1209,7 @@ void RegistrarBanda()
      Console.WriteLine("Registro de bandas");
      Console.Write("Digite o nome da banda que deseja registrar: ");
      string nomeDaBanda = Console.ReadLine()!;
-     Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");	 
+     Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
      Thread.Sleep(2000);
      Console.Clear();
      ExibirOpcoesDoMenu();
@@ -1711,7 +1711,6 @@ for (int i = 0; i < bandas.Count; i++) { Console.WriteLine(bandas[i]); }
 > Isso aí! Com esse código, a saída no console será a mesma do foreach mostrado acima. A variável de controle foi definida como int e iniciado com o valor 0 para exibir o primeiro elemento da lista. Em seguida, o controle do fluxo para quando i for menor que o valor de elementos da lista e a cada repetição, incrementamos 1 ao valor de i.
 
 ### Aula 3 - Desafio: hora da prática
- Próxima Atividade
 
 A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
 
@@ -1730,7 +1729,7 @@ Boa sorte nos estudos!
 
 ### Aula 3 - Faça como eu fiz
 
-Crie uma lista de inteiros utilizando o List``<int>`` e utilize o for e o foreach para iterar sobre essa lista e exibir apenas os números pares.
+Crie uma lista de inteiros utilizando o List`<int>` e utilize o for e o foreach para iterar sobre essa lista e exibir apenas os números pares.
 
 No for, comece o índice em 0 e incremente a cada iteração. Defina a condição de continuação do loop como i < numeros.Count, ou seja, o loop continuará enquanto o valor de i for menor do que o número de elementos na lista. Acesse o valor de cada elemento utilizando a sintaxe numeros[i].
 
@@ -1788,12 +1787,922 @@ Nesta aula aprendemos como criar e percorer uma lista de determinado tipo de dad
 
 ## Aula 4 - Dicionários e avaliação das bandas
 
-### Aula 4 -  - Vídeo 1
-### Aula 4 -  - Vídeo 2
-### Aula 4 -  - Vídeo 3
-### Aula 4 -  - Vídeo 4
-### Aula 4 -  - Vídeo 5
-### Aula 4 -  - Vídeo 6
-### Aula 4 -  - Vídeo 7
-### Aula 4 -  - Vídeo 8
-### Aula 4 -  - Vídeo 9
+### Aula 4 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da aula 03](https://github.com/alura-cursos/csharp-01/archive/refs/heads/aula_3.zip) ou acessar os [arquivos no Github](https://github.com/alura-cursos/csharp-01/tree/aula_3)!
+
+### Aula 4 - Ajustando exibição do título - Vídeo 1
+
+Transcrição  
+Guilherme: Nosso projeto está legal, mas tem um ponto preocupante. À medida que nossa aplicação cresce, algumas ações estão adquirindo o chamado Code Smells.
+
+Daniel: Um "cheiro estranho".
+
+Guilherme: Exatamente. Vamos mostrar.
+
+No Visual Studio, selecionaremos a opção 2 do nosso projeto e pressionaremos "Enter". Veremos o seguinte retorno:
+
+Exibindo todas as bandas registradas
+
+Banda: U2
+
+Banda: The Beatles
+
+Banda: Calypso
+
+Digite uma tecla para voltar ao menu principal
+
+Existe uma ênfase com os asteriscos entre a frase, ficou bem legal.
+
+Se digitarmos qualquer tecla e selecionarmos a opção 1, veremos no retorno do Registro de Bandas que existem asteriscos a mais.
+
+Exibindo todas as bandas registradas
+
+Digite o nome da banda que deseja registrar:
+
+Neste menu, registraremos uma nova banda chamada "Nova banda" e pressionaremos "Enter". Veremos um aviso informando que a nova banda foi registrada.
+
+Queremos exibir para todas as opções (exceto para a 1, que sai do sistema) um texto envolto pelos caracteres compatíveis com ele. Não queremos passar manualmente estes caracteres.
+
+Vamos mostrar no arquivo Program.cs as duas opções. No registro de banda, temos três linhas, uma com o texto do registro, e duas com linhas de asteriscos.
+
+```C#
+void RegistrarBanda()
+{
+    Console.Clear();
+    Console.WriteLine("**********************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("**********************\n");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    listaDasBandas.Add(nomeDaBanda);
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Vamos tirar manualmente três asteriscos da linha superior para manter ambos com a mesma quantidade de caracteres.
+
+```C#
+void RegistrarBanda()
+{
+    Console.Clear();
+    Console.WriteLine("*******************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("*******************\n");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    listaDasBandas.Add(nomeDaBanda);
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Já no código que exibe as bandas, temos muitos caracteres.
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    Console.WriteLine("************************************");
+    Console.WriteLine("Exibindo todas as bandas registradas");
+    Console.WriteLine("************************************\n");
+// Código omitido
+}
+```
+
+Vamos reparar que as três linhas deste código e do anterior são praticamente iguais. A única coisa que muda é o texto.
+
+Daniel: E a quantidade de asteriscos, que é uma função do tamanho desse título.
+
+Guilherme: Exatamente. E pensando bem, nosso projeto tem duas opções já feitas, mas não sabemos quantas opções poderemos ter no futuro. Poderão ser quatro, poderão ser cinquenta.
+
+Queremos manter um padrão para a nossa aplicação. Quando chegamos em cenários como este, em que temos que contar manualmente caracteres e utilizar "Ctrl+C" e "Ctrl+V" com frequência, temos que refletir e refatorar nossa aplicação. Vamos fazer isso agora.
+
+Para isso, criaremos uma função onde enviamos um título, seja ele "Registro das bandas", "Classificando as bandas", "Exibindo a média das bandas" ou qualquer outro. Não importará se alterarmos esse registro, pois ele contará sozinho a quantidade de caracteres e criará esse layout para nós com o Console.Write().
+
+Daniel: Boa.
+
+Guilherme: Para fazer isso, vamos até o final do arquivo e posicionaremos o cursor abaixo do bloco MostrarBandasRegistradas()(). Pressionaremos "Enter" duas vezes para abrir espaço e criaremos uma função void chamada ExibirTituloDaOpcao() que receberá um parâmetro titulo do tipo string.
+
+Abriremos um bloco de chaves e daremos "Enter".
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+
+}
+```
+
+Vamos entender o que estamos fazendo: precisamos de um Console.Write() com a quantidade de caracteres correspondente ao título que informamos. Para isso, no interior do bloco de chaves recém-aberto, criaremos uma variável chamada quantidadeDeLetras que será igual a esse titulo (independente de qual seja).
+
+Queremos pegar a quantidade de caracteres do titulo, então, à sua esquerda, vamos adicionar um ponto junto à palavra Length.
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+}
+```
+
+Já sabemos quantas letras temos. Agora, precisamos criar a linha com os asteriscos. O que podemos fazer, Daniel?
+
+Daniel: Poderíamos fazer um loop (laço), que aprendemos anteriormente, onde faríamos um for de 1 até a quantidade de letras do titulo e imprimiríamos os asteriscos, um por um, usando o Console.Write().
+
+Entretanto, há uma maneira mais elegante de fazer isso. Podemos criar uma variável que será essa linha de asteriscos, que será do tipo string.
+
+Guilherme: Qual nome podemos dar a ela?
+
+Daniel: Pode ser asteriscos.
+
+Guilherme: Vamos adicionar o sinal de igual. O que colocamos à frente dele?
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos =
+}
+```
+
+Daniel: Queremos pegar determinada quantidade de asteriscos e adicioná-la numa string que será inicialmente vazia. Adicionaremos à sua esquerda uma quantidade de asteriscos com este valor de quantidade de letras.
+
+Pode criar uma string vazia com aspas simples ('') ou com string.Empty. Dá na mesma.
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty;
+}
+```
+
+Guilherme: Com este comando, estamos pedindo que seja recolhida uma string vazia.
+
+Daniel: Isso. Ela tem a função de colocar uma quantidade de caracteres à esquerda com o PadLeft() ou à direita com o PadRight().
+
+Guilherme: Se acrescentarmos um ponto à direita do string.Empty, será exibida uma lista flutuante do Visual Studio com diversas opções de ações que podemos executar. Vamos adicionar o PadLeft() para adicionarmos caracteres à esquerda.
+
+Daniel: Isso.
+
+Guilherme: Abriremos um par de parênteses, e veremos outra lista flutuante com mais opções.
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty.PadLeft();
+}
+```
+
+Daniel: A função PadLeft() pede dois argumentos: a quantidade de caracteres a serem inseridos à esquerda e qual caractere será.
+
+Guilherme: Boa. No nosso caso, o primeiro será quantidadeDeLetras, como já sabemos. E qual será o segundo?
+
+Daniel: Agora, entra em cena a observação que tratamos anteriormente: não queremos uma string e sim um caractere. Para estes casos, utilizaremos aspas simples ('') e entre elas, o asterisco.
+
+Guilherme: Certo. Vamos colocar ponto e vírgula no final.
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+}
+```
+
+Teoricamente, já temos o que precisamos exibir no console: a quantidadeDeLetras passada para asteriscos e o título que aparecerá de fato.
+
+Adicionaremos três ConsoleWriteLine()s: no primeiro, adicionaremos o asteriscos no segundo, colocaremos o titulo e no terceiro adicionaremos novamente o asteriscos.
+
+No final da última linha de asteriscos, precisamos pular uma linha. Temos duas opções para realizar esta operação:
+
+Adicionar um ConsoleWriteLine() vazio abaixo da última linha de asteriscos
+Adicionar dentro dos parênteses, à direita de asteriscos, um sinal de mais e concatenar junto ao caracter de quebra de linha \n entre aspas duplas.
+Vamos realizar a segunda opção.
+
+```C#
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+    ConsoleWriteLine(asteriscos);
+    ConsoleWriteLine(titulo);
+    ConsoleWriteLine(asteriscos + "\n");
+}
+```
+
+Antes de testar, vamos alterar as duas funções que temos para que tenham esta nova estrutura.
+
+Começando com o RegistrarBanda(). Vamos substituir as duas linhas de asteriscos e a linha do título pela função ExibirTituloDaOpcao(), que conterá entre parênteses a string do título anterior ("Registro das bandas").
+
+```C#
+void RegistrarBanda()
+{
+    Console.Clear();
+    ExibirTituloDaOpcao("Registro das bandas");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    bandasRegistradas.Add(nomeDaBanda, new List<int>());
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(4000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Faremos o mesmo processo em MostrarBandasRegistradas().
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    ExibirTituloDaOpcao("Exibindo todas as bandas registradas");
+// Código omitido
+}
+```
+
+Vamos testar o código e fazer um teste extra. Vamos alterar esse texto depois para ver se ele imprimirá de fato a quantidade de caracteres que esperamos.
+
+Vamos clicar no botão de rodar a aplicação, na barra superior do Visual Studio. Após a execução, veremos a tela da aplicação. Qual opção testaremos primeiro?
+
+Daniel: A 2. Já temos bandas registradas.
+
+Guilherme: Digitaremos "2" e pressionaremos "Enter". No retorno, veremos que, visualmente, a quantidade de asteriscos parece se igualar à quantidade de caracteres do título.
+
+Pressionaremos qualquer tecla e voltaremos à tela anterior, onde escolheremos a opção 1. No retorno, teremos a mesma impressão.
+
+Somos pessoas céticas, portanto, mudaremos o título da função MostrarBandasRegistradas() de "Exibindo todas as bandas registradas" para "Exibindo todas as bandas registradas na nossa aplicação".
+
+```C#
+void MostrarBandasRegistradas()
+{
+    Console.Clear();
+    ExibirTituloDaOpcao("Exibindo todas as bandas registradas na nossa aplicação");
+
+// Código omitido
+
+}
+```
+
+Vamos rodar a aplicação novamente e selecionar a opção 2. O resultado será conforme esperado.
+
+Nossos menus estão funcionando.
+
+Após refatorar o código para deixá-lo mais bonito, nosso desafio é trabalhar na opção 3, na qual avaliaremos uma banda e determinar uma nota para ela.
+
+Daniel: Boa. Vamos lá.
+
+### Aula 4 - Criando o dicionário - Vídeo 2
+
+Transcrição  
+Daniel: Gui, agora vamos começar a avaliar as bandas, atribuindo notas a elas.
+
+Guilherme: Quero saber qual nota você dará para algumas bandas. Não citarei nomes. As pessoas da produção também estão ansiosas para saber.
+
+Com a estrutura de código que temos, não sei se será possível salvar uma ou mais notas para cada banda. Temos uma lista de bandas:
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"};  
+```
+
+Temos mais elementos nessa lista, mas estes novos elementos não são notas para uma banda e, sim, mais bandas.
+
+Daniel: Precisamos de uma estrutura com a qual seja possível dar uma determinada quantidade de notas para uma banda, por exemplo, "U2", considerando que para outra, como "The Beatles", teremos uma quantidade diferente de notas.
+
+Poderíamos pensar em uma estrutura de matriz, por exemplo.
+
+Guilherme: Faz sentido. Eu abri uma planilha no Google Sheets (você não precisa fazer o mesmo) apenas para entendermos nosso cenário. A nossa lista de bandas pode aumentar não em relação às notas, mas às bandas.
+
+```C#
+A	B	C	D	E	F	G
+1	lista de bandas	U2	Beatles	Pink Floyd			
+2							
+3							
+4							
+5							
+6							
+7							
+8							
+9							
+10							
+```
+
+Então, nossa proposta é que o U2 tenha diversas notas e Beatles tenha diversas notas, que podem ser em quantidade maior ou menor que para U2 ou Pink Floyd. Cada uma dessas bandas podem conter notas específicas.
+
+A estrutura de lista não servirá para o que estamos planejando. Vamos trabalhar com dicionário. No dicionário, teremos sempre uma chave, que são os nomes das bandas. Por exemplo, U2 será uma chave.
+
+Abaixo da chave, teremos vários valores. A primeira nota do U2 poderia ser 10, seguido de 8, 9, 5, 6 e assim por diante.
+
+```C#
+A	B	C	D	E	F	G
+1	lista de bandas	U2	Beatles	Pink Floyd			
+2							
+3							
+4	Dicionário						
+5	Chave	U2	Beatles	Pink Floyd			
+6	Valores	10					
+7		8					
+8		9					
+9		5					
+10		0					
+11		6					
+```
+
+Qual nota daremos para os Beatles?
+
+Daniel: Pode dar 10.
+
+Guilherme: Fiquei com medo de você dar uma nota menor. Estou até vestido com a camiseta deles. Enfim, brincadeiras à parte, vamos atribuir alguns valores aleatórios: 10, 6, 7, 8, 9 e assim por diante.
+
+```C#
+A	B	C	D	E	F	G
+1	lista de bandas	U2	Beatles	Pink Floyd			
+2							
+3							
+4	Dicionário						
+5	Chave	U2	Beatles	Pink Floyd			
+6	Valores	10	10				
+7		8	6				
+8		9	7				
+9		5	8				
+10		0	9				
+11		6					
+```
+
+Vamos supor que o Pink Floyd tenha uma quantidade menor de notas: 10, 6 e 9.
+
+```C#
+A	B	C	D	E	F	G
+1	lista de bandas	U2	Beatles	Pink Floyd			
+2							
+3							
+4	Dicionário						
+5	Chave	U2	Beatles	Pink Floyd			
+6	Valores	10	10	10			
+7		8	6	6			
+8		9	7	9			
+9		5	8				
+10		0	9				
+11		6					
+```
+
+Repare que agora conseguimos atribuir mais notas para cada uma das bandas. Essas notas não são condicionadas a uma quantidade mínima.
+
+Já sabemos trabalhar com listas. Lembrando que, nas listas, precisamos definir as quantidades, porque elas são fortemente tipadas. Agora, vamos trabalhar com dicionários.
+
+As chaves serão os nomes das bandas (strings) e os valores serão uma lista de números.
+
+Daniel: O que você falou é importante, sobre as listas serem fortemente tipadas. Significa que precisamos dizer o tipo:
+
+Da estrutura: dicionários.
+
+Da chave: string.
+
+Dos valores: notas.
+
+Guilherme: Vamos fazer isso no nosso código. Na linha 3 do nosso arquivo Programa.cs, temos a instância da lista das bandas. Vamos comentar essa linha.
+
+```C#
+// Screen Sound
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+//List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"};  
+```
+
+Isso afetará algumas partes do nosso código que estavam usando essa lista, mas depois vamos refatorar e aperfeiçoar esses trechos. O primeiro passo é refatorar um dicionário, Dictionary<>. Nele, precisamos definir: o tipo de chave ou "Tkey", string; e os valores, "TValue", que são uma lista.
+
+Definiremos essa lista de valores, List<>, como uma lista de inteiros, int. Em seguida, nomearemos esse dicionário: bandasRegistradas.
+
+```C#
+Dictionary<string, List<int>> bandasRegistradas
+```
+
+Daniel: Ainda é possível registrar as bandas, mas estamos usando uma nova estrutura.
+
+Guilherme: Um autocomplete foi sugerido para criarmos o dicionário de fato.
+
+```C#
+Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>();
+```
+
+Daniel: Um dicionário vazio foi criado. É como a planilha vazia do começo desse vídeo, sem nenhum valor.
+
+Guilherme: Nosso próximo desafio é refatorar algumas partes da nossa aplicação, porque, por exemplo, na linha 57, o listaDasBandas não existe mais. Temos outra estrutura.
+
+```C#
+    string nomeDaBanda = Console.ReadLine()!;
+    listaDasBandas.Add(nomeDaBanda);
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+No foreach(), onde exibíamos as bandas, também precisaremos refarorar.
+
+```C#
+foreach (string banda in listaDasBandas)
+```
+
+Daniel: Faremos isso no próximo vídeo.
+
+### Aula 4 - Ajustando para o dicionário - Vídeo 3
+
+Transcrição  
+Guilherme: Agora que criamos a estrutura do dicionário, temos que refatorar nosso código, porque estávamos usando lista. A linha com listaDasBandas já não faz mais sentido, podemos apagá-la.
+
+```C#
+Console.Clear();
+    Console.WriteLine("**********************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("**********************\n");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    listaDasBandas.Add(nomeDaBanda);
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+A ideia é atribuir no dicionário o conteúdo que estávamos atribuindo na lista. Como podemos fazer isso, Daniel?
+
+Daniel: Vamos usar a variável bandas. O dicionário tem um método chamado .Add(), em que adicionaremos dois argumentos: a chave e a lista de notas. Não há nenhuma nota para avaliar a primeira banda. Então, a chave é nomeDaBanda e a lista será vazia.
+
+```C#
+Console.Clear();
+    Console.WriteLine("**********************");
+    Console.WriteLine("Registro de bandas");
+    Console.WriteLine("**********************\n");
+    Console.Write("Digite o nome da banda que deseja registrar: ");
+    string nomeDaBanda = Console.ReadLine()!;
+    bandasRegistradas.Add(nomeDaBanda, new List<int> {1});
+    Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+    Thread.Sleep(2000);
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+}
+```
+
+Guilherme: É interessante que o RegistrarBanda() está respeitando os princípios de boas práticas de programação, porque estamos apenas registrando uma banda. Não estamos atribuindo notas a ela. Quer dizer, estamos instanciando: existe uma banda e ela não tem nenhuma nota ainda.
+
+Registrar notas não faz parte do RegistrarBanda. São funções diferentes, sendo que a "registrar notas" nós criaremos logo mais.
+
+Em relação ao MostrarBandasRegistradas(), nós temos um problema. Tínhamos um foreach() que indicava: para cada banda em listaDasBandas. Agora, será: para cada banda em bandasRegistradas.
+
+```C#
+foreach (string banda in bandasRegistradas) 
+```
+
+Mas, fazendo apenas isso, o foreach() não entende a conversão do dicionário. Precisamos, de alguma maneira, pegar apenas as chaves. Lembrando que, na nossa aplicação, temos as chaves que são os nomes das bandas;
+
+```C#
+A	B	C	D	E	F	G
+1	lista de bandas	U2	Beatles	Pink Floyd			
+2							
+3							
+4	Dicionário						
+5	Chave	U2	Beatles	Pink Floyd			
+6	Valores	10	10	10			
+7		8	6	6			
+8		9	7	9			
+9		5	8				
+10		0	9				
+11		6					
+```
+
+Vamos pegar apenas os valores das chaves para exibir os nomes das bandas. Como podemos fazer isso no Visual Studio?
+
+Daniel: Esse dicionário também tem uma informação chamada chaves, isto é, .keys. Se trata de uma lista que contém as chaves cadastradas no dicionário.
+
+```C#
+foreach (string banda in bandasRegistradas.Keys)
+```
+
+Guilherme: Basta incluir o .keys e já não teremos nenhum erro. Vamos testar se está funcionando. Lembrando que agora não temos nenhuma banda registrada. Vamos executar o código.
+
+Daniel: Podemos cadastrar uma banda.
+
+Guilherme: Vamos registrar uma banda. Alguma sugestão, Daniel?
+
+```C#
+*******************
+Registro das bandas
+*******************
+
+Digite o nome da banda que deseja registrar: 
+```
+
+Daniel: Podemos registrar a banda Calypso.
+
+```C#
+*******************
+Registro das bandas
+*******************
+
+Digite o nome da banda que deseja registrar: Calypso
+```
+
+A banda Calypso foi registrada com sucesso!
+
+Guilherme: A banda Calypso foi registrada, então, o código funcionou. Vamos registrar mais uma para garantir que está tudo certo.
+
+```C#
+*******************
+Registro das bandas
+*******************
+
+Digite o nome da banda que deseja registrar: Pink Floyd
+```
+
+A banda Pink Floyd foi registrada com sucesso!
+
+Para visualizar todas as bandas, basta apertar "Enter".
+
+*******************************************************
+Exibindo todas as bandas registradas na nossa aplicação
+*******************************************************
+
+Banda: Calypso
+
+Banda: Pink Floyd
+
+Digite uma tecla para voltar ao menu principal
+
+Temos as bandas Calypso e Pink Floyd. Pressionando uma tecla, conseguimos retornar ao menu principal. Já no menu principal, basta apertar -1 para sair do programa. Por fim, apertaremos o ícone de "x" na lateral direita para fechar a tela.
+
+Daniel: Vale a pena inicializar o dicionário, assim não será ficar registrando as bandas.
+
+Guilherme: No arquivo Programa.cs, temos o nosso dicionário.
+
+```C#
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+//List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"}; 
+Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>(); 
+```
+
+A ideia é criar duas bandas. Para isso, vamos escrever bandasRegistradas.Add(), passando o nome de uma banda, por exemplo, Linkin Park, com as notas: 10, 8 e 6.
+
+```C#
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+//List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"}; 
+Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>(); 
+bandasRegistradas.Add("Linkin Park", newList<int> {10, 8, 6});
+```
+
+Vamos registrar a segunda, Beatles, sem nenhuma nota.
+
+```C#
+string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
+//List<string> listaDasBandas = new List<string> { "U2", "The Beatles", "Calypso"}; 
+Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>(); 
+bandasRegistradas.Add("Linkin Park", newList<int> {10, 8, 6});
+bandasRegistradas.Add("The Beatles", newList<int> ());
+```
+
+Daniel: Essa construção, que parece um pouco complicada, é igual a que está mais acima no código: quando criamos uma lista de bandas, inicializamos esta lista com chaves. Agora, estamos listando notas, "10, 8 e 9", e depois passamos uma lista vazia.
+
+Guilherme: Executado o código, vamos visualizar as bandas registradas.
+
+```C#
+Boas vindas ao Screen Sound
+
+Digite 1 para registrar uma banda
+Digite 2 para mostrar todas as bandas
+Digite 3 para avaliar uma banda
+Digite 4 para exibir a média de uma banda
+Digite -1 para sair
+```
+
+Digite sua opção: 2
+
+Visualizamos Linkin Park e Bealtes.
+
+```C#
+*******************************************************
+Exibindo todas as bandas registradas na nossa aplicação
+*******************************************************
+
+Banda: Linkin Park
+
+Banda: Beatles
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Nosso próximo desafio é avaliar os Beatles.
+
+### Aula 4 - Avaliando uma banda - Vídeo 4
+
+Transcrição  
+Guilherme: A seguir, trabalharemos na opção 3 para avaliar uma banda. No case 3 da estrutura switch, colocaremos a função avaliarUmaBanda(), mantendo o padrão de nomenclaturas:
+
+```C#
+//...
+case 1: RegistrarBanda();
+        break;
+case 2: MostrarBandasRegistradas();
+        break;
+case 3: AvaliarUmaBanda();
+        break;
+// ...
+```
+
+Essa função ainda não existe. Vamos criá-la ao final do arquivo, antes da chamada a ExibirOpcoesDoMenu():
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+
+}
+// ...
+```
+
+Daniel: Como percebemos que a lógica é um pouco extensa, podemos inserir alguns comentários nessa função para fazer um passo a passo. Primeiro, precisamos que a pessoa digite qual banda ela quer avaliar. Depois, verificamos se a banda realmente existe no dicionário. Por fim, recebemos a nota para registrá-la.
+
+Guilherme: Então, vamos criar três comentários:
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+}
+// ...
+```
+
+Se a banda existir, nós atribuiremos uma nota. Do contrário, exibiremos uma mensagem e voltaremos para o menu principal.
+
+Mantendo o padrão das demais opções, começaremos com o comando Console.Clear() para dar a sensação de que estamos em uma nova janela. Em seguida, exibiremos o título "Avaliar banda":
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+}
+// ...
+```
+
+Vamos salvar e testar se essa parte está funcionando. Ao executar a aplicação, digitaremos a opção 3 e teremos o título "Avaliar banda". O projeto está rodando como esperado! Podemos continuar o desenvolvimento.
+
+O próximo passo é perguntar qual banda a pessoa quer avaliar. Uma opção seria usar o comando Console.WriteLine(), mas optaremos pelo Console.Write(). Assim, a pessoa conseguirá digitar na mesma linha em que o texto foi impresso:
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+}
+// ...
+```
+
+Em seguida, armazenaremos o valor digitado em uma variável do tipo string chamada nomeDaBanda. Assim como fizemos no menu principal, usaremos o comando Console.ReadLine() com uma exclamação ao final, porque não queremos valores nulos:
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+}
+// ...
+```
+
+Daniel: O próximo passo é pesquisar se a banda informada existe no dicionário bandasRegistradas.
+
+Guilherme: Lembrando que o dicionário é composto por chaves e valores. Nós queremos checar se existe uma chave específica com o nome da banda, portanto podemos usar o método ContainsKey(), que retorna um valor true ou false. Se o dicionário contiver a chave informada, atribuiremos um nome. Do contrário, exibiremos uma mensagem e voltaremos ao menu.
+
+Vamos desenvolver essa lógica com uma estrutura if/else:
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+
+        } else
+        {
+
+        }
+}
+// ...
+```
+
+Começaremos pelo bloco else. Se o dicionário não contiver a banda, primeiramente exibiremos uma mensagem, usando uma interpolação de strings:
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+
+        } else
+        {
+                Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+        }
+}
+// ...
+```
+
+Note que incluímos "\n" no início da string para pular uma linha e deixar o texto visualmente mais organizado. Na sequência, podemos ter uma ação similar às demais opções da aplicação. Vamos exibir uma mensagem para que a pessoa pressione uma tecla para voltar ao menu principal, depois chamar Console.ReadKey(). Por fim, invocaremos o Console.Clear() e ExibirOpcoesDoMenu():
+
+```C#
+// ...
+void AvaliarUmaBanda()
+{
+        //digite qual banda deseja avaliar
+        // se a banda existir no dicionario >> atribuir uma nota
+        // senão, volta ao menu principal
+
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+
+        } else
+        {
+                Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+                Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+                Console.ReadKey();
+                Console.Clear();    
+                ExibirOpcoesDoMenu();
+        }
+}
+// ...
+```
+
+Vamos testar se o código funciona até agora. Ao executar o programa, selecionaremos a opção 3. Na tela, além do título, teremos a seguinte mensagem:
+
+Digite o nome da banda que deseja avaliar:
+
+Como exemplo, podemos digitar o nome "Ira", uma banda que não está registrada no dicionário. Ao pressionar "Enter", obtemos a seguinte mensagem:
+
+A banda Ira não foi encontrada!
+
+Digite uma tecla para voltar ao menu principal
+
+Ao pressionar uma tecla, voltaremos ao menu. O código está funcionando como esperado! Nosso próximo desafio é desenvolver o bloco if para atribuir uma nota para a chave no dicionário. É o que exploraremos no próximo vídeo!
+
+### Aula 4 - Escola de programação - Exercício
+
+Uma pessoa está desenvolvendo um programa em C# que gerencia as notas dos alunos em uma escola de programação. Cada aluno está associado a uma lista de linguagens de programação que ele estudou, e outra lista de notas correspondentes a essas linguagens, como ilustra o código abaixo:
+
+```C#
+var notasAlunos = new Dictionary<string, Dictionary<string, List<int>>> {
+    { "Ana", new Dictionary<string, List<int>> {
+        { "C#", new List<int> { 8, 7, 6 } },
+        { "Java", new List<int> { 7, 6, 5 } },
+        { "Python", new List<int> { 9, 8, 8 } }
+    }},
+    { "Maria", new Dictionary<string, List<int>> {
+        { "C#", new List<int> { 6, 5, 4 } },
+        { "Java", new List<int> { 8, 7, 6 } },
+        { "Python", new List<int> { 6, 10, 5 } }
+    }},
+    { "Luiza", new Dictionary<string, List<int>> {
+        { "C#", new List<int> { 2, 3, 10 } },
+        { "Java", new List<int> { 8, 8, 8 } },
+        { "Python", new List<int> { 7, 7, 7 } }
+    }}
+};
+```
+
+Sabendo disso, analise as alternativas abaixo e marque apenas a verdadeira:
+
+Resposta:  
+A média da aluna Maria na disciplina Python é 7.
+
+> Isso aí! Um possível código para descobrir a nota com base no código acima seria:
+
+```C#
+List<int> notasPythonMaria = notasAlunos["Maria"]["Python"];
+double mediaMariaEmPython = notasPythonMaria.Average();
+Console.WriteLine(mediaMariaEmPython);
+```
+
+### Aula 4 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar então?
+
+1. Criar um dicionário que represente um aluno, com uma lista de notas, e mostre a média de suas notas na tela.
+2. Criar um programa que gerencie o estoque de uma loja. Utilize um dicionário para armazenar produtos e suas quantidades em estoque e mostre, a partir do nome de um produto, sua quantidade em estoque.
+3. Crie um programa que implemente um quiz simples de perguntas e respostas. Utilize um dicionário para armazenar as perguntas e as respostas corretas.
+4. Criar um programa que simule um sistema de login utilizando um dicionário para armazenar nomes de usuário e senhas.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma [lista com as possíveis soluções no Github.](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-1-aula-4)
+
+Boa sorte nos estudos!
+
+### Aula 4 - Faça como eu fiz
+
+Para manipular elementos na lista em C#, é necessário acessar os elementos usando índices ou chaves, por exemplo. É possível adicionar elementos usando o método Add(), remover elementos usando o método Remove() ou alterar elementos diretamente através do seu índice ou chave. Confira abaixo:
+
+```C#
+Dictionary<string, List<int>> vendasCarros = new Dictionary<string, List<int>> {
+    { "Bugatti Veyron", new List<int> { 10, 15, 12, 8, 5 } },
+    { "Koenigsegg Agera RS", new List<int> { 2, 3, 5, 6, 7 } },
+    { "Lamborghini Aventador", new List<int> { 20, 18, 22, 24, 16 } },
+    { "Pagani Huayra", new List<int> { 4, 5, 6, 5, 4 } },
+    { "Ferrari LaFerrari", new List<int> { 7, 6, 5, 8, 10 } }
+};
+```
+
+Com base na lista de super carros fornecida acima, onde a chave é o nome do carro e os valores são quantas vezes esse carro foi vendido por ano, calcule a média de uma chave específica.
+
+Bom trabalho!
+
+Opinião do instrutor
+
+Média de uma chave específica  
+Para calcular a média de uma chave específica, podemos utilizar o método Average da classe List do C#, conforme o exemplo abaixo, onde calculamos a média de vendas do Bugatti Veyron, por exemplo:
+
+```C#
+double mediaVendasBugatti = vendasCarros["Bugatti Veyron"].Average();
+Console.WriteLine("Média de vendas do Bugatti Veyron: " + mediaVendasBugatti);
+```
+
+A saída da execução deste console será: Média de vendas do Bugatti Veyron: 10. A imagem abaixo mostra o modelo deste carro:
+
+Foto de um carro esportivo, nas cores preta e laranja. Ele aparenta estar em movimento em uma estrada asfaltada.
+
+Sabendo disso, veja a média de vendas dos outros modelos também!
+
+### Aula 4 - O que aprendemos?
+
+Nesta aula:
+
+- Criamos um dicionário que é uma coleção de pares chave-valor, onde cada chave é única e associada a um valor correspondente. É uma estrutura de dados útil para armazenar informações relacionadas que precisam ser acessadas com base em uma chave específica;
+
+- Aprendemos que no dicionário, as chaves e os valores podem ser de qualquer tipo, desde que a chave seja única. Para acessar o valor de um determinado par chave-valor, basta usar a chave correspondente;
+
+- Desenvolvemos um método com retorno no C# que serve para retornar um valor ou objeto específico para o chamador do método.
+
+Na próxima aula:
+
+Você terá a chance de colocar todo o conhecimento que adquiriu em prática resolvendo um desafio que o professor Daniel preparou. Até lá!
+
+## Aula 5 - 
+
+### Aula 5 -  - Vídeo 1
+### Aula 5 -  - Vídeo 2
+### Aula 5 -  - Vídeo 3
+### Aula 5 -  - Vídeo 4
+### Aula 5 -  - Vídeo 5
+### Aula 5 -  - Vídeo 6
+### Aula 5 -  - Vídeo 7
+### Aula 5 -  - Vídeo 8
+### Aula 5 -  - Vídeo 9
+### Aula 5 -  - Vídeo 0
