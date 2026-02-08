@@ -387,5 +387,386 @@ Neste vídeo, discutimos as conversões entre tipos inteiros e decimais, abordan
 
 Para fixar o conteúdo abordado nos vídeos, é essencial praticar. Disponibilizamos uma série de exercícios para que você possa reforçar os aprendizados adquiridos. Bons estudos!
 
-### Aula 1 -  - Vídeo 1
-### Aula 1 -  - Vídeo 1
+### Aula 1 - Calculando a idade - Desafio 1
+
+Imagine que você está desenvolvendo um sistema para um cadastro de usuários. Uma das funcionalidades desse sistema é calcular a idade do usuário para oferecer conteúdo e serviços adequados à sua faixa etária.
+
+Escreva um programa em C# que, a partir do ano de nascimento de uma pessoa, calcule a idade com base no ano atual.
+
+Exemplo de entrada:
+
+> int anoNascimento = 1997;
+
+Saída esperada:
+
+> Supondo que o ano atual seja 2025.
+
+Sua idade é: 28 anos
+
+Opinião do instrutor
+
+Nessa atividade, exploramos o tipo int (inteiro) e a subtração usando o operador -. O objetivo foi calcular a idade de uma pessoa com base no ano de nascimento e no ano atual. Para isso:
+
+- Declaramos duas variáveis: uma para armazenar o ano de nascimento e outra para armazenar o ano atual.
+- Utilizamos o operador de subtração (-) para calcular a diferença entre o ano atual e o ano de nascimento, obtendo assim a idade.
+- E por fim, exibimos a resultado através do Console.WriteLine.
+
+```C#
+int anoNascimento = 1997; 
+int anoAtual = 2025; 
+
+int idade = anoAtual - anoNascimento; 
+
+Console.WriteLine("Sua idade é: " + idade + " anos"); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Registro de doações - Desafio 2
+
+Você foi contratado por uma empresa beneficente, que recebe doações de pessoas físicas e jurídicas para ajudar comunidades carentes. Algumas dessas doações são anônimas, e outras são registradas com os dados do doador. Além disso, as doações são depositadas em dois tipos de contas: corrente ou poupança. Recentemente, uma doação anônima no valor de R$500 foi feita para a conta poupança da empresa.
+
+Crie um programa que:
+
+- Declare uma variável para armazenar o valor recebido da doação.
+- Declare uma variável para indicar se a doação foi anônima (true para anônima, false para não anônima).
+- Declare uma variável para indicar o tipo de conta onde o valor foi depositado:
+  - Use P para conta poupança.
+  - Use C para conta corrente
+
+Saída esperada:
+
+Valor recebido: R$500
+Doação anônima: True
+Tipo de conta: P
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos variáveis de tipos diferentes (float, bool, char) para representar as informações no sistema de registro de doações.
+
+- valorRecebido para armazenar o valor da doação (em reais).
+- doacaoAnonima para indicar se a doação foi feita anonimamente.
+- tipoConta para definir se o depósito foi feito em conta corrente ou poupança.
+
+```C#
+float valorRecebido = 500.00f; 
+bool doacaoAnonima = true; 
+char tipoConta = 'P'; 
+
+Console.WriteLine("Valor recebido: R$" + valorRecebido); 
+Console.WriteLine("Doação anônima: " + doacaoAnonima); 
+Console.WriteLine("Tipo de conta: " + tipoConta); 
+```
+
+Uma curiosidade é que em C#, a convenção adotada para nomes de variáveis é o camelCase, onde a primeira palavra começa com letra minúscula e as seguintes com maiúscula, sem espaços. Isso melhora a legibilidade e mantém o código padronizado.
+
+No exemplo, as variáveis já seguem essa convenção (valorRecebido, doacaoAnonima, tipoConta ), o que facilita a manutenção e compreensão do código. Sempre que possível, é recomendado seguir essas boas práticas ao nomear variáveis!
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Convertendo distâncias - Desafio 3
+
+Você trabalha para uma empresa de turismo que organiza passeios e viagens internacionais. Muitos dos destinos oferecidos pela empresa utilizam o sistema imperial de medidas, onde as distâncias são fornecidas em milhas. No entanto, os clientes brasileiros estão mais familiarizados com o sistema métrico, que utiliza quilômetros.
+
+Para facilitar a comunicação com os clientes, sua missão é criar um sistema de conversão de distâncias que transforme milhas em quilômetros, utilizando a fórmula:
+
+> 1 milha = 1.60934 quilômetros.
+
+Crie um programa que:
+
+- Declare uma variável que receba o valor das milhas.
+- Calcule a distância em quilômetros e armazene o resultado em uma nova variável.
+- Exiba o resultado no console.
+
+Saída esperada:
+
+> 10 milhas equivalem a 16,0934 quilômetros.
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos variáveis do tipo double para representar valores decimais. A conversão de milhas para quilômetros é um exemplo clássico de aplicação de fórmulas matemáticas em programação. O valor das milhas é multiplicado por 1.60934, que representa quantos quilômetros equivalem a uma milha. Esse cálculo é armazenado na variável quilometros, que guarda o resultado dessa conversão, o valor pode então ser exibido no console, mostrando a distância convertida.
+
+Na expressão quilometros = milhas * 1.60934, o operador * (asterisco) realiza a multiplicação entre os valores, e o resultado é atribuído à variável quilômetros. Esse valor pode então ser exibido no console, mostrando a distância convertida de forma clara e precisa.
+
+```C#
+double milhas = 10.0; 
+
+double quilometros = milhas * 1.60934; 
+
+Console.WriteLine(milhas + " milhas equivalem a " + quilometros + " quilômetros."); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Convertendo horas para minutos - Desafio 4
+
+Imagine que você está desenvolvendo um sistema de gerenciamento de tempo para um aplicativo de produtividade. Esse sistema precisa converter o tempo total de atividades, registrado em minutos, para um formato mais legível (horas e minutos), facilitando a visualização do usuário.
+
+Crie um programa que:
+
+- Declare uma variável com um valor inteiro representando o total de minutos.
+- Calcule quantas horas completas existem nesse valor e quantos minutos restam.
+- Exiba o resultado no formato X horas e Y minutos.
+
+Exemplo de entrada:
+
+> int minutos = 250;
+
+Saída esperada:
+
+> Tempo: 4 horas e 10 minutos
+
+Opinião do instrutor
+
+Nesta atividade, exploramos operações matemáticas para manipulação de valores temporais. A divisão inteira (/) é usada para extrair as horas completas, enquanto o operador módulo (%) captura o resto da divisão, que representa os minutos excedentes.
+
+```C#
+minutos / 60 retorna a parte inteira da divisão (horas).
+minutos % 60 retorna o resto da divisão (minutos não convertidos em horas).
+int minutos = 250; 
+int horas = minutos / 60; 
+int restantesMinutos = minutos % 60;
+
+Console.WriteLine("Tempo: " + horas + " horas e " + restantesMinutos + " minutos"); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Calculando a área de um retângulo - Desafio 5
+
+Você foi contratado por uma empresa de construção civil. A empresa está expandindo os seus projetos e precisa de um sistema para calcular a área de terrenos retangulares. Para isso utilize a fórmula:
+
+> área = largura * comprimento
+
+Para essa atividade, você deve criar um programa que:
+
+- Declare duas variáveis para a largura e comprimento, respectivamente.
+- Aplique a fórmula mencionada para calcular a área do terreno.
+- Exiba o resultado do cálculo.
+
+Exemplo de entrada:
+
+```C#
+double largura = 10.5; 
+double comprimento = 20.3; 
+```
+
+Saída esperada:
+
+```C#
+A área do terreno é: 213,15 metros quadrados. 
+```
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos variáveis do tipo double para a altura e a largura, e o operador de multiplicação (*). A fórmula área = largura * comprimento nos permite chegar no resultado desejado e demonstra como conceitos matemáticos podem ser aplicados na programação para resolver problemas reais.
+
+```C#
+double largura = 10.5; 
+double comprimento = 20.3; 
+
+double area = largura * comprimento; 
+
+Console.WriteLine($"A área do terreno é: {area} metros quadrados."); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Média de notas - Desafio 6
+
+Imagine que você está desenvolvendo um sistema de boletim escolar para uma escola que deseja modernizar sua forma de acompanhar o desempenho dos alunos. O objetivo é criar um programa capaz de calcular a média das notas, facilitando o trabalho e fornecendo resultados imediatos.
+
+Para essa atividade, você deve criar um programa que:
+
+- Declare três variáveis do tipo float para armazenar as notas dos alunos. Foi fornecido pela escola os seguintes  valores (7.2, 8.3 e 9.1).
+- Calcule a média aritmética das três.
+- Exiba a média calculada.
+
+Saída esperada:
+
+```C#
+A média das notas é: 8,2 
+```
+
+Opinião do instrutor
+
+Nessa atividade, trabalhamos com o tipo float, que é um dos tipos utilizados para representar números com casas decimais. Utilizamos operadores matemáticos como a soma (+) para somar as notas e a divisão (/) para calcular a médias.
+
+Uso do f na declaração de valores do tipo float:
+
+Quando declaramos valores do tipo float em C#, é necessário adicionar o sufixo f ao número para indicar ao compilador que se trata do tipo float e não de um double (que é o tipo padrão para números com casas decimais)
+
+```C#
+float nota1 = 7.2f; 
+float nota2 = 8.3f; 
+float nota3 = 9.1f; 
+
+float media = (nota1 + nota2 + nota3) / 3; 
+
+Console.WriteLine("A média das notas é: " + media); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Convertendo tipos - Desafio 7
+
+Imagine que você está desenvolvendo um sistema de gerenciamento de carga para um grande centro de distribuição. Para otimizar o transporte, a empresa estabeleceu que cada veículo deve transportar exatamente 1 tonelada. Seu sistema precisa converter o peso total dos containers para um número inteiro de veículos necessários, descartando qualquer fração decimal (já que um veículo não pode ser alocado para transportar apenas parte da carga).
+
+Seu programa deve:
+
+- Receber o peso total em toneladas (decimal)
+- Converter para inteiro descartando a parte decimal
+- Exibir a quantidade mínima de veículos necessários
+
+Exemplo de entrada:
+
+> decimal pesoContainer = 18.75m;
+
+Saída esperada:
+
+> Veículos necessários: 18
+
+Opinião do instrutor
+
+Nesta atividade, utilizamos o conceito de conversão explícita entre tipos numéricos. O comando (int)pesoContainer realiza o que chamamos de "truncamento" - ele simplesmente descarta a parte decimal sem qualquer tipo de arredondamento. É como se estivéssemos pegando apenas a parte inteira do número e ignorando tudo após a vírgula.
+
+```C#
+decimal pesoContainer = 18.75m; 
+int veiculosNecessarios = (int)pesoContainer; 
+
+Console.WriteLine("Veículos necessários: " + veiculosNecessarios); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Controle de vidas em um jogo - Desafio 8
+
+Você está desenvolvendo um sistema de controle de vidas para um jogo. Nesse jogo, o jogador começa com um número inicial de vidas e, a cada erro, perde uma vida. Por outro lado, ao acertar, ele ganha uma vida.
+
+Seu desafio é criar um programa que simule essa mecânica utilizando os operadores de incremento e decremento. Para isso, o programa deve:
+
+- Declarar uma variável com o número inicial de vidas.
+- Simular uma situação em que o jogador erra.
+- Simular que o jogador acerta duas vezes.
+- Armazene o valor final das vidas em uma nova variável.
+
+Saída esperada:
+
+Se o jogador começa com 5 vidas, o programa deve exibir:
+
+> Vidas finais: 6
+
+Opinião do instrutor
+
+Nessa atividade, trabalhamos com os operadores de incremento (++) e decremento (--), que são usados para aumentar ou diminuir o valor de uma variável em 1. Além de sua simplicidade, o uso desses operadores permite que o código se torne mais legível e conciso. Em vez de escrever expressões mais longas para incrementar ou decrementar uma variável, podemos utilizar os operadores de forma direta, o que facilita a compreensão do fluxo do programa.
+
+```C#
+int vidas = 5; 
+vidas--;  
+vidas++; 
+vidas++; 
+int vidasFinais = vidas; 
+
+Console.WriteLine("Vidas finais: " + vidasFinais); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Aumento de salário - Desafio 9
+
+Você trabalha desenvolvendo um sistema de recursos humanos para uma empresa. Uma das funcionalidades desse sistema é calcular o aumento salarial dos funcionários com base em percentual definido pela empresa. Seu desafio é criar um programa que facilite esse cálculo.
+
+Crie um programa que:
+
+- Defina uma variável para o salário atual (decimal).
+- Defina uma variável para o percentual de aumento (decimal).
+- Calcule o novo salário e o salve em uma nova variável (decimal).
+- Por fim, exiba o novo salário.
+
+A fórmula para o cálculo é:
+
+> salarioAtual + (salarioAtual * percentualAumento / 100) 
+
+Saída esperada:
+
+Você pode usar o método .ToString("F2") para formatar a saída dos valores no console, por exemplo: novoSalario.ToString("F2").
+
+Se o salário atual for de 1500.00 e o percentual de aumento for de 10%, o programa deve exibir:
+
+> O novo salário é de R$1650,00
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos variáveis do tipo decimal, garantindo precisão no cálculo. O uso do sufixo m é necessário, para indicar ao compilador que o valor se trata de um decimal e não de um double (que é o tipo padrão para números com casas decimais).
+
+```C#
+decimal salarioAtual = 1500.0m; 
+decimal percentualAumento = 10.0m; 
+decimal novoSalario = salarioAtual + (salarioAtual * percentualAumento / 100); 
+
+Console.WriteLine("O novo salário é de R$" + novoSalario.ToString("F2")); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Calculando a área e o perímetro - Desafio 10
+
+Você trabalha para uma empresa de engenharia que desenvolve soluções para cálculos geométricos utilizados em projetos de construção e design. Um dos clientes da empresa solicitou um sistema para calcular a área e o perímetro (também conhecido como circunferência) de círculos, informações essenciais para o planejamento de estruturas circulares, como tanques, pisos e jardins.
+
+Sua missão é criar um programa que, a partir do raio de um círculo, calcule sua área e perímetro utilizando as fórmulas matemáticas adequadas.
+
+Crie um programa que:
+
+- Declare uma variável que receba o valor de PI (considere PI como sendo igual a 3.14159).
+- Declare uma variável que receba o valor do raio do círculo.
+- Calcule e armazene em uma variável a área do círculo utilizando a fórmula: área = pi x raio x raio.
+- Calcule e armazene em uma variável o perímetro do círculo utilizando a fórmula: 2 * pi * raio.
+- Exiba os resultados no console.
+
+Exemplo de entrada:
+
+> double raio = 5.0; 
+
+Saída esperada:
+
+Você pode usar o método .ToString("F2") para formatar a saída dos valores no console, por exemplo: raio.ToString("F2")
+
+```C#
+Raio: 5,00 
+Área do círculo: 78,54 
+Perímetro do círculo: 31,42 
+```
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos o valor 3.14159 para representar PI e formatamos a saída com .ToString("F2"), o que garante que os resultados sejam exibidos com duas casas decimais. Essa formatação facilita a leitura e a interpretação dos valores, tornando o programa mais amigável para o usuário.
+
+```C#
+double raio = 5.0;  
+double pi = 3.14159; 
+
+double area = pi * raio * raio;  
+double perimetro = 2 * pi * raio; 
+
+Console.WriteLine("Raio: " + raio.ToString("F2"));  
+Console.WriteLine("Área do círculo: " + area.ToString("F2"));  
+Console.WriteLine("Perímetro do círculo: " + perimetro.ToString("F2")); 
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você adquiriu conhecimento prático e aplicou conceitos de programação em C#, com foco no uso de variáveis e tipos de dados e operações. Agora, você pode:
+
+- Desenvolver programas em C#, utilizando variáveis e operações matemáticas.
+- Realizar conversões de tipos e manipular dados.
+- Criar soluções para problemas do cotidiano, aplicando lógica de programação e boas práticas de codificação.
+
+Quer continuar explorando a programação em C#? Recomendamos os seguintes conteúdos:
+
+- Artigo - [C#: Conhecendo a linguagem orientada a objetos mais popular da Microsoft](https://www.alura.com.br/artigos/csharp-linguagem-programacao-dotnet)
+- Podcast - [Guia de Carreira C# (C SHARP)](https://www.youtube.com/watch?v=RtwvUNvabPA&ab_channel=Alura) | #HipstersPontoTube
+- Curso - [C#: aplicando a Orientação a Objetos](https://cursos.alura.com.br/course/csharp-aplicando-orientacao-objetos)
+
+Nos vemos nos próximos cursos práticos!

@@ -1,0 +1,15 @@
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\bin\Debug\net10.0\PraticandoVariaveisTipos.exe
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\bin\Debug\net10.0\PraticandoVariaveisTipos.deps.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\bin\Debug\net10.0\PraticandoVariaveisTipos.runtimeconfig.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\bin\Debug\net10.0\PraticandoVariaveisTipos.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\bin\Debug\net10.0\PraticandoVariaveisTipos.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.GeneratedMSBuildEditorConfig.editorconfig
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.AssemblyInfoInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.AssemblyInfo.cs
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.csproj.CoreCompileInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.sourcelink.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\refint\PraticandoVariaveisTipos.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\PraticandoVariaveisTipos.genruntimeconfig.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\3-Praticando C# variáveis e tipos\PraticandoVariaveisTipos\obj\Debug\net10.0\ref\PraticandoVariaveisTipos.dll
