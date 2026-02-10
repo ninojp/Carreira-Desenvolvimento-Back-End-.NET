@@ -1,0 +1,15 @@
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\bin\Debug\net10.0\PraticandoIfElse.exe
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\bin\Debug\net10.0\PraticandoIfElse.deps.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\bin\Debug\net10.0\PraticandoIfElse.runtimeconfig.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\bin\Debug\net10.0\PraticandoIfElse.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\bin\Debug\net10.0\PraticandoIfElse.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.GeneratedMSBuildEditorConfig.editorconfig
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.AssemblyInfoInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.AssemblyInfo.cs
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.csproj.CoreCompileInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.sourcelink.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\refint\PraticandoIfElse.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\PraticandoIfElse.genruntimeconfig.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoIfElse\obj\Debug\net10.0\ref\PraticandoIfElse.dll

@@ -143,12 +143,12 @@ Observe a tabela abaixo:
 
 | Operador | Significado | Exemplo |
 |----------|-------------|---------|
-| > | Maior que | x > 10 |
-| < | Menor que | x < 10 |
-| == | Igual a | x == 10 |
-| != | Diferente de | x != 10 |
-| >= | Maior ou igual a | x >= 10 |
-| <= | Menor ou igual a | x <= 10 |
+| >        | Maior que   | x > 10  |
+| <        | Menor que   | x < 10  |
+| ==       | Igual a     | x == 10 |
+| !=       | Diferente de | x != 10 |
+| >=       | Maior ou igual a | x >= 10 |
+| <=       | Menor ou igual a | x <= 10 |
 
 Podemos, por exemplo, querer saber se uma variável tem um valor maior que outro. Suponha que queremos comparar se a variável x é maior do que 10. Nesse caso específico, utilizamos o operador de comparação representado por >. Da mesma forma, podemos comparar se uma variável é menor que outra, se é igual, se é diferente, maior ou igual, ou menor ou igual.
 
@@ -161,12 +161,12 @@ Dentro dos operadores lógicos, temos o operador AND, que indica se uma condiç�
 
 Operador AND
 
-| Condição 1 | Condição 2 | Resultado |
-|-----------|-----------|-----------|
-| Verdadeiro | Verdadeiro | Verdadeiro |
-| Verdadeiro | Falso | Falso |
-| Falso | Verdadeiro | Falso |
-| Falso | Falso | Falso |
+| Condição 1 | Condição 2  | Resultado  |
+|------------|-------------|------------|
+| Verdadeiro | Verdadeiro  | Verdadeiro |
+| Verdadeiro | Falso       | Falso      |
+| Falso      | Verdadeiro  | Falso      |
+| Falso      | Falso       | Falso      |
 
 Se temos verdadeiro e verdadeiro, retornamos verdadeiro, mas se temos qualquer outra combinação, o resultado será falso. A condição 1 não pode ser verdadeira e a 2 ser falsa, por exemplo, se queremos que a combinação delas seja verdadeira.
 
@@ -174,12 +174,12 @@ Já no caso do operador OR, queremos que uma condição ou outra sejam verdadeir
 
 Operador OR
 
-| Condição 1 | Condição 2 | Resultado |
-|-----------|-----------|-----------|
+| Condição 1 | Condição 2 |  Resultado |
+|------------|------------|------------|
 | Verdadeiro | Verdadeiro | Verdadeiro |
-| Verdadeiro | Falso | Falso |
-| Falso | Verdadeiro | Falso |
-| Falso | Falso | Falso |
+| Verdadeiro | Falso      | Verdadeiro |
+| Falso      | Verdadeiro | Verdadeiro |
+| Falso      | Falso      | Falso      |
 
 Se temos verdadeiro e verdadeiro, retornamos verdadeiro, mas se temos qualquer outra combinação, o resultado será falso. A condição 1 não pode ser verdadeira e a 2 ser falsa, por exemplo, se queremos que a combinação delas seja verdadeira.
 
@@ -187,14 +187,12 @@ Já no caso do operador OR, queremos que uma condição ou outra sejam verdadeir
 
 Operador OR
 
-| Condição 1 | Condição 2 | Resultado |
-| Expressão | Negação |
-|-----------|----------|
-| Verdadeiro | Falso |
-| Falso | Verdadeiro |
-also | Falso |
-| Falso | Verdadeiro | Falso |
-| Falso | Falso | Falso |
+| Condição 1 | Condição 2 | Resultado  |
+|------------|------------|------------|
+| Expressão  | Negação    | Resultado  |
+| Verdadeiro | Falso      | Verdadeiro |
+| Falso      | Verdadeiro | Verdadeiro |
+| Falso      | Falso      | Falso      |
 
 Para a combinação das condições ser verdadeira, apenas uma precisa verdadeira. Podemos ter verdadeiro e verdadeiro, que resultará em verdadeiro; verdadeiro e falso resultando em verdadeiro; e falso com falso, resultando em falso, pois pelo menos uma condição deve ser verdadeira.
 
@@ -204,10 +202,10 @@ Abaixo, a representação do operador em tabela:
 
 Operador NOT
 
-| Expressão | Negação |
-|-----------|---------|
-| Verdadeiro | Falso |
-| Falso | Verdadeiro |
+| Expressão  | Negação      | Resultado  |
+|------------|----------    |------------|
+| Verdadeiro | Falso        | Verdadeiro |
+| Falso      | Verdadeiro   | Verdadeiro |
 
 Exemplo prático no Visual Studio  
 Uma vez que conhecemos esses diversos operadores, bem como os blocos if e else, podemos verificar em código como isso funciona na prática.
@@ -238,16 +236,244 @@ Dessa forma, ou executamos o primeiro bloco, ou o segundo. Com isso, receberemos
 Conclusão  
 Assim, conhecemos o funcionamento básico das estruturas if e else!
 
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
-### Aula 1 -  - Vídeo 2
+### Aula 1 - Mais exemplos de if/else - Vídeo 3
+
+Transcrição  
+Neste vídeo, apresentaremos outros exemplos de expressões condicionais.
+
+Mais exemplos de expressões condicionais
+
+Vamos pensar em um exemplo mais avançado? Suponha que trabalhamos em um e-commerce. Nesse e-commerce, se uma compra for a partir de 300 reais, o cliente ganha 10% de desconto.
+
+Nesse caso, precisaremos trabalhar novamente com condições.
+
+Definindo variáveis e condições iniciais  
+Primeiramente, no arquivo Program.cs no Visual Studio, vamos criar uma variável double chamada valorCompra e atribuir a ela o valor de 545 reais.
+
+Program.cs:
+
+> double valorCompra = 545.00;
+
+Agora, queremos verificar se o valor da compra é maior do que 300. Portanto, se (if) valorCompra for maior que (>) 300, usaremos um operador relacional de comparação.
+
+Nesse caso, vamos informar que o cliente teve um desconto. Para calcular o valor do desconto, criaremos a variável double desconto no bloco if, que será valorCompra multiplicado por 0.1. Podemos usar interpolação para exibir $"Você ganhou {desconto} reais em desconto!".
+
+```C#
+// código omitido
+double valorCompra = 545.00;
+
+if (valorCompra > 300.00)
+{
+    double desconto = valorCompra * 0.1;
+    Console.WriteLine($"Você ganhou {desconto} reais em desconto!");
+}
+```
+
+Com isso, temos nossa condição inicial.
+
+Configurando o caminho alternativo  
+Agora, vamos pensar no caminho alternativo (else). Se o valor da compra for menor que 300 reais, precisamos saber quanto falta para atingir os 300 reais. Para isso, criaremos uma variável do tipo double chamada diferenca, que será igual a 300.00 menos (-) valorCompra.
+
+Por que conseguimos fazer isso? Porque, no caso do bloco else, vamos considerar todos os casos em que o valor da compra é menor que 300 reais.
+
+Por fim, vamos imprimir com Console.WriteLine() a mensagem $"Faltam {diferenca} reais para você ganhar desconto na sua compra!", utilizando interpolação.
+
+```C#
+// código omitido
+    if (valorCompra > 300.00)
+{
+    double desconto = valorCompra * 0.1;
+    Console.WriteLine($"Você ganhou {desconto} reais em desconto!");
+}
+else
+{
+    double diferenca = 300.00 - valorCompra;
+    Console.WriteLine($"Faltam {diferenca} reais para você ganhar desconto na sua compra!");
+}
+```
+
+Após isso, executaremos o código. Se o valor da compra for 545 reais, a saída será "Você ganhou 54,5 reais em desconto!". Por outro lado, se o valor da compra for 245 reais, por exemplo, a saída será "Faltam 55 reais para você ganhar desconto na sua compra!".
+
+Utilizando o operador AND  
+Agora, vamos pensar em combinar condições.
+
+Suponha que o cliente só consegue 10% de desconto se comprar mais de 300 reais e for um cliente VIP. Vamos declarar uma variável bool clienteVip e defini-la como true por enquanto.
+
+```C#
+// código omitido
+
+double valorCompra = 245.00;
+bool clienteVip = true;
+
+// código omitido
+```
+
+Agora, o bloco if será verdadeiro apenas se duas condições forem verdadeiras: se o valor da compra for maior do que 300 reais; e se o cliente for VIP.
+
+Para isso, utilizaremos o operador AND, representado por &&.
+
+```C#
+// código omitido
+if (valorCompra > 300.00 && clienteVip)
+{
+    double desconto = valorCompra * 0.1;
+    Console.WriteLine($"Você ganhou {desconto} reais em desconto!");
+}
+// código omitido
+```
+
+Se ambas as condições forem verdadeiras, exibiremos a mensagem $"Você ganhou {desconto} reais em desconto!". Caso contrário, cairemos na outra condição. Ao executar o código, observamos que faltam 55 reais para ganhar desconto, pois o valor da compra está em 245 reais. Assim, a primeira condição é falsa. Logo, a combinação das duas será falsa, pois utilizamos o operador AND.
+
+Utilizando o operador OR  
+Se quiséssemos usar o operador OR, representado por ||, entraríamos no primeiro if, pois teríamos uma condição falsa ou uma condição verdadeira.
+
+Observação: se uma das condições for verdadeira, entramos no bloco if.
+
+```C#
+// código omitido
+if (valorCompra > 300.00 || clienteVip)
+{
+    double desconto = valorCompra * 0.1;
+    Console.WriteLine($"Você ganhou {desconto} reais em desconto!");
+}
+// código omitido
+```
+
+Ao executar, visualizamos que o cliente ganhou 24,5 reais em desconto.
+
+Utilizando a estrutura else if
+No exemplo anterior, temos uma expressão condicional bem estruturada, pois a condição é verdadeira ou falsa, resultando em apenas dois caminhos possíveis.
+
+Entretanto, podemos ter vários caminhos nos blocos if e else. Para isso, utilizamos else if, seguido de uma nova condição que desejamos aplicar.
+
+Podemos verificar se o valor da compra é maior que 300 reais. Suponha que a pessoa não atingiu 300 reais, mas atingiu 200 reais. Nesse caso, enviaremos uma amostra grátis ou um brinde. Portanto, exibiremos a mensagem "Parabéns! Você ganhou um brinde!".
+
+```C#
+
+if (valorCompra > 300.00 || clienteVip)
+{
+    double desconto = valorCompra * 0.1;
+    Console.WriteLine($"Você ganhou {desconto} reais em desconto!");
+}
+else if (valorCompra > 200.00)
+{
+    Console.WriteLine("Parabéns! Você ganhou um brinde!");
+}
+else
+{
+    double diferenca = 300.00 - valorCompra;
+    Console.WriteLine($"Faltam {diferenca} reais para você ganhar desconto na sua compra!");
+}
+```
+
+Queremos saber primeiro se o cliente pagou mais de 300 reais ou se é um cliente VIP. Se nenhuma dessas condições for verdadeira, mas o valor da compra for maior que 200 reais, ele se enquadra no caso que criamos. Ele não está entre os que gastaram mais de 300 reais, mas está entre os que gastaram entre 200 e 300 reais.
+
+Depois, temos o else, que se aplica a quem fez uma compra menor que 200 reais. Para essas pessoas, imprimimos o que falta para alcançar o desconto, pois, no marketing, as empresas focam em clientes que fazem compras com valores mais altos. Assim, temos três casos:
+
+- Quem gastou mais de 300 reais;
+- Quem gastou entre 200 e 300 reais;
+- Quem gastou menos de 200 reais.
+
+Cada vez que encadeamos if e else if, criamos mais um caminho possível para a execução do programa. Para testar, podemos alcançar a condição de "Parabéns! Você ganhou um brinde!" se o valor da compra for 245 reais e clienteVip for false.
+
+Conclusão  
+Com isso, entendemos como funcionam as condicionais, sendo if e else as principais na lógica de programação. No entanto, também temos a opção de trabalhar com switch e case.
+
+Na sequência, vamos explorar melhor esse tipo de expressão!
+
+### Aula 1 - Verificando o saldo da conta - Desafio 1
+
+Imagine que você está desenvolvendo um sistema de análise financeira para um banco digital. Como parte das funcionalidades, você precisa criar um programa que avalie o estado de um saldo bancário.
+
+Crie um programa que:
+
+- Receba um valor representando o saldo.
+- Verifique se esse valor é positivo, negativo ou zero.
+- Exiba uma mensagem indicando a situação do saldo.
+
+Exemplo de entrada:
+
+Digite o saldo:
+-26.75
+
+Saída esperada:
+
+> O saldo está negativo.
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos estruturas condicionais para tomar decisões baseadas no valor do saldo. Primeiro, lemos o valor digitado pelo usuário com o método ReadLine, e o convertemos para decimal, e em seguida as comparações são realizadas:
+
+- Se o valor for maior que zero, mostramos que o saldo é positivo.
+- Se for menor que zero, mostramos que é negativo.
+- Se não for nenhum dos dois, mostramos que o saldo é zero.
+
+```C#
+Console.WriteLine("Digite o saldo:");
+decimal saldo = decimal.Parse(Console.ReadLine());
+ 
+if (saldo > 0)
+{
+    Console.WriteLine("O saldo está positivo.");
+}
+else if (saldo < 0)
+{
+    Console.WriteLine("O saldo está negativo.");
+}
+else
+{
+    Console.WriteLine("O saldo é zero.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Classificação de produtos - Desafio 2
+
+Imagine que você está desenvolvendo um sistema de gestão de estoque para um centro de distribuição de alimentos. Seu desafio é criar um programa que classifique os produtos conforme seu tipo, para otimizar o armazenamento em áreas específicas do armazém.
+
+Crie um programa que:
+
+- Receba um código numérico (1 ou 2) representando o tipo de produto.
+- Classifique o produto como:
+- “Perecível” para código 1.
+- “Não perecível” para código 2.
+- Alerte o usuário caso o código seja inválido.
+
+Exemplo de entrada:
+
+Digite o código do produto (1 ou 2): 1
+
+Saída esperada:
+
+Perecível
+
+Opinião do instrutor
+
+Nessa atividade, exploramos a tomada de decisão usando condicionais. A lógica implementada no programa é a seguinte: primeiro, ele verifica se o código inserido é exatamente igual a 1 (codigo == 1). Se essa condição não for atendida, o programa avança para a próxima verificação, que checa se o código é igual a 2 (codigo == 2). Caso nenhuma das condições anteriores seja verdadeira, o bloco else é executado, indicando que o código não corresponde a nenhuma das opções válidas.
+
+```C#
+Console.Write("Digite o código do produto (1 ou 2): ");
+int codigo = int.Parse(Console.ReadLine());
+ 
+if (codigo == 1)
+{
+    Console.WriteLine("Perecível");
+}
+else if (codigo == 2)
+{
+    Console.WriteLine("Não perecível");
+}
+else
+{
+    Console.WriteLine("Código inválido");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 -  - Desafio 3
+### Aula 1 -  - Desafio 4
+### Aula 1 -  - Desafio 5
+### Aula 1 -  - Desafio 6
+### Aula 1 -  - Desafio 7
