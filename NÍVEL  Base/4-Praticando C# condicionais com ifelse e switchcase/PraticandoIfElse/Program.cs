@@ -1,4 +1,7 @@
-﻿void exibiTitulo()
+﻿//será que é necessário usar o namespace completo para acessar a classe AulaPratica1, ou seja, PraticandoIfElse.AulaPratica1? Sim, é necessário usar o namespace completo para acessar a classe AulaPratica1, a menos que você tenha uma declaração de using para o namespace PraticandoIfElse no início do seu arquivo. Se você tiver a declaração de using, poderá acessar a classe diretamente como AulaPratica1. Caso contrário, você precisará usar o nome completo do namespace para acessar a classe.
+using PraticandoIfElse;
+
+void exibiTitulo()
 {
     Console.BackgroundColor = ConsoleColor.DarkBlue;
     Console.ForegroundColor = ConsoleColor.Black;
@@ -6,11 +9,11 @@
     Console.ResetColor();
     Console.ForegroundColor = ConsoleColor.DarkBlue;
     Console.WriteLine(@"
-                  _
-                 | |
-                 | |===( )   //////
-                 |_|   |||  | o o|   Hit any key to continue...
-                        ||| ( c  )                  ____
+                 /\
+               |   |
+               |   |===( )   //////
+               |   |   |||  | o o|   Hit any key to continue...
+               |___|    ||| ( c  )                  ____
                          ||| \= /                  ||   \_
                           ||||||                   ||     |
                           ||||||                ...||__/|-´
@@ -21,82 +24,42 @@
     ------------------------|||-------------||-||------||-||-------
                             |__>            || ||      || ||
     ");
-}
-string VerificaCondicaoSaldo()
-{
-    Console.BackgroundColor = ConsoleColor.DarkBlue;
-    Console.ForegroundColor = ConsoleColor.Black;
-    Console.WriteLine("\n Desafio 1: Verificando o saldo da conta.");
     Console.ResetColor();
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.Write("\nDigite o saldo (ex: 10.00): ");
-    Console.ResetColor();
-    string input = Console.ReadLine();
-    decimal saldo;
-    //Verifica se a entrada é um número decimal válido
-    if (!decimal.TryParse(input, out saldo))
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        return "\nValor inválido. Por favor, digite um número.";
-        Console.ResetColor();
-    }
-    else
-    {
-        if (saldo > 0)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            return $"\nO Saldo atual de {saldo}, é Positivo!";
-            Console.ResetColor();
-        }
-        else if (saldo == 0)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            return $"\nO Saldo atual de {saldo}, é ZERO!";
-            Console.ResetColor();
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            return $"\nO Saldo atual de {saldo}, é Negativo!";
-            Console.ResetColor();
-        }
-    }
 }
 exibiTitulo();
-string resultado = VerificaCondicaoSaldo();
-Console.WriteLine($"\n{resultado}");
-Console.ResetColor();
+//=======================================================================
 
-void ExibiMSG()
-{
-    Console.BackgroundColor = ConsoleColor.DarkBlue;
-    Console.ForegroundColor = ConsoleColor.Black;
-    Console.WriteLine("\n Desafio 2: Classificação de produtos.");
-    Console.ResetColor();
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.Write("\nDigite o código do produto (1 ou 2): ");
-    Console.ResetColor();
-    string input = Console.ReadLine();
-    if (input == "1")
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write($"\nProduto Perecivel, o código digitado foi {input}");
-        Console.ResetColor();
-    }
-    else if (input == "2")
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write($"\nProduto Não Perecivel, o código digitado foi {input}");
-        Console.ResetColor();
-    }
-    else
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write($"\nCódigo inválido. Por favor, digite 1 ou 2.");
-        Console.ResetColor();
-    }
-}
-ExibiMSG();
+//string resultado = new AulaPratica1().VerificaCondicaoSaldo();
+//Console.WriteLine($"\n{resultado}");
+//=======================================================================
 
-//Classificando a nota de um aluno
-//Informe a nota final do aluno: 8,5
+//new AulaPratica1().ExibiMSG();
+//=======================================================================
+
+//new AulaPratica1().ClassificacaoAluno();
+//=======================================================================
+
+//new AulaPratica1().VerificaAcesso();
+//=======================================================================
+
+//new AulaPratica1().ClassificaFaixaEtaria();
+//=======================================================================
+
+// Calculadora de operações básicas - Aula 2 Desafio 1
+//new AulaPratica2().Calculadora();
+//=============================================
+
+//Saudação personalizada - Aula 2 Desafio 2
+new AulaPratica2().SaudacaoPersonalizada();
+//=============================================
+
+//Sistema de recompensas - Aula 2 Desafio 3
+new AulaPratica2().SistemaRecompensas();
+//=============================================
+
+//Refatorando a organização de livros - Aula 2 Desafio 4
+new AulaPratica2().OrganizaLivros();
+//=============================================
+
+////Autenticação de usuário - Aula 2 Desafio 5
+new AulaPratica2().AutentificaUsuario();

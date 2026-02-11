@@ -141,12 +141,12 @@ Quando falamos sobre expressões condicionais, que resultam em true ou false, ex
 
 Observe a tabela abaixo:
 
-| Operador | Significado | Exemplo |
-|----------|-------------|---------|
-| >        | Maior que   | x > 10  |
-| <        | Menor que   | x < 10  |
-| ==       | Igual a     | x == 10 |
-| !=       | Diferente de | x != 10 |
+| Operador | Significado      | Exemplo |
+|----------|------------------|---------|
+| >        | Maior que        | x > 10  |
+| <        | Menor que        | x < 10  |
+| ==       | Igual a          | x == 10 |
+| !=       | Diferente de     | x != 10 |
 | >=       | Maior ou igual a | x >= 10 |
 | <=       | Menor ou igual a | x <= 10 |
 
@@ -472,8 +472,864 @@ else
 
 Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
 
-### Aula 1 -  - Desafio 3
-### Aula 1 -  - Desafio 4
-### Aula 1 -  - Desafio 5
-### Aula 1 -  - Desafio 6
-### Aula 1 -  - Desafio 7
+### Aula 1 - Classificando a nota de um aluno - Desafio 3
+
+Você é responsável pelo desenvolvimento do sistema de avaliação de uma escola de tecnologia. Seu programa precisa analisar o desempenho dos alunos em cada módulo e atribuir uma classificação que reflita seu aproveitamento.
+
+Crie um sistema que:
+
+- Receba a nota final do aluno
+- Classifique o desempenho conforme a tabela:
+
+A (notas ≥ 9)
+B (notas ≥ 7 e < 9)
+C (notas ≥ 5 e < 7)
+D (notas < 5)
+
+Exiba a classificação obtida.
+
+Exemplo de entrada:
+
+> Informe a nota final do aluno: 8,5
+
+Saída esperada:
+
+> O aluno recebeu a nota B.
+
+Opinião do instrutor
+
+Nesta solução, utilizamos uma sequência de condições encadeadas para determinar a classificação do aluno. Esse encadeamento funciona da seguinte forma:
+
+Fluxograma explicando a lógica condicional do if, else if e else. O processo começa em "Início" e segue para uma decisão "Condição IF é verdadeira?". Se sim, executa o bloco IF e vai para "Fim". Se não, verifica "Condição ELSE IF é verdadeira?". Se sim, executa o bloco ELSE IF e segue para "Fim". Se não, executa o bloco ELSE e segue para "Fim".
+
+O código segue uma estrutura lógica decrescente:
+
+- Primeiro verifica a condição mais restritiva (nota ≥ 9)
+- Caso não seja atendida, testa a próxima faixa (nota ≥ 7)
+- Continua o processo até a condição final (nota < 5)
+- A ordem das verificações é crucial, começando sempre da condição mais exigente.
+
+```C#
+Console.WriteLine("Informe a nota final do aluno: ");
+double nota = double.Parse(Console.ReadLine());
+ 
+if (nota >= 9)
+{
+    Console.WriteLine("O aluno recebeu a nota A.");
+}
+else if (nota >= 7)
+{
+    Console.WriteLine("O aluno recebeu a nota B.");
+}
+else if (nota >= 5)
+{
+    Console.WriteLine("O aluno recebeu a nota C.");
+}
+else
+{
+    Console.WriteLine("O aluno recebeu a nota D.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Verificando acesso a área restrita - Desafio 4
+
+Imagine que você está desenvolvendo um sistema de controle de acesso para um laboratório de pesquisa altamente seguro. Sua tarefa é criar um programa que valide as credenciais de quem tenta entrar, garantindo que apenas pessoas autorizadas tenham acesso.
+
+Crie um programa que:
+
+- Receba uma senha.
+- Receba um nível de acesso.
+
+Verifique se:
+
+- A senha está correta (Considere a senha como 42).
+- O nível de acesso é igual ou superior a 5.
+- Exiba “Acesso liberado” se ambos os critérios forem atendidos, ou “Acesso negado” caso contrário.
+
+Exemplo de entrada:
+
+Digite a senha:  
+1234
+
+Digite o nível de acesso:  
+6
+
+Saída esperada:
+
+Acesso negado.
+
+Opinião do instrutor
+
+Nessa atividade, trabalhamos com dois critérios que precisam ser atendidos ao mesmo tempo: a senha deve ser correta e o nível de acesso deve ser suficiente. Para isso, o operador lógico && (AND), que funciona da seguinte forma:
+
+|Condição A |Condição B | A && B (Resultado) |
+|-----------|-----------|--------------------|
+|true       |true       | true               |
+|true       |false      | false              |
+|false      |true       | false              |
+|false      |false      | false              |
+
+Esse operador é utilizado dentro da estrutura condicional if, permitindo que ambas as condições sejam verificadas.
+
+```C#
+Console.WriteLine("Digite a senha:");
+int senha = int.Parse(Console.ReadLine());
+ 
+Console.WriteLine("Digite o nível de acesso:");
+int nivel = int.Parse(Console.ReadLine());
+ 
+if (senha == 42 && nivel >= 5)
+{
+    Console.WriteLine("Acesso liberado.");
+}
+else
+{
+    Console.WriteLine("Acesso negado.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 1 - Classificando a faixa etária - Desafio 5
+
+Imagine que você está desenvolvendo uma funcionalidade para um sistema de planos de saúde. A ideia é classificar um cliente conforme a sua idade em uma das faixas: infantil (0 a 12 anos), adolescente (13 a 17), adulto (18 a 59) ou idoso (60 ou mais).
+
+Crie um programa que:
+
+- Receba a idade do cliente como entrada.
+- Classifique-o em uma das faixas
+- Infantil (0 a 12 anos)
+- Adolescente (13 a 17 anos)
+- Adulto (18 a 59 anos)
+- Idoso (60 anos ou mais)
+- Exiba a categoria correspondente
+
+Exemplo de entrada:
+
+Digite a idade:  
+18
+
+Saída esperada:
+
+Classificação: adulto
+
+Opinião do instrutor
+
+Nessa atividade, trabalhamos com várias verificações sequenciais. O ponto chave é utilizar os operadores >= (maior igual) e <= (menor igual) para definir os intervalos de idade. Como as faixas não se sobrepões, podemos usar if, else if e finalizar com else para os casos acima de 60 anos.
+
+Um ponto importante é o uso do operador lógico && (AND) nas comparações. Ele permite verificar duas condições simultaneamente, garantindo que a idade esteja dentro de um intervalo específico.
+
+```C#
+Console.WriteLine("Digite a idade:");
+int idade = int.Parse(Console.ReadLine());
+ 
+if (idade >= 0 && idade <= 12)
+{
+    Console.WriteLine("Classificação: infantil");
+}
+else if (idade >= 13 && idade <= 17)
+{
+    Console.WriteLine("Classificação: adolescente");
+}
+else if (idade >= 18 && idade <= 59)
+{
+    Console.WriteLine("Classificação: adulto");
+}
+else
+{
+    Console.WriteLine("Classificação: idoso");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - switch/case
+
+### Aula 2 - switch/case - Vídeo 1
+
+Transcrição  
+Neste vídeo, abordaremos as estruturas switch e case.
+
+- Utilizando switch e case
+- Analisando o código de Program.cs
+- Para analisarmos a estrutura de switch e case, vamos examinar o seguinte código:
+
+Program.cs:
+
+```C#
+Console.WriteLine("\nMENU:");
+Console.WriteLine("1 - Ver produtos");
+Console.WriteLine("2 - Fazer pedido");
+Console.WriteLine("0 - Sair");
+Console.Write("Escolha uma opção: ");
+
+int opcao = int.Parse(Console.ReadLine());
+
+if (opcao == 1)
+{
+    Console.WriteLine("Mostrando produtos…");
+}
+else if (opcao == 2)
+{
+    Console.WriteLine("Pedido realizado!");
+}
+else if (opcao == 0)
+{
+    Console.WriteLine("Saindo…");
+}
+else
+{
+    Console.WriteLine("Opção inválida!");
+}
+```
+
+Primeiro, temos um menu que interage com a pessoa usuária, oferecendo três opções:
+
+- Opção 1 para ver produtos
+- Opção 2 para fazer pedidos
+- Opção 0 para sair
+
+Estamos em um sistema de estoque de e-commerce. Para escolher uma opção e exibir o resultado para a pessoa usuária, lemos a opção e, com base no que foi digitado, exibimos mensagens diferentes, como "Mostrando produtos…" e "Pedido realizado!".
+
+Para testar, vamos escolher a opção 2 no terminal. Ao fazer isso, o sistema informa que o pedido foi realizado e encerra a execução. Se executarmos novamente e escolhermos 0, ele mostra que está saindo e também finaliza a execução.
+
+No entanto, observamos que há uma sequência extensa de if e else if. À medida que incrementamos o sistema, precisaremos de mais blocos else if, o que não é produtivo e pode causar confusão. Podemos usar expressões do tipo switch-case para tratar esse tipo de problema.
+
+Entendendo a sintaxe do switch-case  
+No switch-case, sempre teremos uma variável com valores específicos. No nosso problema, temos a variável opcao, que pode assumir os valores 0, 1 e 2.
+
+Queremos escolher um caminho que dependa dessa variável. Para isso, utilizamos a palavra-chave switch, seguida de uma abertura e fechamento de parênteses.
+
+Em seguida, definimos os casos do bloco switch. Teremos um case para cada expressão, que corresponde ao valor que a variável pode assumir.
+
+Se a variável vale expressão 1, seguimos por esse caminho; se vale expressão 2, seguimos por outro caminho; e assim por diante. No final, teremos um caminho padrão para quando a variável não assume nenhum desses valores, chamado default.
+
+```C#
+switch (variável)
+{
+case expressão 1:
+    vá por esse caminho
+    break;
+…
+default:
+    faça esse caminho padrão
+    break;
+}
+```
+
+Transformando if e else em switch-case  
+Agora, começaremos a transformar os blocos if e else em blocos switch e case. Primeiramente, vamos aplicar o switch em opcao ao final do código.
+
+Program.cs:
+
+```C#
+// código omitido
+
+switch (opcao)
+{
+
+}
+```
+
+Com base nesse switch, definiremos vários casos.
+
+Por exemplo: no caso em que opcao vale 1, exibimos "Mostrando produtos…" com Console.WriteLine(). No fim do case, sempre usamos a palavra-chave break.
+
+Já no caso em que opcao vale 2, imprimimos "Pedido realizado!". Na sequência, para o case de valor 0, exibimos "Saindo…" e também usamos break ao final.
+
+Caso nenhuma dessas opções seja digitada, utilizamos a opção padrão default, imprimindo a mensagem "Opção inválida!" e finalizando com break.
+
+```C#
+// código omitido
+
+switch(opcao)
+{
+    case 1:
+        Console.WriteLine("Mostrando produtos…");
+        break;
+    case 2:
+        Console.WriteLine("Pedido realizado!");
+        break;
+    case 0:
+        Console.WriteLine("Saindo…");
+        break;
+    default:
+        Console.WriteLine("Opção inválida!");
+        break;
+}
+```
+
+Testando a estrutura switch-case  
+Realizados os ajustes, esperamos obter o mesmo resultado dos blocos if, else if e else, então podemos apagar esse trecho e executar o programa novamente.
+
+Trecho a ser removido do arquivo Program.cs:
+
+```C#
+if (opcao == 1)
+{
+    Console.WriteLine("Mostrando produtos…");
+}
+else if (opcao == 2)
+{
+    Console.WriteLine("Pedido realizado!");
+}
+else if (opcao == 0)
+{
+    Console.WriteLine("Saindo…");
+}
+else
+{
+    Console.WriteLine("Opção inválida!");
+}
+```
+
+Com o menu aberto, escolheremos a opção 1 para visualizar produtos. Com isso, os produtos são exibidos. Também testaremos a opção 5, que é inválida. Agora, o sistema mostra "Opção inválida!", confirmando que o switch-case funciona corretamente.
+
+Aplicações avançadas do switch-case  
+O switch-case funciona com diversos tipos de expressões. No lugar de case 1, por exemplo, poderíamos utilizar uma string ou até mesmo um double. Esse estilo de switch-case é comum em diversas linguagens de programação, permitindo a conversão dos blocos if e else para switch e case de forma tranquila, a depender do problema que estamos resolvendo.
+
+Exemplo de if e else com descontos  
+Em C#, existe uma sintaxe mais sofisticada que nos ajuda a resolver problemas relacionados à determinação do valor de uma variável com base em expressões.
+
+Para entender melhor esse problema, vamos analisar um código semelhante aos anteriores, onde oferecíamos um desconto maior para clientes VIP, por exemplo.
+
+Entretanto, nesse caso específico, temos diversos tipos de clientes:
+
+- Comum;
+- VIP;
+- Premium.
+
+Com base nesses tipos, oferecemos mais ou menos desconto.
+
+Program.cs:
+
+```C#
+// código omitido
+
+Console.WriteLine("Digite o tipo de cliente (Comum, VIP, Premium):");
+string tipoCliente = Console.ReadLine();
+
+decimal desconto;
+
+if (tipoCliente == "Comum")
+{
+    desconto = 0.05m;
+}
+else if (tipoCliente == "VIP")
+{
+    desconto = 0.10m;
+}
+else if (tipoCliente == "Premium")
+{
+    desconto = 0.15m;
+}
+else
+{
+    desconto = 0.00m;
+}
+```
+
+Para implementar isso, utilizamos if com else if. Inicialmente, temos a variável tipoCliente, utilizada para comparar a expressão, e outra variável chamada desconto, que recebe um valor diferente para cada condição. Se o cliente for comum, o desconto é 0.05; se for premium, 0.15; e assim por diante. Portanto, temos uma variável que depende exclusivamente da condição.
+
+Entendendo a sintaxe simplificada do switch-case  
+Podemos usar os blocos switch e case para isso, o que é mais sofisticado.
+
+A sintaxe do switch-case simplificado é a seguinte:
+
+```C#
+return variável switch
+{
+    expressão 1 => vá por esse caminho,
+    expressão 2 => vá por esse outro caminho,
+    …
+    _ => faça esse caminho padrão
+}
+```
+
+Retornamos uma expressão com base na variável escolhida, que pode ter várias expressões. Se variável corresponde a expressão 1, usamos => para indicar o desconto final; se variável corresponde a expressão 2, retornamos outro valor; e assim por diante. Se não corresponder a nenhum valor, seguimos um caminho padrão, representado por _.
+
+Aplicando a estrutura simplificada de switch-case  
+Com isso em mente, vamos retornar ao Visual Studio para converter os blocos if e else em uma estrutura de switch e case mais sofisticada. No final do código, começaremos chamando a variável que será inicializada com base no switch, que é desconto. O desconto será dado de acordo com o tipo do cliente, então atribuiremos tipoCliente switch à variável desconto.
+
+Em seguida, passaremos entre chaves as expressões desejadas:
+
+- Se tipoCliente for "Comum", o desconto será de 0.05m;
+- Se tipoCliente for "VIP", o desconto será de 0.10m;
+- Se tipoCliente for "Premium", o desconto será de 0.15m;
+- Se tipoCliente não for nenhum dos valores, o desconto será de 0.00m.
+
+Program.cs:
+
+```C#
+// código omitido
+
+desconto = tipoCliente switch
+{
+    "Comum" => 0.05m,
+    "VIP" => 0.10m,
+    "Premium" => 0.15m,
+    _ => 0.00m
+};
+```
+
+Testando o código  
+Após converter if e else em um switch-case mais organizado visualmente, podemos testar o código executando um Console.WriteLine() em desconto.
+
+```C#
+// código omitido
+desconto = tipoCliente switch
+{
+    "Comum" => 0.05m,
+    "VIP" => 0.10m,
+    "Premium" => 0.15m,
+    _ => 0.00m
+};
+
+Console.WriteLine(desconto);
+```
+
+Ao executar o programa, basta digitar o tipo de cliente: comum, VIP ou premium. Se digitarmos um tipo não cadastrado, o desconto será 0.00, seguindo o padrão. Ao digitar VIP, o resultado é 0.10, confirmando o funcionamento do switch-case.
+
+Conclusão
+
+Com isso, finalizamos nossos aprendizados teóricos sobre expressões condicionais. Na sequência, haverá diversos exercícios para você praticar, especialmente a parte referente ao switch-case, para aprimorar a resolução de problemas. Bons estudos e até a próxima!
+
+### Aula 2 - Calculadora de operações básicas - Desafio 1
+
+Você precisa construir uma minicalculadora que realiza uma operação matemática com dois números. O usuário deve digitar o primeiro número, o segundo número e qual operação deseja fazer: soma (+), subtração (-), multiplicação (*) ou divisão (/). Com base na operação digitada, o programa deve calcular e exibir o resultado.
+
+Crie um programa que:
+
+- Receba dois números digitados pelo usuário.
+- Pergunte qual a operação matemática deseja realizar (+, -, *, /).
+- Exiba “Operação inválida” caso a entrada seja diferente das operações acima.
+- Exiba o resultado de acordo com a operação escolhida.
+Exemplo de entrada:
+
+Digite o primeiro número:  
+5
+
+Digite o segundo número:  
+5
+
+Digite a operação (+, -, *, /):  
+*
+
+Saída esperada:  
+Resultado: 25
+
+Opinião do instrutor
+
+Nessa atividade, exploramos a estrutura switch como uma alternativa para evitar múltiplos condicionais if/else quando lidamos com comparações diretas. Primeiro, convertemos a entrada do usuário para double, garantindo que números decimais sejam suportados. Em seguida, o switch avalia a operação desejada e executa o cálculo correspondente.
+
+```C#
+Console.WriteLine("Digite o primeiro número:");
+double num1 = double.Parse(Console.ReadLine());
+ 
+Console.WriteLine("Digite o segundo número:");
+double num2 = double.Parse(Console.ReadLine());
+ 
+Console.WriteLine("Digite a operação (+, -, *, /):");
+string operacao = Console.ReadLine();
+ 
+switch (operacao)
+{
+    case "+":
+        Console.WriteLine("Resultado: " + (num1 + num2));
+        break;
+    case "-":
+        Console.WriteLine("Resultado: " + (num1 - num2));
+        break;
+    case "*":
+        Console.WriteLine("Resultado: " + (num1 * num2));
+        break;
+    case "/":
+        Console.WriteLine("Resultado: " + (num1 / num2));
+        break;
+    default:
+        Console.WriteLine("Operação inválida.");
+        break;
+}
+```
+
+Por que usar switch e não if neste caso?
+
+Estamos testando um único valor fixo (operacao) contra múltiplas possibilidades específicas ("+", "-", "*", "/"). O switch é mais apropriado quando:
+
+- O valor a ser avaliado não muda durante as comparações.
+- As comparações são diretas, sem necessidade de expressões compostas com and ou or.
+- Queremos deixar o código mais limpo, legível e organizado.
+
+![alt text](image.png)
+
+Insira aqui a descrição dessa imagem para ajudar na acessibilidade
+
+Vantagens do switch sobre if neste contexto:
+
+- Evita a repetição de múltiplos if (variavel == valor).
+- Agrupa todas as possibilidades de forma mais clara.
+- Permite melhor manutenção e leitura futura do código.
+- Torna a estrutura do programa mais enxuta quando se trata de múltiplas comparações sobre o mesmo valor.
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2 - Saudação personalizada - Desafio 2
+
+Você trabalha no desenvolvimento de Lura IA, um assistente virtual para um sistema de atendimento ao cliente. Ela precisa personalizar suas mensagens de acordo com o horário do dia para tornar a interação mais amigável e natural.
+
+Para isso, você precisa de um programa que:
+
+- Pergunte ao usuário qual o momento do dia (manhã, tarde ou noite).
+- Solicite o nome do usuário.
+- Exiba uma saudação personalizada com base no momento do dia e no nome fornecido.
+- Exiba uma mensagem em caso de opção inválida.
+
+Exemplo de entrada:
+
+1 - Manhã  
+2 - Tarde  
+3 - Noite  
+
+Que momento do dia é agora?  
+2
+
+Qual o seu nome?  
+Mike
+
+Saída esperada:
+
+Boa tarde, Mike.
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos uma estrutura switch para direcionar a saída com base na escolha do usuário. Lembrando que o switch é mais apropriado para casos onde estamos testando um único valor fixo para comparação. Neste caso, a entrada é capturada como um número inteiro (int), que é comparado nos casos do switch. Cada caso imprime a saudação correspondente, concatenando o nome fornecido pelo usuário.
+
+```C#
+Console.WriteLine("""
+    1 - Manhã
+    2 - Tarde
+    3 - Noite
+ 
+    Que momento do dia é agora?
+    """);
+int momento = int.Parse(Console.ReadLine());
+ 
+Console.WriteLine("Qual o seu nome? ");
+string nome = Console.ReadLine();
+switch(momento)
+{
+    case 1:
+        Console.WriteLine($"Bom dia, {nome}");
+        break;
+    case 2:
+        Console.WriteLine($"Boa tarde, {nome}");
+        break;
+    case 3:
+        Console.WriteLine($"Boa noite, {nome}");
+        break;
+    default:
+        Console.WriteLine("Entrada inválida");
+        break;
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2 - Sistema de recompensas - Desafio 3
+
+Imagine que você está desenvolvendo um sistema de missões para um jogo medieval. Os jogadores podem resgatar cupons secretos encontrados em baús ou derrotando inimigos para obter recompensas exclusivas. Cada cupom desbloqueia um benefício diferente.
+
+Crie um programa que:
+
+- Receba o cupom de recompensa inserido
+- Retorne uma mensagem de acordo com o cupom
+- Informe que “Recompensa indisponível” se o cupom for inválido
+
+As recompensas de acordo com o cupom são:
+
+- DOBRAR: Ganhar 2x EXP por 1 hora.
+- CURAR: Poção de cura.
+- OURO: 1000 moedas de ouro.
+- ESPECIAL: Item lendário.
+
+Sua tarefa é usar a sintaxe simplificada do switch-case para retornar a mensagem diretamente na atribuição da variável, tornando o código mais conciso e legível.
+
+Exemplo de entrada:
+
+Digite o código de recompensa (DOBRAR, CURAR, OURO, ESPECIAL):  
+ESPECIAL
+
+Saída esperada:
+
+Item lendário desbloqueado!
+
+Opinião do instrutor
+
+Nesta atividade, usamos o switch como expressão para mapear diretamente cada código à sua mensagem correspondente. A sintaxe simplificada elimina a necessidade de múltiplos case e break, tornando o código mais limpo e fácil de manter. O padrão _ trata códigos inválidos, centralizando toda a lógica em uma única estrutura.
+
+```C#
+Console.WriteLine("Digite o código de recompensa (DOBRAR, CURAR, OURO, ESPECIAL):");
+string codigo = Console.ReadLine();
+ 
+string mensagem = codigo switch
+{
+    "DOBRAR" => "Você ganhou 2x EXP por 1 hora!",
+    "CURAR" => "Poção de cura adquirida!",
+    "OURO" => "+1000 moedas de ouro!",
+    "ESPECIAL" => "Item lendário desbloqueado!",
+    _ => "Recompensa indisponível."
+};
+ 
+Console.WriteLine(mensagem);
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2 - Refatorando a organização de livros - Desafio 4
+
+Você é responsável pelo sistema de catalogação de uma biblioteca universitária. Atualmente, os livros são classificados em categorias com base em seus códigos numéricos, mas o código está extenso e difícil de manter devido ao uso excessivo de condicionais if/else.
+
+Atualmente, os livros são organizados em códigos de três dígitos e catalogados de acordo com o número inicial em seu código, seguindo a tabela abaixo:
+
+- 1: Ficção Científica
+- 2: Literatura Clássica
+- 3: Fantasia
+- 4: Romance
+- 5: Suspense/Mistério
+- 6: Não ficção
+- 7: Biografias/Memórias
+- 8: Distopia
+- 9: Infantojuvenil
+
+Então, um livro com o código 451 seria catalogado como “Romance”, enquanto o livro com o código 762 seria “Biografias/Memórias”. Sua tarefa é refatorar o código atual para utilizar switch/case.
+
+Código atual:
+
+```C#
+Console.WriteLine("Digite o código do livro: ");
+int codigo = int.Parse(Console.ReadLine());
+ 
+if (codigo >= 100 && codigo <= 199)
+{
+    Console.WriteLine("Ficção Científica");
+}
+else if (codigo >= 200 && codigo <= 299)
+{
+    Console.WriteLine("Literatura Clássica");
+}
+else if (codigo >= 300 && codigo <= 399)
+{
+    Console.WriteLine("Fantasia");
+}
+else if (codigo >= 400 && codigo <= 499)
+{
+    Console.WriteLine("Romance");
+}
+else if (codigo >= 500 && codigo <= 599)
+{
+    Console.WriteLine("Suspense/Mistério");
+}
+else if (codigo >= 600 && codigo <= 699)
+{
+    Console.WriteLine("Não Ficção");
+}
+else if (codigo >= 700 && codigo <= 799)
+{
+    Console.WriteLine("Biografias/Memórias");
+}
+else if (codigo >= 800 && codigo <= 899)
+{
+    Console.WriteLine("Distopia");
+}
+else if (codigo >= 900 && codigo <= 999)
+{
+    Console.WriteLine("Infantojuvenil");
+}
+else
+{
+    Console.WriteLine("Código inexistente");
+}
+```
+
+Exemplo de entrada:
+
+Digite o código do livro:  
+142
+
+Saída esperada:
+
+Ficção Científica
+
+Opinião do instrutor
+
+A estrutura switch/case é ideal para substituir múltiplos if/else quando a decisão depende de valores específicos. Nessa atividade, usamos divisão inteira (/ 100) para converter o código em um valor único (ex.: 142 / 100 = 1), permitindo mapear cada categoria diretamente. Isso reduz a complexidade do código e o torna mais legível.
+
+```C#
+Console.WriteLine("Digite o código do livro: ");
+int codigo = int.Parse(Console.ReadLine());
+switch (codigo / 100)
+{
+    case 1:
+        Console.WriteLine("Ficção Científica");
+        break;
+    case 2:
+        Console.WriteLine("Literatura Clássica");
+        break;
+    case 3:
+        Console.WriteLine("Fantasia");
+        break;
+    case 4:
+        Console.WriteLine("Romance");
+        break;
+    case 5:
+        Console.WriteLine("Suspense/Mistério");
+        break;
+    case 6:
+        Console.WriteLine("Não Ficção");
+        break;
+    case 7:
+        Console.WriteLine("Biografias/Memórias");
+        break;
+    case 8:
+        Console.WriteLine("Distopia");
+        break;
+    case 9:
+        Console.WriteLine("Infantojuvenil");
+        break;
+    default:
+        Console.WriteLine("Código inexistente");
+        break;
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2 - Autenticação de usuário - Desafio 5
+
+Você é responsável por implementar o sistema de autenticação de um aplicativo corporativo. O sistema precisa diferenciar entre administradores, usuários cadastrados e visitantes, garantindo o acesso adequado a cada perfil.
+
+Crie um programa que:
+
+- Solicite que o usuário digite seu nome
+- Verifique se o nome corresponde ao do administrador (ex: "Admin")
+- Caso não seja o administrador, exibir uma mensagem de "Usuário não cadastrado" e apresentar um menu com opções:
+- Cadastrar novo usuário
+- Acessar como convidado
+- Sair do sistema
+
+Exemplo de entrada:
+
+Sistema de Autenticação
+-----------------------
+
+Digite seu nome de usuário: Arthur Dent
+
+Saída esperada:
+
+Caso a opção escolhida seja cadastrar novo usuário:
+
+Usuário não cadastrado.
+
+Opções disponíveis:  
+[1] Cadastrar novo usuário  
+[2] Acessar como convidado  
+[3] Sair  
+1  
+
+Novo usuário 'Arthur Dent' cadastrado com sucesso!
+
+Caso a opção escolhida seja entrar como convidado:
+
+Usuário não cadastrado.
+
+Opções disponíveis:  
+[1] Cadastrar novo usuário  
+[2] Acessar como convidado  
+[3] Sair  
+2
+
+Acesso concedido como convidado.
+
+Caso o usuário esteja cadastrado:
+
+Bem-vindo, Arthur Dent!
+
+Opinião do instrutor
+
+Nesta atividade, combinamos a estrutura if com switch-case para organizar o fluxo de autenticação.
+
+Primeiro, utilizamos o if para verificar se o nome inserido pelo usuário corresponde ao do administrador. Essa abordagem é ideal porque estamos lidando com uma condição direta e única, ou seja, a comparação entre o nome digitado e o nome "Admin".
+
+Caso o nome não seja do administrador, o sistema apresenta um menu com três opções. Para tratar essas escolhas de forma clara e organizada, utilizamos a estrutura switch, onde cada case representa uma ação específica:
+
+Cadastrar novo usuário
+
+Acessar como convidado
+
+Sair do sistema
+
+O uso do switch aqui é útil porque estamos lidando com um único valor fixo (opcao) que pode assumir diferentes caminhos predefinidos, o que torna o código mais limpo.
+
+Esse tipo de combinação (if para decisão única + switch para múltiplos caminhos) é bastante comum em sistemas de menus interativos.
+
+```C#
+string ADMIN_USER = "Admin";
+ 
+Console.WriteLine("Sistema de Autenticação");
+Console.WriteLine("-----------------------");
+Console.Write("Digite seu nome de usuário: ");
+ 
+string username = Console.ReadLine();
+ 
+if (username == ADMIN_USER)
+{
+    Console.WriteLine($"Bem-vindo, {username}!");
+}
+ 
+else
+{
+    Console.WriteLine("Usuário não cadastrado.");
+    Console.WriteLine("Opções disponíveis:");
+    Console.WriteLine("[1] Cadastrar novo usuário");
+    Console.WriteLine("[2] Acessar como convidado");
+    Console.WriteLine("[3] Sair");
+ 
+    int opcao = int.Parse(Console.ReadLine());
+ 
+    switch (opcao)
+    {
+        case 1:
+            Console.WriteLine($"Novo usuário '{username}' cadastrado com sucesso!");
+            break;
+ 
+        case 2:
+            Console.WriteLine("Acesso concedido como convidado.");
+            break;
+ 
+        case 3:
+            Console.WriteLine("Saindo do sistema...");
+            Environment.Exit(0);
+            break;
+ 
+        default:
+            Console.WriteLine("Opção inválida. O sistema será encerrado.");
+            break;
+    }
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2 - Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você adquiriu conhecimento prático e aplicou conceitos de programação em C#, com foco no uso de condicionais. Agora, você pode:
+
+- Tomar decisões lógicas em seus programas utilizando estruturas condicionais como if/else e switch-case;
+- Implementar fluxos de decisão complexos combinando operadores lógicos e comparações;
+- Refatorar código substituindo estruturas condicionais aninhadas por alternativas mais legíveis.
+
+Quer continuar explorando a programação em C#? Recomendamos a [Formação Aprenda a programar em C# com Orientação a Objetos](https://cursos.alura.com.br/formacao-c-sharp-orientacao-objetos).
+
+Nos vemos nos próximos cursos práticos!
