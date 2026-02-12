@@ -29,24 +29,24 @@ void exibiTitulo()
 exibiTitulo();
 //=======================================================================
 
-//string resultado = new AulaPratica1().VerificaCondicaoSaldo();
-//Console.WriteLine($"\n{resultado}");
+string resultado = new AulaPratica1().VerificaCondicaoSaldo();
+Console.WriteLine($"\n{resultado}");
 //=======================================================================
 
-//new AulaPratica1().ExibiMSG();
+new AulaPratica1().ExibiMSG();
 //=======================================================================
 
-//new AulaPratica1().ClassificacaoAluno();
+new AulaPratica1().ClassificacaoAluno();
 //=======================================================================
 
-//new AulaPratica1().VerificaAcesso();
+new AulaPratica1().VerificaAcesso();
 //=======================================================================
 
-//new AulaPratica1().ClassificaFaixaEtaria();
+new AulaPratica1().ClassificaFaixaEtaria();
 //=======================================================================
 
 // Calculadora de operações básicas - Aula 2 Desafio 1
-//new AulaPratica2().Calculadora();
+new AulaPratica2().Calculadora();
 //=============================================
 
 //Saudação personalizada - Aula 2 Desafio 2

@@ -1,0 +1,15 @@
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\bin\Debug\net10.0\PraticandoLoops.exe
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\bin\Debug\net10.0\PraticandoLoops.deps.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\bin\Debug\net10.0\PraticandoLoops.runtimeconfig.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\bin\Debug\net10.0\PraticandoLoops.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\bin\Debug\net10.0\PraticandoLoops.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.GeneratedMSBuildEditorConfig.editorconfig
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.AssemblyInfoInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.AssemblyInfo.cs
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.csproj.CoreCompileInputs.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.sourcelink.json
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\refint\PraticandoLoops.dll
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.pdb
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\PraticandoLoops.genruntimeconfig.cache
+C:\IMPORTANTE\ALURA\Carreira-Desenvolvimento-Back-End-.NET\NÍVEL  Base\4-Praticando C# condicionais com ifelse e switchcase\PraticandoLoops\obj\Debug\net10.0\ref\PraticandoLoops.dll

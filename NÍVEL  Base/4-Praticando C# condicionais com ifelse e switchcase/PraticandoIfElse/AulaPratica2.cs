@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace PraticandoIfElse
+namespace PraticandoIfElse;
+
+internal class AulaPratica2
 {
-    internal class AulaPratica2
+    public AulaPratica2()
     {
-        public AulaPratica2()
-        {
-        }
+    }
         // Calculadora de operações básicas - Aula 2 Desafio 1
         public void Calculadora()
         {
@@ -245,6 +245,4 @@ Digite dos números e escolha qual é o seu momento do dia:");
                 }
             }
         }
-
     }
-}

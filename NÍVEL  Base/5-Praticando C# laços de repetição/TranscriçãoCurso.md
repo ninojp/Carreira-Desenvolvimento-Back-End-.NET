@@ -382,17 +382,16 @@ Executar esse código sem a linha de atualização resultará em um loop infinit
 Conclusão  
 Com isso, conseguimos entender operadores, loops e laços de repetição em C#. Na sequência, discutiremos outros loops da linguagem C#!
 
-## Aula 1 -  - Desafio 1
-Soma das vendas
- Próxima Atividade
+## Aula 1 - Soma das vendas - Desafio 1
 
 Imagine que uma loja de roupas te contratou para criar um sistema simples que ajude a registrar e somar os valores das vendas diárias. A loja não possui um sistema de caixa automatizado, então os funcionários precisam digitar manualmente o valor de cada venda ao final do dia. O desafio é criar um programa que permita a entrada desses valores de forma contínua até que o usuário digite "0", indicando que todas as vendas do dia foram registradas.
 
 Crie um programa que:
 
-Solicite ao usuário que digite o valor de cada venda (inteiro).
-Enquanto o valor digitado for diferente de “0”, o programa adiciona o valor ao total acumulado. O valor precisa ser solicitado ao menos uma vez antes de verificar se o loop deve continuar ou não.
-Quando o usuário digita “0”, o programa encerra o loop e exibe o total de vendas do dia.
+- Solicite ao usuário que digite o valor de cada venda (inteiro).
+- Enquanto o valor digitado for diferente de “0”, o programa adiciona o valor ao total acumulado. O valor precisa  ser solicitado ao menos uma vez antes de verificar se o loop deve continuar ou não.
+- Quando o usuário digita “0”, o programa encerra o loop e exibe o total de vendas do dia.
+
 Exemplo de entrada:
 
 Digite o valor da venda (ou 0 para encerrar): 15
@@ -400,12 +399,11 @@ Digite o valor da venda (ou 0 para encerrar): 20
 Digite o valor da venda (ou 0 para encerrar): 25
 Digite o valor da venda (ou 0 para encerrar): 30
 Digite o valor da venda (ou 0 para encerrar): 0
-Copiar código
+
 Saída esperada:
 
 Total de vendas do dia: R$90
-Copiar código
-Ver opinião do instrutor
+
 Opinião do instrutor
 
 Nesta atividade, você teve a oportunidade de trabalhar com o laço do..while, uma estrutura de controle que permite a execução de um bloco de código repetidamente até que uma condição específica seja atendida. A principal característica do do..while é que ele garante a execução do bloco de código pelo menos uma vez, independentemente da condição, como é mostrado no fluxograma abaixo:
@@ -414,22 +412,130 @@ Fluxograma ilustrando a estrutura de um laço do..while. O processo começa no i
 
 Neste caso, o laço do..while é útil pois queremos garantir que o usuário insira pelo menos um valor de venda, mesmo que seja o valor "0", que sinaliza o término da entrada de dados.
 
-int valor, total = 0;
- 
+```C#
+int valor, total = 0; 
 do
 {
     Console.Write("Digite o valor da venda (ou 0 para encerrar): ");
-    valor = int.Parse(Console.ReadLine());
- 
+    valor = int.Parse(Console.ReadLine()); 
     total += valor;
-} while (valor != 0);
- 
+} while (valor != 0); 
 Console.WriteLine("Total de vendas do dia: R$" + total);
-Copiar código
+```
+
 Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
 
-## Aula 1 -  - Desafio 2
-## Aula 1 -  - Desafio 3
+## Aula 1 - Controle de estoque - Desafio 2
+
+Imagine que você é responsável pelo setor de logística de uma loja de eletrônicos. Seu primeiro desafio é criar um sistema para registrar a entrada de produtos no estoque. Como a loja recebe mercadorias diariamente, você precisa de uma ferramenta que permita adicionar quantidades de forma ágil e que mostre o total acumulado, evitando erros manuais.
+
+Crie um programa que:
+
+- Pergunte ao usuário se ele deseja registrar uma nova entrada.
+- Se sim, solicitar a quantidade e atualizar o estoque.
+- Repetir o processo até que o usuário decida encerrar.
+
+Exemplo de entrada:
+
+Deseja adicionar um produto ao estoque?  
+1 - Sim | 0 - Não  
+1
+
+Saída esperada:
+
+Quantidade:  
+5  
+Estoque atual: 5
+
+Deseja continuar?  
+1 - Sim | 0 - Não
+1  
+
+Quantidade:  
+10  
+Estoque atual: 15
+
+Deseja continuar?  
+1 - Sim | 0 - Não  
+0
+
+Obrigado por usar nosso sistema de estoque!
+
+Opinião do instrutor
+
+Nesta atividade, utilizamos um loop while para manter o programa em execução enquanto o usuário desejar adicionar itens. A variável estoque atua como um acumulador, somando cada nova quantidade inserida.
+
+- O loop continua enquanto resposta for 1.
+- estoque += quantidade incrementa o valor atual do estoque.
+- Quando o usuário responde algo diferente de "1", o loop é encerrado.
+
+```C#
+int estoque = 0;
+Console.WriteLine("Deseja adicionar um produto ao estoque?");
+Console.WriteLine("1 - Sim | 0 - Não");
+int resposta = int.Parse(Console.ReadLine());
+while (resposta == 1)
+{
+    Console.WriteLine("Quantidade:");
+    int quantidade = Convert.ToInt32(Console.ReadLine());
+    estoque += quantidade;
+    Console.WriteLine($"Estoque atual: {estoque}");
+    Console.WriteLine("Deseja continuar?");
+    Console.WriteLine("1 - Sim | 0 - Não");
+    resposta = int.Parse(Console.ReadLine());
+}
+Console.WriteLine("Obrigado por usar nosso sistema de estoque!");
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 1 - Número secreto - Desafio 3
+
+Imagine que você está desenvolvendo um jogo onde o jogador deve tentar adivinhar qual é o número secreto. O desafio é criar um programa que continue solicitando tentativas até que o jogador acerte o número, fornecendo feedback a cada tentativa.
+
+Crie um programa que:
+
+- Declare uma variável com um inteiro para ser o número secreto.
+- Verifique a cada interação se o número digitado é igual ao número secreto.
+- Se o jogador errar, o programa informa que a tentativa está errada e solicita uma nova tentativa.
+- Se o jogador acertar o número, o programa exibe uma mensagem de parabéns e encerra o jogo.
+
+Exemplo de entrada:
+
+Tente adivinhar o número entre 1 e 10: 7
+
+Saída esperada:
+
+Parabéns, você acertou!
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos um laço while para criar um jogo interativo de adivinhação. O valor da tentativa do jogador é comparado ao número secreto, e, com base nessa comparação, o programa fornece feedback para guiar o jogador até o acerto.
+
+Dentro do nosso loop, nós temos uma condicional que verifica se o número digitado é igual ao número secreto (if (tentativa == segredo)), e caso seja verdadeiro, a mensagem que o usuário acertou é exibida na tela para então o código ser encerrado com o break logo abaixo.
+
+Na expressão while (tentativa != segredo), o operador != verifica se a tentativa do jogador é diferente do número secreto. Enquanto essa condição for verdadeira, o laço continua executando, solicitando novas tentativas. Quando o jogador acerta o número, a condição se torna falsa, e o laço é encerrado, exibindo a mensagem de parabéns.
+
+```C#
+int segredo = 7;
+int tentativa;
+ 
+while (true)
+{
+    Console.Write("Tente adivinhar o número entre 1 e 10: ");
+    tentativa = int.Parse(Console.ReadLine());
+ 
+    if (tentativa == segredo)
+    {
+        Console.WriteLine("Parabéns, você acertou!");
+        break;
+    }
+    Console.WriteLine("Errado! Tente novamente.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
 ## Aula 1 -  - Desafio 4
 ## Aula 1 -  - Desafio 5
 ## Aula 1 -  - Desafio 6
