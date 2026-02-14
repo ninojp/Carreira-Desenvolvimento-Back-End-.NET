@@ -536,6 +536,524 @@ while (true)
 
 Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
 
-## Aula 1 -  - Desafio 4
-## Aula 1 -  - Desafio 5
-## Aula 1 -  - Desafio 6
+## Aula 1 - Buscando em uma lista - Desafio 4
+
+Imagine que você está desenvolvendo um sistema de chamada escolar para uma instituição de ensino. A pessoa responsável precisa verificar rapidamente se um aluno específico está presente na lista de chamada. Seu programa deve percorrer a lista de nomes e, ao encontrar o aluno procurado, interromper imediatamente.
+
+Crie um programa que:
+
+- Defina uma lista de nomes dos alunos.
+- Utilize um loop para percorrer a lista.
+- Interrompa a busca quando o nome desejado for encontrado.
+- Informe se o nome não for encontrado.
+
+Exemplo de entrada: Para a seguinte lista de nomes: { "Ana", "Carlos", "Bianca", "João", "Marina" }.
+
+Digite o nome do aluno:  
+João
+
+Saída esperada (caso encontre):
+
+Aluno encontrado na posição: 3
+
+Saída esperada (caso não encontre):
+
+Aluno não está presente na lista
+
+Opinião do instrutor
+
+Nesta atividade, exploramos o uso do loop while combinado com o comando break. O código utiliza um contador (indice++) para percorrer a lista, oferecendo um controle sobre o fluxo de execução. Quando o nome procurado é encontrado, o break interrompe imediatamente o loop, otimizando o processo de busca.
+
+```C#
+List`<string>` alunos = new List`<string>` { "Ana", "Carlos", "Bianca", "João", "Marina" };
+ 
+Console.WriteLine("Digite o nome do aluno:");
+string nomeBusca = Console.ReadLine();
+int indice = 0;
+bool encontrado = false; 
+while (indice < alunos.Count)
+{
+    if (alunos[indice] == nomeBusca)
+    {
+        encontrado = true;
+        break;  
+    }
+    indice++; 
+}
+if (encontrado)
+{
+    Console.WriteLine($"Aluno encontrado na posição: {indice}");
+}
+else
+{
+    Console.WriteLine("Aluno não está presente na lista");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 1 - Senhas de atendimento - Desafio 5
+
+Imagine que você trabalha em uma agência de atendimento ao cliente, como um banco ou uma loja de serviços. Sua tarefa é criar um sistema de senhas para organizar o atendimento dos clientes. O sistema deve permitir que novas senhas sejam geradas quando um cliente chega e que as senhas sejam chamadas quando um atendente está disponível. O desafio é garantir que o sistema funcione de forma eficiente, mantendo o controle das senhas geradas e das senhas já atendidas, proporcionando uma experiência organizada e justa para todos os clientes.
+
+Crie um programa que:
+
+Exiba um menu com as opções: Gerar nova senha, Chamar próxima senha e Sair.
+Para a opção Gerar nova senha, o sistema deve gerar uma nova senha sequencial (por exemplo, 001, 002, 003, etc.).
+Para a opção Chamar próxima senha, o sistema deve chamar a próxima senha disponível na fila, seguindo a ordem de chegada.
+O menu deve ser exibido repetidamente até que o usuário escolha a opção Sair.
+Dica: Você pode utilizar o método ToString("D3") para formatar a saída no formato: 001, 002, 003. Por exemplo:
+
+```C#
+Console.WriteLine("Senha gerada: " + senhaGerada.ToString("D3"));
+```
+
+Exemplo de entrada:
+
+```C#
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 1
+```
+
+Saída esperada:
+
+```C#
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 1
+Senha gerada: 001
+ 
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 1
+Senha gerada: 002
+ 
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 2
+Senha chamada: 001
+ 
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 2
+Senha chamada: 002
+
+
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 4
+Opção inválida.
+ 
+1 - Gerar nova senha
+2 - Chamar próxima senha
+3 - Sair
+Escolha uma opção: 3
+Encerrando sistema.
+```
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos dois contadores para simular um sistema de senhas de atendimento. O primeiro contador (senhaGerada) é responsável por gerar novas senhas sequenciais, enquanto o segundo contador (senhaAtual) controla qual senha deve ser chamada para atendimento.
+
+A estrutura do menu é controlada por um laço do..while, que mantém o sistema em execução até que o usuário escolha a opção Sair. Dentro do laço, um switch..case é usado para tratar as diferentes escolhas do usuário: gerar uma nova senha, chamar a próxima senha ou encerrar o sistema.
+
+Um ponto importante nesta atividade é o uso do método ToString("D3"). Esse método formata o número da senha para que ele sempre tenha três dígitos, preenchendo com zeros à esquerda, se necessário. Por exemplo, o número 1 é exibido como 001, e o número 12 como 012.
+
+```C#
+int senhaGerada = 0;
+int senhaAtual = 0;
+int opcao;
+ 
+do
+{
+Console.WriteLine("1 - Gerar nova senha");
+Console.WriteLine("2 - Chamar próxima senha");
+Console.WriteLine("3 - Sair");
+Console.Write("Escolha uma opção: ");
+opcao = int.Parse(Console.ReadLine());
+ 
+switch (opcao)
+{
+    case 1:
+        senhaGerada++;
+        Console.WriteLine("Senha gerada: " + senhaGerada.ToString("D3"));
+        break;
+    case 2:
+        senhaAtual++;
+        Console.WriteLine("Senha chamada: " + senhaAtual.ToString("D3"));
+        break;
+    case 3:
+        Console.WriteLine("Encerrando sistema.");
+        break;
+    default:
+        Console.WriteLine("Opção inválida.");
+        break;
+}
+} while (opcao != 3);
+```
+
+## Aula 1 - Conversor de temperatura - Desafio 6
+
+Você está desenvolvendo um conversor de temperatura que permite ao usuário escolher entre duas opções: converter de Celsius para Fahrenheit ou de Fahrenheit para Celsius. O programa deve exibir um menu com essas opções e repetir até que o usuário escolha sair.
+
+Para isso, você precisará de um programa que:
+
+- Exiba um menu com as opções de conversão e saída.
+- Permita ao usuário escolher uma das opções.
+- Exiba uma mensagem de Operação inválida caso escolhido uma opção que não existe.
+- Realize a conversão de temperatura com base na escolha do usuário.
+- Repita o menu até que o usuário escolha sair.
+
+Dicas:
+
+> Fórmula para conversão de Celsius para fahrenheit: (celsius * 9 / 5) + 32
+> Fórmula para conversão de fahrenheit para Celsius: (fahrenheit - 32) * 5 / 9
+
+Exemplo de entrada:
+
+1 - Celsius para Fahrenheit  
+2 - Fahrenheit para Celsius  
+3 - Sair
+
+Escolha uma opção: 1  
+Digite a temperatura em Celsius: 25
+
+Saída esperada:
+
+25°C equivalem a 77°F
+
+Opinião do instrutor
+
+Nessa atividade, a estrutura switch é utilizada para tratar as diferentes opções do menu, permitindo que o programa execute a conversão correta com base na escolha do usuário. As fórmulas de conversão são aplicadas diretamente dentro de cada caso do switch, garantindo que o cálculo seja realizado de forma precisa. A repetição do menu é controlada pela condição do do..while, que só é interrompida quando o usuário seleciona a opção de saída.
+
+```C#
+int opcao;
+do
+{
+    Console.WriteLine("1 - Celsius para Fahrenheit");
+    Console.WriteLine("2 - Fahrenheit para Celsius");
+    Console.WriteLine("3 - Sair");
+    Console.Write("Escolha uma opção: ");
+    opcao = int.Parse(Console.ReadLine());
+    switch (opcao)
+    {
+        case 1:
+            Console.Write("Digite a temperatura em Celsius: ");
+            double celsius = double.Parse(Console.ReadLine());
+            double fahrenheit = (celsius * 9 / 5) + 32;
+            Console.WriteLine($"{celsius}°C equivalem a {fahrenheit}°F");
+            break;
+        case 2:
+            Console.Write("Digite a temperatura em Fahrenheit: ");
+            double fahr = double.Parse(Console.ReadLine());
+            double cel = (fahr - 32) * 5 / 9;
+            Console.WriteLine($"{fahr}°F equivalem a {cel}°C");
+            break;
+        case 3:
+            Console.WriteLine("Saindo...");
+            break;
+        default:
+            Console.WriteLine("Opção inválida. Tente novamente.");
+            break;
+    }
+} while (opcao != 3);
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - Laço for - Vídeo 1
+
+Transcrição  
+Conhecemos dois laços bastante comuns na linguagem C#: o while e o do while. Além disso, entendemos que esses laços possuem três elementos fundamentais:
+
+- A inicialização;
+- A condição;
+- E a atualização.
+
+Em C#, existe um laço que une essas três partes em uma única linha: o for.
+
+Utilizando o laço de repetição for
+
+Entendendo a sintaxe do laço for
+
+Abaixo, podemos observar a sintaxe desse tipo de laço:
+
+```csharp
+for (inicialização; condição; atualização)
+{
+    bloco de código
+}
+```
+
+Inicialmente, declaramos um for e abrimos parênteses. Entre esses parênteses, teremos três elementos separados por ponto e vírgula. São eles:
+
+A inicialização da variável;  
+A condição para o funcionamento do laço, com base na variável inicializada;
+E a atualização, definindo como a variável deve ser modificada com o tempo.
+Após declarar esses três elementos, podemos abrir chaves e inserir dentro delas o bloco de código que desejamos repetir com o laço for.
+
+Construindo um laço for  
+Agora, observaremos na prática como funciona o laço for. No arquivo Program.cs no Visual Studio, temos o exemplo do while feito anteriormente:
+
+Program.cs:
+
+```csharp
+int contador = 10;
+while (contador >= 1)
+{
+    Console.WriteLine(contador);
+    contador--;
+}
+Console.WriteLine("A contagem chegou ao fim!");
+```
+
+Podemos declarar um for usando como base as condições estabelecidas. Para isso, precisamos declarar inicialmente a inicialização. Nesse caso, a inicialização corresponde à declaração de int contador = 10, então faremos o mesmo.
+
+A condição é que contador seja maior ou igual (>=) a 1. Além disso, queremos atualizar o contador, então adicionaremos contador--. Em seguida, entre chaves, colocaremos o que deve se repitir. Nesse caso, vamos utilizar Console.WriteLine() recebendo contador entre parênteses.
+
+No loop for, não precisamos colocar contador-- no escopo, pois ele está na declaração.
+
+```csharp
+// código omitido
+for (int contador = 10; contador >= 1; contador--)
+{
+    Console.WriteLine(contador);
+}
+```
+
+Nesse momento, o compilador reclama um erro, pois a variável contador já foi declarada. Para solucionar, basta comentar o trecho do laço while acima.
+
+```csharp
+/*int contador = 10;
+while (contador >= 1)
+{
+    Console.WriteLine(contador);
+    contador--;
+}
+Console.WriteLine("A contagem chegou ao fim!");*/
+
+// código omitido
+```
+
+Uso comum de variáveis em laços for  
+Uma prática comum ao usar loops, especialmente o for, é utilizar uma variável chamada i. Podemos declarar int i, e enquanto i for maior ou igual a 1, faremos i--.
+
+```csharp
+// código omitido
+
+for (int i = 10; i >= 1; i--)
+{
+    Console.WriteLine(i);
+}
+```
+
+Esse é o padrão geralmente utilizado com o for, por isso usaremos esse nome de variável. Ele é bastante comum, pois trabalharemos com a variável i somente dentro do loop.
+
+Assim, deixamos apenas uma letra para facilitar a indexação.
+
+Verificando o resultado  
+Uma vez declarado o laço for, podemos verificar se ele funciona corretamente.
+
+Ao executar, teremos o contador regressivo no terminal. Falta apenas exibir que a contagem chegou ao fim. Nesse caso, basta adicionar a mensagem com WriteLine().
+
+```csharp
+// código omitido
+for (int i = 10; i >= 1; i--)
+{
+    Console.WriteLine(i);
+}
+Console.WriteLine("A contagem chegou ao fim!");
+```
+
+Como resultado, temos valores listados de 10 a 1, em ordem decrescente, finalizando com a mensagem "A contagem chegou ao fim!", conforme configurado.
+
+Conclusão  
+Assim, entendemos como o paralelo de juntar coisas em uma única linha funciona!
+
+## Aula 2 -  Manipulando laços: break e continue - Vídeo 2
+
+Transcrição  
+Anteriormente, conhecemos os três tipos de loops em C#:
+
+- while;
+- do while;
+- E for.
+
+Estamos em uma situação padrão, que é executar o loop até o fim. No entanto, existem situações em que podemos querer alterar o fluxo de execução de alguma forma. Para isso, manipulamos o laço de repetição utilizando duas palavras-chave específicas: break e continue.
+
+Manipulando laços com break e continue
+
+Analisando um exemplo prático  
+Entenderemos melhor a manipulação do laço de repetição no Visual Studio. Com o arquivo Program.cs aberto, trabalharemos em um novo exemplo:
+
+Program.cs:
+
+```csharp
+// código omitido
+
+List<string> funcionarios = new List<string>
+        {
+            "João-Gerente-8500",
+            "Maria-Analista de Sistemas-6200",
+            "Carlos-Desenvolvedor-5500",
+            "Ana-Designer-4800",
+            "Pedro-Suporte Técnico-3900",
+            "Fernanda-Coordenadora de Projetos-7300",
+            "Ricardo-Contador-6000",
+            "Juliana-RH-4500"
+        };
+```
+
+O código acima representa uma lista de funcionários.
+
+Qual é a ideia dessa lista? Suponha que temos uma API ou um arquivo do qual lemos os dados de alguma forma. Isso é bastante comum no dia a dia.
+
+Uma vez que obtemos os dados, eles estão disponíveis na lista.
+
+Buscando um funcionário específico com break  
+A ideia é percorrer a lista de funcionários até encontrar, por exemplo, os dados de Fernanda. Temos vários nomes e dados de funcionários, seguindo a estrutura Nome-Cargo-Salário, e queremos pegar especificamente os dados de Fernanda. Essa é uma prática frequente em buscas no cotidiano.
+
+Como fazer isso utilizando estruturas de repetição?
+
+Podemos declarar um laço for, onde a condição é int i = 0. O i deve ser do tamanho da lista. Poderíamos contar quantas pessoas há na lista, mas, em situações em que lidamos com arquivos gigantes ou buscamos dados em uma API, é inviável contar manualmente.
+
+Portanto, é melhor computar isso utilizando funções do C#. Utilizaremos funcionarios.Count para obter o tamanho da lista, evitando a contagem manual. Dessa forma, enquanto i for menor ou igual a funcionarios.Count, incrementamos i e percorremos a lista.
+
+```csharp
+// código omitido
+for (int i = 0; i < funcionarios.Count; i++)
+{
+
+}
+```
+
+O objetivo é, para cada linha, pegar a primeira parte da estrutura Nome-Cargo-Salário e verificar se corresponde a "Fernanda". Das três partes disponíveis, usaremos a primeira.
+
+Para fazer isso, usamos a manipulação de strings. No escopo do for, teremos uma variável var nome. O nome será obtido de cada linha da coleção de funcionários. Podemos atribuir funcionarios[i] à variável nome para indexar e pegar a posição i da coleção.
+
+Na sequência, vamos separar a estrutura conforme os hifens usando o método Split(). Entre os parênteses, passaremos a string do hífen (-). O Split() dividirá a linha em três partes: 0, 1 e 2. O nome está na parte 0, então usaremos novamente os colchetes para pegar a posição [0]. Feito isso, vamos conferir se o nome é igual a "Fernanda" com o método Equals().
+
+```csharp
+// código omitido
+for (int i = 0; i < funcionarios.Count; i++)
+{
+    var nome = funcionarios[i].Split("-")[0];
+    if (nome.Equals("Fernanda"))
+    {
+
+    }
+}
+```
+
+Como buscamos por Fernanda, se nome for igual a "Fernanda", podemos imprimir os dados. Para isso, usaremos Console.WriteLine() nos dados da Fernanda.
+
+Adicionaremos uma interpolação de string para dizer: $"Dados do funcionário buscado: ". Em seguida, passaremos o conteúdo da lista, que será {funcionarios[i]}, posição desejada.
+
+Ao fazer isso, percorremos a lista de funcionários e, ao encontrar a Fernanda, não precisamos passar pelo Ricardo e pela Juliana, então podemos parar o loop.
+
+Para isso, manipulamos o fluxo de execução utilizando a palavra-chave break.
+
+```csharp
+// código omitido
+
+for (int i = 0; i < funcionarios.Count; i++)
+{
+    var nome = funcionarios[i].Split("-")[0];
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+        break;
+    }
+}
+```
+
+Filtrando funcionários por salário com continue  
+Temos também a palavra-chave continue. Para pensar no continue, suponha que queremos exibir todos os funcionários com salário menor do que R$ 5.000.
+
+Isso significa que iremos ignorar funcionários quem têm salários maiores do que R$ 5.000, pois são condições opostas. Para representar isso, usamos o continue.
+
+Podemos copiar o laço for para agilizar o processo, mas agora nosso interesse é o salário dos funcionários. Vamos criar uma variável chamada salario, que está disponível na posição 2 do array gerado pelo Split(), então usamos o índice 2.
+
+```csharp
+// código omitido
+
+for (int i = 0; i < funcionarios.Count; i++)
+{
+    var salario = funcionarios[i].Split("-")[2];
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+        break;
+    }
+}
+```
+
+No entanto, o salario será do tipo string. Precisamos convertê-lo para int, então após a declaração de salario, criaremos var salarioInt, que será igual a int.Parse(salario).
+
+```csharp
+// código omitido
+
+for (int i = 0; i < funcionarios.Count; i++)
+{
+    var salario = funcionarios[i].Split("-")[2];
+    var salarioInt = int.Parse(salario);
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+        break;
+    }
+}
+```
+
+Com a variável salarioInt, a ideia é ignorar todos os funcionários com salário maior que R$ 5.000.
+
+Faremos um if para verificar se salarioInt é maior que R$ 5.000. Se for, ignoramos o loop e não executamos o conteúdo. Após apagar o trecho de código do escopo do bloco if, adicionaremos a instrução continue. O continue retorna para o início do for, sem executar o restante do loop. Assim, se o salário for maior que R$ 5.000, continuamos. Se for menor, imprimimos.
+
+```csharp
+// código omitido
+for (int i = 0; i < funcionarios.Count; i++)
+{
+    var salario = funcionarios[i].Split("-")[2];
+    var salarioInt = int.Parse(salario);
+    if (salarioInt > 5000)
+    {
+        continue;
+    }
+    Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+}
+```
+
+Ao executar o programa, recebemos os dados corretos. A primeira impressão é do exemplo anterior, em que buscávamos a Fernanda, mas as três últimas linhas mostram os salários menores do que R$ 5.000, que são da Ana, do Pedro e da Juliana.
+
+Retorno no terminal:
+
+```csharp
+Dados do funcionário buscado: Fernanda-Coordenadora de Projetos-7300
+Dados do funcionário buscado: Ana-Designer-4800
+Dados do funcionário buscado: Pedro-Suporte Técnico-3900
+Dados do funcionário buscado: Juliana-RH-4500
+```
+
+Conclusão
+
+O break nos faz sair imediatamente do loop, evitando instruções e verificações adicionais no laço for, enquanto o continue nos faz voltar para a verificação e executar tudo novamente, ignorando o restante das instruções. Nos encontramos no próximo vídeo, onde falaremos sobre o laço while!
+
+## Aula 2 - Foreach - Vídeo 3
+
+
+## Aula 2 -  - Vídeo 4
+## Aula 2 -  - Vídeo 1
+## Aula 2 -  - Desafio 1
+## Aula 2 -  - Desafio 2
+## Aula 2 -  - Desafio 3
+## Aula 2 -  - Desafio 4
+## Aula 2 -  - Desafio 5
+## Aula 2 -  - Desafio 6
+## Aula 2 -  - Desafio 

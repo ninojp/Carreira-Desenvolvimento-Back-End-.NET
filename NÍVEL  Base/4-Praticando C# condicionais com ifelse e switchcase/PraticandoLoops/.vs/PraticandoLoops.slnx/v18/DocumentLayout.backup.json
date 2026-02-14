@@ -3,24 +3,12 @@
   "WorkspaceRootPath": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F069D33-8AA2-BA95-D997-39A08F8176E2}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\breakcontinue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F069D33-8AA2-BA95-D997-39A08F8176E2}|PraticandoLoops.csproj|solutionrelative:breakcontinue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\numerosecreto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|solutionrelative:numerosecreto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\controledeestoque.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|solutionrelative:controledeestoque.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\somadasvendas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|solutionrelative:somadasvendas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\whilelacorepeticao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{726FD07A-334F-4FC8-9F93-1EF4F4778856}|PraticandoLoops.csproj|solutionrelative:whilelacorepeticao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F069D33-8AA2-BA95-D997-39A08F8176E2}|PraticandoLoops.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel  base\\4-praticando c# condicionais com ifelse e switchcase\\praticandoloops\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F069D33-8AA2-BA95-D997-39A08F8176E2}|PraticandoLoops.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -53,68 +41,33 @@
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAkwEgAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAFMAAAAAAAAAAAA3wGQAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-12T06:48:11.08Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "WhileLacoRepeticao.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\WhileLacoRepeticao.cs",
-              "RelativeDocumentMoniker": "WhileLacoRepeticao.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\WhileLacoRepeticao.cs",
-              "RelativeToolTip": "WhileLacoRepeticao.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAA0wEUAAAABAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "BreakContinue.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\BreakContinue.cs",
+              "RelativeDocumentMoniker": "BreakContinue.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\BreakContinue.cs*",
+              "RelativeToolTip": "BreakContinue.cs*",
+              "ViewState": "AgIAADYAAAAAAAAAAAA3wDQAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-12T06:57:10.948Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SomaDasVendas.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\SomaDasVendas.cs",
-              "RelativeDocumentMoniker": "SomaDasVendas.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\SomaDasVendas.cs",
-              "RelativeToolTip": "SomaDasVendas.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-12T08:56:07.051Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ControleDeEstoque.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\ControleDeEstoque.cs",
-              "RelativeDocumentMoniker": "ControleDeEstoque.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\ControleDeEstoque.cs",
-              "RelativeToolTip": "ControleDeEstoque.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAkwA4AAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-12T09:39:27.257Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NumeroSecreto.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\NumeroSecreto.cs",
-              "RelativeDocumentMoniker": "NumeroSecreto.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL  Base\\4-Praticando C# condicionais com ifelse e switchcase\\PraticandoLoops\\NumeroSecreto.cs",
-              "RelativeToolTip": "NumeroSecreto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-12T18:20:43.318Z",
+              "WhenOpened": "2026-02-14T02:30:17.692Z",
               "EditorCaption": ""
             }
           ]

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PraticandoLoops")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48fc6577b349d05ba3ec4f79adc6b55348c09a5a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+105b15887557f6b047d849162971d03847b26701")]
 [assembly: System.Reflection.AssemblyProductAttribute("PraticandoLoops")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PraticandoLoops")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
