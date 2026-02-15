@@ -101,10 +101,59 @@ Console.ResetColor();
 forLacoRepeticao.ForLoop();
 //=================================================================================
 
-//Aula 2 -  Manipulando laços: break e continue - Vídeo 2
+//Aula 2 - Manipulando laços: break e continue - Vídeo 2
 BreakContinue breakContinue = new BreakContinue();
 Console.ForegroundColor = ConsoleColor.DarkBlue;
 Console.WriteLine("\nAula 2 -  Manipulando laços: break e continue - Vídeo 2 ");
 Console.ResetColor();
 breakContinue.ControlandoLoops();
 breakContinue.Exemplo();
+//==================================================================================
+
+//Aula 2 - Foreach - Vídeo 3
+ForEach forEach = new ForEach();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - Foreach - Vídeo 3");
+Console.ResetColor();
+forEach.ParaCada();
+//===================================================================================
+
+//Aula 2 - Pulando números - Desafio 1
+PulandoNumeros pulandoNumeros = new PulandoNumeros();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - Pulando números - Desafio 1");
+Console.ResetColor();
+pulandoNumeros.NumeroPular();
+//====================================================================================
+
+//Aula 2 - Tabela de multiplicação - Desafio 2
+Tabuada tabuada = new Tabuada();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - Tabela de multiplicação - Desafio 2");
+Console.ResetColor();
+tabuada.ATabuada();
+//====================================================================================
+
+//Aula 2 - Classificação de números - Desafio 3
+ClassificaNumeros classificaNumeros = new ClassificaNumeros();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - Classificação de números - Desafio 3");
+Console.ResetColor();
+classificaNumeros.ClassificarNumeros();
+//=====================================================================================
+
+//Aula 2 - O laço certo para o problema - Desafio 4
+LacoCerto lacoCerto = new LacoCerto();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - O laço certo para o problema - Desafio 4");
+Console.ResetColor();
+lacoCerto.LacoCertoParaOProblema();
+
+//======================================================================================
+
+//Aula 2 - Quantos ímpares foram digitados? - Desafio 5
+QuantosImpares quantosImpares = new QuantosImpares();
+Console.ForegroundColor = ConsoleColor.DarkBlue;
+Console.WriteLine("\nAula 2 - Quantos ímpares foram digitados? - Desafio 5");
+Console.ResetColor();
+quantosImpares.QuantosImparesTem();

@@ -1047,13 +1047,347 @@ O break nos faz sair imediatamente do loop, evitando instruções e verificaçõ
 
 ## Aula 2 - Foreach - Vídeo 3
 
+Transcrição  
+Aproveitando que estamos discutindo coleções, há uma última estrutura de repetição que podemos explorar: o foreach, utilizado especificamente quando lidamos com coleções.
 
-## Aula 2 -  - Vídeo 4
-## Aula 2 -  - Vídeo 1
-## Aula 2 -  - Desafio 1
-## Aula 2 -  - Desafio 2
-## Aula 2 -  - Desafio 3
-## Aula 2 -  - Desafio 4
-## Aula 2 -  - Desafio 5
-## Aula 2 -  - Desafio 6
-## Aula 2 -  - Desafio 
+- Utilizando o laço de repetição foreach
+- Entendendo a sintaxe do laço foreach
+- Observe abaixo a sintaxe do foreach:
+
+```csharp
+foreach (tipo variável  nome variável  in  coleção)
+{
+    bloco de código
+}
+```
+
+Primeiro, utilizamos a palavra-chave foreach, seguida da declaração de uma variável. Essa variável terá um tipo e um nome específicos.
+
+A variável estará em uma coleção, por isso usamos in coleção. Para cada variável da coleção, executaremos um bloco de código delimitado por chaves.
+
+**Construindo um laço foreach**  
+Vamos entender como o laço foreach funciona na prática? Para testar, adaptaremos um laço for tradicional do arquivo Program.cs para foreach. Faremos isso substituindo a palavra-chave.
+
+Program.cs:
+
+```csharp
+// código omitido
+foreach (int i = 0; i <= funcionarios.Count; i++)
+{
+    var nome = funcionarios[i].Split("-")[0]; 
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+        break;
+    }
+}
+```
+
+Dica! Para evitar perder o trecho de código original, podemos copiá-lo e colar ao final do código, comentando os exemplos anteriores.
+
+Após adaptar o for tradicional para foreach, ele não compila mais, pois não temos a sintaxe de inicialização, atualização e outras características do for. No foreach, precisamos criar uma variável do mesmo tipo dos elementos na coleção. Por exemplo: se tivermos uma lista de strings, criaremos uma variável do tipo string. Podemos chamar essa variável de funcionario.
+
+```csharp
+// código omitido
+
+foreach (string funcionario)
+{
+    var nome = funcionarios[i].Split("-")[0]; 
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionarios[i]}");
+        break;
+    }
+}
+```
+
+O funcionario faz parte de uma coleção, ou seja, ele está dentro da (in) lista de funcionários (funcionarios). Uma vez que fazemos isso, não precisamos mais usar a indexação com [i] ao chamar funcionarios na variável nome. Dito isso, vamos remover os colchetes e usar a variável declarada anteriormente como funcionario. Isso nos ajuda a não precisar lidar com indexações.
+
+```csharp
+// código omitido
+
+foreach (string funcionario in funcionarios)
+{
+    var nome = funcionario.Split("-")[0]; 
+    if (nome.Equals("Fernanda"))
+    {
+        Console.WriteLine($"Dados do funcionário buscado: {funcionario}");
+        break;
+    }
+}
+```
+
+**Verificando o resultado**  
+Feito isso, vamos executar e verificar se o exemplo da Fernanda funciona.
+
+Como resultado, temos os dados do funcionário buscado, que é a Fernanda. Assim, temos o mesmo funcionamento, mas especializado para lidar com coleções.
+
+Ao comparar essas duas estruturas, devemos sempre considerar nosso problema. Neste caso, em que apenas realizamos uma busca na coleção, faz sentido trabalhar com foreach. No entanto, se quisermos saber a posição da Fernanda na lista, precisaríamos usar o índice de alguma forma.
+
+Talvez fosse necessário criar uma nova variável para armazenar esse índice, por exemplo, o que daria muito mais trabalho do que usar um for tradicional, pois com ele, conseguimos recuperar o dado usando o índice criado anteriormente.
+
+Devemos sempre analisar os problemas para identificar a melhor solução.
+
+**Conclusão**  
+Agora que conhecemos as estruturas de repetição, é hora de praticar. Disponibilizamos uma série de exercícios para você assimilar melhor o conteúdo. Bons estudos e até a próxima!
+
+## Aula 2 - Pulando números - Desafio 1
+
+Você está desenvolvendo um sistema de seleção para um evento de tecnologia onde os participantes são identificados por números de 1 a 20. No entanto, os números múltiplos de 3 estão reservados para uma etapa especial do evento, onde os participantes serão direcionados para atividades exclusivas. Para evitar confusão, esses números não devem ser exibidos na lista inicial de participantes.
+
+Sua tarefa é criar um programa que exiba todos os números de 1 a 20, mas pule os múltiplos de 3.
+
+Saída esperada:
+
+1
+2
+4
+5
+7
+8
+10
+11
+13
+14
+16
+17
+19
+20
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos um laço for para iterar sobre os números de 1 a 20. A instrução for funciona da seguinte maneira:
+
+Fluxograma representando a estrutura de um laço for. O processo começa com a inicialização da variável, seguido pela verificação da condição. Se a condição for verdadeira, as instruções são executadas e a variável é atualizada (incremento ou decremento). O processo se repete até que a condição seja falsa, momento em que o laço é encerrado.
+
+A instrução continue é usada para pular a execução do restante do laço quando o número atual é um múltiplo de 3. A verificação é feita com o operador módulo %, que retorna o resto da divisão. Se i % 3 == 0, o continue é acionado, fazendo com que o programa vá diretamente para a próxima iteração, sem executar o Console.WriteLine(i) para esse número.
+
+```csharp
+for (int i = 1; i <= 20; i++)
+{
+    if (i % 3 == 0)
+    {
+        continue;
+    }
+    Console.WriteLine(i);
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - Tabela de multiplicação - Desafio 2
+
+Imagine que você está criando um programa para mostrar a tabela de multiplicação de um número específico. Neste exercício, o número escolhido será o 7, e a ideia é gerar a tabela de multiplicação de 7, de 1 até 10, usando um laço de repetição. O que você deve fazer é escrever um programa que utilize um laço de repetição para imprimir a tabela de multiplicação do número 7. O programa deve exibir o resultado de cada multiplicação, conforme o exemplo abaixo.
+
+Saída esperada:
+
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70
+
+Opinião do instrutor
+
+Primeiramente, usamos o laço for para iterar de 1 até 10. A cada iteração, o valor da variável de controle do laço (neste caso, o índice i) vai ser multiplicado pelo número 7 e o resultado será impresso no formato correto. Veja que o número 7 é fixo no exercício, mas você pode modificar para receber o número de entrada de um usuário, por exemplo. O laço for é ideal para esse tipo de tarefa, pois sabemos exatamente o número de vezes que ele precisa se repetir.
+
+Vamos ao código:
+
+```csharp
+int numero = 7; 
+ 
+for (int i = 1; i <= 10; i++) 
+{ 
+ 
+    Console.WriteLine(numero + " x " + i + " = " + (numero * i)); 
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - Classificação de números - Desafio 3
+
+Você está desenvolvendo um sistema de validação de respostas para um quiz online. O sistema recebe uma lista de pontuações de participantes (de 0 a 10) e precisa classificá-los como "Reprovado" (se a pontuação for menor que 6) ou "Aprovado" (se a pontuação for maior ou igual que 6).
+
+Para isso, você precisará de um programa que:
+
+- Armazene as notas dos participantes em uma lista.
+- Percorra cada nota usando um laço.
+- Utilize uma estrutura condicional para classificar e exibir a situação de cada participante.
+
+Exemplo de entrada:
+
+List `<int>` notas = new List`<int>` { 4, 7, 5, 9, 6 };
+```
+
+Saída esperada:
+
+Nota 4 - Reprovado
+Nota 7 - Aprovado
+Nota 5 - Reprovado
+Nota 9 - Aprovado
+Nota 6 - Aprovado
+
+Opinião do instrutor
+
+Nessa atividade, utilizamos o laço for para percorrer a lista de notas. A estrutura condicional if..else é utilizada para tomar decisões com base no valor de cada nota, classificando os participantes como "Aprovado" ou "Reprovado".
+
+```csharp
+List `<int>` notas = new List`<int>` { 4, 7, 5, 9, 6 };
+ 
+for (int i = 0; i < notas.Count; i++)
+{
+    if (notas[i] >= 6)
+    {
+        Console.WriteLine($"Nota {notas[i]} - Aprovado");
+    }
+    else
+    {
+        Console.WriteLine($"Nota {notas[i]} - Reprovado");
+    }
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - O laço certo para o problema - Desafio 4
+
+Imagine que você é responsável pelo sistema de monitoramento das notas dos alunos de uma escola. Cada aluno tem sua nota monitorada e é importante verificar se algum aluno está com a nota abaixo da média de aprovação. Caso a nota de algum aluno esteja abaixo da média, você precisa gerar um alerta. O alerta de aprovação é uma média de 7.0, ou seja, qualquer aluno com nota abaixo disso deve gerar um aviso.
+
+Seu desafio é escolher o laço de repetição mais adequado para percorrer a lista de alunos e verificar se as notas deles estão dentro da faixa de aprovação.
+
+```csharp
+List<double> notas= new List<double>
+        {
+    8.5,
+    6.2,
+    9.1,
+    5.8,
+    7.4
+        };
+```
+
+Saída esperada:
+
+O aluno com a nota 8,5 está indo muito bem!  
+O aluno com a nota 6,2 está abaixo da média!  
+O aluno com a nota 9,1 está indo muito bem!  
+O aluno com a nota 5,8 está abaixo da média!  
+O aluno com a nota 7,4 está indo muito bem!  
+
+E aí? Como você resolveria esse problema? Qual tipo de laço de repetição você usaria para percorrer a lista de alunos? Justifique sua escolha e faça o código de resolução, explicando os motivos de usar o laço escolhido no contexto desse problema.
+
+Opinião do instrutor
+
+Neste cenário, o laço foreach é o mais adequado. O foreach foi feito exatamente para esse tipo de situação em que você precisa iterar sobre todos os itens de uma coleção, como uma lista, sem se preocupar com o índice ou a quantidade de elementos. Ele torna o código mais limpo e fácil de entender. Veja como o foreach funciona:
+
+Fluxograma mostrando o funcionamento do laço foreach em C#. Inicia com "Início do foreach", passando pelo item iterável, verificando se há dados. Se sim, executa o loop, mostrando a chave, valor e comando para cada item. Caso contrário, finaliza o laço com "Fim do foreach".
+
+Usar um foreach elimina a necessidade de gerenciar índices manualmente, como acontece em um for. Isso reduz o risco de cometer erros, como acessar um índice fora do alcance ou esquecer de atualizar o índice corretamente. Além disso, o foreach é ideal quando você não precisa modificar a coleção durante a iteração (como seria o caso aqui, onde estamos apenas verificando os valores) e quando a ordem dos elementos não importa (no caso, estamos apenas verificando as notas de todos os alunos).
+
+Por que não usar outros tipos de laços?
+
+for: O for é útil quando você precisa iterar sobre uma coleção com base em um índice, ou quando a quantidade de elementos é conhecida e fixa. No entanto, isso exigiria um código extra para acessar os elementos via índice e aumenta a chance de erros ao gerenciar o índice manualmente. No caso deste exercício, como você está apenas percorrendo uma lista e não se importa com os índices, o foreach é mais simples e direto.
+
+while: O while seria mais indicado se tivéssemos que continuar verificando as notas até que uma condição específica fosse atendida, por exemplo, enquanto a lista não estivesse vazia, ou até que um número indefinido de alunos fosse processado, mas não é o caso aqui, já que a lista está claramente definida.
+
+do-while: Se utilizássemos um do-while, precisaríamos criar uma condição de parada após cada iteração para garantir que a execução não seja repetida indefinidamente. Isso tornaria o código mais complicado sem trazer benefícios claros. Agora, veja como fica a resolução do exercício:
+
+```csharp
+List<double> notas = new List<double>
+{
+    8.5,
+    6.2,
+    9.1,
+    5.8,
+    7.4
+};
+double mediaCorte = 7.0;
+foreach (var nota in notas)
+{
+    if (nota < mediaCorte)
+    {
+        Console.WriteLine($"O aluno com a nota {nota} está abaixo da média!");
+    } 
+    else
+    {
+        Console.WriteLine($"O aluno com a nota {nota} está indo muito bem!");
+    }
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - Quantos ímpares foram digitados? - Desafio 5
+
+Você está desenvolvendo uma ferramenta de análise de dados que permite ao usuário inserir 10 números inteiros, um por vez. O objetivo é contar quantos desses números são ímpares e, ao final, exibir o total de números ímpares digitados.
+
+Para isso, você precisará de um programa que:
+
+Solicite ao usuário a inserção de 10 números inteiros.
+Verifique, para cada número, se ele é ímpar.
+Conte quantos números ímpares foram digitados.
+Exiba o total de números ímpares ao final.
+
+Exemplo de entrada:
+
+```csharp
+Digite um número: 2
+Digite um número: 3
+Digite um número: 5
+Digite um número: 7
+Digite um número: 10
+Digite um número: 12
+Digite um número: 15
+Digite um número: 17
+Digite um número: 20
+Digite um número: 21
+```
+
+Saída esperada:
+
+Você digitou 6 números ímpares.
+
+Opinião do instrutor
+
+Nesta atividade, o uso do laço for é usada para que o programa solicite exatamente 10 números ao usuário. A cada iteração, o programa verifica se o número digitado é ímpar utilizando a condição if (numero % 2 != 0). Caso o número seja ímpar, a variável qtdImpares é incrementada. Essa abordagem permite contar de forma eficiente quantos números ímpares foram inseridos, sem a necessidade de armazenar todos os valores em uma lista.
+
+```csharp
+int qtdImpares = 0;
+ 
+for (int i = 0; i < 10; i++)
+{
+    Console.Write("Digite um número: ");
+    int numero = int.Parse(Console.ReadLine());
+ 
+    if (numero % 2 != 0)
+    {
+        qtdImpares++;
+    }
+}
+ 
+Console.WriteLine($"Você digitou {qtdImpares} números ímpares.");
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+## Aula 2 - Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você adquiriu conhecimento prático e aplicou conceitos de programação em C#, com foco no uso de laços de repetição. Agora, você pode:
+
+- Automatizar tarefas repetitivas com laços de repetição.
+- Criar menus interativos para experiências dinâmicas.
+- Resolver problemas matemáticos de forma eficiente.
+
+Quer continuar explorando a programação em C#? Recomendamos os seguintes conteúdos:
+
+[Artigo: Listas em C#](https://www.alura.com.br/artigos/listas-em-csharp?utm_source=gnarus&utm_medium=timeline)
+[Guia de Carreira C# (C SHARP)](https://youtu.be/RtwvUNvabPA) | #HipstersPontoTube
+[Curso: C#: aplicando a Orientação a Objetos](https://cursos.alura.com.br/course/csharp-aplicando-orientacao-objetos)
+
+Nos vemos nos próximos cursos práticos!
