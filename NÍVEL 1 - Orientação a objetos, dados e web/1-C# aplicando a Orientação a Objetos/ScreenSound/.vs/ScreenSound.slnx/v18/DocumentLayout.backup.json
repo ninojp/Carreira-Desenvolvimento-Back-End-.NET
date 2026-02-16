@@ -1,0 +1,108 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\carros.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|solutionrelative:carros.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\musica.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|solutionrelative:musica.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\contabancaria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A680CA74-C7D3-4E21-B837-BDE29DC9DA44}|ScreenSound.csproj|solutionrelative:contabancaria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAA3wEoAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T17:16:20.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Musica.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Musica.cs",
+              "RelativeDocumentMoniker": "Musica.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Musica.cs",
+              "RelativeToolTip": "Musica.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T17:19:46.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ContaBancaria.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\ContaBancaria.cs",
+              "RelativeDocumentMoniker": "ContaBancaria.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\ContaBancaria.cs",
+              "RelativeToolTip": "ContaBancaria.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T19:14:50.729Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Carros.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Carros.cs",
+              "RelativeDocumentMoniker": "Carros.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Carros.cs",
+              "RelativeToolTip": "Carros.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T19:45:02.958Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
