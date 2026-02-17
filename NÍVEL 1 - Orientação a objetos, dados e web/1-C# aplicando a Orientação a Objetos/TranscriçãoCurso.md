@@ -458,4 +458,710 @@ Na próxima aula:
 
 Vamos seguir as boas práticas de programação e alterar a visibilidade dos atributos, além de aplicar um conceito muito usado no mundo real chamado Properties.
 
-### Aula 1 -  - Vídeo 8
+## Aula 2 - Métodos de acesso e Propriedades
+
+### Aula 2 - Atribuindo valores - Vídeo 1
+
+Transcrição  
+Daniel: Agora nós criamos nosso próprio tipo pela primeira vez, a classe Musica. Isso nos permite destacar a diferença, uma vez que até o momento estávamos utilizando apenas os tipos disponíveis no .NET, no C#.
+
+Só para mostrar essa diferença, vamos fazer uma mudança visual. Vamos selecionar com o mouse a aba Program.cs e vamos arrastá-la para a região central, ao lado. O efeito vai ser ter os dois códigos, a classe Musica, a aba com o arquivo Música.cs de um lado e a classe Program.cs. Na classe Program.cs estamos usando, e na classe Musica foi o nosso primeiro tipo que criamos.
+
+Guilherme: Legal, Daniel.
+
+No entanto, estou pensando no que desenvolvemos e tem uma vulnerabilidade na nossa aplicação. Se alterarmos a variável musica.disponível para True no arquivo Program.cs, a música fica disponível no plano. Está muito fácil manipular uma parte que teoricamente é sensível na nossa aplicação, é só alterar essa variável, é para ser simples assim?
+
+Program.cs
+
+musica2.disponivel = true;
+
+Daniel: A parte que estamos utilizando a classe está obtendo acesso a informações sensíveis.
+
+Guilherme: E como tornamos essa parte da aplicação mais protegida?
+
+Daniel: Vamos tornar essa parte da aplicação mais protegida. Analisando a classe Música, assim como temos nos atributos nome, artista, duração e disponível, a visibilidade como pública, podemos passar que a visibilidade vai ficar privada (Private).
+
+A palavra reservada "private" é usada para especificar que um membro de uma classe só pode ser acessado dentro dessa mesma classe.
+
+Podemos substituir na linha 6 por private. O que estamos dizendo é que agora o acesso a essa característica disponível só pode ser feito dentro das chaves.
+
+Musica.cs
+
+```csharp
+class Musica 
+{
+    public string nome;
+    public string artista;
+    public int duracao;
+    private bool disponível;
+}
+// código omitido
+```
+
+Ninguém mais fora disso consegue enxergar esse atributo.
+
+Guilherme: Inclusive, no Program.cs, já apareceu um sublinhado vermelho abaixo do atributo disponivel.
+
+Daniel: Exatamente, mas temos um outro problema.
+
+No arquivo Program.cs, após o musical.disponivel = true; adicionamos um Console.WriteLine e vamos tentar usar a variável musica1 e mostrar o atributo disponível. Percebe-se que ele não fica disponível na lista do Visual Studio no menu flutuante exibido após digitarmos. Mesmo tentando escrever o atributo, não conseguimos nem ler a informação.
+
+Program.cs
+
+```csharp
+// código omitido
+musica1.duracao = 273;
+musica1.disponivel = true;
+Console.WriteLine(musica1.disponivel);
+// código omitido
+```
+
+Desse modo, conseguimos resolver um problema, que era não querer que outras classes enxerguem ou alterem essa informação de disponibilidade de plano. Porém, também não conseguimos nem saber se a música está disponível ou não.
+
+Guilherme: Vamos pensar nisso no próximo vídeo?
+
+Daniel: Vamos nessa!
+
+### Aula 2 - Centralizando acesso - Vídeo 2
+
+Transcrição  
+Guilherme: O desafio agora é o seguinte: temos um atributo e desejamos que esse atributo fique visível para outras partes, mas ao mesmo tempo não queremos que ele seja facilmente alterado. Como resolvemos isso?
+
+Daniel: Exatamente, temos duas operações que podemos fazer com esse atributo - a leitura e a escrita. Desejamos separar um pouco isso. Queremos que a leitura fique disponível, mas queremos proteger e centralizar a escrita.
+
+Queremos que o atributo disponivel tenha o valor false e só seja alterado para true se determinadas condições forem atendidas. Para garantir isso, vamos separar essas operações. Já conhecemos a solução - iremos criar métodos dentro da classe que desejamos, no caso, a classe Musica.
+
+Vamos criar o nosso primeiro método, que terá a responsabilidade de escrever o atributo disponivel. Utilizaremos a palavra reservada public, pois desejamos que outras classes possam ter acesso. Como esse método não retorna nenhum valor, utilizaremos a palavra reservada void e o nome do método será EscreveDisponivel().
+
+O método receberá um argumento que corresponde ao valor que desejamos atribuir ao atributo disponivel: bool value. Dentro do escopo do método colocamos que o atributo disponivel receberá o valor (value).
+
+Musica.cs
+
+```csharp
+// código omitido
+public void EscreveDisponivel(bool value)
+{
+    disponivel = value;
+}
+// código omitido
+```
+
+Agora, vamos criar o método responsável pela leitura do atributo disponível. Novamente, criaremos um método público. Como o valor retornado será do tipo booleano, definimos esse tipo como o tipo de retorno do método: public bool.
+
+O nome do método será LerDisponivel() e não receberá nenhum valor de entrada. Dentro do escopo do método, utilizamos a palavra reservada return seguida do atributo disponivel, pois é esse valor que desejamos retornar.
+
+Musica.cs
+
+```csharp
+// código omitido
+
+public bool LerDisponivel()
+{
+    return disponivel;
+}
+// código omitido
+```
+
+Podemos salvar as alterações feitas até o momento e irmos ao arquivo Program.cs.
+
+Agora precisamos usar esses métodos de leitura e escrita no lugar da atribuição direta que estávamos fazendo anteriormente.
+
+Se desejamos escrever que o atributo disponivel recebe true, não usamos mais a seguinte sintaxe: musica1.disponivel = true;. Usamos: musica1.EscreveDisponivel(true);. No WriteLine, onde estamos lendo, usamos o LerDisponivel(). Aplicamos a mesma lógica para a variável musica2, mas desta vez é false.
+
+Program.cs
+
+```csharp
+// código omitido
+musica1.EscreveDisponivel(true);
+Console.WriteLine(musica1.LerDisponivel());
+
+musica2.EscreveDisponivel(false);
+Console.WriteLine(musica2.LerDisponivel());
+
+// código omitido
+```
+
+Ainda podemos passar o valor true ou false como argumento de entrada desse método EscreveDisponivel, mas a diferença é que agora temos controle do que podemos fazer ou não com esse atributo.
+
+Guilherme: No futuro, se nossa aplicação crescer, podemos adicionar condições para controlar a atribuição do valor disponível. Por exemplo, somente pessoas com certa permissão podem atribuir esse valor.
+
+Daniel: Isso mesmo.
+
+A ideia é adicionar um if() no método EscreveDisponivel e, se a condição for atendida, conseguimos escrever o valor.
+
+Guilherme: Isso é muito diferente do que tínhamos antes, quando escrevíamos diretamente no atributo disponível.
+
+Daniel: Então, agora precisamos fazer isso para todos os atributos.
+
+No arquivo Musica.cs vamos colocar private para todos atributos. O que vai acontecer é que teremos esses métodos como: escreve nome, lê nome; escreve artista e lê artista. Ou seja, vamos ter uma série de métodos responsáveis apenas por controlar esse acesso de leitura e escrita.
+
+No entanto, há um recurso interessante no C Sharp (C#) que podemos utilizar para tentar simplificar um pouco esse código.
+
+Vamos fazer isso no próximo vídeo.
+
+### Aula 2 - Properties - Vídeo 3
+
+Transcrição  
+Daniel: Gui, vamos aprender um recurso do C# que nos ajudará a tornar nosso código mais conciso e sucinto.
+
+Guilherme: Sabe o que eu estava pensando? É que nós colocamos o primeiro método EscreveDisponivel() e em seguida o LerDisponivel(). Se pegarmos um próximo projeto em C#, qual será o desafio? Como iremos acessar esses valores? Será que EscreveDisponivel() e LerDisponivel() são padrões em todos os projetos em C#? Provavelmente não, especialmente devido à preferência pela escrita em inglês.
+
+Daniel: Exatamente isso.
+
+Considerando a questão da economia de código e visando facilitar nesse sentido, foi estabelecido um padrão. O próprio C# nos proporciona isso. E assim, como as palavras reservadas estão em inglês, a palavra "escreve" foi traduzida para set e a palavra "lê" foi traduzida para get.
+
+Escreve: set
+
+Lê: get
+
+Portanto, essas duas palavras se tornarão palavras reservadas para expressar essa operação.
+
+No arquivo Musica.cs, onde está escrito private bool disponivel, faremos uma mudança. Vamos remover o ponto e vírgula, abrir chaves e declarar que esse atributo disponivel possui operações de leitura e escrita.
+
+Utilizaremos get; set; para indicar explicitamente que o atributo disponivel tem tanto uma operação de leitura quanto uma operação de escrita.
+
+Musica.cs
+
+```csharp
+class Musica
+{
+    public string nome;
+    public string artista;
+    public int duracao;
+    private bool disponivel { get; set; }
+
+// código omitido
+```
+
+Guilherme: Certo, então não é mais necessário utilizar os métodos public void EscreveDisponivel() e public bool LerDisponível()?
+
+Daniel: Não precisa, podemos remover da linha 8 até a linha 16. Assim, diminuiu bastante a linha de código.
+
+Guilherme: Legal, acredito que podemos aplicar esse padrão para todos os atributos, não é mesmo?
+
+Daniel: Podemos fazer isso, mas há uma modificação adicional que precisamos fazer: o atributo disponivel precisa ser público novamente. Portanto, vamos adicionar a palavra reservada public antes dele, indicando que ele está acessível para classes externas à classe Musica, e também vamos especificar que ele possui operações de leitura e escrita usando get e set.
+
+Musica.cs
+
+```csharp
+class Musica
+{
+    public string nome;
+    public string artista;
+    public int duracao;
+    public bool disponivel { get; set; }
+
+// código omitido
+```
+
+Guilherme: Será que conseguimos visualizar isso no arquivo program.cs?
+
+Daniel: Conseguimos fazer isso. Vamos voltar ao arquivo Program.cs. Agora, como removemos aqueles métodos, nas linhas 5 e 6, eles não estão mais presentes. Em vez disso, teremos disponível = true e novamente Console.WriteLine(musica1.disponível).
+
+Program.cs
+
+```csharp
+Musica musica1 = new Musica();
+musica1.nome = "Roxane";
+musica1.artista = "The Police";
+musica1.duracao = 273;
+musica1.disponivel = true;
+Console.WriteLine(musica1.disponivel);
+
+Musica musica2 = new Musica();
+musica2.nome = "Vertigo";
+musica2.artista = "U2";
+musica2.duracao = 367;
+musica2.EscreveDisponivel(false);
+
+musica1.ExibirFichaTecnica();
+musica2.ExibirFichaTecnica();
+```
+
+Guilherme: Mas o que mudou daquele nosso primeiro disponivel para agora, com o get e o set?
+
+Daniel: Parece que não houve mudanças visíveis, certo? No entanto, internamente, de forma transparente para quem está usando a nossa classe Musica (neste caso, é a program.cs), estamos indicando que existe um método que faz a escrita. Assim, podemos realizar exercício do futuro que você mencionou, como adicionar condições para que o valor de disponível seja escrito ou não.
+
+Para as pessoas que estão consumindo, não é perceptível nenhuma diferença aparente. Parece ser apenas um atributo comum, porém temos a capacidade e o recurso de realizar a escrita.
+
+Guilherme: Entendi, então o atributo ainda mantém o mesmo nome, disponivel, mas agora podemos estabelecer restrições para a atribuição de valor no set. Ou seja, só é permitido atribuir um valor se determinadas condições ou regras forem atendidas.
+
+Daniel: Isso, exatamente.
+
+Então, por enquanto, permitiremos que todos possam escrever o atributo disponivel. No entanto, podemos abrir o método de escrita e adicionar as condições necessárias. No momento, ainda não temos nenhuma regra de negócio específica para isso.
+
+Guillherme: Na linha 12, faremos a correção do método EscreveDisponivel() usando o método anterior. Vamos deixar o atributo disponivel como falso. Isso garantirá o funcionamento correto de 100% do código.
+
+Daniel: Vamos alterar, assim ficamos com:
+
+Program.cs
+
+```csharp
+Musica musica1 = new Musica();
+musica1.nome = "Roxane";
+musica1.artista = "The Police";
+musica1.duracao = 273;
+musica1.disponivel = true;
+Console.WriteLine(musica1.disponivel);
+
+Musica musica2 = new Musica();
+musica2.nome = "Vertigo";
+musica2.artista = "U2";
+musica2.duracao = 367;
+musica2.disponivel = false;
+
+musica1.ExibirFichaTecnica();
+musica2.ExibirFichaTecnica();
+```
+
+Existe uma última tarefa que precisamos realizar, relacionada à convenção de nomenclatura. Já mencionamos o Pascal Case e o Camel Case. A partir deste momento, ao utilizar essa construção e após salvar com "Ctrl + S", retornarei à minha classe Musica. Quando usamos o tipo de recurso { get; set; }, o C# adota um novo nome para ele, que é Propriedade.
+
+No C#, as propriedades devem seguir a convenção Pascal Case.
+
+Guilherme: No Visual Studio, ao passar o cursor sobre o atributo disponivel, aparecem três pontos suspensivos. Isso indica que há mais informações disponíveis. Vamos verificar o que é exibido ao clicar nesses três pontos. O que ele fala, Daniel?
+
+Daniel: Violação da regra de nomenclatura.
+
+Violação da regra de nomenclatura. Essas palavras devem começar com caracteres maiúsculos
+
+Guilherme: E o interessante é que o nosso código está funcionando corretamente, foi executado sem problemas. No entanto, devemos observar que não estamos seguindo as convenções estabelecidas.
+
+Daniel: A questão da convenção é importante para a comunicação dentro de uma equipe e em projetos externos. Ao deparar com um código que utiliza a notação Pascal Case, uma classe, é imediatamente perceptível que se trata de uma propriedade, com os métodos Get e Set associados. Essa padronização facilita a compreensão e interpretação do código.
+
+Para tornar a letra "D" do atributo disponivel maiúscula no arquivo Musica.cs, vamos utilizar um recurso do próprio Visual Studio. Se realizarmos essa alteração diretamente na aba Program.cs, ainda vamos encontrar erros.
+
+Vamos solicitar ao Visual Studio que faça a alteração em todos os locais. Vamos desfazer a alteração anterior com "CTRL + Z". O Visual Studio já está nos indicando uma violação das regras de nomenclatura em disponivel, e ao passarmos o mouse sobre ela, um ícone de lâmpada é exibido ao lado.
+
+Se clicarmos nele, será sugerida essa alteração para deixar o "D" maiúsculo. Além disso, a alteração será feita em todas as referências ao "D" minúsculo. Vamos usar essa opção de alteração "Corrigir violação" e vocês podem ver que ele fez automaticamente.
+
+Musica.cs
+
+```csharp
+class Musica
+{
+    public string nome;
+    public string artista;
+    public int duracao;
+    private bool Disponivel { get; set; }
+
+// código omitido
+```
+
+O mesmo ocorreu no arquivo Program.cs, onde usamos o atributo Disponivel agora está com a letra inicial maiúscula.
+
+Então, no C#, temos as propriedades, que são uma forma concisa de escrever as operações de leitura e escrita.
+
+### Aula 2 - Atributos e propriedades - Vídeo 4
+
+Transcrição  
+Daniel: O desafio agora é fazermos esse mesmo recurso de propriedades para os outros atributos: nome, artista e duracao.
+
+Guilherme: A questão é que um atributo com a primeira letra maiúscula indica que é uma propriedade, o que é comum para pessoas desenvolvedoras de C#.
+
+Vamos utilizar todas as letras maiúsculas para isso.
+
+Daniel: Primeiro, vamos criar os get e set, depois, usamos o recurso do Visual Studio para alterar
+
+Guilherme: Legal, pois se não teríamos que alterar manualmente em outras partes da aplicação.
+
+Daniel: Na linha 3 no arquivo Musica.cs, vamos apagar o ponto e vírgula e adicionar o get;. Fazendo o mesmo para artista e duracao:
+
+Musica.cs
+
+```csharp
+class Musica
+{
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+// código omitido
+```
+
+Agora vamos usar aquele recurso de refatoração para renomear os atributos, colocando a primeira letra em maiúsculo: Nome, Artista, Duracao. Basta passarmos o mouse por cima ou usarmos o atalho "Ctrl + R, Ctrl + R". Assim, no campo exibido na janela flutuante escrevemos "Nome" com a primeira letra maiúscula.
+
+O atalho "Ctrl + R, Ctrl + R" possibilita renomear um item no C#
+
+Guilherme: A renomeação alterou a nomenclatura também no método ExibirFichaTécnica do arquivo Musica.cs e no Program.cs.
+
+Daniel: Se tivesse mais um Program.cs ou referência, teríamos que alterar manualmente.
+
+Guilherme: A vantagem de fazermos isso utilizando o recurso de renomeação do Visual Studio é que ele controla todas as alterações em todos os lugares onde estão sendo utilizados os atributos, facilitando o processo e evitando erros.
+
+Daniel: Com as propriedades do C#, é possível entregarmos informações de uma maneira mais simples para quem vai consumir, mas também mantendo o acesso de leitura e escrita centralizados. Para consolidar essa ideia, vamos criar mais uma propriedade chamada NomeCompleto que vai concatenar o nome do artista e colocar entre parênteses.
+
+Usaremos mais um atalho do Visual Studio para criar a propriedade: escrever "PROP" e apertar TAB. Ele já cria para nós o modelo de propriedade, precisando apenas informar o tipo e o nome. No caso, o tipo será "string" e o nome NomeCompleto:
+
+```csharp
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string NomeCompleto { get; set }
+```
+
+O atalho prop + TAB otimiza a criação de uma propriedade no C#
+
+Assim, vimos como criar e utilizar propriedades no C#, bem como o uso de atalhos do Visual Studio para agilizar o processo e garantir a integridade do código.
+
+Guillherme: Isso é legal porque no dia a dia, quantas propriedades uma pessoa que trabalha com C# cria?
+
+Daniel: Isso vai acontecer muito. Você quer criar uma classe de uma maneira muito rápida, você vai usar bastante esse atalho PROP na sua vida.
+
+Só que essa propriedade, não queremos que quem está consumindo essa classe, criar uma instância de música, coloque valor ali.
+
+Guilherme: Vamos fazer isso no próximo vídeo?
+
+Daniel: Vamos.
+
+Guilherme: Na sequência, vamos criar uma propriedade que é diferente das propriedades.
+
+### Aula 2 - Alterando o GET com lambda - Vídeo 5
+
+Transcrição  
+Guilherme: Daniel, quando você colocamos a propriedade public string NomeCompleto, eu não fazia ideia do que você estava querendo fazer. Com o NomeCompleto desejamos realizar uma manipulação de duas propriedades que já temos?
+
+Daniel: Isso, a ideia era fazer uma manipulação de duas propriedades que nós já temos: nome e artista. Desejamos juntá-los para entregar um resumo, algo assim.
+
+Guilherme: Como nós fazemos isso?
+
+Daniel: Esse nome pode continuar sendo "NomeCompleto"?
+
+Guilherme: Serei sincero novamente. Quando colocamos colocou "NomeCompleto", o que imaginei era que nós estaríamos trabalhando com RG, com usuários, mas não é isso, certo?
+
+Daniel: Não. Sugira um nome que altero.
+
+Guilherme: Pode ser "DescriçãoResumida".
+
+Daniel: Vamos alterar direto no arquivo Musica.cs, não vamos utilizar o recurso, porque nós só fizemos referência a ele aqui. Sabemos disso pois o próprio VS Code mostra "0 referências" acima da propriedade.
+
+Musica.cs
+
+```csharp
+// código omitido
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string DescricaoResumida { get; set; }
+// código omitido
+```
+
+Gui, nós queremos que essa propriedade seja um resumo de outros valores que estão no objeto da classe Musica: Nome e Artista.
+
+Vamos voltar ao arquivo Program.cs. Neste momento, quem usá-la poderá atribuir um valor à "DescriçãoResumida", como musica1.DescriçãoResumida = "Ola" mas isso não é o que queremos. Queremos apenas leitura, sem possibilidade de atribuir valor (set). Isto é, os valores são condicionados a valores já existentes em outras propriedades
+
+Program.cs
+
+```csharp
+// código omitido
+musica1.Disponivel = true;
+musica1.DescriçãoResumida = "Ola"
+Console.WriteLine(musica1.DescricaoResumida);
+// código omitido
+```
+
+Inserimos um valor qualquer. Mas nós como criadores da classe Musica, informamos: Não queremos que alguém consiga escrever valor aqui. Para informar isso, removemos o set de DescricaoResumida. É basicamente isso. Passamos que não existe a operação de escrita nessa classe Musica.
+
+Musica.cs
+
+```csharp
+// código omitido
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string DescricaoResumida { get; }
+// código omitido
+```
+
+Guilherme: Na linha 6 do program.cs, ele já mostrou para nós que não podemos fazer isso.
+
+Daniel: Exatamente, podemos apagar a linha, porque não tem essa operação de escrita.
+
+Program.cs
+
+```csharp
+// código omitido
+musica1.Disponivel = true;
+Console.WriteLine(musica1.DescricaoResumida);
+// código omitido
+```
+
+Agora, vamos melhorar nosso método get. Com a leitura disponível, o que vamos informar de valor em DescricaoResumida?
+
+Se tentarmos fazer uma leitura no WriteLine do Program.cs, na DescricaoResumida, o que você acha que vai aparecer?
+
+**Guilherme** Não sei.
+
+Daniel: Vamos testar? Vamos salvar e executar a aplicação clicando no botão de play.
+
+Quando aparece o retorno no console, a DescricaoResumida nem aparece. Isso significa que é um texto vazio que está ali.
+
+Neste vídeo, queremos mostrar como exibir a descrição resumida para a primeira música, "Roxane", do artista The Police. Como podemos fazer isso?
+
+Guilherme: Acredito que agora seja um momento importante para modificar um get, a forma como está sendo exibido. Vamos focar no código no arquivo Musica.cs.
+
+Daniel: Para assumir o controle do código na leitura da propriedade DescricaoResumida, faremos o seguinte:
+
+- Pular a linha das chaves;
+- Em vez de ter um ponto e vírgula no get, abrir chaves;
+- Retornar um valor usando a palavra-chave return.
+
+Musica.cs
+
+```csharp
+// código omitido
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string DescricaoResumida
+{ 
+
+    get
+    {
+            return
+    }
+
+}
+// código omitido
+```
+
+Agora, queremos fazer uma interpolação de duas propriedades. Podemos adicionar um texto para contextualizar a saída, como: "A música {nome} pertence à banda {Artista}".
+
+Musica.cs
+
+```csharp
+// código omitido
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string DescricaoResumida
+{ 
+    get
+    {
+            return $"A música {Nome} pertence à banda {Artista}";
+    }
+}
+// código omitido
+```
+
+Vamos executar novamente o código e ver o que acontece. Legal! Apareceu a ficha técnica da música como desejado: "A música Roxanne pertence à banda The Police".
+
+O retorno abaixo foi parcialmente transcrito. Para conferi-lo na íntegra, execute o código na sua máquina.
+
+A música Roxanne pertene à banda The Police
+
+Guilherme: O interessante neste conceito é que, quando colocávamos o GetSet de maneira automática, parecia que não tínhamos poder sobre ele. No entanto, podemos manipular melhor as propriedades usando as chaves e controlar se uma informação pode ou não acontecer.
+
+Daniel: Às vezes, podemos criar métodos que façam essa alteração, como um atributo chamado "saldo" em uma conta, onde os depósitos e saques realizados afetam o saldo No saldo nem permitiríamos a escrita, os métodos que fariam essa alteração para nós.
+
+Para finalizar, é necessário destacar que, em muitos projetos, quando se tem uma propriedade somente leitura, a construção que mostramos pode ser simplificada ainda mais, deixando o código mais conciso.
+
+Basicamente, podemos selecionar o valor do retorno, no caso a interpolação, e teclar "Ctrl + X". Depois removemos da linha 8 até a 13, e no final da propriedade DescricaoResumida adicionamos uma seta (=>) seguida do valor que queremos exibir, criando uma arrow function.
+
+Musica.cs
+
+```csharp
+// código omitido
+public string Nome { get; set; }
+public string Artista { get; set; }
+public int Duracao { get; set; }
+public bool Disponivel { get; set; }
+public string DescricaoResumida => 
+    $"A música {Nome} pertence à banda {Artista}";
+// código omitido
+```
+
+Em C# chamamos a arrow function de Lambda
+
+Guilherme: Essa abordagem é bastante comum e facilita a compreensão de que a propriedade está no modo leitura apenas, com o comportamento que desejamos.
+
+Daniel: Isso.
+
+### Aula 2 - Para saber mais: funções lambda
+
+No C#, lambdas são funções anônimas que podem ser usadas para criar expressões ou blocos de código compactos e concisos. Eles são especialmente úteis quando se trata de trabalhar com coleções de dados, realizar operações em uma sequência de elementos ou lidar com delegados.
+
+Vamos começar com um exemplo simples de um código sem lambda. Suponha que você tenha uma lista de números inteiros e deseje filtrar apenas os números pares. Aqui está um exemplo sem o uso de lambda:
+
+```csharp
+List<int> numeros = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+List<int> numerosPares = numeros.FindAll(BuscarNumerosQueSaoPares);
+
+bool BuscarNumerosQueSaoPares(int numero)
+{
+    return numero % 2 == 0;
+}
+
+foreach (int numero in numerosPares)
+{
+    Console.WriteLine(numero);
+}
+```
+
+Ao executar esse programa, o resultado será:
+
+```csharp
+2
+4
+6
+8
+10
+```
+
+Neste exemplo, definimos um método chamado BuscarNumerosQueSaoPares, que recebe um número inteiro e retorna um valor booleano indicando se o número é par. Em seguida, usamos o método FindAll da classe List`<T>` para filtrar os números da lista com base nessa condição e exibimos os valores no console.
+
+Como seria esse código com funções lambdas?  
+Lembrando que a estrutura de código de uma função lambda no C# segue um formato geral. Aqui está a estrutura básica de uma função lambda:
+
+```csharp
+(parametros) => expressao
+```
+
+Parâmetros: É uma lista opcional de parâmetros, separados por vírgulas, que especifica as entradas da função lambda. Cada parâmetro pode ser tipado explicitamente ou pode ser inferido pelo compilador.
+
+Operador =>: É o operador de seta (=>), que separa a lista de parâmetros da expressão lambda. Ele indica que os parâmetros estão sendo mapeados para a expressão ou bloco de código seguinte.
+
+Expressão ou bloco de código: É a expressão ou o bloco de código que define a lógica da função lambda. Pode ser uma única expressão ou um bloco de código delimitado por chaves ({}). Se a função lambda contiver um único comando, a expressão será automaticamente retornada. Caso contrário, você pode usar a palavra-chave return para retornar explicitamente um valor.
+
+**Mão nas teclas**  
+Vamos iniciar substituindo a função BuscarNumerosQueSaoPares por uma função anônima que tem a mesma finalidade:
+
+```csharp
+List<int> numeros = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+List<int> numerosPares = numeros.FindAll(numero => numero % 2 == 0);
+```
+
+A expressão lambda especifica um parâmetro numero seguido por uma seta (=>) e uma expressão que retorna um valor booleano. A função FindAll utiliza essa expressão lambda como critério para filtrar os números da lista.
+
+Em seguida, podemos usar uma função lambda na exibição dos números pares:
+
+```csharp
+numerosPares.ForEach(numero => Console.WriteLine(numero));
+```
+
+Segue o código completo:
+
+```csharp
+List<int> numeros = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+List<int> numerosPares = numeros.FindAll(numero => numero % 2 == 0);
+numerosPares.ForEach(numero => Console.WriteLine(numero));
+```
+
+**Algumas vantagens das lambdas em relação ao código sem lambda**  
+Concisão: As lambdas permitem escrever código de forma mais concisa, eliminando a necessidade de definir métodos separados para funções simples.
+
+Legibilidade: As lambdas são mais fáceis de ler e entender, especialmente quando o critério de filtragem ou a lógica do código é curto e direto.
+
+Flexibilidade: As lambdas podem ser usadas em várias situações, como filtrar, ordenar, mapear ou reduzir coleções de dados. Elas permitem que você especifique a lógica do código diretamente no local onde é necessário, sem a necessidade de criar métodos adicionais.
+
+Encerramento de escopo: As lambdas têm acesso às variáveis do escopo em que são definidas, o que permite que você capture e utilize valores externos dentro da expressão lambda. Isso pode ser útil em casos onde você precisa fazer referência a variáveis externas dentro de um loop, por exemplo.
+
+Em resumo, lambdas no C# são funções anônimas que fornecem uma sintaxe concisa para escrever blocos de código em situações onde a criação de um método separado seria inconveniente ou desnecessário. Elas oferecem vantagens em termos de concisão, legibilidade, flexibilidade e encerramento de escopo.
+
+**Quando não é recomendado o uso de código lambda?**  
+Complexidade excessiva: Se a lógica da expressão lambda se tornar muito complexa ou difícil de entender, é preferível usar métodos e blocos de código separados para manter a clareza e legibilidade do código.
+
+Reutilização de código: Se você precisa reutilizar a lógica em várias partes do seu código, é mais adequado criar um método separado em vez de usar uma função lambda repetidamente. Isso promove a reutilização do código e torna mais fácil a manutenção.
+
+Aumento da complexidade do código: Em alguns casos, o uso excessivo de funções lambda pode tornar o código mais difícil de entender e dar manutenção, especialmente quando as expressões lambdas são aninhadas. Nesses casos, pode ser melhor dividir o código em partes menores e mais legíveis.
+
+Embora as funções lambda sejam uma ferramenta poderosa e muito usada no mundo de desenvolvimento C#, há situações em que é mais apropriado evitar o seu uso.
+
+### Aula 2 - Propriedade ou atributo? - Exercício
+
+No C#, um atributo é uma variável declarada dentro de uma classe que armazena dados associados a uma instância específica desta classe e uma propriedade é uma abstração que fornece um meio de acessar e modificar os valores dos atributos de uma classe, encapsulando a lógica de leitura e escrita. Veja o exemplo de código abaixo que contém uma classe com um atributo e uma propriedade:
+
+```csharp
+class Filme
+{
+    public string Titulo;
+
+    public int Orcamento { get; set; }
+}
+```
+
+Um exemplo da instância desta classe seria:
+
+```csharp
+Filme matrix = new Filme();
+matrix.Titulo = "Matrix";
+matrix.Orcamento = 63;
+```
+
+Com base no código acima, analise as seguintes afirmações e marque apenas as verdadeiras:
+
+**Alternativa correta**  
+A classe Filme possui um atributo público chamado Titulo e uma propriedade chamada Orcamento.
+
+> Isso aí! A propriedade Orcamento fornece um meio de acessar e modificar o valor com os métodos get e set. Já o atributo Titulo pode ser acessado e modificado diretamente, sem a necessidade de métodos específicos.
+
+**Alternativa correta**  
+A instância chamada matrix atribui ao Titulo o valor Matrix e à propriedade Orcamento o valor 63, usando o operador de atribuição =.
+
+> Isso aí! Tanto a propriedade como o atributo são atribuídos pelo sinal de =.
+
+**Alternativa correta**  
+Embora ambos sejam usados para armazenar e manipular dados em uma classe, eles possuem características distintas.
+
+> Embora haja uma relação entre atributos (fields) e propriedades (properties) em C#, eles são conceitos distintos e oferecem diferentes recursos e funcionalidades para o desenvolvimento de classes e objetos.
+
+### Aula 2 - Desafio: hora da prática- Desafio
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Reescrever a classe Conta, criada no ultimo desafio, utilizando properties.
+2. Reescrever os atributos da classe Carro, de modo que eles sejam properties, e adicionar uma nova propertie DescricaoDetalhada, que mostra o fabricante, modelo e ano do carro.
+3. Reescrever a propriedade Ano da classe carro, para que ela apenas aceite valores entre 1960 e 2023.
+4. Desenvolver a classe Produto, com os atributos nome, marca, preco e estoque. Além disso, garantir que o preço e o estoque do produto sejam valores positivos e criar uma propriedade que mostra detalhadamente as informações do produto, para que seja usado pela equipe de vendas.
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github.](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-2-aula-2)
+
+Boa sorte nos estudos!
+
+### Aula 2 -Faça como eu fiz: refatorando uma função
+
+No C#, uma função lambda pode ser aplicada em atributos, propriedades ou na forma como escrevemos funções. Abaixo, existe uma função que soma 2 valores inteiros e retorna o resultado da soma, como mostra o trecho de código a seguir:
+
+```csharp
+public int Somar(int a, int b)
+{
+    int resultado = a + b;
+    return resultado;
+}
+```
+
+Agora é sua vez! Refaça esse método Somar() usando uma função lambda retornando o resultado da operação.
+
+Opinião do instrutor
+
+Aqui está a mesma função Somar() reescrita utilizando uma expressão lambda em C#:
+
+> public int Somar(int a, int b) => a + b;
+
+Nesta versão, utilizamos a sintaxe de expressão lambda, que é uma forma concisa de definir funções anônimas. No caso, a expressão lambda recebe dois parâmetros a e b do tipo int e retorna a soma dos valores utilizando a expressão a + b.
+
+> Lembrando: Essa forma simplificada de escrever a função é útil quando a função tem apenas uma linha de código e o retorno é direto, permitindo economizar espaço e tornar o código mais conciso.
+
+### Aula 2 - O que aprendemos?
+
+**Estes foram os pontos principais abordados nesta aula:**
+
+- Corrigimos uma vulnerabilidade do sistema que permitia alterar o valor de um atributo, ferindo a regra de negócio da aplicação criando métodos de leitura e escrita (get e set);
+
+- Criamos uma property no C#, que é uma boa prática de programação porque permite encapsular o acesso aos atributos de uma classe, fornecendo controle, validação e a possibilidade de adicionar comportamentos adicionais ao acesso desses atributos;
+
+- Alteramos o método get de uma property no C# para adicionar lógica personalizada antes de retornar o valor do atributo correspondente.
+
+Na próxima aula:
+
+Vamos tornar nosso projeto mais próximo do mundo real criando mais classes e como elas se relacionam entre si!
+
+### Aula 2 -
