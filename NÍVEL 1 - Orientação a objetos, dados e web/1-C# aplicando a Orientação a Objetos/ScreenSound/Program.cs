@@ -1,7 +1,7 @@
 ﻿using ScreenSound;
 using ScreenSound.exercicios;
 
-void exibirLogo()
+void ExibirLogo()
 {
     Console.BackgroundColor = ConsoleColor.DarkGreen;
     Console.ForegroundColor = ConsoleColor.Black;
@@ -17,7 +17,7 @@ void exibirLogo()
                 ╚═════╝░░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝╚═╝░░╚══╝  ╚═════╝░░╚════╝░░╚═════╝░╚═╝░░╚══╝╚═════╝░");
     Console.ResetColor();
 }
-exibirLogo();
+ExibirLogo();
 //==============================
 /*****************************************************************************
  * Aulas 1 e 2: Orientação a Objetos - conceitos básicos
@@ -49,32 +49,45 @@ musica2.ExibirFichaTecnica();
 Console.ResetColor();
 */
 //===========================================================================================
-
 //Aula 3
-//------------------------------
-Artista artistaQueen = new Artista();
-artistaQueen.NomeArtista = "Queen";
-//-------------------------------
-Genero generoRock = new Genero();
-generoRock.NomeGenero = "Rock";
-//------------------------------
-Album albumQueen = new Album();
-albumQueen.NomeDoAlbum = "A Night at the Opera";
-//---------------------------------------
-Musica musica1 = new Musica();
-musica1.NomeDaMusica = "Love of My Life";
-musica1.Duracao = 217;
-musica1.Genero = generoRock;
+
+//Instância os objetos, a partir das classes e atribui seus valores.
+Genero generoRock = new()
+{
+    NomeGenero = "Rock"
+};
+//-----------------------------
+Artista artistaQueen = new()
+{
+    NomeArtista = "Queen"
+};
+//---------------------------------
+Album albumQueen = new()
+{
+    NomeDoAlbum = "A Night at the Opera"
+};
+//----------------------------------------------
+Musica musica1 = new()
+{
+    NomeDaMusica = "Love of My Life",
+    Duracao = 217,
+    Genero = generoRock
+};
 //-----------------------------------
-Musica musica2 = new Musica();
-musica2.NomeDaMusica = "Bohemian Rhapsody";
-musica2.Duracao = 354;
-musica2.Genero = generoRock;
-//------------------------------------------------
-Console.ForegroundColor = ConsoleColor.DarkYellow;
+Musica musica2 = new()
+{
+    NomeDaMusica = "Bohemian Rhapsody",
+    Duracao = 354,
+    Genero = generoRock
+};
+//Popula os objetos com os relacionamentos entre eles, utilizando os métodos e propriedades criados nas classes.
+artistaQueen.AdicionarAlbumAoArtista(albumQueen);
+albumQueen.Artista = artistaQueen;
 albumQueen.AdicionarMusica(musica1);
 albumQueen.AdicionarMusica(musica2);
-albumQueen.Artista = artistaQueen;
+//Exibe as informações do álbum, incluindo o nome do álbum, o nome do artista, a lista de músicas e a duração total do álbum.
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+artistaQueen.ExibirArtistaEAlbuns();
 albumQueen.ExibirDetalhesDoAlbum();
 Console.ResetColor();
 

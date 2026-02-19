@@ -1630,9 +1630,121 @@ Nessa atualização, adicionamos a propriedade Genero à classe Musica, que repr
 
 - Exibimos a lista de músicas do álbum, mostrando o nome de cada música, além de exibir a duração total do álbum através do método ExibirMusicasDoAlbum.
 
-## Aula 4 - 
+## Aula 4 - Construtor de Bandas
 
-### Aula 4 -  - Vídeo 1
+### Aula 4 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 03](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/aula-3.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound/tree/aula-3)
+
+### Aula 4 - Desenvolvendo a classe banda - Vídeo 1
+
+Transcrição
+Daniel: Agora o desafio é criar uma classe para dar mais um passo nessa estrutura. Já fizemos música e álbum, agora vamos fazer a banda.
+
+**Criação classe Banda**  
+Guilherme: Vamos criar a classe Banda e pensar em algumas propriedades que essa classe deve ter.
+
+Daniel: Para isso, apertamos novamente "Ctrl + Shift + A" para abrir a janela de adicionar novo item. Já está selecionado o "Arquivo de código", podemos somente mudar o nome para Banda.
+
+No arquivo, digitamos a palavra reservada class, o nome Banda com PascalCase e abre e fecha chaves.
+
+No corpo da classe, colocamos as propriedades ao escrever prop e aceitar a sugestão de public int MyProperty { get; set; } com a tecla "Tab". Como bandas têm nome, substituímos MyProperty por Nome e modificamos o tipo para string.
+
+Banda.cs:
+
+class Banda
+{
+    public string Nome { get; set; }
+}Copiar código
+Já podemos colocar os métodos para incluir álbuns. Em uma nova linha, declaramos um método public void que não retorna nada chamado AdicionarAlbum(), recebendo Album album como argumento de entrada.
+
+Para adicionar esse álbum, vamos criar um campo privado antes da propriedade Nome. Desse modo, inicializamos a lista com private List<Album> e apertamos "Tab" para aceitar a sugestão de completar com albums igual à new List<Album>().
+
+No corpo do método AdicionarAlbum(), vamos adicionar na lista albums o objeto album que recebemos como argumento de entrada.
+
+class Banda
+{
+    private List<Album> albums = new List<Album>();
+
+    public string Nome { get; set; }
+
+    public void AdicionarAlbum(Album album) 
+    { 
+        albums.Add(album);
+    }
+}Copiar código
+Também podemos colocar a exibição, já que depois queremos testar essa classe no projeto. Para isso, criamos um novo método public void sem retornar nada chamado ExibirDiscografia().
+
+Nele, colocamos um título para informar que estamos exibindo a discografia. Por isso, digitamos Console.WriteLine(), passando o cifrão que é o símbolo da interpolação seguido da string Discografia da banda e a propriedade {Nome} que contém o nome da banda.
+
+Em seguida, fazemos um foreach novamente com a iteração de Album album in albums. Dentro dele, colocamos outro Console.WriteLine() com cifrão e string Álbum: e o {album.Nome}. Também podemos acrescentar na string a duração total do álbum como {album.DuracaoTotal} entre parênteses.
+
+class Banda
+{
+
+// código omitido…
+
+    public void ExibirDiscografia()
+    {
+        Console.WriteLine($"Discografia da banda {Nome}");
+        foreach (Album album in albums)
+        {
+            Console.WriteLine($"Álbum: {album.Nome} ({album.DuracaoTotal})");
+        }
+    }
+}Copiar código
+Exibir a discografia do Queen
+Daniel: Agora precisamos testar, Gui. Para isso, novamente abrimos a aba com o arquivo Program.cs. Nele, já temos um albumDoQueen com duas músicas. Adicionamos musica1 e musica2 no álbum.
+
+Mas, podemos apagar albumDoQueen.ExibirMusicasDoAlbum(). No lugar, vamos criar uma Banda queen igual à new Banda(). Em uma nova linha, colocamos o nome dela como queen.Nome igual à Queen entre aspas.
+
+Agora, precisamos adicionar o àlbum. Para isso, digitamos queen.AdicionarAlbum(), passando albumDoQueen.
+
+Finalmente, queremos exibir a discografia dessa banda. Ou seja, queen.ExibirDiscografia().
+
+Program.cs:
+
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+musica1.Duracao = 231;
+
+Musica musica2 = new Musica();
+musica2.Nome = "Bohemian Rhapsody";
+musica2.Duracao = 354;
+
+albumDoQueen.AdicionarMusica(musica1);
+albumDoQueen.AdicionarMusica(musica2);
+
+Banda queen = new Banda();
+queen.Nome = "Queen";
+queen.AdicionarAlbum(albumDoQueen);
+queen.ExibirDiscografia();Copiar código
+Agora podemos testar ao clicar no botão com ícone play "ScreenSound". Com isso, aparece a tela do terminal com a discografia da banda Queen com apenas um álbum chamado A night at the opera e a duração total entre parênteses.
+
+Discografia da banda Queen
+
+Álbum: A night at the opera (567)
+
+Importância da organização do projeto
+Guilherme: Qual a grande vantagem que temos como pessoas desenvolvedoras de criar classes pequenas que isolam o comportamento e o método que contêm?
+
+Por que não podemos criar um ou dois arquivos e colocar todas as nossas classes lá dentro? O programa ainda vai funcionar.
+
+No nosso projeto, criamos três classes: Musica, Banda e Album. E começamos a ligar as informações dessas classes. Mas, qual a vantagem de criar diversas classes para isolar a aplicação?
+
+Daniel: Você acabou de se responder: isolar. Temos essa facilidade de que tudo que está relacionado a banda vai estar especificamente na classe Banda, como os conceitos e regras de negócio de banda. Isso também vale para os outros conceitos que temos no projeto.
+
+Guilherme: Em um projeto real, existem muitas classes. Centenas ou até milhares de classes. Teoricamente, ao isolar a classe de Banda, saberemos exatamente qual é o código e em qual arquivo precisamos alterar - seja para alterar um comportamento, criar um método ou adicionar uma regra de negócio.
+
+À medida que criamos essas classes, o nosso projeto aumenta a complexidade.
+
+Daniel: Se tentássemos colocar tudo em um local só e uma classe só, íamos começar a ter dificuldade em saber onde adicionar novas regras de negócio. Onde vamos buscar? Vamos colocar em qual método? Em qual propriedade? O processo de desenvolvimento fica confuso.
+
+Guilherme: Como dito anteriormente, um projeto real tem muitas classes, e o isolamento é fundamental para manter um bom gerenciamento do código.
+
 ### Aula 4 -  - Vídeo 2
 ### Aula 4 -  - Vídeo 3
 ### Aula 4 -  - Vídeo 4

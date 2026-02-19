@@ -13,7 +13,6 @@ internal class Album
     public void ExibirDetalhesDoAlbum()
     {
         Console.WriteLine($"\nO Álbum: {this.NomeDoAlbum}");
-        //para exibir o artista aqui?
         Console.WriteLine($"Pertence ao Artista: {this.Artista.NomeArtista}");
         Console.WriteLine($"E tem {listaMusicas.Count} músicas.\n");
         ExibirMusicasDoAlbum();
