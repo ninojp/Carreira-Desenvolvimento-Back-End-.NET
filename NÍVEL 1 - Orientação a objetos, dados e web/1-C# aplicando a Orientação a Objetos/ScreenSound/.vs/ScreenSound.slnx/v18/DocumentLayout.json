@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\genero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:genero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\album.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:album.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\lambdas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:lambdas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\carros.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:carros.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\artista.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|solutionrelative:artista.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{80852911-9350-38E3-EBB5-8A9DFAEE17E2}|ScreenSound.csproj|c:\\importante\\alura\\carreira-desenvolvimento-back-end-.net\\n\u00EDvel 1 - orienta\u00E7\u00E3o a objetos, dados e web\\1-c# aplicando a orienta\u00E7\u00E3o a objetos\\screensound\\musica.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,24 +51,54 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             }
           ]
         },
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAF8AAAAAAAAAAAAkwGkAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAAAuwEwAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-17T03:24:22.072Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Genero.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Genero.cs",
+              "RelativeDocumentMoniker": "Genero.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Genero.cs",
+              "RelativeToolTip": "Genero.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T05:25:48.725Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Artista.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Artista.cs",
+              "RelativeDocumentMoniker": "Artista.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Artista.cs",
+              "RelativeToolTip": "Artista.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T05:49:00.641Z",
               "EditorCaption": ""
             },
             {
@@ -79,48 +109,22 @@
               "RelativeDocumentMoniker": "Musica.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Musica.cs",
               "RelativeToolTip": "Musica.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T02:00:23.076Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Carros.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Carros.cs",
-              "RelativeDocumentMoniker": "Carros.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Carros.cs",
-              "RelativeToolTip": "Carros.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T05:33:18.073Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Produto.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Produto.cs",
-              "RelativeDocumentMoniker": "Produto.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Produto.cs",
-              "RelativeToolTip": "Produto.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAwwCMAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T07:07:41.126Z",
+              "WhenOpened": "2026-02-19T05:34:45.436Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Lambdas.cs",
-              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Lambdas.cs",
-              "RelativeDocumentMoniker": "Lambdas.cs",
-              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Lambdas.cs",
-              "RelativeToolTip": "Lambdas.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAA0wAQAAABkAAAAAAAAAA==",
+              "Title": "Album.cs",
+              "DocumentMoniker": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Album.cs",
+              "RelativeDocumentMoniker": "Album.cs",
+              "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Album.cs",
+              "RelativeToolTip": "Album.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAwBgAAABzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-17T05:43:59.294Z",
+              "WhenOpened": "2026-02-19T05:45:40.885Z",
               "EditorCaption": ""
             }
           ]

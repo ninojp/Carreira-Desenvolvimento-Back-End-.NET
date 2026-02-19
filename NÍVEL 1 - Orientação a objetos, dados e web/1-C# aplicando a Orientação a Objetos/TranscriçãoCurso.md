@@ -1164,4 +1164,480 @@ Na próxima aula:
 
 Vamos tornar nosso projeto mais próximo do mundo real criando mais classes e como elas se relacionam entre si!
 
-### Aula 2 -
+## Aula 3 - Integrando classes e definindo relacionamentos
+
+### Aula 3 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 02](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/aula-2.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound/tree/aula-2)
+
+### Aula 3 - Criando a classe álbum - Vídeo 1
+
+Transcrição  
+Daniel: Eu, você e o Gui temos um novo desafio: desenvolver e melhorar nosso sistema de músicas. Nesse vídeo, vamos criar um agrupamento de músicas, um álbum. Então, vamos criar uma nova classe chamada Album no nosso sistema.
+
+**Criando a classe Album**  
+Guilherme: Já adicionamos o álbum de uma banda que nós dois gostamos de ouvir. Em casa, você também pode escolher o álbum de uma banda que goste e adicionar ao sistema. Escolhemos a banda Queen, e o álbum é o "A Night at the Opera". Nesse álbum, temos músicas como "Bohemian Rhapsody", "You Are My Best Friend" e "Love of My Life".
+
+No entanto, com base no sistema que criamos, parece que conseguimos criar apenas músicas isoladas. Assim, não temos uma forma de dizer que todas essas músicas pertencem ao álbum do Queen. Então, provavelmente, pela forma como nossa aplicação está sendo desenvolvida, precisamos criar uma nova classe para conter informações relacionadas à banda.
+
+Daniel: Para deixar nosso código mais organizado, vamos fechar as abas Program.cs e a classe de música (Musica.cs) por enquanto. Agora, criaremos uma nova classe, lembrando que estamos colocando cada classe em seu próprio arquivo.
+
+Podemos usar o atalho "Ctrl Shift A" para criar um novo item no nosso projeto. O item escolhido será o "Arquivo de código", e chamaremos o arquivo de Album.cs.
+
+Para criar uma classe, usamos a palavra reservada class com o nome usando PascalCase, seguida de uma abertura e um fechamento de chaves.
+
+```csharp
+class Album
+{
+}
+```
+
+O que um álbum vai ter, Gui? Vamos usar propriedades para definir isso.
+
+Guilherme: Primeiro, podemos dizer que um álbum tem um nome. Então, criamos uma propriedade do tipo string chamada Nome.
+
+```csharp
+class Album
+{
+    public string Nome { get; set; }
+}
+```
+
+Daniel: Além disso, um álbum tem uma coleção de músicas que fazem parte dele. Então, é importante criar um método onde adicionamos a música dentro desse álbum. Criaremos um método público (public) que não retorna nada (void), chamado AdicionarMusica.
+
+Esse método receberá como argumento justamente a música, então digitamos o tipo Musica, damos o nome de musica, e finalizamos com abertura e fechamento de chaves.
+
+```csharp
+class Album
+{
+    public string Nome { get; set; }
+
+    public void AdicionarMusica(Musica musica)
+    {
+    }
+}
+```
+
+Para adicionar mais um método, vamos aproveitar a ideia das propriedades somente leitura. Diremos que esse álbum tem uma duração total. Então, na linha 3, vamos pular uma linha e utilizar a propriedade prop para gerar public int. O tipo será inteiro (int).
+
+Nomearemos essa propriedade como DuraçãoTotal, que será igual à soma da duração das músicas que estão no álbum.
+
+```csharp
+class Album
+{
+    public string Nome { get; set; }
+
+    public int DuracaoTotal { get; set; }
+
+    public void AdicionarMusica(Musica musica)
+    {
+    }
+}
+```
+
+Agora, o desafio é colocar as músicas dentro desse álbum de fato!
+
+### Aula 3 - Criando a lista de músicas - Vídeo 2
+
+Transcrição  
+Daniel: Nesse vídeo, vamos adicionar músicas à classe Album!
+
+**Criando a lista de músicas**  
+Para isso, precisamos ter uma lista de músicas, conforme visto em outros vídeos e cursos. Na linha de código 2 do arquivo Album.cs, criaremos um campo de atributo privado, então vamos digitar private seguido do tipo List.
+
+Na notação C#, chamamos o atributo private de campo.
+
+Nós já usamos uma lista de strings (List`<string>`), referente às bandas. Nesse caso, queremos uma lista de músicas, então vamos passar o tipo Musica para a lista e chamá-la de musicas.
+
+```csharp
+class Album
+{
+    
+    private List<Musica> musicas;
+    
+    public string Nome { get; set; }
+    
+    public int DuracaoTotal { get; set; }
+    
+    public void AdicionarMusica(Musica musica)
+    {
+    }
+}
+```
+
+O campo privado significa que essa variável só está disponível dentro das chaves que compõem a declaração da classe Album. Além disso, iremos inicializar essa lista, deixando-a vazia por enquanto. Antes do ponto e vírgula, vamos atribuí-la à sugestão dada pelo próprio Visual Studio.
+
+Agora precisamos adicionar músicas na lista. No escopo do método AdicionarMusica(), vamos chamar a variável musicas.Add(), adicionando musica à lista interna do álbum. Dessa forma, temos uma relação entre álbum e música.
+
+```csharp
+class Album
+{
+    
+    private List<Musica> musicas;
+    
+    public string Nome { get; set; }
+    
+    public int DuracaoTotal { get; set; }
+    
+    public void AdicionarMusica(Musica musica)
+    {
+        musicas.Add(musica);
+    }
+}
+```
+
+Guilherme: Podemos testar essa primeira parte, e para esse teste faz sentido pensar em um álbum real. Começaremos acessando o arquivo Program.cs para instanciar.
+
+Daniel: Para isso, clicamos no "Gerenciador de Soluções", localizado no canto superior direito da interface. Uma vez aberto, basta dar um duplo clique sobre Program.cs.
+
+Guilherme: Existem algumas músicas diferentes no código nesse momento. Como esse teste já foi realizado e está funcionando corretamente, podemos remover todas as linhas de código e criar um álbum do Queen.
+
+Vamos começar pela instância do álbum (Album). Em seguida, criaremos duas músicas com pelo menos o nome. O Album pode se chamar albumDoQueen, e faremos a instância com new Album().
+
+```csharp
+Album albumDoQueen = new Album();
+```
+
+Na linha abaixo, daremos um nome para albumdoQueen, que será "A Night at the Opera".
+
+Daniel: Para isso, digitamos albumDoQueen seguido da propriedade Nome, sendo igual ao nome que desejamos para o álbum ("A night at the opera") entre aspas.
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+```
+
+Guilherme: Agora que temos o albumDoQueen instanciado, vamos criar duas músicas. A primeira delas será "Love of My Life". Para isso, vamos criar a classe Musica seguida da variável musica1, sendo iguais a new Musica(), operador que instancia a classe.
+
+Na linha abaixo, chamamos a propriedade Nome após a variável musica1 para definir o nome da música como "Love of my life", passado entre aspas.
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+```
+
+A segunda música será "Bohemian Rhapsody". Faremos o mesmo processo, porém com a variável musica2:
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+
+Musica musica2 = new Musica();
+musica2.Nome = "Bohemian Rhapsody";
+```
+
+Nosso próximo desafio é adicionar ambas as músicas ao álbum. Criamos um método para isso, então precisamos apenas chamá-lo, correto?
+
+Daniel: Sim. Chamaremos primeiro a variável albumDoQueen. Se teclarmos ponto (.) após a variável, será disponibilizado o método AdicionarMusica(). Feito isso, chamaremos entre parênteses a variável musica1. Na linha abaixo, repetiremos o mesmo padrão, porém com a variável musica2.
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+
+Musica musica2 = new Musica();
+musica2.Nome = "Bohemian Rhapsody";
+
+albumDoQueen.AdicionarMusica(musica1);
+albumDoQueen.AdicionarMusica(musica2);
+```
+
+Guilherme: Nosso próximo desafio será visualizar esse álbum. Teoricamente, nós conseguimos adicionar as músicas ao álbum sem nenhum problema, mas ainda não conseguimos visualizá-lo, então não sabemos se funciona de fato.
+
+Na sequência, criaremos uma forma de visualizar todas as músicas do álbum criado!
+
+### Aula 3 - Exibindo as músicas de um álbum - Vídeo 3
+
+Transcrição  
+Guilherme: Nós criamos o álbum, mas ainda não conseguimos visualizar as músicas contidas nele. Faremos isso ao longo desse vídeo!
+
+**Exibindo as músicas de um álbum**  
+Daniel: Primeiramente, vamos criar um método chamado ExibirMusicasDoAlbum() no arquivo Album.cs. Ele será um public void e não receberá argumentos.
+
+```csharp
+// Código suprimido
+public void ExibirMusicasDoAlbum()
+{
+}
+```
+
+Feito isso, vamos mostrar o nome da música via Console.WriteLine(), mas ainda não temos a música propriamente dita. Então, precisamos fazer um loop com o recurso foreach, contendo a variável musica em (in) musicas. No escopo de foreach, colocaremos o método Console.WriteLine().
+
+```csharp
+public void ExibirMusicasDoAlbum()
+{
+    foreach (var musica in musicas)
+    {
+        Console.WriteLine();
+    }
+}
+```
+
+Guilherme: No método ExibirMusicasDoAlbum(), podemos colocar o nome das músicas como argumento de Console.WriteLine().
+
+Daniel: Primeiro fazemos a interpolação utilizando o sinal de cifrão ($) seguido de Música: entre aspas. Após os dois-pontos, podemos adicionar a variável musica seguida da propriedade Nomes entre chaves.
+
+```csharp
+public void ExibirMusicasDoAlbum()
+{
+    foreach (var musica in musicas)
+    {
+        Console.WriteLine($"Música: {musica.Nome}");
+    }
+}
+```
+
+Em seguida, acima do foreach, vamos adicionar um título. Para isso, usamos novamente o método Console.WriteLine() e passamos como argumento o título entre aspas, que será "Lista de músicas do álbum:".
+
+Antes do dois-pontos, passaremos entre chaves a propriedade Nome, para adicionar o nome do álbum ao título. Para finalizar, vamos adicionar \n antes do fechamento das aspas para pular uma linha após o título.
+
+```csharp
+public void ExibirMusicasDoAlbum()
+{
+    Console.WriteLine($"Lista de músicas do álbum {Nome}:\n");
+    foreach (var musica in musicas)
+    {
+        Console.WriteLine($"Música: {musica.Nome}");
+    }
+}
+```
+
+Feito isso, podemos retornar ao arquivo Program.cs. No final do código, vamos digitar a variável albumDoQueen seguida do método ExibirMusicasDoAlbum(), separados por um ponto.
+
+```csharp
+albumDoQueen.ExibirMusicasDoAlbum();
+```
+
+Ao pressionar o botão de play do ScreenSound, localizado na barra superior da interface, teremos o seguinte resultado no console:
+
+Lista de músicas do álbum A night at the opera:
+
+```csharp
+Música: Love of my life
+Música: Bohemian Rhapsody
+```
+
+Guilherme: Agora falta solucionar um desafio que definimos anteriormente: exibir o tempo total do álbum. Então vamos aproveitar para atribuir uma duração (propriedade Duracao) a musica1 e a musica2.
+
+musica1: 213 segundos  
+musica2: 354 segundos
+
+Faremos essa atribuição na classe Musica respectiva a cada uma das músicas, usando as propriedades musica1.Duracao e musica2.Duracao.
+
+```csharp
+// Código suprimido
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+musica1.Duracao = 213;
+
+Musica musica2 = new Musica();
+musica2.Nome = "Bohemian Rhapsody";
+musica1.Duracao = 354;
+
+// Código suprimido
+```
+
+Daniel: Agora precisamos retornar ao arquivo Álbum.cs e melhorar a propriedade de somente leitura. Para isso, usaremos a construção que tem o lambda (=>) no lugar de { get; set; }.
+
+Como queremos a duração total do álbum, precisamos somar a duração de cada música contida na lista. Existe um método chamado Sum() que vamos usar para formar a expressão musicas.Sum().
+
+Em seguida, precisamos definir que a soma deve ser feita com a propriedade Duracao. No método Sum(), vamos representar cada música como m, adicionar uma arrow function logo depois, e por fim escrever m.Duracao, indicando que para cada música queremos somar a duração.
+
+```csharp
+public int DuracaoTotal => musicas.Sum(m => m.Duracao);
+```
+
+Dessa forma, a soma desejada será feita e retornada na propriedade de somente leitura.
+
+Guilherme: No final do console, após exibir as músicas, podemos adicionar um novo método Console.WriteLine() dizendo, por exemplo, "Para ouvir este álbum inteiro você precisa de {DuracaoTotal} segundos".
+
+Lembre-se de incluir o símbolo de interpolação ($) antes da abertura de aspas.
+
+```csharp
+// Código suprimido
+public void ExibirMusicasDoAlbum()
+{
+    Console.WriteLine($"Lista de músicas do álbum {Nome}:\n");
+    foreach (var musica in musicas)
+    {
+        Console.WriteLine($"Música: {musica.Nome}");
+    }
+    Console.WriteLine($"\nPara ouvir este álbum inteiro você precisa de {DuracaoTotal}");
+}
+```
+
+Perceba que foi adicionado o \n para pular uma linha antes da última mensagem.
+
+Daniel: Agora podemos testar! Clicando novamente no botão ScreenSound da barra superior, o terminal exibirá as mesmas músicas e a nova linha adicionada, contendo a duração total.
+
+Lista de músicas do álbum A night at the opera:
+
+```csharp
+Música: Love of my life
+Música: Bohemian Rhapsody
+Para ouvir este álbum inteiro você precisa de 567
+```
+
+### Aula 3 - Relacionamento entre classes - Execício
+
+No C#, podemos criar um relacionamento entre classes utilizando a composição, que é uma forma de relacionamento em que uma classe possui uma instância de outra classe como um de seus membros. Isso permite que a classe tenha acesso aos membros e comportamentos da classe relacionada, como ilustra o código abaixo:
+
+```csharp
+public class Pessoa
+    {
+        public string Nome { get; set; }
+        public Endereco Endereco { get; set; }
+
+        public void ExibirInformacoes()
+        {
+            Console.WriteLine($"Nome: {Nome}");
+            Console.WriteLine($"Endereço: {Endereco.Rua}, {Endereco.Cidade}, {Endereco.Estado}");
+        }
+    }
+```
+
+Agora, com base no código acima, marque as alternativas que ilustram como seria a classe Endereco.
+
+Selecione 2 alternativas
+
+Resposta 1
+
+```csharp
+class Endereco
+    {
+        public string Rua { get; set; }
+        public string Cidade { get; set; }
+        public string Estado { get; set; }
+    }
+```
+
+> Isso mesmo! Há um relacionamento de composição entre as classes Pessoa e Endereco. Isso significa que a classe Pessoa possui uma instância da classe Endereco como um de seus atributos.
+
+Resposta 2  
+
+```csharp
+class Endereco
+{
+    private string rua;
+    private string cidade;
+    private string estado;
+    public string Rua
+    {
+        get { return rua; }
+        set { rua = value; }
+    }
+    public string Cidade
+    {
+        get { return cidade; }
+        set { cidade = value; }
+    }
+    public string Estado
+    {
+        get { return estado; }
+        set { estado = value; }
+    }
+}
+```
+
+> Isso aí! Esse código permite maior personalização e lógica adicional. As propriedades Rua, Cidade e Estado têm campos privados correspondentes (rua, cidade e estado) e são definidas utilizando os blocos de código {} para os getters e setters. Isso permite adicionar lógica personalizada dentro desses blocos, se necessário, além de ter controle direto sobre o acesso aos campos privados.
+
+### Aula 3 - Desafio: hora da prática - Desafio
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Modelar uma classe Conta, que tenha como atributos uma classe Titular, além de informações da conta, como agência, número da conta, saldo e limite, bem como um método que devolva as informações da conta de forma detalhada.
+2. Instanciar um objeto do tipo Conta e um do tipo Titular e mostrar as informações de Titular, a partir da Conta.
+3. Desenvolver uma classe que represente um estoque de produtos, e que tenha as funcionalidades de adicionar novos produtos, e exibir todos os produtos no estoque.
+4. Modelar o sistema de uma escola. Crie classes para Aluno, Professor e Disciplina. A classe Aluno deve ter informações como nome, idade e notas. A classe Professor deve ter informações sobre nome e disciplinas lecionadas. A classe Disciplina deve armazenar o nome da disciplina e a lista de alunos matriculados.
+5. Modelar um sistema para um restaurante com classes como Restaurante, Mesa, Pedido e Cardapio. A classe Restaurante deve ter mesas que podem ser reservadas e um cardápio com itens que podem ser pedidos. Os pedidos podem estar associados a uma mesa.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-2-aula-3).
+
+Boa sorte nos estudos!
+
+### Aula 3 - Faça como eu fiz: mais uma classe
+
+Atualmente, nossa aplicação possui 2 classes: Musica e Album.
+
+| Música   |   Álbum    |
+|----------|------------|
+|nome      |nome        |
+|artista   |duracaoTotal|
+|duracao   |            |
+|disponível|            |
+
+Agora é sua vez! Crie uma classe chamada Genero, que armazena o nome do gênero musical, e crie um relacionamento desta nova classe em nossa aplicação.
+
+Opinião do instrutor
+
+Essas são as três classes que representam entidades relacionadas à música. A classe Musica contém informações específicas sobre uma música individual, a classe Genero representa os diferentes gêneros musicais e a classe Album representa um álbum musical, que pode conter várias músicas.
+
+|Música    |Álbum       |Gênero|
+|----------|------------|------|
+|nome      |nome        |nome  |
+|artista   |duracaoTotal|      |
+|duracao   |            |      |
+|disponível|            |      |
+|gênero    |            |      |
+
+Vamos criar a classe e definir a propriedade Nome para cada gênero musical, como rock, samba e pop, por exemplo:
+
+```csharp
+public class Genero
+{
+    public string Nome { get; set; }
+}
+```
+
+Agora vamos criar um relacionamento entre as classes Musica e Genero, indicando que cada música possui um gênero musical:
+
+```csharp
+public class Musica
+{
+    public string Nome { get; set; }
+    public string Artista { get; set; }
+    public int Duracao { get; set; }
+    public bool Disponivel { get; set; }
+    public Genero Genero { get; set; }
+
+    //código omitido…
+}
+```
+
+Nessa atualização, adicionamos a propriedade Genero à classe Musica, que representa o gênero musical da música. Agora, cada instância da classe Musica pode ter uma referência a um objeto Genero, permitindo a associação entre uma música e seu respectivo gênero.
+
+> Lembrando: As propriedades Genero nas classes Musica e Genero têm diferentes propósitos e funcionalidades. Na classe Musica, a propriedade Genero é utilizada para definir o gênero musical associado à música. Ela possui tanto o acesso de leitura (get) quanto o acesso de gravação (set), o que permite definir e obter o objeto Genero associado à música. Com isso, é possível atribuir um objeto Genero à uma música e também recuperar o gênero musical associado à ela posteriormente.
+
+### Aula 3 - O que aprendemos?
+
+**Estes foram os pontos principais abordados nesta aula:**
+
+- Criamos um modelo para o album como uma classe, reforçando a prática de manter cada classe em seu arquivo, e foram abordados os métodos AdicionarMusica e DuracaoTotal, mostrando como adicionar e listar as músicas.
+
+- Criamos uma lista de músicas como campo privado da classe, modificou-se o método AdicionarMusica utilizando o método "Add" da lista para adicionar músicas, alterou-se o método DuracaoTotal utilizando o método "Sum" da lista para calcular a duração total das músicas e foram feitos testes relacionando músicas ao álbum.
+
+- Exibimos a lista de músicas do álbum, mostrando o nome de cada música, além de exibir a duração total do álbum através do método ExibirMusicasDoAlbum.
+
+## Aula 4 - 
+
+### Aula 4 -  - Vídeo 1
+### Aula 4 -  - Vídeo 2
+### Aula 4 -  - Vídeo 3
+### Aula 4 -  - Vídeo 4
+### Aula 4 -  - Vídeo 5
+### Aula 4 -  - Vídeo 6
+### Aula 4 -  - Vídeo 7
+### Aula 4 -  - Vídeo 8
+### Aula 4 -  - Vídeo 9

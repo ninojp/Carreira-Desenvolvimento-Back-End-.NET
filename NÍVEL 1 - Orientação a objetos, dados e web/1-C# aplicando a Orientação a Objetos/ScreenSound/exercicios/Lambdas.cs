@@ -1,4 +1,4 @@
-﻿namespace ScreenSound;
+﻿namespace ScreenSound.exercicios;
 
 internal class Lambdas
 {

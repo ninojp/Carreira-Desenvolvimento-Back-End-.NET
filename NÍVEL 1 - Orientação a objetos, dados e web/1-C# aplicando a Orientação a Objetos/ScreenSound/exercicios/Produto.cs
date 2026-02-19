@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Intrinsics.X86;
-namespace ScreenSound;
+namespace ScreenSound.exercicios;
 //4. Desenvolver a classe Produto, com os atributos nome, marca, preco e estoque.
 //Garantir que o preço e o estoque do produto sejam valores positivos e criar uma propriedade
 //Mostrar detalhadamente as informações do produto.
@@ -13,10 +13,10 @@ internal class Produto{
     //dos atributos de uma classe, encapsulando a lógica de leitura e escrita.
     public string NomePropriedade { get; set; }
     public string MarcaPropriedade { get; set; }
-    public decimal PrecoPropriedade
     //Para trabalhar com valores monetários, é recomendado usar o tipo decimal,
     //pois ele tem uma precisão maior do que o tipo float ou double,
     //o que é importante para evitar erros de arredondamento em cálculos financeiros.
+    public decimal PrecoPropriedade
     {
         get => precoAtributo;
         set
