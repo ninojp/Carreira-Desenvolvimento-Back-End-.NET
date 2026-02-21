@@ -44,12 +44,8 @@
         },
         {
           "DockedHeight": 724,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -58,7 +54,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\IMPORTANTE\\ALURA\\Carreira-Desenvolvimento-Back-End-.NET\\N\u00CDVEL 1 - Orienta\u00E7\u00E3o a objetos, dados e web\\1-C# aplicando a Orienta\u00E7\u00E3o a Objetos\\ScreenSound\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAkwFcAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAkwF0AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-17T03:24:22.072Z",
               "EditorCaption": ""
