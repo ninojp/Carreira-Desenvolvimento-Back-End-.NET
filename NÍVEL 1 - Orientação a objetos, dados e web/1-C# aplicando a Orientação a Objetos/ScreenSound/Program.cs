@@ -72,8 +72,29 @@ Console.ResetColor();
 //Crie uma classe chamada Genero, que armazena o nome do gênero musical,
 //e crie um relacionamento desta nova classe em nossa aplicação.
 
+//Aula 5 - Desafio:
+//Além das músicas, bandas, álbuns e artistas que já temos no sistema, criaremos duas classes para manter podcasts e episódios.
+Episodio novoEpisodio = new("Técnicas de facilitação", 1,  45);
+novoEpisodio.AdicionarConvidados("João");
+novoEpisodio.AdicionarConvidados("Maria");
+novoEpisodio.AdicionarConvidados("José");
+//cria outra instância de episódio.
+Episodio outroEpisodio = new("Técnicas de aprendizado", 2, 60);
+outroEpisodio.AdicionarConvidados("Marco");
+outroEpisodio.AdicionarConvidados("Ana");
+outroEpisodio.AdicionarConvidados("Lucas");
+//cria uma instância de podcast e adiciona os episódios criados.
+Podcast podcastScreenSound = new("Curso-Alura", "Screen Sound");
+podcastScreenSound.AdicionaEpisodios(outroEpisodio);
+podcastScreenSound.AdicionaEpisodios(novoEpisodio);
+//exibe os detalhes do podcast, incluindo o nome do podcast, o host, a lista de episódios e o total de episódios.
+Console.WriteLine($"\nAula 5 - Desafio:");
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+podcastScreenSound.ExibirDetalhes();
+Console.ResetColor();
 
 /****************************************************************************************************/
 
+//Todos os exercícios do curso
 //Instância a classe ExecutarExercicios e chama o método que executa os exercícios propostos.
-ExecutarExercicios.ExecutarOsExercicios();
+//ExecutarExercicios.ExecutarOsExercicios();

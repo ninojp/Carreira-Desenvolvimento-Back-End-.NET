@@ -2426,8 +2426,7 @@ Desafio proposto pela Luri, a IA da Alura.
 
 Explique com suas próprias palavras os principais conceitos que você aprendeu nesta aula.
 
-Resposta:
-
+**Resposta:**  
 Nesta aula evoluimos nosssa aplicação aprendo e aplicando os conceitos de relacionamentos entre classes, mas o que achei mais interessante foi o constructor e toda sua iimportancia na instânciação da classe.
 
 Parabéns pela dedicação aos estudos!
@@ -2440,5 +2439,415 @@ Outro ponto importante que foi abordado é a integração das classes Musica, Al
 
 Continue estudando e praticando!
 
-### Aula 4 -  - Vídeo 9
-### Aula 4 -  - Vídeo 9
+## Aula 5 - Desafio
+
+### Aula 5 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 04](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/aula-4.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound/tree/aula-4)
+
+### Aula 5 - Apresentação do desafio - Vídeo 1
+
+Transcrição  
+Guilherme: Chegou a hora de colocar seu conhecimento à prova. Vamos te passar um desafio que consiste em ampliar nossa aplicação.
+
+Além das músicas, bandas, álbuns e artistas que já temos no sistema, criaremos duas classes para manter podcasts e episódios.
+
+Seguiremos algumas regras de negócio. O podcast possui um nome, um host e um total de episódios.
+
+Um podcast nasce com um nome e um host definido. Para isso, utilize os conceitos de construtores que aprendemos durante o curso.
+
+Assim, conforme os episódios forem criados, vamos adicioná-los ao podcast.
+
+Um podcast também terá dois métodos, um AdicionarEpisodio() e outro ExibirDetalhes().
+
+O método ExibirDetalhes() deve mostrar o nome do podcast e o host na primeira linha, seguido pela lista de episódios ordenados por sequência e por fim o total de episódios.
+
+O episódio deve ter um número, um título, uma duração e um resumo. O resumo do episódio será concatenado com os valores de número, título, duração e convidados do episódio.
+
+Para finalizar, todo episódio possui um método AdicionarConvidados(), que será chamado quantas vezes forem necessárias.
+
+Esse é o desafio! O objetivo é colocar tudo o que aprendemos em prática. Isso inclui o construtor, a verificação se o atributo pode ser apenas um atributo ou se precisa ser uma propriedade e também se precisamos utilizar get e set para todos os valores.
+
+É isso que queremos que você pense. Mostraremos a resolução desse desafio nos próximos vídeos.
+
+Até lá!
+
+### Aula 5 - Resolvendo o desafio #1 - Vídeo 2
+
+Transcrição  
+Daniel: O que achou do desafio? Vamos resolvê-lo juntos?
+
+Faremos isso em dois passos. Primeiro criaremos a classe episódio e depois trabalharemos classe podcast, que estará relacionada ao episódio.
+
+**Resolvendo o desafio #1**  
+Começamos criando um novo arquivo de código usando o atalho "Ctrl + Shift + A". Depois, selecionamos "Arquivo de código" e definimos o nome do arquivo com o nome da classe, portanto Episódio. Feito isso, apertamos a tecla "Enter".
+
+> class Episodio
+
+Temos um arquivo vazio, criaremos a classe chamada Episodio. Abaixo, abrimos um bloco de código usando chaves.
+
+Agora vamos analisar a especificação para preencher essa classe.
+
+Precisamos de quatro propriedades:
+
+Ordem  
+Título  
+Duração  
+Resumo
+
+Vamos criá-las. Usando o atalho aqui do Visual Studio, Prop, criamos a primeira propriedade chamada ordem e do tipo int, public int Ordem { get; set; }.
+
+Depois criamos uma propriedade do tipo string, que é o título do episódio, public string Titulo { get; set; }.
+
+Na linha abaixo, a propriedade public int Duracao { get; } e public string Resumo { get; set; }.
+
+```csharp
+class Episodio
+{
+    public int Ordem { get; }
+    public string Titulo { get; }
+    public int Duracao { get; }
+    public string Resumo { get; set; }
+}
+```
+
+Segundo a especificação, um objeto do tipo episódio nasce com a ordem título e duração. Isso significa que o valor dessas propriedades precisam ser recebidos no construtor da propriedade.
+
+Então, apagamos todos os set do código, assim dizemos que essas propriedades são de leitura. Para não precisarmos escrever o construtor, utilizaremos outro recurso do Visual Studio.
+
+Para isso, selecionamos as propriedades que queremos que sejam inicializadas, nesse caso, da linha 3 até a 5. Depois, clicamos com o botão direito e clicamos em "Ações rápidas e Refatorações".
+
+Feito isso, a ferramenta indica algumas opções. Selecionamos "Gerar Construtor". Assim, a ferramenta disponibiliza automaticamente o código abaixo:
+
+```csharp
+class Epidodio
+{
+        public Episodio(int ordem, string titulo, int duracao)
+    {
+        Ordem = ordem;
+        Titulo = titulo;
+        Duracao = duracao;
+    }
+//código omitido
+}
+```
+
+Agora focaremos na propriedade Resumo. Essa propriedade é uma concatenação dos valores das outras três propriedades.
+
+Então, na linha public string Resumo, usaremos o lambda. Para isso, escrevemos => $"".
+
+Nas aspas passamos {Ordem}. {Título} ({Duração} min).
+
+```csharp
+    public string Resumo => $"{Ordem}. {Titulo} ({Duracao} min)";
+```
+
+Agora, precisamos representar os convidados. Estudamos anteriormente que isso é feito por meio de uma lista de string.
+
+Então, na linha 2, damos espaço e criamos um campo privado do tipo lista string, chamado convidados e inicializamos a lista vazia.
+
+```csharp
+private List<string> convidados = new();
+```
+
+Para receber os convidados, criamos o método public void AdicionarConvidados() que recebe como argumento o nome do convidado string convidade e adiciona na lista esse argumento convidados.Add(convidado).
+
+```csharp
+//código omitido
+public void AdicionarConvidado(string convidado)
+{
+        convidados.Add(convidado);
+}
+```
+
+Agora precisamos colocar essa lista de convidados no resumo. Para isso, poderiamos fazer o loop, verificar cada ítem e colocar uma vírgula no final.
+
+Porém, usaremos um recurso da própria string que fará isso de forma simplificada.
+
+Para isso, na linha abaixo de public string Resumo, adicionamos chaves. Nela, escrevemos string.Join() essa função irá juntar os valores da nossa lista de convidados.
+
+Dentro dos parenteses passamos a string que é justamente a vírgula e o espaço, seguido da lista de convidados ", ", convidados.
+
+class Episodio
+
+```csharp
+{
+    private List<string> convidados = new();
+    public Episodio(int ordem, string titulo, int duracao)
+    {
+        Ordem = ordem;
+        Titulo = titulo;
+        Duracao = duracao;
+    }
+    public int Ordem { get; }
+    public string Titulo { get; }
+    public int Duracao { get; }
+    public string Resumo => $"{Ordem}. {Titulo} ({Duracao} min) - {string.Join(", ", convidados)}";
+
+    public void AdicionarConvidados(string convidado)
+    {
+        convidados.Add(convidado);
+    }
+}
+```
+
+Assim, finalizamos a especificação da classe episódio. Porém, por enquanto só temos o modelo. Ainda precisamos testar isso criando um objeto.
+
+Abrimos o arquivo program.cs. Repare que encontramos os testes que fizemos para banda e álbum. Como não precisamos disso, selecionamos todo o código e apagamos.
+
+Para criar um episódio escrevemos Episodio ep1 que será do tipo new(). Dentro dos parênteses definimos a ordem 1 e o título "Técnicas de facilitação" e a duração 45.
+
+Em seguida, escrevemos o resumo desse episódio Console.WriteLine(ep1.Resumo).
+
+```csharp
+Episodio ep1 = new(4, "Técnicas de Facilitação", 45);
+Console.WriteLine(ep1.Resumo);
+```
+
+Apertamos o botão "play" para executar a aplicação e abrimos o terminal. Como não colocamos o convidado, ele não apareceu.
+
+Para corrigir isso, na linha abaixo de Episodio, escrevemos ep1.AdicionarConvidados("Maria"). Abaixo, usamos o mesmo código para passar o convidado Marcelo.
+
+```csharp
+Episodio ep1 = new(4, "Técnicas de Facilitação", 45);
+Console.WriteLine(ep1.Resumo);
+ep1.AdicionarConvidados("Maria");
+ep1.AdicionarConvidados("Marcelo");
+```
+
+Rodamos o código novamente. Agora o resumo é exibido corretamente.
+
+No próximo vídeo faremos a classe Podcast e juntaremos os episódios ao podcast.
+
+Até lá!
+
+### Aula 5 - Resolvendo o desafio #2 - Vídeo 3
+
+Transcrição  
+Daniel: Agora faremos a classe Podcast. Para isso, apertamos o comando "Ctrl + Shift + A" e clicamos em "Arquivo de código". O nome do arquivo será o nome da classe, então escrevemos Podcast. Depois clicamos em "Adicionar".
+
+Feito isso, temos um arquivo vazio. Começamos declarando a classe Podcast. Na linha abaixo inserimos chaves e dentro delas definiremos a especificação do Podcast.
+
+Lembrando quePodcast tem nome, host e total de episódios, sendo que os dois primeiros já são atributos do objeto do tipo Podcast.
+
+Nas chaves, criamos novamente uma propriedade do tipo string para representar o nome do Podcast public string Nome { get; set; }.
+
+Depois, na linha abaixo, uma propriedade também do tipo string para representar o host do Podcast, public string Host { get; set; }
+
+```csharp
+class Podcast
+{
+        public string Nome { get; set; }
+        
+        public string Host { get; set; }
+}
+```
+
+Retiramos a operação de escrita set dessas propriedades, pois receberemos os valores pelo construtor.
+
+É possível acionar as Ações Rápidas e Refatorações selecionando o código e usando o atalho "Ctrl + .". Feito isso, a ferramenta mostra as opções, selecionamos "Gerar construtor" e ele cria automaticamente.
+
+```csharp
+// código omitido
+public string Nome { get; }
+public string Host { get; }
+```
+
+Agora, inserimos outra propriedade, porém de leitura. Para isso, escrevemos public int TotalEpisodios { get; set; }.
+
+```csharp
+// código omitido
+public string Nome { get; }
+public string Host { get; }
+public int TotalEpisodios { get; set; }
+```
+
+Para criar essa propriedade precisamos de uma lista com os episódios do Podcast. Então, na linha 3, criaremos um campo privado chamado ppisodio e do tipo lista de episodios, provate List`<Episodio>` episodios. Como esse campo será inicializado, adicionamos o sinal de igual seguido da string vazia new().
+
+```csharp
+class Podcast
+{
+    private List<Episodio> episodios = new();
+// código omitido
+```
+
+Abaixo da linha 12, criaremos o método que irá incluir o episódio. Escrevemos public void AdicionarEpisodio(). Ele receberá como argumento o objeto Episodio, episodio.
+
+Na linha de baixo adicionamos chaves e dentro dela escrevemos episodios.Add(episodio).
+
+```csharp
+//código omitido
+public void AdicionarEpisodio(Episodio episodio)
+{
+        episodios.Add(episodio);
+}
+```
+
+Para exibir os detalhes desse Podcast,criamos um método que não retornará nada, public void ExibirDetalhes().
+
+Agora, vamos analisar a especificação para entender o que vamos exibir em relação aos detalhes de um Podcast.
+
+Na primeira linha precisamos ter o nome do Podcast e o host. Então escrevemos "cw" seguido de "Tab", feito isso o código Console.WriteLine() aparece.
+
+Dentro dos parêntese, usando interpolação, passamos $"Podcast {Nome} apresentado por {Host}". Para pularmos uma linha no final, usamos o \n.
+
+```csharp
+//código omitido
+public void ExibirDetalhes()
+{
+        Console.WriteLine($"Podcast {Nome} apresentado por {Host}\n");
+}
+```
+
+Como precisamos fazer um loop para cada episódio mostrar os episódios, escrevemos foreach (Episodio episodio in episodios).
+
+Abaixo, dentro das chaves, vamos exibir o resumo do episódio passando Console.WriteLine(episodio.Resumo).
+
+Na especificação final, na última linha, vamos definir o total de episódios. Então, Console.WriteLine(). Em seguida, passamos como parâmetro $"\n\nEste podcast possui {TotalEpisodios}.episodios."
+
+```csharp
+//código omitido
+public void ExibirDetalhes()
+{
+    Console.WriteLine($"Podcast >|{Nome}|< apresentado por [{Host}]\n");
+    foreach (Episodio episodio in episodios.OrderBy(e => e.Ordem))
+    {
+            Console.WriteLine(episodio.Resumo);
+    }
+    Console.WriteLine($"\n\nTotal de episódios: {TotalEpisodios}.");
+}
+}
+```
+
+Agora, na linha 12, podemos concluir a especificação aqui do TotalEpisodios usando lambda. Repare que o próprio Visual Studio sugere utilizar a contagem do que existe na lista de episódios.
+
+Então, apagamos o { get; set; } e escrevemos => episodios.Count.
+
+```csharp
+//código omitido
+public int TotalEpisodios => episodios.Count;
+```
+
+Para testar, voltamos na aba Program.cs. Nela, criaremos alguns episódios. Para isso, copiamos o código já existente, colamos abaixo e mudamos os valores do episódio, título, ordem, duração e convidados.
+
+Em seguida, criamos um Podcast podcast = new("Podcast especial", "Daniel").
+
+Agora, queremos adicionar os episódios, então escrevemos podcast.AdicionarEpisodio(). Nos parênteses passamos ep1. Feito isso, adicionamos mais uma linha com o mesmo trecho de código, porém como ep2. Por fim, passamos podcast.ExibirDetalhes(). Dessa forma:
+
+```csharp
+Episodio ep1 = new(1, "Técnicas de facilitação",45);
+ep1.AdicionarConvidados("Maria");
+ep1.AdicionarConvidados("Marcelo");
+
+Episodio ep2 = new(2, "Tecnicas de aprendizado", 67);
+ep2.AdicionarConvidades("Fernando");
+ep2.AdicionarConvidades("Marcos");
+ep2.AdicionarConvidades("Flavia");
+
+Podcast podcast = new("Podcast especial", "Daniel");
+podcast.AdicionarEpisodio(ep1);
+podcast.AdicionarEpisodio(ep2);
+podcast.ExibirDetalhes();
+```
+
+Para testar, apertamos o botão "play" e abrimos o terminal. Podemos perceber que deu certo.
+
+Faremos um último teste. Colocaremos o ep1 como ordem 2 e o ep2 como ordem 1, ou seja, invertidos.
+
+```csharp
+Episodio ep1 = new(2, "Técnicas de facilitação",45);
+ep1.AdicionarConvidados("Maria");
+ep1.AdicionarConvidados("Marcelo");
+
+Episodio ep2 = new(1, "Tecnicas de aprendizado", 67);
+ep2.AdicionarConvidados("Fernando");
+ep2.AdicionarConvidados("Marcos");
+ep2.AdicionarConvidados("Flavia");
+
+Podcast podcast = new("Podcast especial", "Daniel");
+podcast.AdicionarEpisodio(ep1);
+podcast.AdicionarEpisodio(ep2);
+podcast.ExibirDetalhes();
+```
+
+Apertamos o botão "play" e abrimos o terminal. Feito isso, notamos que o primeiro episódio aparece primeiro. Isso significa que precisaremos ordenar a lista no momento de exibir o podcast.
+
+Para isso, no arquivo Podcast.cs, no fim da linha de foreach() adicionamos ponto e a função OrderBy(e => e.Ordem).
+
+```csharp
+//código omitido
+foreach (Episodio episodio in episodios.OrderBy(e => e.Ordem))
+//código omitido
+```
+
+Rodamos o código novamente. Repare que agora o segundo episódio criado aparece como sequência 1.
+
+Criamos duas classes relacionadas, episodio e podcast, e fizemos os testes.
+
+Assim cumprimos todas as especificações e concluímos o desafio.
+
+### Aula 5 - projeto final do curso
+
+Aqui você pode [baixar o zip da Aula 05](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/desafio-aula-5.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound/tree/desafio-aula-5)
+
+### Aula 5 - Parabéns!
+
+Chegou o momento de celebrar sua grande conquista!
+
+Neste curso, você aprendeu a criar um modelo de música com atributos como nome, artista, gênero, duração e disponibilidade. Por meio da manipulação de variáveis, métodos e propriedades, você pode exibir informações sobre as músicas, modificar valores de avaliação e explorar a criação de álbuns, adicionando músicas e calculando a duração total. Além disso, você foi introduzido ao conceito de classes relacionadas, como a classe "Banda", e aprendeu a utilizar construtores para garantir a associação correta entre entidades.
+
+Durante o curso, você teve a oportunidade de aplicar esses conceitos em um ambiente prático, utilizando o Visual Studio para visualizar as classes e seus relacionamentos. Essas habilidades são essenciais para o desenvolvimento de programas e sistemas mais robustos e estruturados em C#.
+
+Nossa… quanta coisa legal!
+
+"Não tenha medo de falhar. Cada fracasso é um degrau para o sucesso." (Allyson Michelle Felix, corredora olímpica)
+
+Agora, dê uma nota para o curso, faça download do seu certificado e comemore bastante essa conquista.
+
+Guilherme Lima
+Daniel Portugal
+
+### Aula 5 - Referências
+
+1. [TechGuide: Orientação a Objetos – Hipsters Ponto Tech `#350`](https://www.hipsters.tech/praticas-de-orientacao-a-objetos-hipsters-129/) (gratuito, português, podcast)
+
+> Podcast que discute a orientação a objetos, paradigma essencial em muitas linguagens de programação. O episódio abrange tópicos como encapsulamento, abstração, polimorfismo e muito mais.
+
+2. [Orientação a Objetos: aprenda seus conceitos e suas aplicabilidades de forma efetiva](https://www.casadocodigo.com.br/products/livro-oo-conceitos) (pago, português, livro)
+
+> O livro apresenta conceitos de orientação a objetos para utilizar da forma mais eficiente. Por meio de exemplos, visa as boas práticas do uso para tornar o processo de desenvolvimento mais produtivo.
+
+3. [Orientação a objetos com Roberta Arcoverde](https://www.youtube.com/watch?v=jpuJ1qrluoU) (gratuito, português, vídeo)
+
+> Vídeo que apresenta os conceitos fundamentais sobre sobre a utilização de orientação a objeto e suas aplicações.
+
+4. [Propriedades em C#](https://learn.microsoft.com/pt-br/dotnet/csharp/programming-guide/classes-and-structs/properties) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre propriedades e exemplos de implementação.
+
+5. [Classes e objetos](https://learn.microsoft.com/pt-br/dotnet/csharp/fundamentals/tutorials/classes) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre classes, objetos e exemplos de implementação.
+
+### Aula 5 - Conclusão - Vídeo
+
+Transcrição  
+Daniel: Parabéns por concluir o curso! Comemore muito, é importante celebrarmos cada passo que damos em nossa carreira.
+
+Vamos relembrar um pouco sobre o que aprendemos. Gui, após esse curso, no que estamos capacitados?
+
+Guilherme: Aprendemos muito sobre orientação a objetos com C#.
+
+Os futuros projetos em C# que você for trabalhar, aplicar ou criar com certeza serão diferentes. Isso porque, você irá pensar em orientação a objetos e encapsulamento.
+
+Também irá avaliar se o melhor é deixa um método visível, se é um atributo, se é uma propriedade, ou seja, vários conceitos importantes usados no dia a dia.
+
+Nessa jornada de aprendizado conseguimos colocar em prática todo aprendizado adquirido em aula. Isso irá proporcionar outra percepção sobre os projetos C# que você for produzir.
+
+Daniel: Além disso, os códigos que criamos em aula são muito parecidos com o que você encontrará no mercado de trabalho e nos projetos.
+
+Guilherme: Não deixe de continuar seus estudos em C#, aproveite para sempre aprofundar ainda mais seus conhecimentos.
+
+Bons estudos e sucesso na sua jornada!
+
+### Aula 5 -  - Vídeo 8
