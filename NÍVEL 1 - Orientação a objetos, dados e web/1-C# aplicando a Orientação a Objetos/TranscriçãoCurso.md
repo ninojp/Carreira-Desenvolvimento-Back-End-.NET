@@ -1652,19 +1652,23 @@ No corpo da classe, colocamos as propriedades ao escrever prop e aceitar a suges
 
 Banda.cs:
 
+```csharp
 class Banda
 {
     public string Nome { get; set; }
-}Copiar código
+}
+```
+
 Já podemos colocar os métodos para incluir álbuns. Em uma nova linha, declaramos um método public void que não retorna nada chamado AdicionarAlbum(), recebendo Album album como argumento de entrada.
 
-Para adicionar esse álbum, vamos criar um campo privado antes da propriedade Nome. Desse modo, inicializamos a lista com private List<Album> e apertamos "Tab" para aceitar a sugestão de completar com albums igual à new List<Album>().
+Para adicionar esse álbum, vamos criar um campo privado antes da propriedade Nome. Desse modo, inicializamos a lista com private List`<Album>` e apertamos "Tab" para aceitar a sugestão de completar com albums igual à new List`<Album>`().
 
 No corpo do método AdicionarAlbum(), vamos adicionar na lista albums o objeto album que recebemos como argumento de entrada.
 
+```csharp
 class Banda
 {
-    private List<Album> albums = new List<Album>();
+    private List`<Album>` albums = new List`<Album>`();
 
     public string Nome { get; set; }
 
@@ -1672,18 +1676,19 @@ class Banda
     { 
         albums.Add(album);
     }
-}Copiar código
+}
+```
+
 Também podemos colocar a exibição, já que depois queremos testar essa classe no projeto. Para isso, criamos um novo método public void sem retornar nada chamado ExibirDiscografia().
 
 Nele, colocamos um título para informar que estamos exibindo a discografia. Por isso, digitamos Console.WriteLine(), passando o cifrão que é o símbolo da interpolação seguido da string Discografia da banda e a propriedade {Nome} que contém o nome da banda.
 
 Em seguida, fazemos um foreach novamente com a iteração de Album album in albums. Dentro dele, colocamos outro Console.WriteLine() com cifrão e string Álbum: e o {album.Nome}. Também podemos acrescentar na string a duração total do álbum como {album.DuracaoTotal} entre parênteses.
 
+```csharp
 class Banda
 {
-
 // código omitido…
-
     public void ExibirDiscografia()
     {
         Console.WriteLine($"Discografia da banda {Nome}");
@@ -1692,8 +1697,10 @@ class Banda
             Console.WriteLine($"Álbum: {album.Nome} ({album.DuracaoTotal})");
         }
     }
-}Copiar código
-Exibir a discografia do Queen
+}
+```
+
+**Exibir a discografia do Queen**  
 Daniel: Agora precisamos testar, Gui. Para isso, novamente abrimos a aba com o arquivo Program.cs. Nele, já temos um albumDoQueen com duas músicas. Adicionamos musica1 e musica2 no álbum.
 
 Mas, podemos apagar albumDoQueen.ExibirMusicasDoAlbum(). No lugar, vamos criar uma Banda queen igual à new Banda(). Em uma nova linha, colocamos o nome dela como queen.Nome igual à Queen entre aspas.
@@ -1704,6 +1711,7 @@ Finalmente, queremos exibir a discografia dessa banda. Ou seja, queen.ExibirDisc
 
 Program.cs:
 
+```csharp
 Album albumDoQueen = new Album();
 albumDoQueen.Nome = "A night at the opera";
 
@@ -1721,14 +1729,16 @@ albumDoQueen.AdicionarMusica(musica2);
 Banda queen = new Banda();
 queen.Nome = "Queen";
 queen.AdicionarAlbum(albumDoQueen);
-queen.ExibirDiscografia();Copiar código
+queen.ExibirDiscografia();
+```
+
 Agora podemos testar ao clicar no botão com ícone play "ScreenSound". Com isso, aparece a tela do terminal com a discografia da banda Queen com apenas um álbum chamado A night at the opera e a duração total entre parênteses.
 
 Discografia da banda Queen
 
 Álbum: A night at the opera (567)
 
-Importância da organização do projeto
+**Importância da organização do projeto**  
 Guilherme: Qual a grande vantagem que temos como pessoas desenvolvedoras de criar classes pequenas que isolam o comportamento e o método que contêm?
 
 Por que não podemos criar um ou dois arquivos e colocar todas as nossas classes lá dentro? O programa ainda vai funcionar.
@@ -1745,11 +1755,690 @@ Daniel: Se tentássemos colocar tudo em um local só e uma classe só, íamos co
 
 Guilherme: Como dito anteriormente, um projeto real tem muitas classes, e o isolamento é fundamental para manter um bom gerenciamento do código.
 
-### Aula 4 -  - Vídeo 2
-### Aula 4 -  - Vídeo 3
-### Aula 4 -  - Vídeo 4
-### Aula 4 -  - Vídeo 5
-### Aula 4 -  - Vídeo 6
-### Aula 4 -  - Vídeo 7
-### Aula 4 -  - Vídeo 8
+### Aula 4 - Criando um construtor - Vídeo 2
+
+Transcrição  
+Guilherme: Estou gostando do projeto que estamos fazendo. Só que encontrei um pequeno bug no nosso sistema.
+
+Daniel: Impossível.
+
+**Inconsistência de dados**  
+Guilherme: Encontrei. Abre a classe de Musica, por favor.
+
+Daniel: Já que estamos no arquivo Program.cs, vamos usar um recurso: apertamos a tecla "Ctrl" e passamos o mouse em cima de Musica(). Com isso, esse trecho vira um link, basta clicar e vai abrir a classe Musica.
+
+Guilherme: Diferentemente de um álbum ou artista, a música está definida como string, ou seja, é um texto. Então, podemos cometer um erro e dizer que o Queen não se chama Queen, mas se chama Barões da Pisadinha, por exemplo.
+
+Voltamos em Program.cs. Vamos imaginar que o álbum "A night at the opera" é da banda "Barões da Pisadinha". Por isso, após musica1.Duracao, vamos colocar que musica1.Artista é igual ao texto Barões da Pisadinha. Ponto e vírgula no final.
+
+Daniel: Não deu problema na gravação? A música "Love of My Life" foi cantada por Barões da Pisadinha?
+
+Guilherme: Acho que ia ficar bem diferente. Ia ficar bacana.
+
+Podemos analisar o que vai acontecer ao executar esse código. Mas, precisamos acrescentar albumDoQueen.ExibirMusicasDoAlbum() para visualizar o álbum, onde conseguimos mostrar todas as músicas e o nome do artista.
+
+Program.cs:
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+musica1.Duracao = 231;
+musica1.Artista = "Barões da Pisadinha";
+
+// código omitido…
+
+albumDoQueen.ExibirMusicasDoAlbum()
+
+Banda queen = new Banda();
+queen.Nome = "Queen";
+queen.AdicionarAlbum(albumDoQueen);
+queen.ExibirDiscografia();
+```
+
+Daniel: Vamos apertar o play.
+
+Guilherme: No terminal aparece a falha do nosso sistema.
+
+```csharp
+Lista de músicas do álbum A night at the opera:
+
+Música: Love of my life
+Música Bohemian Rhapsody
+
+Para ouvir este álbum inteiro você precisa de 567
+Discografia da banda Queen
+Álbum: A night at the opera (567)
+```
+
+Por que está com a banda Queen?
+
+Daniel: Porque associamos o álbum à banda Queen.
+
+Guilherme: Isso está estranho, porque definimos que artista que canta "Love of my life" é o Barões da Pisadinha. Porém, o álbum é do Queen. Estamos com uma inconsistência dos dados.
+
+Atualmente, os dados que desenvolvemos e a estrutura que temos de código estão confusos. Por quê? Apesar de definir um artista ou banda, podemos definir artista quando uma música é definida. Isso está errado.
+
+Daniel: Também temos dois locais onde alteramos o artista. Um dos caminhos é criar a banda, definir o artista no álbum que tem várias músicas. Outro caminho é definir a string do artista especificamente na música. Com isso, podemos criar uma divergência.
+
+Precisamos tentar encontrar um modo de convergir informação.
+
+Guilherme: Vamos analisar o que está acontecendo no Program.cs. Na linha 7, falamos que o artista da musica1 é a string Barões da Pisadinha. Mesmo assim, quando definimos uma banda, falamos que a banda se chama Queen.
+
+É importante fazer uma análise quando desenvolvemos aplicação, pois precisamos garantir que a consistência dos dados fique em um só local.
+
+Daniel: Inclusive, mais perto do mundo real. Quando uma música é criada no mundo real, ela já foi criada por alguém, seja compositor ou uma banda. Por isso, quando a música nasce, ela já precisa ter uma banda disponível para ser associada.
+
+Vamos tentar trabalhar esse recurso no próximo vídeo para poder associar uma banda a uma música assim que ela for criada.
+
+### Aula 4 - Relacionamento entre as classes - Vídeo 3
+
+Transcrição  
+Daniel: Nosso desafio é resolver a inconsistência que temos.
+
+**Proteger o método de escrita e leitura**  
+Daniel: Já temos informações sobre banda e artista. Criamos um modelo, ou seja, uma classe e por isso sabemos que uma banda tem nome e álbuns.
+
+Portanto, o artista não é mais um texto (string). É a própria Banda, ou seja, a própria classe.
+
+Vamos abrir a classe Musica novamente. Na linha 4, em vez de usar uma string para o Artista, vamos dizer que ele é do tipo Banda.
+
+Musica.cs:
+
+```csharp
+class Musica
+{
+    public string Nome { get; set; }
+
+    public Banda Artista { get; set; }
+// código omitido…
+}
+```
+
+Ao voltar no Program.cs, já encontramos um erro na string Barões da Pisadinha.
+
+Além disso, precisamos garantir que a música seja criada com uma Banda, como acontece no mundo real. No nosso código, a linha Musica musica1 = new Musica() é onde a música é criada.
+
+Guilherme: A música foi criada. Quem criou essa música? Não tem lógica a música não ter artista. Alguém precisou compor e cantar essa música. Ela não aparece no tocador de música sozinha.
+
+Por isso, vamos apagar a linha musica1.Artista = "Barões da Pisadinha".
+
+Daniel: Mas, poderíamos escrever musica1.Artista = new Banda(), certo? Isso funcionaria, porém, não protege o método de escrita e de leitura. Pois, não queremos que escrevem um novo valor para a propriedade Artista depois que a Musica for criada.
+
+Para proteger o método de escrita e de leitura, basta ir até a classe Musica e remover o set de Artista. Isso previne alterações na propriedade Artista após a criação da música.
+
+Musica.cs:
+
+```csharp
+class Musica
+{
+    public string Nome { get; set; }
+
+    public Banda Artista { get; }
+// código omitido…
+}
+```
+
+Agora, sim, podemos apagar a linha musica1.Artista = "Barões da Pisadinha" Program.cs. Pois não podemos mais atribuir nada ao Artista.
+
+Program.cs:
+
+```csharp
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica();
+musica1.Nome = "Love of my life";
+musica1.Duracao = 231;
+// código omitido…
+```
+
+Guilherme: Contudo, agora temos outro problema: como atribuir um artista à música, se tiramos o método de atribuição?
+
+**Construtores**  
+Daniel: Precisamos entender o seguinte: quando uma música é criada no nosso código?
+
+Guilherme: O new Musica() é quando criamos uma nova música.
+
+Daniel: Por isso, seria muito bom que tivéssemos uma oportunidade de escrever um código no momento da criação desse objeto do tipo Musica. Chamamos isso construtores.
+
+Um construtor é um método especial que é executado no momento da criação do objeto.
+
+No caso da Musica, queremos que a Banda seja atribuída no momento da construção. Mas, ainda não temos construtor na classe Musica.cs. Ou seja, não temos um local onde escrevemos um código que vai ser executado na construção da música.
+
+Guilherme: A ideia do construtor é: quando colocamos new Musica(), vai ser obrigatório passar algumas informações para esse objeto.
+
+Daniel: Qual a característica de um construtor? Ele não tem retorno, não tem void. O nome dele é o tipo.
+
+Por isso, no começo da classe Musica, vamos escrever a palavra reservada public e Musica() seguido das chaves.
+
+Musica.cs:
+
+```csharp
+class Musica
+{
+    public Musica()
+    {
+
+    }
+// código omitido…
+}
+```
+
+Nesse momento temos a oportunidade de escrever entre as chaves que vai ser executado na construção do objeto Musica. Queremos que nesse momento passar a banda.
+
+Por isso, vamos pedir um argumento do tipo Banda artista. No corpo do construtor, dizemos que a propriedade Artista recebe o artista que é argumento do método construtor.
+
+```csharp
+class Musica
+{
+    public Musica(Banda artista)
+    {
+        Artista = artista;
+    }
+// código omitido…
+}
+```
+
+Podemos salvar essa classe e voltar no Program.cs. Agora, temos erros no new Musica().
+
+É um erro bom, pois nos avisa que não conseguimos mais criar uma instância de Musica() sem passar a Banda como parâmetro.
+
+Guilherme: Nesse caso, precisamos ajustar a ordem das linhas para ter primeiro a instância da Banda e só depois criar as músicas passando o objeto da Banda no construtor. Ou seja, recortamos Banda queen = new Banda() e queen.Nome = "Queen" e colamos no começo do arquivo.
+
+Daniel: Faz parte do mundo real. Uma banda nasce e só depois cria as músicas e os álbuns.
+
+Guilherme: Exatamente. Após criar a banda, podemos passar no new Musica() a banda queen, tanto na musica1 quanto na musica2.
+
+Program.cs:
+
+```csharp
+Banda queen = new Banda();
+queen.Nome = "Queen";
+
+Album albumDoQueen = new Album();
+albumDoQueen.Nome = "A night at the opera";
+
+Musica musica1 = new Musica(queen);
+musica1.Nome = "Love of my life";
+musica1.Duracao = 231;
+
+Musica.musica2 = new Musica(queen);
+
+// código omitido…
+```
+
+Daniel: Executamos novamente a aplicação para verificar que tudo continua funcionando.
+
+No terminal, temos a lista de músicas do álbum, depois as músicas, quantidade de duração do álbum e a discografia com apenas um álbum por enquanto. Ou seja, a aplicação continua igual, mas agora aumentamos a restrição do nosso modelo de classes, impedindo que o artista seja alterado depois que a música for criada.
+
+Guilherme: Qual o nome dessa técnica?
+
+Daniel: Esta técnica envolve o uso de construtores com parâmetros, garantindo que algumas informações sejam obrigatórias no momento da criação do objeto Musica.
+
+Quando a classe não possui um construtor explícito, a linguagem cria um construtor implícito sem parâmetros. Por exemplo, estamos usando esses construtores implícitos em new Banda() e new Album() no Program.cs.
+
+### Aula 4 - Construtores para as classes - Vídeo 4
+
+Transcrição  
+Daniel: Com base neste novo conhecimento, podemos também melhorar e evoluir nossas classes, Banda e Album.
+
+**Construtores para Banda**  
+Guilherme: Estamos usando aquele construtor invisível que a linguagem gera para o álbum e a banda, não é? Não é isso que queremos.
+
+No momento que vamos criar a Musica, já sabemos qual é o nome da banda.
+
+Daniel: No Program.cs, já vamos escrever como esperamos que seja. Desse modo, vamos recortar a string Queen que está após queen.Nome. Vamos colá-la dentro dos parênteses do construtor para a Banda.
+
+Por enquanto, aponta um erro porque ainda não existe esse construtor. Vamos precisar criá-lo.
+
+Também não queremos que a propriedade queen.Nome funcione. Vamos igualá-la a um valor qualquer, porque não queremos atribuir um valor para o nome da banda.
+
+Program.cs:
+
+```csharp
+Banda queen = new Banda("Queen");
+queen.Nome = "weriu";
+
+// código omitido…
+```
+
+Agora, vamos abrir a classe Banda para criar um construtor para banda com essa especificação de nome. Após private `<List>`Album albums, vamos pular uma linha e criar um construtor com a ajuda do Visual Studio.
+
+Ao digitar ctor e apertar "Tab", o Visual Studo gera o modelo de um construtor.
+
+O construtor ainda está sem argumentos. Mas, queremos receber uma string com o nome da banda.
+
+No corpo, colocamos que a propriedade Nome vai ser igual o argumento nome.
+
+Por fim, não queremos que escrevem um novo valor para a propriedade Nome depois que a Banda for criada. Por isso, precisamos tirar o set de public string Nome. Vamos deixar apenas o get.
+
+Banda.cs:
+
+```csharp
+class Banda
+{
+    private List<Album> albums = new List<Album>();
+
+    public Banda(string nome)
+    {
+        Nome = nome;
+    }
+    public string Nome { get; }
+// código omitido…
+}
+```
+
+No C#, quando você coloca apenas a opção de leitura na propriedade, você precisa necessariamente inicializar esse valor no construtor ou fornecer um valor à propriedade.
+
+Com isso, não podemos mais escrever queen.Nome = "weriu". O VSCode avisa que tem um erro nessa linha, por isso, vamos apagá-la. Adeus banda "weriu".
+
+Program.cs:
+
+```csharp
+Banda queen = new Banda("Queen");
+// código omitido…
+```
+
+**Construtor para Album**  
+Guilherme: Agora, falta a classe Album. Faremos algo similar.
+
+No Program.cs, já vamos recortar a string A night at the opera que está como valor da propriedade albumDoQueen.Nome. Podemos colocá-la como parâmetro em new Album().
+
+Por enquanto aparece um erro porque a classe Album não tem construtor.
+
+Program.cs:
+
+```csharp
+Banda queen = new Banda("Queen");
+
+Album albumDoQueen = new Album("A night at the opera");
+albumDoQueen.Nome = "A night at the opera";
+// código omitido…
+```
+
+Daniel: Agora, vamos na classe Album.cs para conhecer um novo atalho. Primeiro, apagamos o set de public string Nome.
+
+Em seguida, selecionamos a linha com as propriedades que queremos colocar no construtor. Nesse caso, selecionamos public string Nome { get;}, clicamos com o botão direito do mouse e escolhemos a opção "Ações rápidas e refatorações" (ou "Ctrl + ."). Desse modo, podemos escolher a opção "Gerar construtor "Album(string)".
+
+Com isso, o Visual Studio já gera o construtor com a informação do Nome.
+
+Album.cs:
+
+```csharp
+class Album {
+    private List<Musica> musicas = new List<Musica>();
+    public Album(string nome)
+    {
+        Nome = nome;
+    }
+    public string Nome { get; }
+// código omitido…
+}
+```
+
+Quando vocês tiverem estudando outros cursos, vocês vão ver a pessoa instrutora fazer esse construtor de forma rápida com esse atalho.
+
+Guilherme: Como tirou o set do Nome, a linha albumDoQueen.Nome não funciona mais. Por isso, vamos apagá-la. Com isso, criamos um novo álbum e já passamos o nome desse álbum.
+
+Program.cs:
+
+```csharp
+Banda queen = new Banda("Queen");
+
+Album albumDoQueen = new Album("A night at the opera");
+
+// código omitido…
+```
+
+**Construtor para Musica**  
+Guilherme: Agora, vamos também trabalhar com a Musica. Primeiro, instanciamos uma nova música do Queen com new Musica (queen). Depois, vamos passando passo a passo cada informação, como Nome e Duracao.
+
+Qual sua sugestão para melhorar o nosso código?
+
+Daniel: Acho que a música nasce com o nome. Por isso, podemos recortar o nome "Love of my life" de musica1.Nome e passar como segundo parâmetro de new Musica(). Faremos o mesmo para "Bohemian Rhapsody".
+
+Podemos apagar musica1.Nome e musica2.Nome já que não podemos mais atribuir um nome.
+
+Mas, não vamos alterar a propriedade Duracao, pois a música ainda está sendo criada e a duração não está definida.
+
+Program.cs:
+
+```csharp
+// código omitido…
+Musica musica1 = new Musica(queen, "Love of my life")
+musica1.Duracao = 213;
+
+Musica musica1 = new Musica(queen, "Bohemian Rhapsody")
+musica 2.Duracao = 354;
+// código omitido…
+```
+
+Em Musica.cs, vamos retirar o set da propriedade Nome. Novamente, selecionamos toda a linha public string Nome { get; } e clicamos com o botão direito do mouse e escolhemos "Ações rápidas e refatorações".
+
+Mas, não vamos usar a opção "Gerar um construtor" porque o construtor de Musica já existe. Ao invés disso, vamos selecionar "Adicionar parâmetros ao Musica(Banda)". Com isso, é adicionado o argumento String nome e a propriedade Nome = nome no construtor que já existe.
+
+Musica.cs:
+
+```csharp
+class Musica
+{
+    public Musica(Banda artista, string nome)
+    {
+        Artista = artista;
+        Nome = nome;
+    }
+    public string Nome { get; }
+// código omitido…
+}
+```
+
+Guilherme: Um ponto interessante: o construtor não precisa necessariamente de um parâmetro ou argumento. Podemos passar quantos fizerem sentido para o momento da criação daquele objeto.
+
+Daniel: Agora podemos salvar a classe com "Ctrl + S" ou com o botão de disquete na barra de ferramenta. Repare como o código fica mais enxuto.
+
+**Propriedades opcionais**  
+Guilherme: As propriedades Nome e Artista já configuramos na criação da Musica por meio do construtor. Mas, existem mais propriedades da música que não trabalhamos, como a Duracao e o Disponível. Ou seja, não são propriedades obrigatórias da música.
+
+O que podemos fazer nesses casos?
+
+Daniel: Nesse caso, podemos buscar uma maneira mais enxuta de inicializar essas propriedades opcionais do objeto - ao invés de escrever toda hora musica1.Duracao ou musica1.Disponivel.
+
+No Program.cs, vamos no final da linha onde temos o construtor Musica() da musica1, apagar o ponto e vírgula e inserir chaves. Entre as chaves, vamos escrever a propriedade Duracao igual 213 e, em uma nova linha, Disponivel igual à true. Terminamos as chaves com ponto e vírgula.
+
+Guilherme: Também podemos fazer o mesmo na musica2 do "Bohemian Rhapsody" para deixá-las iguais. Mas, vamos deixar a propriedade a Duracao como 354 e a propriedade Disponivel como false.
+
+Program.cs:
+
+```csharp
+// código omitido…
+Musica musica1 = new Musica(queen, "Love of my life")
+{
+    Duracao = 213,
+    Disponivel = true,
+};
+Musica musica2 = new Musica(queen, "Bohemian Rhapsody")
+{
+    Duracao = 354,
+    Disponivel = false,
+};
+// código omitido…
+```
+
+Um ponto interessante de lembrar é que enquanto estiver fazendo a atribuição desses valores com as chaves, use apenas a vírgula dentro das chaves. Enquanto o ponto e vírgula é usado somente no final para fechar as chaves.
+
+Isso é semelhante ao que aprendemos com o new quando tivemos que criar a lista de banda e usamos abre e fecha chaves.
+
+Daniel: O nome desse recurso é inicializadores (initializers). Vocês podem procurar na documentação os inicializadores de propriedades e também de listas.
+
+Guilherme: Antes de executar para verificar se o código funciona, podemos colocar todos métodos que exibem informações no console ao final do Program.cs.
+
+Daniel: Primeiro, vamos colocar todas as informações relacionadas juntas, como AdicionarMusica e AdicionarAlbum. Em seguida, vamos escrever musica1.ExibirFichaTecnica() e musica2.ExibirFichaTecnica().
+
+No final, vamos manter ExibirMusicasDoAlbum() e ExibirDiscografia().
+
+Program.cs:
+
+```csharp
+// código omitido…
+albumDoQueen.AdicionarMusica(musica1);
+albumDoQueen.AdicionarMusica(musica2);
+queen.AdicionarAlbum(albumDoQueen);
+
+musica1.ExibirFichaTecnica();
+musica2.ExibirFichaTecnica();
+albumDoQueen.ExibirMusicasDoAlbum();
+queen.ExibirDiscografia();
+```
+
+Guilherme: Com isso, temos todos os métodos para exibir álbum e banda.
+
+Daniel: Agora, vamos executar o código e ver o resultado no console. Perceba que teremos muitas informações sendo exibidas.
+
+Analisando a saída do console, notamos que há um problema com a exibição do artista. Isso ocorre porque modificamos o código anteriormente, mas não atualizamos a exibição da ficha técnica.
+
+Vamos voltar para a Musica.cs e corrigir o problema na função ExibirFichaTecnica(). Como o artista não é mais uma string, precisamos colocar {Artista.Nome} no Console.WriteLine() do artista. Assim, podemos acessar propriedade nome do objeto Artista.
+
+Musica.cs:
+
+```csharp
+// código omitido…
+    public void ExibirFichaTecnica()
+    {
+        Console.WriteLine($"Nome: {Nome}");
+        Console.WriteLine($"Artista: {Artista.Nome}");
+        Console.WriteLine($"Duração: {Duracao}");
+        if (Disponivel)
+        {
+            Console.WriteLine("Disponível no plano.");
+        } else
+        {
+            Console.WriteLine("Adquira o plano Plus+");
+        }
+    }
+```
+
+Guilherme: Agora que fizemos a correção no código, podemos executar novamente e verificar o resultado no console. Com sorte, todas as informações serão exibidas corretamente.
+
+```csharp
+Nome: Love of my life
+Artista: Queen
+Duracao: 213
+Disponível no plano.
+Nome: Bohemian Rhapsody
+Artista: Queen
+Duração: 345
+Adquira o plano Plus+
+Lista de músicas do álbum A night at the opera:
+
+Música: Love of my life
+Música Bohemian Rhapsody
+
+Para ouvir este álbum inteiro você precisa de 567
+Discografia da banda Queen
+Álbum: A night at the opera (567)
+```
+
+Executando o código, podemos conferir que as informações sobre as músicas estão sendo exibidas corretamente, incluindo o nome da banda "Queen".
+
+Além disso, também temos a lista de músicas e discografia apresentadas corretamente no console.
+
+Daniel: Portanto, conseguimos criar um modelo de classes que representa o projeto de músicas de forma eficiente e funcional.
+
+### Aula 4 - Para saber mais: classes no mundo real
+
+Aplicações orientadas geralmente possuem várias classes em suas estruturas. No entanto, é importante observar que a quantidade exata de classes pode variar dependendo do tamanho e complexidade do sistema. Esses tipos de aplicativos geralmente são compostos por várias classes que representam diferentes componentes e funcionalidades do sistema.
+
+**Uma aplicação possui quantas classes?**  
+Aqui estão algumas classes comuns que podem estar presentes em programas desse tipo:
+
+- Classe de Usuário: Representa um usuário registrado no sistema e contém informações como nome, email, senha, histórico de atividades, por exemplo.
+
+- Classe de Mídia: Para programas de streaming de vídeo, essa classe representa uma peça de mídia, como um filme, série ou episódio. Para programas de streaming de música, essa classe pode representar uma faixa musical.
+
+- Classe de Playlist: Representa uma lista de mídias selecionadas pelo usuário para reprodução contínua.
+
+- Classe de Categoria: Para programas de streaming de vídeo, essa classe representa uma categoria ou gênero, como ação, comédia, drama etc. Para programas de streaming de música, essa classe pode representar gêneros musicais, como rock, pop, hip-hop, por exemplo.
+
+- Classe de Avaliação: Representa uma avaliação ou classificação dada pelo usuário a uma mídia específica.
+
+- Classe de Pagamento: Para programas com assinatura ou sistema de compra, essa classe representa informações de pagamento do usuário.
+
+- Classe de Reserva: Para aplicações como Airbnb, essa classe representa uma reserva feita por um usuário para uma acomodação específica.
+
+- Classe de Anúncio: No caso do Airbnb, essa classe representa um anúncio de propriedade feito por um usuário que deseja disponibilizá-la para reservas.
+
+> O número total de classes pode variar amplamente, dependendo da arquitetura e dos recursos específicos implementados no sistema. Leve esse conhecimento em conta quando for desenvolver seus projetos!
+
+### Aula 4 - Comparando tipos - Exercício
+
+Uma pessoa que estava estudando C# desenvolveu o seguinte código:
+
+```csharp
+public class Genero
+{
+    public string Nome { get; set; }
+}
+```
+
+Com base neste código, analise as afirmações abaixo e selecione apenas aquela que contém a classe e seu construtor escritos de forma correta e de acordo com as boas práticas de programação.
+
+Resposta:
+
+```csharp
+class Genero
+{
+    public string Nome { get; }
+    public Genero(string nome)
+    {
+            Nome = nome;
+    }
+}
+```
+
+> Nesse exemplo, adicionamos um construtor à classe Genero que recebe um parâmetro nome. O construtor atribui o valor do parâmetro à propriedade Nome da classe Genero.
+
+### Aula 4 - Vantagens de um construtor - Exercício
+
+Usar uma classe sem construtor no C# não garante que o objeto seja inicializado corretamente. Sem um construtor, não há um ponto de entrada definido para configurar o estado inicial do objeto. Isso pode levar a objetos em um estado inválido ou inconsistente, o que pode resultar em comportamento inesperado ou erros em tempo de execução.
+
+Sabendo disso, analise as alternativas abaixo e marque aquelas que descrevem as vantagens de usar construtor em uma classe no C#.
+
+Respostas:
+
+**Usar um construtor auxilia na inicialização dos estados.**
+
+> Isso aí! Um construtor permite que você inicialize os estados de um objeto no momento da sua criação. Isso garante que o objeto seja criado com os valores corretos e em um estado válido desde o início.
+
+**Usar um construtor facilita o uso dos objetos.**
+
+> Um construtor torna a criação de objetos mais fácil e mais intuitiva. Os parâmetros do construtor podem ser usados para fornecer os valores iniciais necessários para configurar o objeto corretamente.
+
+**Usar um construtor auxilia nos dados de entrada das instâncias.**
+
+> Isso aí! Os construtores podem ser usados para validar os valores de entrada e garantir que sejam válidos antes de atribuí-los às propriedades do objeto. Isso ajuda a prevenir inconsistências e erros no uso do objeto.
+
+### Aula 4 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Criar um construtor para a classe Titular, que inicialize todas suas propriedades:
+
+```csharp
+class Titular
+{
+    public string Nome {get; set;}
+    public string Cpf {get; set;}
+    public string Endereco {get; set;}
+}
+```
+
+2. Criar um construtor para a classe Conta, que inicialize todas suas propriedades:
+
+```csharp
+class Conta
+{
+    public Titular Titular {get; set;}
+    public int Agencia {get; set;}
+    public int NumeroDaConta {get; set;}
+    public double Saldo {get;}
+    public double Limite {get; set;}
+
+    public string Informacoes => $"Conta nº {this.NumeroDaConta}, Agência {this.Agencia}, Titular: {this.Titular.Nome} - Saldo: {this.Saldo}";
+}
+```
+
+3. Instanciar uma Conta e exibir suas informações na tela, utilizando construtores.
+
+4. Desenvolver uma classe que representa um catálogo de jogos, com uma lista de Jogos e métodos para manipular essa lista, bem como um construtor que faça sua inicialização.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-2-aula-4).
+
+Boa sorte nos estudos!
+
+### Aula 4 - Faça como eu fiz: criando mais classes
+
+Chegou o momento de você usar a criatividade e praticar todos os conhecimentos aprendidos criando mais classes e evoluindo ainda mais a aplicação que estamos desenvolvendo. Crie mais algumas classes e pense no relacionamento com outras classes, atributos, propriedades, métodos, encapsulamento e construtores.
+
+Para ajudar nesse desafio, vou deixar algumas sugestões de classes que você pode implementar criando suas próprias regras de negócio:
+
+- Classe ReprodutorMusical: Responsável por controlar a reprodução de músicas, incluindo reprodução, pausa, avanço, retrocesso, controle de volume, etc.
+
+- Classe Playlist: Representa uma coleção de músicas organizadas em uma determinada ordem ou tema.
+
+- Classe Artista: Representa um artista musical, contendo informações como nome, biografia, lista de álbuns, etc.
+
+- Classe GeneroMusical: Representa um gênero musical, contendo informações como nome, descrição, lista de artistas ou músicas associadas, etc.
+
+- Classe Usuario: Representa um usuário da aplicação, com informações como nome, e-mail, senha, histórico de reprodução, playlists criadas, etc.
+
+- Classe AvaliacaoMusica: Representa uma avaliação feita por um usuário em relação a uma música, contendo informações como a pontuação e o comentário.
+
+- Classe Busca: Responsável por realizar pesquisas de músicas, artistas, álbuns ou playlists com base em critérios fornecidos pelo usuário.
+
+- Classe Recomendacao: Responsável por gerar recomendações personalizadas de músicas com base nos hábitos de audição do usuário.
+
+- Classe LetraMusica: Representa a letra de uma música, permitindo a exibição ou busca de letras.
+
+- Classe EstatisticasUsuario: Responsável por coletar e calcular estatísticas relacionadas ao uso da aplicação por parte dos usuários, como músicas mais reproduzidas, artistas favoritos, etc.
+
+- Classe Notificacao: Responsável por gerenciar notificações enviadas aos usuários, como atualizações de playlists, lançamentos de álbuns, etc.
+
+- Classe Compartilhamento: Permite que os usuários compartilhem músicas, playlists ou artistas com outros usuários.
+
+- Classe LojaVirtual: Representa uma loja virtual de músicas, permitindo a compra ou download de músicas ou álbuns.
+
+- Classe Podcast: Representa um episódio de um podcast, contendo informações como título, descrição, duração, etc.
+
+- Classe DownloadManager: Responsável por gerenciar o download de músicas ou álbuns para uso offline.
+
+- Classe EventoMusical: Representa um evento musical, como um show ao vivo ou um festival, contendo informações como local, data, lista de artistas participantes, etc.
+
+- Classe RadioOnline: Permite a reprodução contínua de músicas em uma sequência aleatória ou baseada em um gênero ou artista específico.
+
+- Classe ContaPremium: Representa uma conta premium ou assinatura paga, desbloqueando recursos adicionais, como reprodução ilimitada, qualidade de áudio superior, etc.
+
+Opinião do instrutor
+
+Ao criar sua classe, não se esqueça que uma boa classe na programação orientada a objetos possui algumas características importantes:
+
+- Coesão: Uma boa classe possui responsabilidades bem definidas e coesas. Ela deve ter uma única responsabilidade e representar um conceito claro e específico dentro do domínio do problema. Isso facilita a compreensão e manutenção do código.
+
+- Baixo acoplamento: Uma boa classe possui baixo acoplamento com outras classes. Ela deve depender apenas das informações e comportamentos necessários para realizar sua própria responsabilidade. Isso promove a reutilização do código e torna o sistema mais flexível e modular.
+
+- Encapsulamento: Uma boa classe encapsula seus dados e comportamentos, fornecendo uma interface consistente e bem definida para interagir com outras partes do sistema. Isso ajuda a proteger os dados internos da classe e permite a evolução independente de seus detalhes internos.
+
+- Legibilidade e manutenibilidade: Uma boa classe é fácil de ler, entender e manter. Ela segue convenções de nomenclatura adequadas, possui um código bem estruturado, utiliza comentários e documentação quando necessário, e segue os princípios de design de software, como o Princípio da Responsabilidade Única (SRP) e o Princípio Aberto/Fechado (OCP).
+
+- Reutilização: Uma boa classe é projetada para ser reutilizável em diferentes partes do sistema. Ela pode ser facilmente adaptada e estendida para atender a novos requisitos sem modificar seu código original. Isso promove a eficiência no desenvolvimento e evita a duplicação de código.
+
+> Lembre-se: uma classe que possui responsabilidades claras, baixo acoplamento, alto encapsulamento, é legível, reutilizável e fácil de manter. Ela contribui para a construção de um sistema robusto, flexível e de fácil evolução.
+
+### Aula 4 - O que aprendemos?
+
+Desafio proposto pela Luri, a IA da Alura.
+
+Explique com suas próprias palavras os principais conceitos que você aprendeu nesta aula.
+
+Resposta:
+
+Nesta aula evoluimos nosssa aplicação aprendo e aplicando os conceitos de relacionamentos entre classes, mas o que achei mais interessante foi o constructor e toda sua iimportancia na instânciação da classe.
+
+Parabéns pela dedicação aos estudos!
+
+Você mencionou que evoluiu na aplicação dos conceitos de relacionamentos entre classes, o que é fundamental para entender como as diferentes partes de um sistema interagem. Além disso, você destacou a importância do construtor na instanciação da classe, o que é realmente um ponto crucial, pois o construtor permite inicializar os atributos da classe e preparar o objeto para uso.
+
+Além disso, também vimos que a classe Banda possui métodos específicos para adicionar álbuns e exibir a discografia, o que demonstra a funcionalidade prática da classe. Essa abordagem ajuda a organizar melhor o código e a manter a lógica da aplicação clara e coesa.
+
+Outro ponto importante que foi abordado é a integração das classes Musica, Album e Banda, que permite um relacionamento mais rico entre os objetos, facilitando a manipulação e a apresentação dos dados.
+
+Continue estudando e praticando!
+
+### Aula 4 -  - Vídeo 9
 ### Aula 4 -  - Vídeo 9
