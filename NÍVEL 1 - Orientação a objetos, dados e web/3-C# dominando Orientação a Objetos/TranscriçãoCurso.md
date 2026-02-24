@@ -637,11 +637,683 @@ Continue estudando e praticando!
 
 ## Aula 2 - Nova classe Avaliacao
 
-### Aula 2 -  - Vídeo 1
-### Aula 2 -  - Vídeo 2 
-### Aula 2 -  - Vídeo 3
-### Aula 2 -  - Vídeo 4
-### Aula 2 -  - Vídeo 5
-### Aula 2 -  - Vídeo 6
-### Aula 2 -  - Vídeo 7
-### Aula 2 -  - Vídeo 8
+### Aula 2 - Visibilidade internal - Vídeo 1
+
+Transcrição  
+Daniel: Neste vídeo, trabalharemos com a Orientação a Objetos para encapsular o conceito de nota.
+
+Vamos abrir novamente o arquivo Banda.cs, onde veremos que as notas dadas para a classe Banda são representadas como um inteiro (int). Imagina se adicionarmos um número negativo como -1237.
+
+Guilherme: Ele vai aceitar.
+
+Daniel: A banda será rebaixada.
+
+Vamos tentar representar o conceito de nota por meio de uma classe.
+
+Guilherme: Isso é comum. Geralmente adicionamos os tipos primitivos (int, string, entre outros) no interior de uma classe para podermos manipular melhor essas informações e suas validações. Não queremos que notas negativas sejam aplicadas.
+
+Daniel: Encontraremos muitos tipos na biblioteca .NET que possuem uma série de comportamentos. Com o tipo DateTime, por exemplo, possui comportamentos para representar uma data. Ele permite a soma entre um mês e determinada data para adquirir uma nova data.
+
+Voltando ao código, abriremos o gerenciador de soluções clicando no botão de mesmo nome na lateral direita da IDE. Em seu interior, clicaremos com o botão direito na pasta "Modelos" e selecionaremos "Adicionar > Classe". Com isso, uma janela denominada "Adicionar novo Item" será aberta, onde veremos uma lista de modelos de template.
+
+Até agora utilizamos somente o modelo "Arquivo de Código". Agora, clicaremos no modelo "Classe" e entenderemos o que o Visual Studio nos fornecerá com este template. No campo "Nome", abaixo da lista de modelos, escreveremos "Avaliacao" (sem pontuação) e pressionaremos "Enter".
+
+Com isso, o editor abrirá o arquivo recém-criado Avaliacao.cs, onde teremos a classe Avaliavao com uma estrutura pronta.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace ScreenSound.Modelos
+{
+    internal class Avaliacao
+    {
+    }
+}
+```
+
+Guilherme: É interessante ver que ele aplicou o namespace correto: ScreenSound.Modelos.
+
+Daniel: Exatamente.
+
+Já sabemos o que significam os using no topo do código — ele nos entregou um atalho para diversos namespaces (System, System.Collections.Generic, System.Linq, System.Text e System.Threading.Tasks), entretanto, não vamos utilizar nenhum deles. Por isso, vamos selecionar e apagar essas cinco linhas.
+
+```csharp
+namespace ScreenSound.Modelos
+{
+    internal class Avaliacao
+    {
+    }
+}
+```
+
+Dica de boas práticas: Quando mais enxuto o código estiver, melhor.
+
+O namespace está declarado da maneira antiga, utilizando um bloco de chaves. Para alterá-lo, iremos até o fim da linha namespace ScreenSound.Modelos e adicionaremos um ;. Com isso, o editor excluirá o bloco de chaves.
+
+```csharp
+namespace ScreenSound.Modelos;
+
+    internal class Avaliacao
+    {
+    }
+```
+
+Guilherme: É como mágica. Eu esperava que você tirasse manualmente as chaves.
+
+Daniel: É.
+
+Voltando à classe Avaliacao, o que ela precisará ter? Um construtor
+
+Entre as chaves de internal class Avaliacao, adicionaremos o construtor escrevendo o atalho ctor e pressionando "Enter". Isso fará com que o editor crie o construtor public Avaliacao() junto a um bloco de chaves.
+
+Entre os parênteses desse construtor, "embrulharemos" o conceito de inteiro adicionando um int nota com "N" minúsculo.
+
+Abaixo das chaves dele, criaremos a propriedade public int Nota { } que terá entre chaves apenas o acesso de leitura (o get).
+
+Acessando o interior das chaves do construtor, guardaremos a nota com "n" minúsculo dentro da propriedade Nota com "N" maiúsculo.
+
+```csharp
+namespace ScreenSound.Modelos;
+
+    internal class Avaliacao
+        {
+            public Avaliacao()
+            {
+                Nota = nota;
+            }
+            
+            public int Nota { get; }
+        }
+```
+
+Apesar de não realizarmos ainda nenhuma validação, poderíamos fazê-la para encapsular melhor o conceito de nota.
+
+Guilherme: Vamos deixar esta validação livre para ser criada pelas pessoas estudantes, pois o tipo de valor inserido pode variar, dependendo do aplicativo. Alguns utilizam avaliações que vão de 0 a 10, outros utilizam estrelas que vão de 0 a 5 e outros podem utilizar somente duas opções ("Gostei" e "Não gostei").
+
+Daniel: Vamos falar sobre o termo internal, que não estava presente nas classes anteriores. Ele está relacionado à visibilidade de classes. Vamos entendê-lo por meio da exploração do seu contrário.
+
+Acessando o arquivo Program.cs, veremos a linha abaixo com o tipo Dictionary.
+
+```csharp
+Dictionary<string, Banda> bandasRegistradas = new;
+```
+
+Nós declaramos esta classe, Gui?
+
+Guilherme: Não.
+
+Daniel: Ela foi criada e entregue pelo próprio .NET, está no namespace System.Collections.Generic e está no interior de outro projeto que não temos acesso neste momento. Para que outros projetos possam enxergá-la, a visibilidade da classe do tipo Dictionary precisa ser pública.
+
+Voltando ao arquivo Avaliacao.cs, quando declaramos uma classe como internal (interna), ela será vista apenas pelo projeto.
+
+Guilherme: Excelente. Acredito que este tipo seja bem-vindo nas outras classes.
+
+Daniel: Exatamente.
+
+Guilherme: Vamos realizar uma refatoração e incluir o internal nelas?
+
+Daniel: Vamos. Acessaremos os arquivos das classes abaixo e adicionaremos o internal à esquerda da palavra reservadas class, salvando o código a cada troca de arquivo. O resultado pode ser visto abaixo.
+
+Arquivo Musica.cs:
+
+```csharp
+internal class Musica
+```
+
+Arquivo Album.cs:
+
+```csharp
+internal class Album
+```
+
+Arquivo Banda.cs:
+
+```csharp
+internal class Banda
+```
+
+Por orientação, manteremos nossas classes com a menor visibilidade possível. Elas devem ser alteradas para public somente nos casos em que queremos que ela seja vista em outros projetos.
+
+Guilherme: Certo. Voltando à aplicação, criamos a classe Avaliacao, mas ainda não a utilizamos. Faremos isso na sequência.
+
+### Aula 2 - Usando o novo tipo - Vídeo 2
+
+Transcrição  
+Daniel: Gui, vamos utilizar a classe Avaliacao no projeto.
+
+Guilherme: Vamos lá.
+
+Daniel: Acessaremos o arquivo Banda.cs, onde verificaremos que a representação da nota ainda é feita como uma lista de int. Vamos alterá-la para uma lista de Avaliacao.
+
+Em seguida, alteraremos o método AdicionarNota() para receber um Avaliacao nota no lugar do int nota.
+
+```csharp
+internal class Banda
+{
+// Código omitido
+    private List<Avaliacao> notas = new List<Avaliacao>();
+    // Código omitido
+    public void AdicionarNota(Avaliacao nota)
+    {
+    // Código omitido
+    }
+// Código omitido
+}
+```
+
+Vamos até o método public double Media que calcula a média das notas. Para ele receber um tipo mais complexo (ou seja, uma classe com várias propriedades), precisamos explicitar qual propriedade usar para este cálculo.
+
+Guilherme: Provavelmente é a Avaliacao.nota, certo?
+
+Daniel: Isso. Portanto, na linha public double Media => notas.Average, adicionaremos uma expressão lambda à direita, onde diremos que deve-se usar a propriedade nota para cada avaliação.
+
+Dica: Para entender mais sobre expressões lambda, acesse o página da Microsoft sobre expressões lambda.
+
+```csharp
+internal class Banda
+{
+    // Código omitido
+    public double Media => notas. Average (a => a. Nota);
+    // Código omitido
+}
+```
+
+Resolvemos a questão na classe Banda.
+
+Guilherme: Uma dúvida: vamos supor que a nota seja vazia, ou seja, um espaço em branco. Teríamos um erro na média de notas da classe Banda?
+
+Daniel: Você se refere ao caso da lista estar vazia.
+
+Guilherme: Isso.
+
+Daniel: Acho que sim, Gui.
+
+Guilherme: Poderíamos iniciar o construtor dela com a nota 0?
+
+Daniel: Sim, mas a nota seria contabilizada como 0.
+
+Guilherme: Verdade. Então, poderíamos realizar uma verificação para exibir alguma coisa nos casos em que não existir uma nota.
+
+Daniel: Interessante. Com isso, podemos utilizar uma propriedade que não seja somente de leitura no lugar do => notas. Average (a => a. Nota.
+
+Vamos selecionar todo o lambda mencionado acima, recortar esse conteúdo e adicionar um bloco de chaves em seu lugar. Entre essas chaves, abriremos um bloco de chaves get e diremos em seu interior que, para este método de leitura, faremos o seguinte teste:
+
+Se notas.Count for 0 (ou seja, não existe nota), retornaremos a média 0. Senão, retornaremos o cálculo que recortamos anteriormente.
+Por fim, substituiremos a primeira seta do código colado por um return.
+
+O resultado do código pode ser visto abaixo.
+
+```csharp
+internal class Banda
+{
+    // Código omitido
+    public double Media
+    {
+        get
+        {
+            if (notas.Count == 0) return 0;
+            else return notas. Average (a => a. Nota);
+        }
+    }
+    // Código omitido
+}
+```
+
+Boa, Gui.
+
+Guilherme: Excelente. Com isso, garantimos o melhor funcionamento do código.
+
+Daniel: De fato. Eu não havia percebido isso. Por isso é interessante programar junto com outras pessoas.
+
+Com este problema resolvido, vamos acessar o arquivo Program.cs pois lá haverão erros.
+
+No começo do arquivo, temos três linhas que possuem o ira.AdicionarNota().
+
+Guilherme: Ela adicionava a nota diretamente, né. Vamos precisar chamar algo dentro deste método.
+
+Daniel: Exato. Entre os parênteses dos três ira.AdicionarNota() criaremos um objeto new Avaliacao() que envolverá em seus parênteses o número que representa a nota.
+
+```csharp
+Banda ira = new Banda("Ira!");
+ira. AdicionarNota(new Avaliacao (10));
+ira. AdicionarNota(new Avaliacao (8));
+ira. AdicionarNota(new Avaliacao (6));
+Banda beatles = new("The Beatles");
+```
+
+Guilherme: Muito bom. Se observarmos a barra de rolagem na lateral direita, veremos um ponto vermelho.
+
+Daniel: Vamos descer a tela até ele.
+
+Guilherme: É o mesmo problema, né.
+
+Daniel: Sim. Vamos alterar o banda.AdicionarNota(nota) para receber entre parênteses um new Avaliacao() que envolverá a nota.
+
+```csharp
+if (bandasRegistradas.ContainsKey(nomeDaBanda))
+{
+    // Código omitido
+    banda.AdicionarNota(new Avaliacao(nota));
+    // Código omitido
+}
+// Código omitido
+```
+
+Acredito que resolvemos.
+
+Guilherme: Vamos testar?
+
+Daniel: Vamos. Para isso, pressionaremos "Ctrl+F5".
+
+Na tela da aplicação, vamos avaliar uma banda. Responderemos à primeira pergunta com um 4, a segunda com o nome da banda (Ira!), e por fim, a pergunta sobre a nota que ela merece com o valor da nota. Qual será ela?
+
+Guilherme: Nota 9.
+
+Daniel: Após o "Enter", receberemos a mensagem de que a nota foi registrada com sucesso.
+
+Agora, queremos exibir os detalhes de uma banda que não possui nota, para testar a condicional que criamos. Para isso, responderemos à pergunta "Digite sua opção" com o número 5 e à pergunta "Digite o nome da banda que deseja conhecer melhor" com o nome The Beatles.
+
+Com isso, aparecerá a seguinte mensagem:
+
+A média da banda The Beatles é 0.
+
+Guilherme: Nota 0? Vamos dar uma nota aos Beatles antes de acabar o vídeo?
+
+Daniel: Certo. Vamos responder à pergunta "Digite sua opção" com o número 4 para avaliar a banda, à pergunta "Digite o nome da banda que deseja avaliar" com o nome The Beatles e à pergunta "Qual a nota que a banda The Beatles merece" com o número 10.
+
+Após recebermos a mensagem de que a nota foi registrada com sucesso, exibiremos os detalhes da banda recém-avaliada. Para isso, responderemos à pergunta "Digite sua opção" com o número 5, à pergunta "Digite o nome da banda" com o nome The Beatles e veremos a seguinte mensagem:
+
+A média da banda The Beatles é 10.
+
+Com um "Enter", voltamos ao menu principal. Nele, digitaremos -1 para sair da aplicação. Tudo ok.
+
+### Aula 2 - Melhorando avaliação - Vídeo 3
+
+Transcrição  
+Daniel: Gui, já temos bastante coisa. Criamos a classe Avaliacao que encapsula o conceito de nota da avaliação.
+
+Contudo, existe um detalhe que me incomoda e que podemos melhorar, afinal, sempre que desenvolvemos um projeto, buscamos melhorias.
+
+Voltando ao arquivo Program.cs, na linha em que realizamos a última modificação, nós convertemos um valor digitado pela pessoa para inteiro, depois convertemos este valor para um objeto do tipo Avaliacao.
+
+Vamos pular um passo, recolhendo o texto digitado e convertendo-o diretamente para um objeto Avaliacao.
+
+Guilherme: Neste caso, teríamos um parse (conversão) para Avaliacao.
+
+Daniel: Isso. Vamos acessar o arquivo Avaliacao.cs e, abaixo da linha public int Nota { get; }, pularemos uma linha e criaremos um método public Avaliacao Parse() junto a um bloco de chaves. Este método terá o nome Parse e retornará, em vez do Void, um objeto Avaliacao.
+
+Ele também receberá entre parênteses uma string texto.
+
+Voltando ao arquivo Program.cs, copiaremos a linha abaixo, localizada dentro do if.
+
+```csharp
+Console.Write("Qual a nota que a banda merece: ");
+int nota = int.Parse(Console.ReadLine()!);
+```
+
+Em seguida, voltaremos ao Avaliacao.cs e pressionaremos "Ctrl+V" para colar esta linha no interior das chaves de public Avaliacao Parse(). Na linha recém-colada, substituiremos o comando Console.ReadLine()! pelo argumento texto. Por fim, abaixo dela, retornaremos um new Avaliacao(nota).
+
+```csharp
+internal class Avaliacao
+{
+    // Código omitido
+
+    public int Nota { get; }
+
+    public Avaliacao Parse(string texto)
+    {
+        int nota = int.Parse(texto);
+        return new Avaliacao(nota);
+    }
+}
+```
+
+Voltando ao Program.cs, modificaremos a linha que copiamos, de int nota = int.Parse(Console.ReadLine()!) para Avaliacao nota = new Avaliacao().Parse(Console.ReadLine()!).
+
+```csharp
+Avaliacao nota = new Avaliacao().Parse(Console.ReadLine()!)
+```
+
+Neste momento, o código Avaliacao apontará um erro, sendo sublinhado por uma linha vermelha.
+
+Guilherme: Isso é estranho, pois teoricamente, o Parse pode ser utilizado somente pela chamada, sem precisar instanciá-lo.
+
+Daniel: Existe uma distinção entre métodos de instância (executados com as informações do próprio objeto) e métodos que não são da instância, por exemplo, o int.Parse() utilizado anteriormente.
+
+Guilherme: No primeiro caso, damos new.
+
+Daniel: Isso mesmo.
+
+Se, em vez de int.Parse(), quiséssemos realizar um Avaliacao.Parse(), não seria possível.
+
+Voltando ao arquivo Avaliacao.cs, veremos que as instruções dentro do método Avaliacao Parse() não utilizam nada de fora da instância do objeto, como, por exemplo, nota. Neste tipo de cenário, podemos marcar este método como estático. Dessa forma, ele se tornará apenas uma função com elementos autocontidos.
+
+Faremos isso, adicionando um static à direita da palavra reservada public.
+
+```csharp
+internal class Avaliacao
+{
+// Código omitido
+    public static Avaliacao Parse(string texto) 
+    {
+        int nota int.Parse(texto);
+        return new Avaliacao (nota);
+    }
+}
+```
+
+Guilherme: Assim, temos o public static, o tipo Avaliacao que queremos retornar e o Parse que converte um tipo para outro. Ele retornará um new Avaliacao.
+
+Com o static, não precisamos declarar o new e podemos chamar o método diretamente pelo tipo.
+
+Daniel: Isso. O static informa que o conteúdo executado não utiliza nenhuma informação da instância desta classe — no caso, Avaliacao.
+
+Guilherme: Apesar disso, ela modifica alguma coisa que ajudará a classe.
+
+Daniel: Isso mesmo. Através do return que gerará um objeto neste caso.
+
+Salvaremos o código e retornaremos ao arquivo Program.cs, onde temos o compilador funcionando na linha Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!). O que antes era int nota = int.Parse() agora é Avaliacao nota = Avaliacao.Parse().
+
+Na linha de baixo, nós já temos o objeto, então não precisamos mais do comando new Avaliacao. Vamos deletá-lo do interior dos parênteses de banda.AdicionarNota() e fornecer somente o nota que foi criado a partir do Parse().
+
+Guilherme: Porque ele já é do tipo Avaliacao, né. Se ele não conseguir converter, retornará uma mensagem informando que não foi possível realizar o processo.
+
+Daniel: Isso.
+
+```csharp
+if (bandasRegistradas.ContainsKey(nomeDaBanda))
+{
+    // Código omitido
+    Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+    banda. AdicionarNota(nota);
+    // Código omitido
+}
+// Código omitido
+```
+
+Guilherme: Vamos testar este código adicionando uma nota?
+
+Daniel: Sim. Pressionaremos "Ctrl+F5" para abrir a aplicação.
+
+Guilherme: Vamos avaliar a banda Ira! com a nota 10. Após responder todas as perguntas, veremos a seguinte mensagem:
+
+A nota ScreenSound.Modelos.Avaliacao foi registrada com sucesso para a banda Ira!
+
+Daniel: Apareceu algo interessante: o nome do tipo da nota (ScreenSound.Modelos.Avaliacao). Isso ocorre porque não estamos mais utilizando um inteiro.
+
+Vamos fechar a aplicação com -1 e observar a linha do Console.WriteLine() abaixo de banda. AdicionarNota(nota). Nela, utilizamos um objeto nota. Para que funcione, precisamos adicionar a ele a propriedade Nota, inserindo antes um ponto.
+
+```csharp
+if (bandasRegistradas.ContainsKey(nomeDaBanda))
+{
+    // Código omitido
+    banda. AdicionarNota(nota);
+    Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+    // Código omitido
+}
+// Código omitido
+```
+
+Voltando à aplicação por meio do "Ctrl+F5", vamos conferir se funciona. Vamos avaliar a banda Ira! novamente com a nota 10. Após responder todas as perguntas, veremos a seguinte mensagem:
+
+A nota 9 foi registrada com sucesso para a banda Ira!
+
+Guilherme: Excelente.
+
+Daniel: Vamos fechar a aplicação digitando -1.
+
+Para concluir, os métodos estáticos são muito importantes e serão bastante utilizados em nossas carreiras como pessoas desenvolvedoras. Eles permitem a anexação de funções dentro de um tipo — neste caso, no conceito de Avaliacao.
+
+### Aula 2 - Classe Program - Vídeo 4
+
+Transcrição  
+Daniel: Gui, nós incorporamos o conceito de Avaliacao na aplicação e conhecemos os métodos estáticos.
+
+Desde o primeiro curso, revelamos palavras reservadas que foram aparecendo, como internal e namespace. Elas parecem um truque mas, na verdade, o próprio .NET sugere o uso delas como uma maneira de aprendizado.
+
+Guilherme: Sim.
+
+Daniel: O nosso arquivo .cs é, na verdade, uma classe!
+
+Guilherme: Não acredito. Você deve estar brincando! Mostre para nós.
+
+Daniel: Se acessarmos o arquivo Program.cs, veremos que seu texto está organizado em instruções, o que foge do padrão dos outros arquivos do projeto. Isso ocorre porque o Program.cs é o ponto de entrada de uma aplicação .NET.
+
+Para facilitar o aprendizado das pessoas que estão iniciando nessa linguagem, ele escondeu a classe Program. Com o Visual Studio, posicionaremos o cursor na linha vazia, abaixo da linha using ScreenSound.Modelos. Nela, vamos apertar "Ctrl+." acessar a lista suspensa aberta pelo editor e clicar na terceira opção: "Converter para 'Program.Main' o estilo do programa".
+
+Com isso, nosso código exibirá a classe internal class Program envolvendo todo o código do arquivo, e dentro dele, na primeira linha, temos um método chamado Main, o método principal e ponto de entrada da aplicação.
+
+using ScreenSound. Modelos;
+
+```csharp
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Banda ira = new Banda("Ira!");    
+    // Código omitido    
+    }    
+// Código omitido
+}
+```
+
+Guilherme: Isso é comum? Teremos em toda aplicação?
+
+Daniel: Sim, todas as aplicações .NET possuem estes elementos.
+
+Guilherme: Esta classe diz "o programa começa aqui". A partir dela, toda a mágica acontecerá.
+
+Daniel: Exatamente.
+
+Guilherme: No nosso caso, ela sempre existiu, né… Quando damos play ou rodamos o programa com o Visual Studio Code, por exemplo, sempre fornecemos o nome. Com isso, sem sabermos, estávamos chamando a execução do programa principal, por meio do qual a aplicação se inicia.
+
+Daniel: Exatamente.
+
+Guilherme: E ele possui alguns elementos: o internal para ser visto apenas na própria aplicação e o private static void Main que recebe uma lista de strings com o args.
+
+Daniel: Este último é uma lista ou arranjo de strings que já conhecemos.
+
+Agora que vemos a classe Program e seu método Main, interpretamos melhor o código. Em nossas carreiras, podemos trabalhar com códigos de times que usam o CSharp em uma versão anterior (10 ou menos), onde nos depararemos com estes dois elementos.
+
+Guilherme: É interessante comentar que estes elementos não são exclusivos do CSharp. A maioria das linguagens, principalmente aquelas baseadas em Orientação a Objetos (como Java ou Python), conterão uma classe como essa que armazena outras centenas de classes.
+
+A classe Main é uma forma com a qual a plataforma entende onde será o ponto de partida da aplicação.
+
+Daniel: Contudo, diferentemente de outras linguagens que possuem estes elementos, no CSharp o projeto possui uma marcação para sinalizar qual é a classe de entrada — neste caso, o projeto marcado "ScreenSound" pode ser visto pelo gerenciador de soluções na lateral esquerda da IDE, localizado na raiz dos diretórios).
+
+No Java, por exemplo, podemos marcar qualquer classe como classe de entrada. Para alterá-la, entramos no projeto e alteramos uma opção específica.
+
+Vamos retirar o internal class Program e o private static void Main(string[] args), pois o código estava mais elegante sem eles. Vamos deixar o compilador realizar o trabalho destes elementos.
+
+Para retornar o código para o modo anterior, excluindo a classe Program e o método Main, pressionaremos "Ctrl+Z".
+
+```csharp
+using ScreenSound.Modelos;
+Banda ira = new Banda("Ira!");
+// Código omitido
+```
+
+Após esta alteração, podemos continuar nosso aprendizado.
+
+### Aula 2 - Faça como eu fiz: o poder do encapsulamento
+
+Nesta aula introduzimos uma nova classe Avaliacao para que ela pudesse isolar tanto o dado primitivo com o valor da nota (usamos um inteiro para representá-la) quanto possíveis comportamentos do conceito de avaliação em nossa aplicação (por exemplo a capacidade de transformar um texto em um objeto através do método estático Parse(). Um tipo muito comum em projetos C# criado com esta mesma finalidade é o DateTime. Seu objetivo é representar um momento no tempo e fornecer comportamentos para lidar com datas, horas, conversões, dentre outros.
+
+Um comportamento que pode ser inserido nestes tipos é a habilidade de validar valores que estão fora do limite permitido. No caso de uma nota, citei que um valor negativo para uma banda faria com que ela fosse rebaixada no carnaval daquela temporada :-). Notas muito grandes também não fariam sentido e impactariam o cálculo da média, impossibilitando a comparação entre bandas.
+
+Agora é sua vez! Na classe Avaliacao, crie uma regra de negócio para não permitir que notas menores que zero sejam registradas. Além disso, notas maiores que dez também não podem ser registradas.
+
+Considere que valores inteiros fora da faixa recebem os limites inferior e superior. Ou seja:
+
+Notas menores que zero são zero;  
+Notas maiores que dez são dez.
+
+Opinião do instrutor
+
+Veja como ficou a classe Avaliacao alterada:
+
+```csharp
+internal class Avaliacao
+{
+    public Avaliacao(int nota)
+    {
+        if (nota <= 0) nota = 0;
+        if (nota >= 10) nota = 10;
+        Nota = nota;
+    }
+
+    public int Nota { get; }
+
+    public static Avaliacao Parse(string texto)
+    {
+        int nota = int.Parse(texto);
+        return new Avaliacao(nota);
+    }
+}
+```
+
+A regra ficou embutida no construtor da classe. Quando o argumento nota estiver fora da faixa, alteramos seu valor para os valores mínimo ou máximo. E melhor ainda: mesmo que utilize o método estático Parse(), a regra será obedecida. Quem a consome pode passar valores fora da faixa 0-10 e não vai conseguir burlar ou hackear o sistema.
+
+Esse é o poder do encapsulamento: isolamos uma regra de validação pertinente somente a avaliações. Quando houver necessidade de mudar esta regra (seja porque os limites mudaram ou por qualquer outro motivo), a mudança será realizada em um local único. Muito interessante!
+
+### Aula 2 - Exibindo a folha salarial - Exercício
+
+No módulo de folha salarial de uma empresa, existe uma classe que calcula o salário de cada colaborador com base no seu salário bruto, nos descontos aplicados no mês e nos bônus por anos de empresa (anuênio). O código das classes Colaborador e DepartamentoPessoal é exibido abaixo. Nele, o método ExibeFolha() é declarado estaticamente e possui como argumento uma lista de colaboradores.
+
+```csharp
+internal class Colaborador
+{
+    public Colaborador(string nome, double salario, int anosEmpresa, double descontos = 0)
+    {
+        Nome = nome;
+        Salario = salario;
+        AnosEmpresa = anosEmpresa;
+        Descontos = descontos;
+    }
+
+    public string Nome { get; }
+    public double Salario { get; }
+    public int AnosEmpresa { get; }
+    public double Descontos { get; }
+    public double Anuenio => 1 + (AnosEmpresa * 0.01);
+}
+
+internal class DepartamentoPessoal
+{
+    public static void ExibeFolha(List<Colaborador> colaboradores)
+    {
+        foreach (Colaborador c in colaboradores)
+        {
+            var salarioDoMes = (c.Salario * c.Anuenio) - c.Descontos;
+            Console.WriteLine($"- {c.Nome}: R$ {salarioDoMes}");
+        }
+    }
+}
+```
+
+Analise as afirmações abaixo e marque as alternativas corretas.
+
+Respostas:  
+
+Para invocar a exibição da folha, basta executar o código abaixo.
+
+> List`<Colaborador>` colaboradores = new();
+DepartamentoPessoal.ExibeFolha(colaboradores);
+
+Muito bem! Para exibir a folha salarial da lista de colaboradores não precisamos instanciar objetos DepartamentoPessoal, uma vez que ExibeFolha() é um método estático.
+
+O método de acesso de leitura à propriedade Anuenio não pode ser marcado como estático porque ele acessa o membro de instância Colaborador.AnosEmpresa.
+
+> Isso aí! Apesar da construção usando expressões lambda, ainda estamos escrevendo código para o método get, que implementa o acesso de leitura à propriedade Anuenio. Como esta implementação utiliza a propriedade de instância AnosEmpresa, Anuenio também precisa ser de instância, e portanto não pode ser declarado como static.
+
+### Aula 2 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Modelar um Pet Shop com classes como Pet, Dono, Consulta e médico.
+
+2. Modelar o funcionamento de uma oficina automobilistica.
+
+3. Criar um programa Program.cs e simular o funcionamento do programa.
+
+4. Escrever um programa que funcione como uma calculadora, que pode realizar as 4 operações básicas, além de calcular raiz quadrada e potências. O usuario deve entrar com dois números e um simbolo que represente a operação a ser feita.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-3-aula-2).
+
+Boa sorte nos estudos!
+
+### Aula 2 - Faça como eu fiz: contador de objetos
+
+Nesta aula, conhecemos os métodos estáticos, que são blocos de instrução que de alguma maneira estão relacionados ao tipo ao qual aquele método pertence, mas não utilizam nenhum dado ou outro método de objetos do tipo. Além de métodos estáticos, também podemos criar campos estáticos. Neste caso, o valor do campo está associado ao tipo e não ao objeto. Um cenário muito comum é armazenar constantes associadas àquele tipo. Por exemplo, o limite mínimo ou máximo de uma Avaliacao.
+
+Agora é sua vez! Na classe Album utilize um campo estático para incrementar o número de objetos criados no programa. Por exemplo, para o código abaixo, o valor impresso deverá ser 3.
+
+```csharp
+internal class Album
+{
+    // código omitido
+}
+
+Album a1 = new Album(“Barões da Pisadinha Ao Vivo”);
+Album a2 = new Album(“Barões da Pisadinha feat. Anitta”);
+Album a3 = new Album(“Barões da Pisadinha no Free Jazz Festival”);
+
+Console.WriteLine($”Total de objetos criados: {Album.ContadorDeObjetos}”);
+```
+
+Opinião do instrutor
+
+Inicialmente, vamos criar um campo estático chamado ContadorDeObjetos na classe Album e inicializá-lo com o valor zero.
+
+```csharp
+internal class Album
+{
+    public static int ContadorDeObjetos = 0;
+    // código omitido
+}
+```
+
+Até mesmo classes podem ser declaradas como estáticas! No caso de classes estáticas, o objetivo é impedir a criação de objetos. Classes estáticas são muito usadas como contêineres de funções estáticas independentes, mas unidas logicamente.
+
+Para concluir o desafio, precisamos incrementar este campo toda vez que um objeto for criado. O momento de fazer isso é no construtor da classe:
+
+```csharp
+internal class Album
+{
+    public static int ContadorDeObjetos = 0;
+
+    public Album()
+    {
+        ContadorDeObjetos++;
+    }
+}
+```
+
+Pronto! Agora toda vez que um objeto for criado, o campo será incrementado e podemos saber quantos existem através dele.
+
+### Aula 2 - O que aprendemos?
+
+Estes foram os pontos principais abordados nesta aula:
+
+- Conhecemos uma boa prática que é embrulhar tipos primitivos em conceitos maiores, permitindo adicionarmos comportamentos como validação, tradução e quaisquer outras operações;
+
+- Aprendemos que também as classes podem ter sua visibilidade modificada pelas palavras reservadas internal e public. Classes internal só podem ser vistas dentro de um projeto. Já classes public são vistas por qualquer projeto que as referencie.
+
+- Compreendemos que quando um método não acessa informações dos objetos da classe onde está declarado, pode ser indicado como estático. Basta usar a palavra reservada static em sua assinatura. E para ser invocado, usamos o modelo Tipo.MetodoEstatico(). Exemplos de métodos estáticos que já vínhamos usando desde os primeiros cursos: Console.WriteLine(), int.Parse(), Thread.Sleep(), Console.Clear(), dentre outros.
+
+- Revelamos um segredo da Microsoft no arquivo Program.cs. Ele também é uma classe que possui um método estático chamado Main(), indicado para representar o ponto de entrada de qualquer programa .NET. O motivo pelo qual a Microsoft escolheu esconder esta classe foi para reduzir a curva de aprendizado aos iniciantes na linguagem. Legal né?!
+
+Na próxima aula:
+
+Vamos aprender de forma prática como usar uma poderosa tecnologia disponível no C# que oferece recursos avançados para consulta e manipulação de dados!
+
+## Aula 3 - 
+
+### Aula 3 -  - Vídeo 1

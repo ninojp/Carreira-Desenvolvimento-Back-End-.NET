@@ -4,9 +4,11 @@ internal class Album
 {
     private List<Musica> musicas = new List<Musica>();
 
+    public static int ContadorDeObjetos = 0;
     public Album(string nome)
     {
         Nome = nome;
+        ContadorDeObjetos++;
     }
 
     public string Nome { get; }
@@ -27,4 +29,6 @@ internal class Album
         }
         Console.WriteLine($"\nPara ouvir este álbum inteiro você precisa de {DuracaoTotal}");
     }
+    //exibir quantas vezes a classe Album foi instanciada
+    //Console.WriteLine($"Total de objetos criados: {Album.ContadorDeObjetos}");
 }
