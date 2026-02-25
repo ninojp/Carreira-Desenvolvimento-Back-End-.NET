@@ -1314,6 +1314,1586 @@ Na próxima aula:
 
 Vamos aprender de forma prática como usar uma poderosa tecnologia disponível no C# que oferece recursos avançados para consulta e manipulação de dados!
 
-## Aula 3 - 
+## Aula 3 - Comportamento comuns aos menus
 
-### Aula 3 -  - Vídeo 1
+### Aula 3 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 02](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/aula-2.zip) ou acessar os [arquivos no GitHub!](https://github.com/alura-cursos/ScreenSound/tree/aula-2)
+
+### Aula 3 - Isolando cada opção - Vídeo 1
+
+Transcrição  
+Guilherme: Algo que me preocupa um pouco na aplicação que estamos desenvolvendo é a quantidade de linhas em alguns arquivos e em outros, não.
+
+Por exemplo: vamos abrir a classe Banda. Observando o arquivo, identificamos 42 linhas de código. Porém, as informações contidas no arquivo Banda.cs fazem com que ele tenha sentido em existir, pois estão isolados os comportamentos e as propriedades.
+
+No arquivo Program.cs, que sabemos ser uma classe, temos 190 linhas de código. Essa não é uma boa prática, não pela quantidade de linhas, mas pelo seguinte problema: temos mais de uma responsabilidade executadas em um único arquivo.
+
+Daniel: De certa forma, a causa é essa. O sintoma é a quantidade de linhas. Se precisamos rolar muito o código, temos o chamado code smell, cheiro de que há algum problema.
+
+Quando temos muitas linhas, provavelmente, há mais de uma responsabilidade na classe.
+
+Guilherme: Pensando nos livros famosos de programação, sabemos que a responsabilidade de uma classe deve ser única, assim como a responsabilidade dos atributos de uma classe, ou de um método, que deve realizar apenas uma função.
+
+Ao observar a classe Program.cs, identificamos diversos nomes: temos o método ExibirDetalhes(), o AvaliarUmaBanda(), o ExibirTituloDaOpcao()… Todos eles contidos em uma mesma classe.
+
+Nesse cenário, o desafio é o seguinte: como manter o comportamento da aplicação, ou seja, como manter o código funcionando, mas de uma maneira que fique mais fácil para dar manutenção?
+
+Daniel: Vamos começar a fazer essa melhoria, Guilherme. Podemos tentar fazer com que cada opção executada seja extraída para uma classe.
+
+Iniciaremos pela exibição dos detalhes, isto é, pelo método ExibirDetalhes(). Acessando o Gerenciador de Soluções na lateral direita da tela, vamos criar uma pasta chamada "Menus" em "ScreenSound", que será responsável pelos menus.
+
+Dentro dessa pasta, criaremos uma classe chamada MenuExibirDetalhes.cs. Teremos a estrutura de classe que já conhecemos, e podemos apagar as linhas de 1 a 6, obtendo o seguinte resultado:
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes
+{
+}
+```
+
+Feito isso, vamos retornar ao arquivo Program.cs para entender o que podemos fazer. No momento de exibir os detalhes, a partir da linha 55, precisaríamos criar um objeto MenuExibirDetalhes, e para isso seria necessário adicionar o using no início do arquivo.
+
+```csharp
+using ScreenSound.Menus;
+```
+
+Após o objeto, declaramos a variável menu e criamos a instância. Na linha abaixo, digitaremos a instância do objeto menu junto ao método Executar(), recebendo como parâmetro bandasRegistradas, pois precisaremos da coleção do dicionário.
+
+Nessa etapa, removemos o método ExibirDetalhes() da linha abaixo.
+
+O método Executar() ainda não existe, então podemos usar o Visual Studio para facilitar nosso processo: com o atalho "Ctrl + .", conseguimos pedir para gerar esse método.
+
+Sugestão do Visual Studio:
+
+```csharp
+{
+    internal void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Na sugestão, note que o dicionário é passado como argumento. Após teclar "Enter" na sugestão, teremos o método declarado.
+
+Resultado do bloco de código:
+
+```csharp
+/* Código suprimido */
+case 5:
+    MenuExibirDetalhes menu = new MenuExibirDetalhes();
+    menu.Executar(bandasRegistradas);
+    break;
+
+/* Código suprimido */
+```
+
+Guilherme: A marcação de erro no método Executar() irá sumir e se clicarmos sobre ele com a tecla "Ctrl" pressionada, seremos redirecionados para a declaração no arquivo MenuExibirDetalhes.cs.
+
+namespace ScreenSound.Menus;
+
+```csharp
+internal class MenuExibirDetalhes
+{
+    internal void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Daniel: Nesse caso, vamos alterar a visibilidade do método de internal para public, e também vamos remover o bloco throw new NotImplementedException().
+
+namespace ScreenSound.Menus;
+
+```csharp
+internal class MenuExibirDetalhes
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+
+    }
+}
+```
+
+Feito isso, vamos copiar o que está na classe Program.cs e colar no espaço entre chaves. Recortaremos todas as linhas contidas no bloco do método ExibirDetalhes() com o atalho "Ctrl + X", e em seguida teclaremos "Ctrl + V" em MenuExibirDetalhes.cs.
+
+namespace ScreenSound.Menus;
+
+```csharp
+internal class MenuExibirDetalhes
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+            ExibirOpcoesDoMenu();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+            ExibirOpcoesDoMenu();
+        }
+    }
+}
+```
+
+Precisamos ajustar algumas coisas. Primeiro, o método ExibirTituloDaOpcao() precisa ser visível na classe MenuExibirDetalhes.cs, então vamos criá-lo antes do método Executar().
+
+Guilherme: Para isso, podemos ir até o arquivo Program.cs e copiar da linha de código 126 à 133.
+
+```csharp
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+    Console.WriteLine(asteriscos);
+    Console.WriteLine(titulo);
+    Console.WriteLine(asteriscos + "\n");
+}
+```
+
+Daniel: No caso das instruções ExibirOpcoesDoMenu(), que estão com erro nas linhas de código 32 e 40, vamos apenas removê-las.
+
+namespace ScreenSound.Menus;
+
+```csharp
+internal class MenuExibirDetalhes
+{
+    void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Dessa forma, nossa classe funciona corretamente!
+
+Guilherme: Agora vamos retornar ao arquivo Program.cs, e na linha de código 59, abaixo do método Executar(), vamos adicionar o método ExibirOpcoesDoMenu().
+
+```csharp
+/* Código suprimido */
+case 5:
+    MenuExibirDetalhes menu = new MenuExibirDetalhes();
+    menu.Executar(bandasRegistradas);
+    ExibirOpcoesDoMenu();
+    break;
+/* Código suprimido */
+```
+
+Daniel: Além disso, podemos apagar o método ExibirDetalhes(), a partir da linha de código 164, pois ele não está sendo mais usado, conforme indicado pelo sublinhado verde.
+
+Trecho a ser apagado:
+
+```csharp
+void ExibirDetalhes()
+{
+
+}
+```
+
+Guilherme: Exatamente, temos a indicação de que a função declarada nunca é usada.
+
+Daniel: Já conseguimos eliminar algumas linhas do nosso código!
+
+Guilherme: De 190 para 165 já são muitas linhas. Vamos testar para conferir se a função está funcionando corretamente?
+
+Daniel: Com a aplicação aberta, vamos digitar a opção 5 para exibir os detalhes de uma banda:
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 5
+```
+
+Em seguida, precisamos digitar o nome da banda, que será "Ira!":
+
+```csharp
+************************
+Exibir detalhes da banda
+************************
+
+Digite o nome da banda que deseja conhecer melhor: Ira!
+```
+
+Por enquanto, será exibida a média da banda, mas depois podemos melhorar os detalhes da resposta.
+
+```csharp
+A média da banda Ira! é 8.
+Digite uma tecla para voltar ao menu principal
+```
+
+Aparentemente, está tudo normal. Pegamos uma instrução que estava em determinado arquivo e levamos para outra classe.
+
+Guilherme: Nós, como pessoas estudantes, podemos fazer isso para as outras classes também? Você recomenda isso nesse momento?
+
+Daniel: Ainda não. Antes, quero trazer mais um recurso que vai nos ajudar a economizar ainda mais em código. Veremos isso no próximo vídeo!
+
+### Aula 3 - Identificando semelhanças - Vídeo 2
+
+Transcrição  
+Daniel: Vamos começar a fazer o mesmo processo para outros menus. Começaremos acessando o Gerenciador de Soluções e criando uma nova classe dentro da pasta "Menus".
+
+Chamaremos essa classe de MenuAvaliarBanda.cs e faremos as mesmas alterações, removendo as linhas de 1 a 6 e adicionando ponto e vírgula após o nome do namespace.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarBanda
+{
+}
+```
+
+Entre as chaves da classe MenuAvaliarBanda, teremos um método public void chamado Executar(), e vamos passar para ele a assinatura que está no arquivo MenuExibirDetalhes.cs, na linha de código 16:
+
+```csharp
+public void Executar(Dictionary<string, Banda> bandasRegistradas)
+```
+
+Copiaremos todo o argumento do método, vamos retornar ao arquivo MenuAvaliarBanda.cs, e colar o trecho entre os parênteses de Executar().
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarBanda
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+    
+    }
+}
+```
+
+Em seguida, vamos acessar o arquivo Program.cs e recortar com "Ctrl + X" o conteúdo da linha de código 138 à 160, contido no bloco do método AvaliarUmaBanda().
+
+Feito isso, retornaremos ao arquivo MenuAvaliarBanda.cs e usaremos o atalho "Ctrl + V" na linha de código 9.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarBanda
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
+            Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+            banda.AdicionarNota(nota);
+            Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+            Thread.Sleep(2000);
+            Console.Clear();
+            ExibirOpcoesDoMenu();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+            ExibirOpcoesDoMenu();
+        }
+    }
+}
+```
+
+Guilherme: Teremos praticamente os mesmos erros, não é?
+
+Daniel: Sim, os mesmos erros. Vamos fazer os ajustes removendo o ExibirOpcoesDoMenu() das linhas de código 22 e 30. Em seguida, temos a questão do método ExibirTituloDaOpcao(). O que fazer nesse caso?
+
+Guilherme: Agora temos um problema que é um code smell: o método ExibirTituloDaOpcao() será, teoricamente, copiado e colado do arquivo MenuExibirDetalhes.cs para outra classe, sendo a mesma coisa.
+
+Daniel: Teríamos o seguinte resultado:
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarBanda
+{
+
+    void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
+            Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+            banda.AdicionarNota(nota);
+            Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+            Thread.Sleep(2000);
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Guilherme: Isso é um problema. O propósito do método ExibirTituloDaOpcao() é que, ao acessar cada menu, haja um asterisco, o título, e outro asterisco abaixo. Mas e se trocássemos o sinal? E se, no lugar de asterisco, houvesse uma mudança na regra de negócio, a partir da qual foi entendido que o sinal de igual seria melhor?
+
+Nesse caso, teríamos que alterar em todas as classes com o método ExibirTituloDaOpcao() do sinal de asterisco para o sinal de igual.
+
+Daniel: Você falou uma frase que é uma dica para a resolução: todas as classes que tenham o ExibirTituloDaOpcao(), isto é, todas as classes que são menus.
+
+Essa afirmação nos leva a um recurso das linguagens orientadas a objetos: conseguir declarar relações hierárquicas entre classes. Então, podemos dizer que o MenuAvaliarBanda.cs e o MenuExibirDetalhes.cs são menus, conforme o próprio nome diz.
+
+Com isso, podemos criar uma classe chamada Menu.cs e dizer que MenuAvaliarBanda.cs e MenuExibirDetalhes.cs são filhas dessa classe. Esse recurso se chama herança.
+
+Guilherme: Extremamente importante para a orientação a objetos.
+
+Daniel: Sim! Vamos começar a fazer isso no C#, criando uma classe chamada Menu.cs. Como já sabemos, para criar uma classe, acessamos o Gerenciador de Soluções.
+
+Novamente, apagaremos as linhas de 1 a 6 e adicionaremos o ponto e vírgula após o namespace.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+}
+```
+
+Guilherme: Essa classe será a ancestral, correto?
+
+Daniel: Exatamente.
+
+Guilherme: Eu só não entendi ainda como as outras classes vão ser aproveitadas com a herança. Mas veremos isso adiante!
+
+Daniel: Primeiro, vamos recortar com "Ctrl + X" o código de ExibirTituloDaOpcao() do arquivo MenuAvaliarBanda.cs, da linha de código 7 à 14, para a nova classe Menu.cs.
+
+Nesse caso, vamos deixá-lo público, então adicionamos public antes de void.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+    public void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+}
+```
+
+Agora o método ExibirTituloDaOpcao() faz parte da classe Menu.
+
+Retornando ao arquivo MenuAvaliarBanda.cs, teremos um erro no método ExibirTituloDaOpcao().
+
+Guilherme: Porque ele ainda não sabe o que é isso.
+
+Daniel: Sim, para ele, isso ainda não existe. Então, vamos dizer que MenuAvaliarBanda.cs herda as características de Menu.cs. Quando falamos isso, nos referimos a propriedades e métodos, nesse caso, o método ExibirTituloDaOpcao().
+
+Para fazer isso em C#, no final da classe MenuAvaliarBanda, adicionamos dois-pontos (:) seguido de Menu.
+
+Guilherme: Apenas com isso, o arquivo já compreendeu e resolvemos o problema.
+
+Daniel: A leitura feita é de que MenuAvaliarBanda é um Menu.
+
+Guilherme: Vamos retornar ao arquivo Menu.cs para fazer um último teste. Quando falamos em herança e dizemos que uma classe herda de outra, significa que a classe filha terá acesso a todos os métodos, todas as propriedades, e todos os atributos.
+
+Funcionará como uma extensão da classe.
+
+Daniel: Exato. Existe um detalhe: depende da visibilidade que estamos dando na declaração dos ancestrais. Se colocamos, por exemplo, private antes da declaração do método, tornamos ele privado, ou seja, visível apenas entre as chaves das linhas 4 e 13, na declaração da classe Menu.
+
+Dessa forma, retornando ao arquivo MenuAvaliarBanda.cs, ele não conseguirá enxergar e o erro será indicado novamente.
+
+Por isso, mantemos a visibilidade public na classe Menu para garantir acesso geral.
+
+Guilherme: Podemos fazer o mesmo para a classe MenuExibirDetalhes: remover a declaração do método ExibirTituloDaOpcao() e falar que ela herda de Menu.
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Feito isso, o projeto estará funcionando da mesma forma?
+
+Daniel: No arquivo Program.cs, ainda precisamos apagar o método AvaliarUmaBanda() que deixamos vazio.
+
+Trecho a ser apagado:
+
+```csharp
+void AvaliarUmaBanda()
+{
+
+}
+```
+
+Reduzimos um pouco mais o arquivo Program.cs, agora com 136 linhas.
+
+Além disso, no switch, não temos mais o método AvaliarUmaBanda(). No lugar dele, vamos digitar MenuAvaliarBanda menu4 = new().
+
+Logo abaixo, vamos adicionar o método menu4.Executar(), passando para ele o parâmetro bandasRegistradas. Na linha seguinte, adicionamos o método ExibirOpcoesDoMenu().
+
+```csharp
+/* Código suprimido */
+case 4:
+    MenuAvaliarBanda menu = new()
+    menu.Executar(bandasRegistradas);
+    ExibirOpcoesDoMenu();
+    break;
+/* Código suprimido */
+```
+
+Vamos aproveitar e alterar a variável menu do bloco de código de case 5 para menu5.
+
+```csharp
+/* Código suprimido */
+
+case 5:
+    MenuExibirDetalhes menu5 = new()
+    menu5.Executar(bandasRegistradas);
+    ExibirOpcoesDoMenu();
+    break;
+
+/* Código suprimido */
+```
+
+Guilherme: Acredito que podemos testar somente uma das opções, como a MenuAvaliarBanda, por exemplo, que ainda não testamos.
+
+Daniel: Certo. Usamos o atalho "Ctrl + F5" para abrir a aplicação. Feito isso, vamos digitar 4 para selecionar a opção de avaliar uma banda:
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 4
+```
+
+Guilherme: Vamos avaliar a banda "Ira!" como nota 10:
+
+```csharp
+=============
+Avaliar banda
+=============
+
+Digite o nome da banda que deseja avaliar: Ira!
+Qual a nota que a banda Ira! merece: 10
+
+A nota 10 foi registrada com sucesso para a banda Ira!
+```
+
+Daniel: Tudo funcionou corretamente! Agora podemos pedir para você, estudante, criar as opções restantes, usando a ideia de herança. Tudo o que fizemos ao longo desses vídeos, será feito para as outras três opções.
+
+Guilherme: Os cases 3, 2 e 1.
+
+Quando retornarmos, já teremos essas opções feitas!
+
+Daniel: Deixaremos uma atividade com o código resolvido e retornaremos com tudo pronto!
+
+### Aula 3 - Reduzindo mais linhas - Vídeo 3
+
+Transcrição  
+Guilherme: Nós criamos uma classe para cada menu restante: MenuRegistrarBanda.cs, MenuRegistrarAlbum.cs, e MenuMostrarBandas.cs.
+
+O código de cada um está disponibilizado na atividade, seguindo os mesmos princípios utilizados anteriormente. Um desses princípios é que toda opção do menu herda de Menu.
+
+Observação: o método ExibirTituloDaOpcao() agora faz parte de Menu.cs, então podemos removê-lo do código de Program.cs.
+
+Trecho a ser removido:
+
+```csharp
+void ExibirTituloDaOpcao(string titulo)
+{
+    int quantidadeDeLetras = titulo.Length;
+    string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+    Console.WriteLine(asteriscos);
+    Console.WriteLine(titulo);
+    Console.WriteLine(asteriscos + "\n");
+}
+```
+
+Daniel: Apagamos da linha 78 à 88, então reduzimos outras 10 linhas do nosso código.
+
+Guilherme: Fomos de praticamente 200 linhas para 80. É uma grande diferença! Agora os elementos estão isolados. Vamos fazer um teste?
+
+Na classe Menu.cs, perceba que foi usado o sinal de igual (=) na string da linha de código 8. Vamos substituir por qualquer outro sinal, como a cerquilha (#), por exemplo.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+    public void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '#');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+}
+```
+
+Daniel: Com "Ctrl + F5", abrimos a aplicação.
+
+Guilherme: Faremos isso apenas para executar e observar que o novo sinal já será aplicado a todas as opções. Vamos testar, por exemplo, a de registrar uma banda:
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 1
+```
+
+Daniel: Já temos as cerquilhas e vamos registrar a banda "Titãs".
+
+```csharp
+###################
+Registro das bandas
+###################
+
+Digite o nome da banda que deseja registrar: Titãs
+A banda Titãs foi registrada com sucesso!
+```
+
+Guilherme: Agora vamos retornar para o sinal de asterisco (*) e escolher outra opção na aplicação, como a de registrar um álbum, por exemplo.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+    public void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+}
+
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 2
+```
+
+Daniel: Agora teremos os asteriscos em vez das cerquilhas, e vamos registrar um álbum da banda "The Beatles", chamado "White Album".
+
+```csharp
+******************
+Registro de álbuns
+******************
+
+Digite a banda cujo álbum deseja registrar: The Beatles
+Agora digite o título do álbum: White Album
+O álbum White Album de The Beatles foi registrado com sucesso!
+```
+
+Guilherme: Qual é o nosso próximo desafio, Daniel?
+
+Daniel: Acho que podemos diminuir ainda mais a quantidade de linhas do arquivo Program.cs. Repare como os blocos do switch estão parecidos: primeiro é criado o menu, depois é chamado o método Executar(), e por fim temos o método ExibirOpcoesDoMenu().
+
+Além de os descendentes herdarem as características dos ancestrais, existe outra vantagem. Conseguimos criar uma variável do tipo Menu chamada menu, e atribuir qualquer objeto descendente a ela, como o MenuAvaliarBanda(), por exemplo.
+
+```csharp
+Menu menu = new MenuAvaliarBanda();
+```
+
+Isso é possível pois o MenuAvaliarBanda() faz parte da hierarquia de menu.
+
+Com essa informação em mente, podemos criar um dicionário de menus. A partir disso, tentaremos remover o switch do código de Program.cs.
+
+Vamos manter a variável do tipo Menu antes do bloco switch, pois vamos utilizá-la posteriormente. Depois faremos as melhorias necessárias.
+
+Agora vamos criar um novo dicionário na linha de código 15, abaixo do primeiro Dictionary<>. O tipo da chave desse dicionário será inteiro (int) e o valor será um objeto do tipo Menu. Em seguida, vamos definir o nome como opcoes. Criaremos o dicionário vazio, então digitamos new() após opcoes.
+
+```csharp
+Dictionary<int, Menu> opcoes = new();
+```
+
+O próximo passo é popular o dicionário. Faremos isso da mesma forma que fizemos com bandasRegistradas: usaremos o método Add() junto a opcoes.
+
+```csharp
+Para a opção 1, teremos new MenuRegistrarBanda();
+Para a opção 2, new MenuRegistrarAlbum();
+Para a opção 3, new MenuMostrarBandas();
+Para a opção 4, new MenuAvaliarBanda();
+Para a opção 5, new MenuExibirDetalhes();
+Para a opção -1, new MenuSair();
+Dictionary<int, Menu> opcoes = new();
+opcoes.Add(1, new MenuRegistrarBanda());
+opcoes.Add(2, new MenuRegistrarAlbum());
+opcoes.Add(3, new MenuMostrarBandas());
+opcoes.Add(4, new MenuAvaliarBanda());
+opcoes.Add(5, new MenuExibirDetalhes());
+opcoes.Add(-1, new MenuSair());
+```
+
+Agora temos um dicionário de menus!
+
+Feito isso, vamos retornar ao Console.Write() na linha de código 47, acima da variável menu. Suponha que a pessoa escolheu a opção e temos agora a opcaoEscolhidaNumerica. O menu pode ser encontrado através do dicionário opcoes seguido de uma abertura de colchetes contendo a chave opcaoEscolhidaNumerica.
+
+```csharp
+/* Código suprimido */
+Console.Write("\nDigite a sua opção: ");
+string opcaoEscolhida = Console.ReadLine()!;
+int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
+
+Menu menu = opcoes[opcaoEscolhidaNumerica];
+/* Código suprimido */
+```
+
+Guilherme: Vamos entender por partes: nós pegamos a opção que a pessoa digitou, que é um inteiro (int), pegamos o dicionário de menus (opcoes), e falamos para opcoes usar um menu específico, que pode ser o 1, o 2, o 3, e assim por diante. Em seguida, atribuímos toda essa informação a uma variável chamada menu.
+
+Daniel: Exato, estou capturando o objeto que está no dicionário e adicionando à variável.
+
+Guilherme: Essa variável poderia ter outro nome? Por exemplo, menuASerExibido?
+
+Daniel: Sim, vamos alterar.
+
+```csharp
+Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
+```
+
+Precisamos nos lembrar de fazer o seguinte teste: se houver a chave opcaoEscolhidaNumerica dentro do dicionário, conseguiremos capturar o menu na variável menuASerExibido. Para isso, digitamos o bloco if contendo entre parênteses a estrutura opcoes.ContainsKey() que recebe a chave opcaoEscolhidaNumerica.
+
+Se não houver essa chave, ou seja, else, será exibida a mensagem da linha 92 do switch.
+
+```csharp
+if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
+{
+    Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
+}
+else
+{
+    Console.WriteLine("Opção inválida");
+}
+```
+
+Agora resta exibir o menu.
+
+Guilherme: Precisamos executá-lo de alguma forma.
+
+Daniel: Para isso, abaixo da declaração da variável menuASerExibido, vamos digitar menuASerExibido chamando o método Executar().
+
+```csharp
+if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
+{
+    Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
+    menuASerExibido.Executar();
+}
+else
+{
+    Console.WriteLine("Opção inválida");
+}
+```
+
+Porém, o método Executar() não existe no menuASerExibido. O primeiro motivo é que o tipo da variável que capturamos é Menu, e em Menu.cs não existe um método com esse nome.
+
+Guilherme: Nesse caso, temos um problema, porque o Executar() de cada menu é diferente.
+
+Daniel: As instruções que estão dentro do método Executar() são diferentes, mas podemos reparar que a assinatura do método é igual.
+
+Com assinatura, nos referimos ao que aparece para quem estiver consumindo.
+
+Tentaremos usar essa informação para resolver a questão de remover o switch.
+
+### Aula 3 - Removendo o switch - Vídeo 4
+
+Transcrição  
+Daniel: Precisamos resolver a questão do arquivo Program.cs, para que uma variável do tipo Menu consiga ser executada.
+
+Vimos que todos os menus têm a mesma declaração do método Executar().
+
+```csharp
+public void Executar(Dictionary<string, Banda> bandasRegistradas)
+```
+
+A partir disso, vamos copiar essa declaração e colar no ancestral Menu, logo abaixo do método ExibirTituloDaOpcao().
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+    public void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+
+    public virtual void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+
+    }
+}
+```
+
+Com isso, temos um novo erro no arquivo Program.cs: o método Executar() só é reconhecido com argumentos, então vamos passar bandasRegistradas.
+
+```csharp
+if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
+{
+    Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
+    menuASerExibido.Executar(bandasRegistradas);
+}
+else
+{
+    Console.WriteLine("Opção inválida");
+}
+```
+
+Agora a variável pode ser executada normalmente.
+
+Porém, ainda precisamos fazer algumas alterações. A questão é a seguinte: o arquivo Menu.cs está com o método Executar(); da mesma forma, o arquivo descendente MenuAvaliarBanda.cs, por exemplo, possui esse método, mas com um sublinhado verde indicando erro.
+
+Essa indicação significa que temos o método Executar() no ancestral e esse método com a mesma assinatura no descendente, mas no descendente, é como se estivéssemos criando um novo método e abandonando tudo o que estiver escrito no arquivo ancestral.
+
+Na verdade, queremos aproveitar isso, afinal, estamos falando sobre herdar características. Seria interessante que, ao executar o método Executar(), fosse aproveitado o que já está no ancestral.
+
+Guilherme: O que for comum a todos os métodos Executar() das outras classes, correto?
+
+Daniel: Exatamente!
+
+Guilherme: A ideia é a seguinte: colocaremos algumas coisas no método Executar() da classe ancestral, isto é, do Menu.cs, e todos os outros Executar() que vão herdar esse comportamento, terão partes do Executar() do Menu e partes do Executar() de cada um deles.
+
+Daniel: Isso mesmo! Vamos acessar, por exemplo, a classe MenuAvaliarBanda.cs. O método Executar() dessa classe tem o método Console.Clear(). Da mesma forma, temos esse método em MenuExibirDetalhes.cs.
+
+Guilherme: Vamos começar movendo o Console.Clear() para o arquivo Menu.cs.
+
+Daniel: Para isso, selecionamos o trecho, teclamos "Ctrl + X" para recortar" , e colamos no método Executar().
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class Menu
+{
+    public void ExibirTituloDaOpcao(string titulo)
+    {
+        int quantidadeDeLetras = titulo.Length;
+        string asteriscos = string.Empty.PadLeft(quantidadeDeLetras, '*');
+        Console.WriteLine(asteriscos);
+        Console.WriteLine(titulo);
+        Console.WriteLine(asteriscos + "\n");
+    }
+
+    public virtual void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear()
+    }
+}
+```
+
+Dessa forma, todos os menus que chamarem o método Executar() devem limpar o console.
+
+No arquivo MenuExibirDetalhes.cs, precisamos informar que queremos continuar utilizando o que está escrito também no Menu. Então, precisamos dizer que queremos sobrescrever, mas, eventualmente, utilizar o que está no arquivo.
+
+Existe uma palavra reservada que podemos usar para indicar que queremos sobrescrever o método Executar(), chamada override. Vamos adicioná-la após a palavra public da declaração.
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+
+/* Código suprimido */
+```
+
+Feito isso, será indicado um novo erro no método Executar(), porque precisamos indicar no ancestral que ele pode ser sobrescrito. Para isso, temos a palavra reservada virtual. Vamos adicioná-la após o public do método Executar() no arquivo Menu.cs.
+
+```csharp
+/* Código suprimido */
+
+    public virtual void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear()
+    }
+}
+```
+
+Assim, dizemos que o método Executar() pode ser sobrescrito pelos seus ancestrais e o código funcionará corretamente.
+
+Há outra coisa que precisamos fazer: para puxar o que está sendo executado na classe Menu.cs, isto é, o método Console.Clear(), precisamos dizer no MenuExibirDetalhes.cs que queremos executar o que está nas bases, nos ancestrais.
+
+Para isso, existe a palavra reservada base que vamos usar para chamar o método Executar(), recebendo como argumento bandasRegistradas.
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Guilherme: Isso significa que será executado o que está no método do arquivo Menu.cs e também o que está no método que sobrescrevemos.
+
+Daniel: Exato, inclusive na posição indicada no código. Primeiro, conforme indicado na linha 9, é executado o que está na classe Menu.cs, e depois, correspondente à linha 10, é dada continuidade à execução do próprio método Executar() e do ExibirTituloDaOpcao().
+
+Guilherme: Vamos fazer isso em todas as nossas classes. Em todas elas, teremos a palavra reservada override, e no lugar de Console.Clear(), teremos base.Executar(bandasregistradas).
+
+```csharp
+MenuAvaliarBanda.cs
+
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarBanda : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Avaliar banda");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
+            Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+            banda.AdicionarNota(nota);
+            Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+            Thread.Sleep(2000);
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+MenuMostrarBandas.cs
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuMostrarBandas : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Exibindo todas as bandas registradas na nossa aplicação");
+
+        foreach (string banda in bandasRegistradas.Keys)
+        {
+            Console.WriteLine($"Banda: {banda}");
+        }
+
+        Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+        Console.ReadKey();
+        Console.Clear();
+    }
+}
+```
+
+MenuRegistrarAlbum.cs
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuRegistrarAlbum : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Registro de álbuns");
+        Console.Write("Digite a banda cujo álbum deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Console.Write("Agora digite o título do álbum: ");
+            string tituloAlbum = Console.ReadLine()!;
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            banda.AdicionarAlbum(new Album(tituloAlbum));
+            Console.WriteLine($"O álbum {tituloAlbum} de {nomeDaBanda} foi registrado com sucesso!");
+            Thread.Sleep(4000);
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+MenuRegistrarBanda.cs
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuRegistrarBanda : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Registro das bandas");
+        Console.Write("Digite o nome da banda que deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        Banda banda = new Banda(nomeDaBanda);
+        bandasRegistradas.Add(nomeDaBanda, banda);
+        Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+        Thread.Sleep(4000);
+        Console.Clear();
+    }
+}
+```
+
+Daniel: No caso do arquivo MenuSair.cs, não queremos que seja feito o Console.Clear() na mensagem "Tchau tchau :)", então não vamos chamar o base.Executar(bandasRegistradas).
+
+MenuSair.cs
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuSair : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.WriteLine("Tchau tchau :)");
+    }
+}
+```
+
+Guilherme: De fato, no console a informação não era limpada. Era apenas retornada a mensagem de "tchau" e depois saíamos da aplicação.
+
+Para conseguirmos testar, faltam apenas alguns detalhes no arquivo Program.cs, além das configurações que já fizemos.
+
+Daniel: Precisamos remover o switch.
+
+Guilherme: Provavelmente, se rodássemos o código como está agora, escolheríamos uma opção e depois iríamos novamente para o switch, pois ele tem o número da opção.
+
+Daniel: Iria executar a opção duas vezes. Então, vamos apagar da linha de código 61 à 95.
+
+Trecho a ser apagado:
+
+```csharp
+switch (opcaoEscolhidaNumerica)
+{
+    case 1:
+        MenuRegistrarBanda menu1 = new();
+        menu1.Executar(bandasRegistradas);
+        ExibirOpcoesDoMenu();
+        break;
+    case 2:
+        MenuRegistrarAlbum menu2 = new();
+        menu2.Executar(bandasRegistradas);
+        ExibirOpcoesDoMenu();
+        break;
+    case 3:
+        MenuMostrarBandas menu3 = new();
+        menu3.Executar(bandasRegistradas);
+        ExibirOpcoesDoMenu();
+        break;
+    case 4:
+        MenuAvaliarBanda menu4 = new();
+        menu4.Executar(bandasRegistradas);
+        ExibirOpcoesDoMenu();
+        break;
+    case 5:
+        MenuExibirDetalhes menu5 = new();
+        menu5.Executar(bandasRegistradas);
+        ExibirOpcoesDoMenu();
+        break;
+    case -1:
+        MenuSair menu6 = new();
+        menu6.Executar(bandasRegistradas);
+        break;
+    default:
+        Console.WriteLine("Opção inválida");
+        break;
+}
+```
+
+Guilherme: Chegamos a um código com 62 linhas no arquivo Program.cs.
+
+Daniel: Agora que reduzimos as linhas de código, precisamos fazer uma última alteração. Após executar o menu (menuASerExibido.Executar()), precisam ser exibidas novamente as opções do menu (ExibirOpcoesDoMenu()).
+
+Porém, isso só será feito se (if) a opção numérica (opcaoEscolhidaNumerica) não for a correspondente ao sair, ou seja, se for maior que zero.
+
+Ao final do bloco if, adicionamos o método ExibirOpcoesDoMenu().
+
+```csharp
+/* Código suprimido */
+    if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
+    {
+        Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
+        menuASerExibido.Executar(bandasRegistradas);
+        if (opcaoEscolhidaNumerica > 0) ExibirOpcoesDoMenu();
+    } 
+    else
+    {
+        Console.WriteLine("Opção inválida");
+    }
+}
+ExibirOpcoesDoMenu();
+```
+
+Agora conseguimos testar. Vamos compilar com o atalho "Ctrl + F5":
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 
+```
+
+Guilherme: Criaremos a banda "U2", então selecionamos a opção 1 para registro de banda:
+
+```csharp
+*******************
+Registro das bandas
+*******************
+
+Digite o nome da banda que deseja registrar: U2
+A banda U2 foi registrada com sucesso!
+```
+
+Daniel: Após 4 segundos, retornamos para a tela de boas-vindas. Agora vamos registrar um álbum da banda U2 (opção 2), chamado "Joshua Tree".
+
+```csharp
+******************
+Registro de álbuns
+******************
+
+Digite a banda cujo álbum deseja registrar: U2
+Agora digite o título do álbum: Joshua Tree
+O álbum Joshua Tree de U2 foi registrado com sucesso!
+```
+
+Em seguida, vamos selecionar a opção 3 para exibir todas as bandas registradas:
+
+```csharp
+*******************************************************
+Exibindo todas as bandas registradas na nossa aplicação
+*******************************************************
+
+Banda: Ira!
+Banda: The Beatles
+Banda: U2
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Com a opção 4, conseguimos avaliar uma banda. Vamos avaliar o U2 com a nota 10.
+
+```csharp
+*************
+Avaliar banda
+*************
+
+Digite o nome da banda que deseja avaliar: U2
+Qual a nota que a banda U2 merece: 10
+
+A nota 10 foi registrada com sucesso para a banda U2
+```
+
+Por fim, vamos digitar a opção 5 para exibir detalhes da banda U2:
+
+```csharp
+************************
+Exibir detalhes da banda
+************************
+
+Digite o nome da banda que deseja conhecer melhor: U2
+
+A média da banda U2 é 10.
+Digite uma tecla para voltar ao menu principal
+```
+
+A opção -1 nos permite sair da aplicação e é retornada a mensagem "Tchau tchau :)".
+
+Guilherme: Com isso, concluímos a última questão de reduzir as linhas de código do arquivo Program.cs, deixando-o mais legível, usando herança para representar os menus da nossa aplicação.
+
+### Aula 3 - Modelando o planeta Pandora - Exercício
+
+No universo dos filmes "Avatar", existem diferentes espécies de seres que habitam o planeta Pandora. Cada espécie possui características únicas e habilidades especiais. A classe SerPandora está escrita no código abaixo:
+
+```csharp
+internal class SerPandora
+{
+    public void Apresentar()
+    {
+        Console.Write($"\nBoas-vindas ao mundo de Pandora!");
+    }
+}
+```
+
+Representamos duas espécies de Pandora, Banshee e Thanator, com suas respectivas apresentações, conforme ilustrado no código abaixo:
+
+```csharp
+internal class Banshee : SerPandora
+{
+    public void Apresentar()
+    {
+        Console.WriteLine($"\nFaço parte da espécie Banshee!");
+    }
+}
+
+internal class Thanator : SerPandora
+{
+    public void Apresentar()
+    {
+        Console.WriteLine($"\nEu sou #TeamThanator 0-< ");
+    }
+}
+```
+
+O código a seguir cria dois seres de Pandora, cada um com sua espécie, e os apresenta:
+
+```csharp
+SerPandora ser1 = new Banshee();
+SerPandora ser2 = new Thanator();
+
+ser1.Apresentar();
+ser2.Apresentar();
+```
+
+Agora, marque todas as alternativas que modificam as classes para que a execução imprima a seguinte mensagem no console:
+
+```csharp
+Boas-vindas ao mundo de Pandora!
+Faço parte da espécie Banshee!
+
+Boas-vindas ao mundo de Pandora!
+Eu sou #TeamThanator 0-<
+```
+
+Selecione 3 alternativas
+
+Resposta, 1:
+
+```csharp
+internal class Banshee : SerPandora
+{
+    public override void Apresentar()
+    {
+        base.Apresentar();
+        Console.WriteLine($"\nFaço parte da espécie Banshee!");
+    }
+}
+```
+
+> Boa! Na classe descendente Banshee sobrescrevemos o método Apresentar() usando a palavra reservada override. E, além disso, chamamos o código do mesmo método em seu ancestral para imprimir as boas-vindas (através do base.Apresentar()).
+
+Resposta, 2:
+
+```csharp
+internal class Thanator : SerPandora
+{
+    public override void Apresentar()
+    {
+        base.Apresentar();
+        Console.WriteLine($"\nEu sou #TeamThanator 0-< ");
+    }
+}
+```
+
+> Muito bem! Na classe descendente Thanator, sobrescrevemos o método Apresentar() usando a palavra reservada override. E, além disso, chamamos o código do mesmo método em seu ancestral para imprimir as boas-vindas (através do base.Apresentar()).
+
+Respostas, 3:
+
+```csharp
+internal class SerPandora
+{
+    public virtual void Apresentar()
+    {
+        Console.Write($"\nBoas-vindas ao mundo de Pandora!");
+    }
+}
+```
+
+Esse é um passo importante para a resolução do problema. É preciso marcar o método Apresentar() como virtual para que ele possa ser sobrescrito nos descendentes.
+
+### Aula 3 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Criar uma hierarquia de classes representando formas geométricas, como Quadrado, Círculo e Triângulo. Utilize herança para criar uma classe base chamada FormaGeometrica, que contenha métodos para calcular a área e o perímetro de uma forma.
+
+2. Crie uma hierarquia de classes representando funcionários de uma empresa. Utilize herança para criar classes como Gerente, Programador e Analista. Cada classe deve ter propriedades específicas, além das propriedades comuns a todos os funcionários, como Nome e Salário.
+
+3. Criar uma hierarquia de classes representando contas bancárias, como ContaCorrente e ContaPoupanca. Utilize herança e o conceito de métodos virtuais para implementar um método CalcularSaldo que retorne o saldo atual da conta.
+
+4. Criar uma hierarquia de classes representando animais, como Mamifero, Ave e Peixe. Utilize herança e o conceito de métodos virtuais para implementar um método EmitirSom que represente o som característico de cada tipo de animal.
+
+5. Criar uma hierarquia de classes representando produtos eletrônicos, como Smartphone, Tablet e Laptop. Utilize herança e o conceito de métodos virtuais para implementar um método ExibirInformacoes que retorne informações específicas de cada produto.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-3-aula-3).
+
+Boa sorte nos estudos!
+
+### Aula 3 - Faça como eu fiz: crie as opções restantes
+
+Atualmente, nossa aplicação possui 2 menus: MenuAvaliarBanda e MenuExibirDetalhes. Esses menus foram criados para encapsular a execução específica de cada menu. Para aproveitar as características comuns a cada menu, utilizamos o recurso de herança criando a classe ancestral Menu e relacionamos as opções concretas com Menu a partir do modelo ClasseDescendente : ClasseAncestral.
+
+Agora é sua vez! Crie classes para as opções restantes:
+
+- Para registrar bandas, implemente a classe MenuRegistrarBanda;
+- Para registrar álbuns, construa a classe MenuRegistrarAlbum;
+- Para mostrar todas as bandas registradas, crie a classe MenuMostrarBandas;
+- Para sair da ScreenSound, crie a classe MenuSair.
+
+Não se esqueça de aplicar herança nas classes acima, dizendo que são filhas de Menu.
+
+Por fim, substitua o código na classe Program.cs para utilizar as opções recém criadas. Ah, e não se esqueça de apagar o código desnecessário. É bastante coisa, mas tenho certeza que você vai mandar bem! Pode ir com calma que eu e Gui te esperamos para os próximos ensinamentos!
+
+Opinião do instrutor
+
+Abaixo, compartilhamos o código das quatro classes que representam as novas opções de menu.
+
+Para a classe MenuRegistrarBanda:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuRegistrarBanda : Menu
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Registro das bandas");
+        Console.Write("Digite o nome da banda que deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        Banda banda = new Banda(nomeDaBanda);
+        bandasRegistradas.Add(nomeDaBanda, banda);
+        Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+        Thread.Sleep(4000);
+        Console.Clear();
+    }
+}
+```
+
+Para a classe MenuRegistrarAlbum:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuRegistrarAlbum : Menu
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Registro de álbuns");
+        Console.Write("Digite a banda cujo álbum deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Console.Write("Agora digite o título do álbum: ");
+            string tituloAlbum = Console.ReadLine()!;
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            banda.AdicionarAlbum(new Album(tituloAlbum));
+            Console.WriteLine($"O álbum {tituloAlbum} de {nomeDaBanda} foi registrado com sucesso!");
+            Thread.Sleep(4000);
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Para a classe MenuMostrarBandas:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuMostrarBandas : Menu
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.Clear();
+        ExibirTituloDaOpcao("Exibindo todas as bandas registradas na nossa aplicação");
+
+        foreach (string banda in bandasRegistradas.Keys)
+        {
+            Console.WriteLine($"Banda: {banda}");
+        }
+
+        Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+        Console.ReadKey();
+        Console.Clear();
+    }
+}
+```
+
+Para a classe MenuSair:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuSair : Menu
+{
+    public void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        Console.WriteLine("Tchau tchau :)");
+    }
+}
+```
+
+Por fim veja como ficou o código do switch no arquivo Program.cs:
+
+```csharp
+    switch (opcaoEscolhidaNumerica)
+    {
+        case 1:
+            MenuRegistrarBanda menu1 = new();
+            menu1.Executar(bandasRegistradas);
+            ExibirOpcoesDoMenu();
+            break;
+        case 2:
+            MenuRegistrarAlbum menu2 = new();
+            menu2.Executar(bandasRegistradas);
+            ExibirOpcoesDoMenu();
+            break;
+        case 3:
+            MenuMostrarBandas menu3 = new();
+            menu3.Executar(bandasRegistradas);
+            ExibirOpcoesDoMenu();
+            break;
+        case 4:
+            MenuAvaliarBanda menu4 = new();
+            menu4.Executar(bandasRegistradas);
+            ExibirOpcoesDoMenu();
+            break;
+        case 5:
+            MenuExibirDetalhes menu5 = new MenuExibirDetalhes();
+            menu5.Executar(bandasRegistradas);
+            ExibirOpcoesDoMenu();
+            break;
+        case -1:
+            MenuSair menuSair = new();
+            menuSair.Executar(bandasRegistradas);
+            break;
+        default:
+            Console.WriteLine("Opção inválida");
+            break;
+    }
+```
+
+Pronto! Observe que o arquivo Program.cs teve uma redução de mais de cem linhas de código!
+
+### Aula 3 - O que aprendemos?
+
+Estes foram os pontos principais abordados nesta aula:
+
+- Classes e métodos com muitas linhas são sintomas de códigos que possuem muitas responsabilidades. Isso é ruim porque dificulta a manutenção e legibilidade do seu projeto;
+
+- Aprendemos o conceito de herança, um recurso para compartilhar comportamentos comuns entre classes de mesma hierarquia;
+
+- Na herança, classes ancestrais podem ter comportamentos substituídos ou sobrescritos por seus descendentes. Para indicar essa possibilidade, declaramos o membro no ancestral como virtual, e no descendente que for sobrescrevê-lo, marcamos o membro da classe com override. Se ainda assim quisermos executar a parte de código que estiver no ancestral, usamos a palavra reservada base.
+
+## Aula 4 - Alternativa para anexar semelhanças
+
+### Aula 4 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 03](https://github.com/alura-cursos/ScreenSound03/archive/refs/heads/aula-3.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound03)
+
+### Aula 4 -  - Vídeo 1
+
+
+### Aula 4 -  - Vídeo 2
+### Aula 4 -  - Vídeo 3
+### Aula 4 -  - Vídeo 4
+### Aula 4 -  - Vídeo 5
+### Aula 4 -  - Vídeo 6
+### Aula 4 -  - Vídeo 7
+### Aula 4 -  - Vídeo 8

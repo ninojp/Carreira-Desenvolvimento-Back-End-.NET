@@ -29,6 +29,4 @@ internal class Album
         }
         Console.WriteLine($"\nPara ouvir este álbum inteiro você precisa de {DuracaoTotal}");
     }
-    //exibir quantas vezes a classe Album foi instanciada
-    //Console.WriteLine($"Total de objetos criados: {Album.ContadorDeObjetos}");
 }
