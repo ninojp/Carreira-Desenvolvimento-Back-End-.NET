@@ -6,7 +6,6 @@ namespace ScreenSound
 {
     internal class OpenAITestes
     {
-        //================================================================
         //OpenAI Oficial API, Testes
         public async Task TestarAPI()
         {
