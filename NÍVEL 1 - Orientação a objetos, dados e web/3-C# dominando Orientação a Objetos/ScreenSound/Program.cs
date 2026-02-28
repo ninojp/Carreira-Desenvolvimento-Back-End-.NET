@@ -1,8 +1,9 @@
-﻿using ScreenSound.Menus;
+﻿using ScreenSound;
+using ScreenSound.Menus;
 using ScreenSound.Models;
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         //Sem o uso do namespace, seria necessário usar o nome completo da classe:
         //ScreenSound.Models.Banda SlipknotBand = new ScreenSound.Models.Banda("Slipknot");
@@ -11,23 +12,23 @@ internal class Program
         IraBand.AdicionarNota(new Avaliacao(4));
         IraBand.AdicionarNota(new Avaliacao(6));
         IraBand.AdicionarAlbum(new Album("ABC"));
-        Album ABC = IraBand.ListaAlbunsDaBanda[0];
-        ABC.AdicionarNota(new Avaliacao(2));
-        ABC.AdicionarNota(new Avaliacao(4));
+        //Album ABC = IraBand.ListaAlbunsDaBanda[0];
+        //ABC.AdicionarNota(new Avaliacao(2));
+        //ABC.AdicionarNota(new Avaliacao(4));
         IraBand.AdicionarAlbum(new Album("Vivendo e Aprendendo"));
-        Album vivendoAprendendo = IraBand.ListaAlbunsDaBanda[1];
-        vivendoAprendendo.AdicionarNota(new Avaliacao(5));
-        vivendoAprendendo.AdicionarNota(new Avaliacao(6));
-        vivendoAprendendo.AdicionarNota(new Avaliacao(7));
+        //Album vivendoAprendendo = IraBand.ListaAlbunsDaBanda[1];
+        //vivendoAprendendo.AdicionarNota(new Avaliacao(5));
+        //vivendoAprendendo.AdicionarNota(new Avaliacao(6));
+        //vivendoAprendendo.AdicionarNota(new Avaliacao(7));
 
         Banda SlipknotBand = new("Slipknot");
         SlipknotBand.AdicionarNota(new Avaliacao(9));
         SlipknotBand.AdicionarNota(new Avaliacao(9));
         SlipknotBand.AdicionarNota(new Avaliacao(8));
         SlipknotBand.AdicionarAlbum(new Album("Iowa"));
-        Album Iowa = SlipknotBand.ListaAlbunsDaBanda[0];
-        Iowa.AdicionarNota(new Avaliacao(10));
-        Iowa.AdicionarNota(new Avaliacao(10));
+        //Album Iowa = SlipknotBand.ListaAlbunsDaBanda[0];
+        //Iowa.AdicionarNota(new Avaliacao(10));
+        //Iowa.AdicionarNota(new Avaliacao(10));
         Musica Psychosocial = new(SlipknotBand, "Psychosocial", 4, true);
 
         Banda LinkinParkBand = new("Linkin Park");
@@ -63,6 +64,7 @@ internal class Program
         opcoesMenu.Add(6, new MenuExibirDetalhesBanda());
         opcoesMenu.Add(-1, new MenuSair());
 
+        //====================================================================================
         void ExibirLogo()
         {
             Console.WriteLine(@"
@@ -106,6 +108,10 @@ internal class Program
                 Console.WriteLine("Opção inválida, Digite um numero entre 1 e 6 ou -1 para sair");
             }
         }
+        //para exibir o resultado da classe OpenAITestes, vou precisar deixar o método Main como async, para isso, preciso alterar a assinatura do método Main para: private static async Task Main(string[] args)
+        //OpenAITestes openAITestes = new OpenAITestes();
+        //Minha cota gratuita acabou, então não vou conseguir testar a API.
+        //await openAITestes.TestarAPI();
         ExibirOpcoesDoMenu();
     }
 }

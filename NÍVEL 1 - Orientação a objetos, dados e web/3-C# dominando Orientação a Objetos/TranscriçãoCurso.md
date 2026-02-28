@@ -3908,4 +3908,380 @@ Herança não é a única maneira de incluir comportamentos e características c
 
 Interfaces não possuem código concreto e não podem ser instanciadas através de new.
 
-### Aula 4 -  - Vídeo 8
+## Aula 5 - Desafio: implementar API do ChatGPT
+
+### Aula 5 - Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 04](https://github.com/alura-cursos/ScreenSound03/archive/refs/heads/aula-4.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound03/tree/aula-4/ScreenSound)
+
+### Aula 4 - Precificação da OpenAI
+
+🚨 Aviso importante sobre mudanças na precificação da OpenAI
+Nos próximos vídeos, utilizaremos a API da OpenAI para geração de textos. A OpenAI, responsável pelo ChatGPT, é uma das maiores referências em inteligência artificial no mundo. No mercado de trabalho, o uso de IA está se tornando cada vez mais requisitado, seja para automação de processos ou até mesmo apoio em tarefas rotineiras.
+
+Mas é importante dizer que adicionar a API da OpenAI ao projeto do curso é uma etapa opcional que claro, deixa seu projeto mais completo. No entanto, caso não queira investir nisso, tudo bem. Pular essa etapa não afetará seu progresso no curso. Mas, caso queira deixar seu projeto com maiores funcionalidades como buscar automaticamente uma descrição para banda, leia as orientações abaixo.
+
+**Mudança na política de preços da OpenAI**  
+Quando este curso foi desenvolvido, a OpenAI oferecia um free tier, ou seja, um nível gratuito que permitia um número limitado de requisições sem custo. No entanto, a OpenAI alterou seus termos e desativou esse modelo gratuito.
+
+Agora, é necessário um pagamento mínimo de US$ 5 para ativar o uso da API, mesmo no nível mais básico.
+
+**Como isso impacta você?**  
+
+- O pagamento é feito via cartão de crédito, que deve ser [cadastrado na OpenAI](https://platform.openai.com/settings/organization/billing/overview).
+- O valor mínimo de US$ 5 em créditos será suficiente para acompanhar o curso.
+- A OpenAI cobra por tokens utilizados, não por requisições. Tokens representam fragmentos de texto processado.
+
+Após o esgotamento dos créditos, você pode decidir se deseja adicionar mais saldo ou interromper o uso.
+
+**Controle de custos**  
+
+- Você pode definir um orçamento mensal nas [configurações de cobrança](https://platform.openai.com/settings/organization/limits).
+- Para evitar cobranças inesperadas, desative a recarga automática (auto recharge). Ou seja, quando seu saldo de créditos atingir $0, suas solicitações de API deixarão de funcionar.
+- Consulte os [limites de uso](https://platform.openai.com/organization/usage) e os [preços atualizados](https://openai.com/api/pricing/).
+
+> ⚠️ Reforçamos que essa cobrança é uma política exclusiva da OpenAI, não tem relação com a Alura. Defina seus limites para evitar gastos inesperados.
+
+### Aula 4 - Desafio - Vídeo 1
+
+Transcrição  
+Guilherme: Nesse curso, estamos trazendo cenários e situações que acontecem no cotidiano da pessoa profissional em desenvolvimento de software e programação.
+
+Algo comum é quando um projeto, desenvolvido pela equipe interna, é integrado a uma solução de outro time, que às vezes nem utiliza a mesma linguagem.
+
+Simularemos uma situação semelhante. Utilizaremos a Inteligência Artificial no nosso projeto para criar uma descrição quando a banda for criada.
+
+Daniel: Vamos descobrir como podemos fazer isso usando o ChatGPT. Para isso, abrimos o navegador e acessamos o Chat OpenAI. Feito isso, escrevemos o seguinte prompt:
+
+Resuma a banda Ira! em um parágrafo. Adote um estilo informal.
+
+Temos o seguinte retorno:
+
+Ah, Ira!, mano, que banda massa! Formada lá nos anos 80, esses caras são pura energia e atitude. Com um som que mistura rock, pop e punk, eles arrebentam nos palcos e nas letras. Edgard Scandurra, o guitarrista, manda muito bem nos riffs, enquanto Nasi, o vocalista, tem uma voz poderosa que te arrepia. Os caras falam de amor, de protesto e das coisas da vida de um jeito único, fazendo a galera se identificar e cantar junto, Ira! é daquelas bandas que deixam saudade, sabe? Não tem como resistir ao som desses ícones do rock nacional.
+
+Guilherme: Gostei muito do retorno!
+
+Daniel: É exatamente isso que queremos, utilizar esse resumo quando formos exibir uma banda.
+
+Guilherme: Antes de mostrarmos onde colocaremos as informações, precisamos nos conectar com o ChatGPT, certo?
+
+Daniel: Sim! Além disso, é importante lembrar que essa aplicação não é valida apenas para o ChatGPT e sim para qualquer tipo de biblioteca que quisermos integrar na aplicação.
+
+Para utilizar o ChatGPT, precisamos criar uma conta gratuita na plataforma utilizando e-mail, celular e senha. Feito isso, a ferramenta fica disponível para uso durante três meses. Caso você tenha criado uma conta anteriormente, fique atento a data.
+
+O segundo passo é criar a API Key, ou seja, uma chave para podermos utilizar na integração. Para isso, logado na OpenAI, no lado superior direito, clicamos no botão "Personal" e depois em "View API keys".
+
+Somos encaminhados para uma nova página na qual descobrimos como gerenciar as chaves que permitirão o acesso a API.
+
+Para criar uma nova chave, clicamos no botão "Create new secret key", definimos o nome "ScreenSound" e clicamos em "Create secret key".
+
+A ferramenta só disponibiliza a chave quando é criada, portanto, precisamos copiá-la assim que é gerada, caso não, não a encontraremos em outro local. Feito isso, clicamos no botão "Done".
+
+O próximo passo é abrir o projeto #C para criarmos a integração usando a chave e uma biblioteca específica que fará a integração.
+
+Guilherme: Faremos isso no vídeo seguinte. Até lá!
+
+### Aula 4 - Preparando o ambiente: instalando pelo Visual Studio Code
+
+Na próxima atividade, vamos instalar uma biblioteca pelo Visual Studio. Porém, se você está fazendo o curso através do Visual Studio Code, é possível adicionar a biblioteca através do terminal com a instrução abaixo (garanta que está no diretório do projeto, ok?):
+
+> dotnet add package OpenAI
+
+### Aula 4 - Instalando a biblioteca - Vídeo 2
+
+Transcrição  
+Daniel: Acessamos nosso projeto no VS Code. Agora, precisamos adicionar uma biblioteca que nos auxiliará na construção do código.
+
+Para integrar bibliotecas nos projetos .NET, no menu lateral direito, clicamos no botão "Gerenciador de soluções". No projeto, encontramos um item chamado "Dependências". Clicamos nele com o botão direito e depois em "Gerenciar Pacotes do NuGet".
+
+Abre uma nova tela na lateral esquerda, na qual podemos procurar e instalar a biblioteca desejada. Na lateral superior esquerda, encontramos as abas "Procurar", "Instalado" e "Atualizações".
+
+Clicamos na primeira opção. Depois, no campo de busca, escrevemos "OpenAI" e apertamos "Enter". Feito isso, temos uma lista de resultados. Clicamos no primeiro e depois no botão "Install".
+
+Lembrando que geralmente para executar essa ação é preciso estar conectado a internet.
+
+Aparece uma aba de permissão de instalação e licenças, clicamos em "Ok" e depois em "Aceitar".
+
+Guilherme: Feito isso a biblioteca já está no projeto? Já podemos utilizá-la?
+
+Daniel: Isso mesmo, Gui. Podemos fechar as abas e voltar para o código.
+
+Começaremos realizando um teste. O que precisamos fazer é criar um objeto, guardá-lo em uma variável e usar seus métodos.
+
+Então, na quarta linha, escrevemos using OpenAI_API.
+
+Caso apareça um sublinhado em vermelho é porque houve algum erro na instalação, portanto, será necessário verificar isso antes de prosseguir.
+
+Agora, utilizando o var criaremos uma variável chamada client com o tipo new OpenAIAPI(). Nas chaves e dentro de aspas duplas, passaremos a chave, portanto, apertamos "Ctrl + V".
+
+```csharp
+using ScreenSound;
+using ScreenSound. Menus;
+using ScreenSound. Modelos;
+using OpenAI_API;
+```
+
+```csharp
+var client = new OpenAIAPI("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");
+```
+
+Guilherme: Lembrando que a chave que estamos utilizando já não está mais ativa, portanto, não tentem utilizá-la, crie uma especificamente para seu projeto.
+
+Daniel: Feito isso, criamos um objeto cliente que fará pedidos para a API OpenAI.
+
+Na linha abaixo, escrevemos var chat = client.Chat.CreateConversation() para começar uma nova conversa, semelhante como ocorre no navegador.
+
+Em seguida, escrevemos chat.AppendSystemMessage() para escrever uma mensagem. Nos parênteses, dentro de aspas duplas, inserimos o prompt que usamos no ChatGPT.
+
+Feito isso, precisamos capturar a resposta em uma string, então escrevemos string resposta. Essa string está na variável chat.GetResponseFromChatbotAsync().
+
+```csharp
+//trecho omitido
+
+var chat = client.Chat.CreateConversation();
+
+chat.AppendSystemMessage("Resuma a banda Ira! em 1 parágrafo. Adote um estilo informal.");
+
+string resposta = chat.GetResponseFromChatbotAsync();
+```
+
+Como não conheciamos todos os métodos dessa API acessamos a documentação para estudá-la.
+
+Nesse caso, o método GetResponse() é executado de forma assíncrona. Isso significa que a execução não parará no fim desse trecho de código que criamos, ela continuará executando o restante.
+
+Precisamos informar para o #C que queremos esperar o término da execução dessa requisição. Para isso, antes de GetResponse() escrevemos await.
+
+Assim temos a resposta em uma string. Para imprimir no console escrevemos Console.WriteLine(resposta).
+
+```csharp
+using ScreenSound;
+using ScreenSound. Menus;
+using ScreenSound. Modelos;
+using OpenAI_API;
+
+var client = new OpenAIAPI("sk-GisUk7sScSE7KUd7XBYOTзBlbkFJjPYOTnGrMzxjzxWBCB5R");
+
+var chat = client.Chat.CreateConversation();
+
+chat.AppendSystemMessage("Resuma a banda Ira! em 1 parágrafo. Adote um estilo informal.");
+
+string resposta = await chat.GetResponseFromChatbotAsync();
+
+Console.WriteLine(resposta);
+```
+
+Guilherme: Para imprimirmos apenas essa resposta, no fim desse código, podemos comentar o ExibirOpcoesdoMenu() adicionando duas barras.
+
+Daniel: Ótimo, Gui. Feito isso, apertamos "Ctrl + F5" para executar o código. Temos como retorno a resposta do ChatGPT. Deu certo!
+
+Guilherme: Agora, o desafio é que esse texto seja gerado quando registrarmos uma nova banda. Faremos isso na aula seguinte!
+
+### Aula 4 - Obtendo o resumo - Vídeo 3
+
+Transcrição  
+Daniel: Agora, integraremos tudo o que aprendemos no sistema. Colocaremos nosso código no registro de banda, assim, quando for registrada solicitaremos que o ChatGPT gere o resumo.
+
+Banda.cs
+
+Precisamos guardar esse resumo, mas ainda não temos um local para isso. Então, no menu lateral direito, clicamos em "Gerenciador de Soluções" e abrimos o arquivo Banda.cs.
+
+Na linha 22, criamos uma propriedade string que aceitará valores nulos, então escrevemos public string? Resumo { get; set; }
+
+//trecho omitido  
+public string? Resumo { get; set; }
+
+MenuRegistrarBanda.cs
+
+Em seguida, acessamos novamente o "Gerenciador de Soluções", clicamos na pasta "Menu" e abrimos o arquivo MenuRegistrarBanda.cs, no qual criaremos o acesso ao ChatGPT.
+
+Program.cs
+
+Para isso, abrimos o arquivo Program.cs. Selecionamos o trecho de código da linha 6 até a 13 e apertamos "Ctrl + X".
+
+Aproveitamos para apagar o using OpenAI_API, já que não precisaremos mais dele nesse arquivo.
+
+MenuRegistrarBanda.cs
+
+Voltamos para o arquivo de registro de banda. Após a linha bandasRegistradas, damos espaço e apertamos "Ctrl + V" para colar o código.
+
+Agora, faremos as alterações necessárias. Em AppendSystemMessage(), fazemos uma interpolação de string, adicionando $ antes do texto. Depois, apagamos o nome da banda Ira! e definimos a variável nomeDaBanda.
+
+Repare que, o trecho de código abaixo está sublinhado em vermelho. Isso acontece, pois a palavra reservada await precisa estar em conjunto com a palavra async.
+
+De forma geral, os métodos assíncronos retornam uma tarefa, porém, nesse caso, utilizaremos outra estrutura. Então, na linha 23, apagamos o await.
+
+Feito isso, se passarmos o mouse no método de GetResponseFromChatbotAsync(), percebemos que essa é uma tarefa que retorna uma string.
+
+Então, na mesma linha, escrevemos .GetAwaiter(), para haver a espera e depois .GetResult() para termos o resultado.
+
+Recomendamos essa opção somente se não for possível utilizar o awaite o async.
+
+Feito isso, apagamos a linha Console.WriteLine(resposta) e escrevemos banda.Resumo que receberá a resposta.
+
+Por fim, comentamos a linha Thread.Sleep(4000) adicionando duas barras.
+
+```csharp
+//trecho omitido
+
+bandasRegistradas.Add(nomeDaBanda, banda);
+
+var client = new OpenAIAPI("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");
+
+var chat = client.Chat.CreateConversation();
+
+chat.AppendSystemMessage($"Resuma a banda {nomeDaBanda} em 1 parágrafo. Adote um est: informal.");
+
+string resposta = chat.GetResponseFromChatbotAsync().GetAwaiter().GetResult();
+banda. Resumo = resposta;
+
+Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!"); 
+//Thread.Sleep(4000);
+Console.Clear();
+```
+
+MenuExibirDetalhes.cs
+
+Daniel: Agora, precisamos acessar o arquivo MenuExibirDetalhes.cs para exibir o resumo.
+
+Então, em if(), abaixo de Banda banda, escrevemos Console.WriteLine(banda.Resumo).
+
+```csharp
+//trecho omitido
+ if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine(banda.Resumo);
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            Console.WriteLine("\nDiscografia:");
+            foreach(Album album in banda.Albuns)
+
+//trecho omitido
+```
+
+Guilherme: Daniel, o que você acha de copiar o trecho de código das linhas 23 a 25 e colar em MenuRegistrarBanda.cs? Isso porque, mesmo que a requisição demore um pouco, passará direto.
+
+Daniel: Acho ótimo, Gui. Ao fazer isso o código está pronto.
+
+```csharp
+using ScreenSound.Modelos;
+using OpenAI_API;
+
+namespace ScreenSound.Menus;
+
+internal class MenuRegistrarBanda : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Registro das bandas");
+        Console.Write("Digite o nome da banda que deseja registrar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        Banda banda = new Banda(nomeDaBanda);
+        bandasRegistradas.Add(nomeDaBanda, banda);
+
+        var client = new OpenAIAPI("<SUA API KEY AQUI>");
+        var chat = client.Chat.CreateConversation();
+        chat.AppendSystemMessage($"Resuma a banda {nomeDaBanda} em 1 parágrafo. Adote um estilo informal");
+        var resposta = chat.GetResponseFromChatbotAsync().GetAwaiter().GetResult();
+        banda.Resumo = resposta;
+
+        Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
+        Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+        Console.ReadKey();
+        Console.Clear();
+    }
+}
+```
+
+Daniel: Para testar, apertamos "Ctrl + F5". Repare que houve um erro.
+
+Guilherme: Sei o motivo. No código principal comentamos o método ExibirOpcoesDoMenu(), precisamos apagar o comentário.
+
+Daniel: Para corrigir basta acessar o arquivo Program.cse apagar as duas barras. Feito isso, executamos o código novamente. Agora deu certo.
+
+Feito isso o Screen Sound 2.0 abre. Digitamos "1" e apertamos "Enter" para registrar uma banda.
+
+Guilherme: Vamos registrar a banda Kid Abelha. Então, escrevemos e apertamos "Enter". Assim, temos o retorno abaixo:
+
+A banda Kid Abelha foi registrada com sucesso! Digite uma tecla para voltar ao menu principal
+
+Daniel: Para exibir os detalhes da banda digitamos "6" e apertamos "Enter". Temos o retorno abaixo:
+
+Mano, Kid Abelha era uma banda de rock/pop nacional que fazia um sucesso danado nos anos 80 e 90. A liderança era da diva Paula Toller, que arrasava nos vocais e na beleza, e o repertório era cheio de músicas que grudavam na cabeça, tipo "Como eu quero", "Grand Hotel", "Lágrimas e chuva" e mais uma porrada de sucessos. Além disso, a banda sempre teve um estilo maneiro, com umas roupinhas bem típicas da época, sabe? Enfim, Kid Abelha é até hoje um clássico daquela época.
+
+A média da banda Kid Abelha é 0.
+
+Discografia:
+
+Digite uma tecla para voltar ao menu principal
+
+Guilherme: Voltamos para o menu principal e digitamos "4" para avaliar a banda.
+
+Em seguida, digitamos o nome da banda e atribuímos o valor "10". Assim, temos o seguinte retorno:
+
+A nota 10 foi registrada com sucesso para a banda Kid Abelha
+
+Daniel: Agora, se voltarmos para o menu principal e acessarmos os detalhes da banda, digitando "6" temos a descrição e a nota média. Tudo certo!
+
+### Aula 4 - Projeto final
+
+Chegamos ao final deste curso! Se você quiser conferir e fazer o download do projeto completo que desenvolvemos juntos durantes as aulas, você pode [baixar o zip da Aula 05](https://github.com/alura-cursos/ScreenSound03/archive/refs/heads/aula-5.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound03/tree/aula-5)
+
+### Aula 4 - Parabéns!
+
+Chegou o momento de celebrar sua grande conquista!
+
+Neste curso, você aprofundou os conhecimentos de Orientação a Objetos, aprendendo sobre métodos estáticos, herança e interface. Além disso, refletiu sobre boas práticas, organizando seu código através de namespaces e pastas de projeto. Por fim, também descobriu como integrar o seu projeto a uma biblioteca de terceiros.
+
+Durante o curso, você teve a oportunidade de aplicar esses conceitos em um ambiente prático, utilizando o Visual Studio, como já está acostumado aqui na Alura. Incorporou as classes Banda e Album no arquivo Program.cs, criou uma classe Avaliacao para representar avaliações, reorganizou os menus em uma hierarquia de classes e conseguiu aplicar notas a bandas, álbuns e músicas através da interface IAvaliavel. Para fechar com chave de ouro, utilizou Inteligência Artificial instalando uma biblioteca de terceiros para ajudar a obter mais informações sobre bandas, exibindo-as no ScreenSound!
+
+Nossa… quanta coisa legal!
+
+"Não tenha medo de falhar. Cada fracasso é um degrau para o sucesso." (Allyson Michelle Felix, corredora olímpica)
+
+Agora, dê uma nota para o curso, faça download do seu certificado e comemore bastante essa conquista.
+
+Guilherme Lima
+
+Daniel Portugal
+
+### Aula 4 - Referências
+
+1. [Estrutura geral de um programa em C#](https://learn.microsoft.com/pt-br/dotnet/csharp/fundamentals/program-structure/) (gratuito, português, documentação)
+
+Documentação oficial da Microsoft que apresenta conceitos sobre a estrutura de projetos em C# e exemplos de implementação.
+
+2. [Convenções comuns de código C#](https://learn.microsoft.com/pt-br/dotnet/csharp/fundamentals/coding-style/coding-conventions) (gratuito, português, documentação)
+
+Documentação oficial da Microsoft que apresenta conceitos sobre convenções comuns e boas práticas de escrita de código em C#, além de exemplos de utilização.
+
+3. [Modificadores de acesso](https://learn.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/access-modifiers) (gratuito, português, documentação)
+
+Documentação oficial da Microsoft que apresenta conceitos sobre modificadores de acesso, diferentes visibilidades em C# e exemplos de implementação.
+
+4. [Interfaces](https://learn.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/interface) (gratuito, português, documentação)
+
+Documentação oficial da Microsoft que apresenta conceitos sobre interfaces em C# e exemplos de implementação.
+
+### Aula 4 - Conclusão - Vídeo
+
+Transcrição  
+Guilherme: Parabéns por concluir mais um curso da Alura!
+
+Antes de encerrar, vamos relembrar tudo o que aprendemos e descobrir quais são suas novas capacitações.
+
+Daniel: Com o conteúdo aprendido, você pode poderá fazer a leitura e organização do código, além de entender e evoluir um projeto real com a Orientação a Objetos, como herança e interface.
+
+Guilherme: Nessa jornada de aprendizado, estudamos a arquitetura das pastas, como devemos organizar a aplicação em códigos e classes diferentes usando namespaces e como tornar o código mais legível.
+
+É muito importante que você entenda que o código que criamos sempre passará por mudanças e evoluções.
+
+Daniel: Exatamente, Gui. Por fim, integramos um projeto a uma biblioteca externa com inteligência artificial para buscarmos novas informações sobre bandas de música.
+
+Guilherme: Isso foi realmente muito interessante! Parecia que seria algo muito complexo, mas conseguimos aplicar de forma simples.
+
+Esperamos que você também tenha gostado do curso. Não se esqueça de deixar sua avaliação e nos contar o que mais gostou.
+
+Até a próxima!
+
+continuar lendo

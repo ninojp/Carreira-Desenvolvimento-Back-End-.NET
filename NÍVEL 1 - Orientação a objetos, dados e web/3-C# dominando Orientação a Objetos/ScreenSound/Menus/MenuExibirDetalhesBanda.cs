@@ -18,13 +18,13 @@ internal class MenuExibirDetalhesBanda : Menu
             Console.WriteLine($"A classe Banda foi Instânciada: {Banda.ContadorDeObjetos} vezes");
             Console.WriteLine($"Notas da Banda: {string.Join(", ", bandaSelecionada.ListaNotasBanda.Select(n => n.Nota))}");
             Console.WriteLine($"Média da Banda: {bandaSelecionada.MediaNotas}");
-            bandaSelecionada.ListaAlbunsDaBanda.ForEach(album =>
+            foreach (var album in bandaSelecionada.ListaAlbunsDaBanda)
             {
                 Console.WriteLine($"\nÁlbum: {album.Nome}");
                 Console.WriteLine($"A classe Album foi Instânciada: {Album.ContadorDeObjetos} vezes");
                 Console.WriteLine($"Notas do álbum: {string.Join(", ", album.ListaNotasAlbum.Select(n => n.Nota))}");
                 Console.WriteLine($"Média do álbum: {album.MediaNotas}");
-            });
+            }
             Console.WriteLine("Digite uma tecla para voltar ao menu principal");
             Console.ReadKey();
             Console.Clear();
