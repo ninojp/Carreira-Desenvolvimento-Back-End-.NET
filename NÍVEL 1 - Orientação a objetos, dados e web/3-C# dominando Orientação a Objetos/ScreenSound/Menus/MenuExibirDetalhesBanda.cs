@@ -2,7 +2,7 @@
 
 namespace ScreenSound.Menus;
 
-internal class MenuExibirDetalhes : Menu
+internal class MenuExibirDetalhesBanda : Menu
 {
     public override void Executar(Dictionary<string, Banda> bandasRegistradas)
     {
@@ -14,11 +14,18 @@ internal class MenuExibirDetalhes : Menu
         if (bandasRegistradas.ContainsKey(nomeDaBanda))
         {
             Banda bandaSelecionada = bandasRegistradas[nomeDaBanda];
-            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {bandaSelecionada.Media}.");
-            /**
-            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
-            */
-            Console.WriteLine("Digite uma tecla para votar ao menu principal");
+            Console.WriteLine($"\nBanda: {bandaSelecionada.Nome}");
+            Console.WriteLine($"A classe Banda foi Instânciada: {Banda.ContadorDeObjetos} vezes");
+            Console.WriteLine($"Notas da Banda: {string.Join(", ", bandaSelecionada.ListaNotasBanda.Select(n => n.Nota))}");
+            Console.WriteLine($"Média da Banda: {bandaSelecionada.MediaNotas}");
+            bandaSelecionada.ListaAlbunsDaBanda.ForEach(album =>
+            {
+                Console.WriteLine($"\nÁlbum: {album.Nome}");
+                Console.WriteLine($"A classe Album foi Instânciada: {Album.ContadorDeObjetos} vezes");
+                Console.WriteLine($"Notas do álbum: {string.Join(", ", album.ListaNotasAlbum.Select(n => n.Nota))}");
+                Console.WriteLine($"Média do álbum: {album.MediaNotas}");
+            });
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
             Console.ReadKey();
             Console.Clear();
         }

@@ -13,7 +13,8 @@ internal class MenuRegistrarBanda : Menu
         Banda novaBanda = new(nomeDaBanda);
         bandasRegistradas.Add(nomeDaBanda, novaBanda);
         Console.WriteLine($"A banda {nomeDaBanda} foi registrada com sucesso!");
-        Thread.Sleep(4000);
+        Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+        Console.ReadKey();
         Console.Clear();
     }
 }

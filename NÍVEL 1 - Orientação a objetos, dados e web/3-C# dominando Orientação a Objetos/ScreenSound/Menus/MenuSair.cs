@@ -9,7 +9,7 @@ internal class MenuSair : Menu
         base.Executar(bandasRegistradas);
         ExibirTituloDaOpcao("Saindo do Screen Sound...");
         Console.WriteLine("Obrigado por usar o Screen Sound, volte sempre!");
-        Thread.Sleep(2000);
+        Thread.Sleep(3000);
         Console.Clear();
     }
 }

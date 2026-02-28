@@ -2887,13 +2887,1025 @@ Estes foram os pontos principais abordados nesta aula:
 
 Aqui você pode [baixar o zip da Aula 03](https://github.com/alura-cursos/ScreenSound03/archive/refs/heads/aula-3.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound03)
 
-### Aula 4 -  - Vídeo 1
+### Aula 4 - Álbuns e músicas avaliáveis - Vídeo 1
 
+Transcrição  
+Daniel: Agora temos os menus e nosso código está mais sucinto. Seria interessante evoluir um pouco mais a aplicação.
 
-### Aula 4 -  - Vídeo 2
-### Aula 4 -  - Vídeo 3
-### Aula 4 -  - Vídeo 4
-### Aula 4 -  - Vídeo 5
-### Aula 4 -  - Vídeo 6
-### Aula 4 -  - Vídeo 7
+Você deve gostar de diferentes bandas, e provavelmente gosta de alguns álbuns delas menos do que gosta de outros. Sendo assim, você poderia querer avaliar álbuns de uma mesma banda de maneira diferente. No nosso sistema, só temos a opção de avaliar bandas, e não álbuns específicos.
+
+Seria legal ter a possibilidade de, por exemplo, dar nota 10 para um determinado álbum do U2 e nota 8 para outro álbum dessa banda. O mesmo vale para músicas específicas, ou seja, poderíamos atribuir notas diferentes para músicas de um mesmo álbum.
+
+Para isso, vamos verificar como a avaliação de uma banda se dá dentro da classe Banda, no arquivo Banda.cs.
+
+Guilherme: Temos uma lista com as notas na linha 6: private List`<Avaliacao>` notas = new List`<Avaliacao>`(). Em seguida, temos a propriedade Media na linha 14, calculada a partir dessa lista. Também temos um método chamado AdicionarNota() que, justamente, adiciona notas a essa lista.
+
+Daniel: São essas as partes do código que fazem parte do cenário de avaliação de bandas. O mesmo valeria para álbuns e músicas específicas. Ou seja, esse seria um comportamento comum que gostaríamos de incluir nas classes Album e Musica.
+
+Conhecemos um recurso que pode nos ajudar nisso: a herança. Vale a pena aplicar esse recurso nesse caso?
+
+Guilherme: No caso dos menus, o próprio nome da classe levava o nome da classe ancestral — como Menu e MenuExibirDetalhes, MenuAvaliarBanda e assim por diante.
+
+No caso atual, queremos que Musica e Album tenham uma classe ancestral, teoricamente, para aproveitar esses comportamentos. Talvez seja difícil pensar em um nome específico para eles.
+
+Daniel: Essa é uma situação muito comum. Nós "forçamos" uma herança apenas para aproveitar um comportamento comum; nesse caso, a possibilidade de avaliação dessas classes.
+
+Mas não temos apenas esse recurso para anexar um comportamento a uma classe. Na orientação a objetos, não apenas no C#, há outro recurso para isso. Vamos entender como ele funciona.
+
+Por exemplo, queremos que álbuns sejam avaliados; então, basta que Album garanta que entregará o método AdicionarNota(), que é público, e a Media, que também é pública.
+
+A lista de notas não é pública, então não é obrigatório solucionar dessa forma.
+
+É como se informássemos a necessidade de garantir que seja entregue a média e o método AdicionarNota(). Funciona como um contrato, e na orientação a objetos, chamamos isso de interface.
+
+Guilherme: Vamos partir para o código, onde criaremos uma interface com esse comportamento. No Gerenciador de Soluções, vamos clicar com o botão direito sobre a pasta "Modelos" e ir até "Adicionar > Classe…".
+
+Agora, em vez de usar a opção "Classe", vamos selecionar o modelo "Interface". Quanto ao nome, por convenção, a Microsoft pede que todas as interfaces sejam iniciadas com a letra "I" maiúscula. Nesse caso, chamaremos de IAvaliavel.cs.
+
+Quando você encontrar um tipo que comece com "I", provavelmente se trata de uma interface.
+
+Daniel: Será criado um arquivo com a seguinte estrutura:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScreenSound.Modelos;
+{
+    internal interface IAvaliavel
+    {
+    }
+}
+```
+
+Conforme feito anteriormente, vamos apagar as linhas de 1 a 6 e adicionar um ponto e vírgula após o namespace que é ScreenSound.Modelos.
+
+```csharp
+namespace ScreenSound.Modelos;
+
+internal interface IAvaliavel
+{
+}
+```
+
+A diferença desse código para os outros está na palavra reservada interface. Essa palavra reservada indica que, dentro da chave, o que teremos não será um código executável, apenas uma assinatura.
+
+Guilherme: Nós não usamos new em interface, correto?
+
+Daniel: Exato, o compilador não permite.
+
+Entre as chaves da interface, temos um método chamado AdicionarNota() que recebe como argumento uma Avaliacao e o parâmetro nota. Dessa vez, finalizamos a linha com ponto e vírgula, e não com abertura de chaves.
+
+```csharp
+namespace ScreenSound.Modelos;
+
+internal interface IAvaliavel
+{
+    void AdicionarNota(Avaliacao nota);
+}
+```
+
+Guilherme: Mais uma diferença no código.
+
+Daniel: Sim. Existe essa diferença por não ter execução de código dentro da interface. O que fazemos é como se fosse a cláusula de um contrato: para assinar o contrato IAvaliavel.cs, você precisa necessariamente ter um método chamado AdicionarNota() que não retorna nada e que recebe como argumento um objeto do tipo Avaliacao.
+
+Guilherme: Agora falta a Media, certo?
+
+Daniel: Exatamente. A propriedade Media retorna um double e contém get entre chaves. Vamos adicionar isso antes do método AdicionarNota()
+
+```csharp
+namespace ScreenSound.Modelos;
+
+internal interface IAvaliavel
+{
+    double Media { get; }
+    void AdicionarNota(Avaliacao nota);
+}
+```
+
+Essa assinatura de propriedade apenas indica que teremos um método de leitura que irá entregar um double no nome Media.
+
+Guilherme: E como usamos uma interface?
+
+Daniel: Primeiro, vamos dizer que Banda já assina o contrato IAvaliavel.cs, ou seja, que o arquivo Banda.cs implementa a interface IAvaliavel.
+
+Com Banda.cs aberto, na declaração da classe Banda, vamos adicionar dois-pontos (:) e dizer que ela implementa a interface IAvaliavel.
+
+```csharp
+namespace ScreenSound.Modelos; 
+
+internal class Banda : IAvaliavel
+{
+
+/* Código suprimido */
+```
+
+Guilherme: Teoricamente, após fazer isso, nada acontece. O código continuou da mesma forma, justamente porque já implementamos o que é pedido.
+
+Mas e se, por exemplo, removêssemos a Media, da linha 14 à linha 21?
+
+Trecho a ser comentado para teste:
+
+```csharp
+public double Media
+{
+    get
+    {
+        if (notas.Count == 0) return 0;
+        else return notas.Average(a => a.Nota);
+    }
+}
+```
+
+Daniel: Para comentar, selecionamos o trecho e usamos o atalho "Ctrl + K + C".
+
+Guilherme: Com essa alteração, será indicado um erro na interface IAvaliavel.
+
+Daniel: Posicionando o cursor sobre a interface, teremos a indicação de que Banda não implementa o membro de interface IAvaliavel.Media.
+
+Guilherme: Interessante, então a partir do momento em que criamos uma classe e dizemos que ela implementa determinada interface, cada classe pode ter meios diferentes de exibir a média, no nosso caso.
+
+Daniel: Podemos remover o comentário do trecho selecionado, usando o atalho "Ctrl + K + U". Assim, garantimos que a aplicação irá funcionar da mesma forma, sendo possível visualizar a média de uma banda.
+
+Guilherme: Vamos executar apenas para conferir se a média é calculada corretamente.
+
+Daniel: Com "Ctrl + F5", executamos a aplicação.
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 
+```
+
+Guilherme: Podemos selecionar a opção 5 para exibir os detalhes da banda Ira!.
+
+```csharp
+************************
+Exibir detalhes da banda
+************************
+
+Digite o nome da banda que deseja conhecer melhor: Ira!
+
+A média da banda Ira! é 8.
+Digite uma tecla para voltar ao menu principal
+```
+
+Daniel: A média é exibida normalmente!
+
+Guilherme: Bacana. O próximo desafio é implementar a interface na classe Album, do arquivo Album.cs. Faremos isso no vídeo a seguir!
+
+### Aula 4 - IAvaliavel em álbum e música - Vídeo 2
+
+Transcrição  
+Daniel: O desafio agora é implementar a interface IAvaliavel em Album. Ou seja, queremos que álbuns sejam avaliáveis.
+
+Para isso, vamos acessar o arquivo Album.cs e dizer que a classe Album implementa IAvaliavel.
+
+```csharp
+namespace ScreenSound.Modelos;
+
+internal class Album : IAvaliavel
+{
+
+/* Código suprimido */
+```
+
+Guilherme: Feito isso, alguns erros são esperados. Quando posicionamos o cursor sobre IAvaliavel, temos a indicação de que Album não implementa os membros de interface IAvaliavel.AdicionarNota(Avaliacao) e IAvaliavel.Media.
+
+Daniel: Vamos usar o Visual Studio para nos ajudar a resolver esses problemas. Com o erro selecionado, podemos teclar "Ctrl + ." e escolher a primeira opção "Implementar a interface".
+
+Porém, ao fazer isso, será exibido o seguinte trecho na linha de código 17, acima do método AdicionarMusica():
+
+```csharp
+public double Media => throw new NotImplementedException();
+```
+
+Resolveremos isso mais adiante.
+
+Antes de preencher esse bloco, vamos criar a lista de notas na linha 6, abaixo da lista de musicas. Para isso, digitamos a palavra private seguida do componente List<> do tipo Avaliacao cujo nome é notas. Vamos criá-la vazia, então, new().
+
+```csharp
+namespace ScreenSound.Modelos;
+
+internal class Album : IAvaliavel
+{
+    private List<Musica> musicas = new List<Musica>();
+    private List<Avaliacao> notas = new();
+```
+
+Guilherme: Agora podemos fazer o mesmo na Media e no método AdicionarNota().
+
+Na Media, em vez de usar o lambda completo, vamos abrir e fechar chaves, e dizer que o método get tem uma construção condicional. Se não houver nenhuma nota cadastrada, ou seja, if (notas.Count ==0), será retornado 0, então return 0.
+
+Caso contrário (else), será retornada a média da propriedade Nota que está no objeto a (return notas.Average(a => a.Nota)).
+
+```csharp
+public double Media
+{
+    get
+    {
+        if (notas.Count == 0) return 0;
+        else return notas.Average(nota => nota.Nota);
+    }
+}
+```
+
+Daniel: Agora que retornamos a média, vamos preencher na linha 33 o código para o método AdicionarNota(). No lugar de throw new NotImplementedException(), vamos usar o método notas.Add() para adicionar um objeto nota na lista.
+
+```csharp
+public void AdicionarNota(Avaliacao nota)
+{
+    notas.Add(nota);
+}
+```
+
+Guilherme: Assinamos o contrato?
+
+Daniel: Contrato assinado! Porém, não conseguimos testar.
+
+Guilherme: Sim, porque não temos um menu para avaliar de fato um álbum. Nesse caso, avaliamos apenas a banda, correto?
+
+Daniel: Sim, por enquanto, é válido somente a banda no menu. Agora precisamos criar um menu para avaliar álbum. No Gerenciador de Soluções, vamos clicar com o botão direito sobre a pasta "Menus" e ir até "Adicionar > Classe…". Criaremos um menu chamado MenuAvaliarAlbum.cs. Como padrão, vamos remover as linhas de 1 a 6 e adicionar ponto e vírgula ao final do namespace.
+
+A primeira coisa que faremos é informar que a classe MenuAvaliarAlbum herda de Menu.
+
+```csharp
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarAlbum : Menu
+{
+}
+```
+
+Guilherme: O próximo passo é adicionar o método Executar().
+
+Daniel: Sim. É interessante que o Visual Studio nos permite dizer se queremos sobrescrever o método Executar(). Para isso, temos a palavra reservada override. Ao digitá-la, serão sugeridas todas as opções que podemos sobrescrever. São quatro métodos:
+
+Equals();  
+Executar();  
+GetHashCode();  
+ToString();
+
+Explicaremos três deles com mais calma, mas o que buscamos no momento é o Executar(). Quando selecionamos essa opção e teclamos "Enter", automaticamente, é montado o modelo.
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarAlbum : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+    }
+}
+```
+
+Agora resta escrever o código relacionado a avaliar um álbum.
+
+Guilherme: O código é muito semelhante ao de avaliar uma banda. Nesse caso, podemos talvez copiar e colar alguns trechos. Então, vamos acessar o arquivo MenuAvaliarBanda.cs.
+
+Copiaremos da linha 12 à linha 31 e, em seguida, vamos colar abaixo do método Executar(), na linha de código 11.
+
+Trecho a ser copiado:
+
+```csharp
+ExibirTituloDaOpcao("Avaliar banda");
+Console.Write("Digite o nome da banda que deseja avaliar: ");
+string nomeDaBanda = Console.ReadLine()!;
+if (bandasRegistradas.ContainsKey(nomeDaBanda))
+{
+    Banda banda = bandasRegistradas[nomeDaBanda];
+    Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
+    Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+    banda.AdicionarNota(nota);
+    Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+    Thread.Sleep(2000);
+    Console.Clear();
+}
+else
+{
+    Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+    Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+    Console.ReadKey();
+    Console.Clear();
+}
+```
+
+Começaremos alterando de "Avaliar banda" para "Avaliar álbum" na linha 11.
+
+Daniel: Na sequência, precisamos procurar a banda, para depois ser possível encontrar o álbum. Então, vamos manter o Console.Write() do texto "Digite o nome da banda que deseja avaliar". Uma vez encontrada a banda, precisamos encontrar o álbum.
+
+Vamos aproveitar o código de outro menu, o MenuRegistrarAlbum.cs. Há um Console.Write() perguntando o título do álbum, nas linhas 15 e 16.
+
+Trecho a ser copiado:
+
+```csharp
+Console.Write("Agora digite o título do álbum: ");
+string tituloAlbum = Console.ReadLine()!;
+```
+
+Podemos copiar esse trecho e colar após a variável banda na linha 16.
+
+Guilherme: Em seguida, precisamos adicionar o bloco correspondente a se o álbum existir.
+
+Daniel: Exatamente, então if (banda.Albuns.Count > 0).
+
+```csharp
+Console.Write("Agora digite o título do álbum: ");
+string tituloAlbum = Console.ReadLine()!;
+if (banda.Albuns.Count > 0)
+{
+
+}
+```
+
+Vamos supor que essa condição ainda não está sendo resolvida. Nesse momento, vamos dar continuidade ao código e deixar as etapas mais difíceis para depois.
+
+Em seguida, vamos copiar todo o Console.Write() após a condição if, da linha 24 à 29, e mover para dentro das chaves da condição.
+
+Trecho a ser movido:
+
+```csharp
+Console.Write($"Qual a nota que a banda {nomeDaBanda} merece: ");
+Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+banda.AdicionarNota(nota);
+Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para a banda {nomeDaBanda}");
+Thread.Sleep(2000);
+Console.Clear();
+```
+
+Faremos as substituições de "banda" para "álbum" e de nomeDaBanda para tituloAlbum na linha 21. Em seguida, pegaremos a nota a partir do Console.ReadLine(), mas após isso, já precisamos ter o objeto Album que será buscado de algum lugar.
+
+Na linha de código 24, vamos substituir banda por album no método AdicionarNota(), para adicionar a nota ao álbum.
+
+Diremos que a nota foi registrada com sucesso, conforme indicado no código, mas dessa vez para o álbum. Então, substituímos "banda" por "álbum" e nomeDaBanda por tituloAlbum.
+
+No momento, temos o seguinte código:
+
+MenuAvaliarAlbum.cs
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarAlbum : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+
+        ExibirTituloDaOpcao("Avaliar álbum");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.Write("Agora digite o título do álbum: ");
+            string tituloAlbum = Console.ReadLine()!;
+            if (banda.Albuns.Count > 0)
+            {
+                Console.Write($"Qual a nota que o álbum {tituloAlbum} merece: ");
+                Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+                Album album = ???
+                album.AdicionarNota(nota);
+                Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para o álbum {tituloAlbum}");
+                Thread.Sleep(2000);
+                Console.Clear();
+            } 
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Temos duas coisas importantes no código acima: primeiro precisamos saber se o álbum existe na lista de bandas, o que ainda não sabemos fazer; e depois precisamos colocar o album em uma variável do tipo Album.
+
+Faremos isso no próximo vídeo!
+
+### Aula 4 - Menu para avaliar álbum - Vídeo 3
+
+Transcrição  
+Daniel: Temos dois desafios nesse momento: primeiro, precisamos encontrar o álbum na lista de álbuns da banda, ou seja, verificar se o tituloAlbum da linha 18 existe nessa lista; segundo, precisamos pegar esse objeto.
+
+Para isso, existem várias alternativas, mas vamos usar a seguinte: primeiramente, removemos a condição Count > 0, pois não queremos entrar na condição if se existir algo, e sim se o tituloAlbum existir na lista de álbuns da banda.
+
+Nesse caso, usamos a operação Any(a => a.Nome.Equals(tituloAlbum) para indicar que entraremos no bloco if se existir algum álbum (Any(a => a)) cujo nome seja igual (Nome.Equals()) ao título digitado (tituloAlbum).
+
+```csharp
+if (banda.Albuns.Any(a => a.Nome.Equals(tituloAlbum)))
+```
+
+Agora podemos pegar esse objeto que já sabemos existir na lista de álbuns. Vamos copiar a linha de código 23, recortá-la e movê-la para a primeira posição no bloco if, na linha 21.
+
+Feito isso, após o sinal de igual, vamos adicionar banda.Albuns.First() para pegar o primeiro álbum da lista que atenda à condição digitada no if, que passaremos também para o First().
+
+```csharp
+if (banda.Albuns.Any(a => a.Nome.Equals(tituloAlbum)))
+{
+    Album album = banda.Albuns.First(a => a.Nome.Equals(tituloAlbum));
+    Console.Write($"Qual a nota que o álbum {tituloAlbum} merece: ");
+    Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+    album.AdicionarNota(nota);
+    Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para o álbum {tituloAlbum}");
+    Thread.Sleep(2000);
+    Console.Clear();
+} 
+```
+
+Com isso, pegamos o objeto que representa o título e aplicamos à variável album.
+
+Guilherme: Você trouxe o álbum de fato que queremos avaliar, correto?
+
+Daniel: Sim. Após pegar o álbum, temos a pergunta sobre a nota que ele merece, obtemos a nota digitada, e adicionamos usando o método AdicionarNota(), construído de modo que o Album implementasse a partir da interface IAvaliavel.
+
+Na sequência, é exibido que o registro foi feito com sucesso para o álbum, após dois segundos, a tela da aplicação é limpa.
+
+Agora resta adicionar um bloco else, para indicar o cenário em que o álbum não existe na lista. Nesse caso, podemos copiar as linhas 37 a 40 e fazer o ajuste necessário: "O álbum {tituloAlbum} não foi encontrado!".
+
+Trecho a ser copiado:
+
+```csharp
+Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+Console.ReadKey();
+Console.Clear();
+```
+
+Abaixo, o resultado do código de MenuAvaliarAlbum.cs:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuAvaliarAlbum : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+
+        ExibirTituloDaOpcao("Avaliar álbum");
+        Console.Write("Digite o nome da banda que deseja avaliar: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+
+            Console.Write("Agora digite o título do álbum: ");
+            string tituloAlbum = Console.ReadLine()!;
+
+            if (banda.Albuns.Any(a => a.Nome.Equals(tituloAlbum)))
+            {
+                Album album = banda.Albuns.First(a => a.Nome.Equals(tituloAlbum));
+                Console.Write($"Qual a nota que o álbum {tituloAlbum} merece: ");
+                Avaliacao nota = Avaliacao.Parse(Console.ReadLine()!);
+                album.AdicionarNota(nota);
+                Console.WriteLine($"\nA nota {nota.Nota} foi registrada com sucesso para o álbum {tituloAlbum}");
+                Thread.Sleep(2000);
+                Console.Clear();
+            } 
+            else
+            {
+                Console.WriteLine($"\nO álbum {tituloAlbum} não foi encontrado!");
+                Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+    }
+}
+```
+
+Dessa forma, conseguimos avaliar álbuns além das bandas. O que falta agora?
+
+Guilherme: Provavelmente, falta ajustar as opções disponíveis no menu inicial, pois teremos uma a mais, a de avaliar álbum.
+
+Daniel: Exato, nós apenas criamos a classe. Agora precisamos ir ao arquivo Program.cs e usar o método opcoes.Add() para adicionar a opção 6. Vamos usar o new para dizer que agora existe a opção MenuAvaliarAlbum().
+
+Guilherme: Com base na ordem das opções do menu, faria sentido que a opção MenuAvaliarAlbum() viesse na posição 5, após a opção MenuAvaliarBanda(). Fazendo essa alteração, chegamos ao seguinte resultado:
+
+```csharp
+Dictionary<int, Menu> opcoes = new();
+opcoes.Add(1, new MenuRegistrarBanda());
+opcoes.Add(2, new MenuRegistrarAlbum());
+opcoes.Add(3, new MenuMostrarBandas());
+opcoes.Add(4, new MenuAvaliarBanda());
+opcoes.Add(5, new MenuAvaliarAlbum());
+opcoes.Add(6, new MenuExibirDetalhes());
+opcoes.Add(-1, new MenuSair());
+```
+
+Em seguida, vamos até a parte do código de Program.cs onde é exibida a lista do menu, no método ExibirOpcoesDoMenu() da linha 38. Precisamos adicionar o Console.WriteLine() da nova opção de avaliar álbum.
+
+Daniel: Podemos copiar a linha de cima e fazer os ajustes necessários. O texto será "Digite 5 para avaliar um álbum", e precisamos também alterar o Console.WriteLine() de exibir os detalhes de uma banda para corresponder à opção 6.
+
+```csharp
+void ExibirOpcoesDoMenu()
+{
+    ExibirLogo();
+    Console.WriteLine("\nDigite 1 para registrar uma banda");
+    Console.WriteLine("Digite 2 para registrar o álbum de uma banda");
+    Console.WriteLine("Digite 3 para mostrar todas as bandas");
+    Console.WriteLine("Digite 4 para avaliar uma banda");
+    Console.WriteLine("Digite 5 para avaliar um álbum");
+    Console.WriteLine("Digite 6 para exibir os detalhes de uma banda");
+    Console.WriteLine("Digite -1 para sair");
+```
+
+É interessante que, após adicionar ao dicionário, não precisamos mais nos preocupar com o que é feito na condição if da linha 53.
+
+Guilherme: Exato, não precisamos criar um if/else para essa condição específica.
+
+Daniel: Agora vamos testar. Com "Ctrl + F5", iniciamos a aplicação.
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 
+```
+
+Guilherme: No momento, ainda não temos álbuns registrados, então vamos usar a opção 2 para registrar um álbum da banda Ira!, como "ABC", por exemplo.
+
+```csharp
+******************
+Registro de álbuns
+******************
+
+Digite a banda cujo álbum deseja registrar: Ira!
+Agora digite o título do álbum: ABC
+O álbum ABC de Ira! foi registrado com sucesso!
+```
+
+Daniel: Após registrar o álbum, vamos avaliá-lo (opção 5).
+
+```csharp
+*************
+Avaliar álbum
+*************
+
+Digite o nome da banda que deseja avaliar: Ira!
+Agora digite o título do álbum: ABC
+Qual a nota que o álbum ABC merece: 10
+
+A nota 10 foi registrada com sucesso para o álbum banda ABC
+```
+
+Ao exibir os detalhes de uma banda, não temos as informações referentes ao álbum. Nesse caso, não seria possível mostrar a média do álbum, pois não trabalhamos nesse código até o momento.
+
+Guilherme: Faremos isso na sequência!
+
+### Aula 4 - Completando o novo menu - Vídeo 4
+
+Transcrição  
+Guilherme: Resta concluir a opção de exibir detalhes da banda, pois em nenhum momento mostramos a média dos álbuns registrados.
+
+Daniel: Vamos analisar o estado atual da classe MenuExibirDetalhes.
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            /**
+            * ESPAÇO RESERVADO PARA COMPLETAR A FUNÇÃO
+            */
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Guilherme: Note que temos um espaço reservado para completar a função na linha 17.
+
+Daniel: Nesse momento, exibimos somente a média da banda.
+
+Guilherme: A ideia é exibir a média de cada álbum registrado para determinada banda. Por exemplo: se a banda Ira! tem três álbuns registrados, exibiremos a média de cada um.
+
+Daniel: Exato. Para isso, nós podemos usar a instrução foreach() para cada álbum (Album album) que estiver nos álbuns da banda (in banda.Albuns).
+
+Entre as chaves, vamos adicionar o método Console.WriteLine(), que será usado para exibir o nome do álbum (album.Nome) e a média do álbum (album.Media)
+
+```csharp
+foreach(Album album in banda.Albuns)
+{
+    Console.WriteLine($"{album.Nome} -> {album.Media}");
+}
+```
+
+Vamos aproveitar para adicionar um espaço (\n) antes do texto "Digite uma tecla para voltar ao menu principal", na linha de código 21. Além disso, antes de exibir os álbuns, podemos adicionar um Console.WriteLine() para escrever "Discografia:".
+
+Abaixo, o resultado do código de MenuExibirDetalhes.cs:
+
+```csharp
+using ScreenSound.Modelos;
+
+namespace ScreenSound.Menus;
+
+internal class MenuExibirDetalhes : Menu
+{
+    public override void Executar(Dictionary<string, Banda> bandasRegistradas)
+    {
+        base.Executar(bandasRegistradas);
+        ExibirTituloDaOpcao("Exibir detalhes da banda");
+        Console.Write("Digite o nome da banda que deseja conhecer melhor: ");
+        string nomeDaBanda = Console.ReadLine()!;
+        if (bandasRegistradas.ContainsKey(nomeDaBanda))
+        {
+            Banda banda = bandasRegistradas[nomeDaBanda];
+            Console.WriteLine($"\nA média da banda {nomeDaBanda} é {banda.Media}.");
+            Console.WriteLine("\nDiscografia:");
+            foreach(Album album in banda.Albuns)
+            {
+                Console.WriteLine($"{album.Nome} -> {album.Media}");
+            }
+            Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine($"\nA banda {nomeDaBanda} não foi encontrada!");
+            Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+```
+
+Guilherme: Podemos começar o teste registrando três álbuns da banda Ira!.
+
+Daniel: Sim, mas antes de iniciar, é importante destacar que, para fazer a alteração no menu MenuExibirDetalhes, só fizemos ajustes no código do método Executar().
+
+Nessa etapa, não precisamos mexer no arquivo Program.cs. Essa é uma das grandes vantagens de separar cada elemento do projeto em suas próprias classes e arquivos.
+
+Vamos partir para os testes?
+
+Guilherme: Vamos lá! Usamos o atalho "Ctrl + F5" para abrir a aplicação:
+
+```csharp
+Boas vindas ao Screen Sound 2.0!
+
+Digite 1 para registrar uma banda
+Digite 2 para registrar o álbum de uma banda
+Digite 3 para mostrar todas as bandas
+Digite 4 para avaliar uma banda
+Digite 5 para exibir os detalhes de uma banda
+Digite -1 para sair
+
+Digite a sua opção: 
+```
+
+Daniel: Para registrar álbuns, usamos a opção 2. Faremos o registro de um álbum da banda Ira!, o "Isso é amor".
+
+```csharp
+******************
+Registro de álbuns
+******************
+
+Digite a banda cujo álbum deseja registrar: Ira!
+Agora digite o título do álbum: Isso é amor
+O álbum Isso é amor de Ira! foi registrado com sucesso!
+```
+
+Guilherme: O próximo álbum também pode ser do Ira!, chamado "Clandestino". Por último, vamos registrar o álbum "Invisível DJ", também da banda Ira!.
+
+Uma dúvida: se pedirmos para exibir os detalhes da banda Ira! nesse momento, como ainda não há nenhuma nota registrada para os álbuns, a média de cada um seria 0.
+
+Vamos observar isso na prática?
+
+Daniel: Selecionamos a opção 6 para exibir detalhes da banda:
+
+```csharp
+************************
+Exibir detalhes da banda
+************************
+
+Digite o nome da banda que deseja conhecer melhor: Ira!
+
+A média da banda Ira! é 8.
+
+Discografia:
+
+Isso é amor -> 0
+Clandestino -> 0
+Invisível DJ -> 0
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Guilherme: Funcionou corretamente a questão de quando não há nenhuma nota registrada. Agora vamos atribuir duas notas diferentes ao álbum "Clandestino", 10 e 8, por exemplo.
+
+Conforme definido, escolhemos a opção 5 para avaliar um álbum.
+
+Daniel: Feito isso, vamos pedir para exibir os detalhes da banda Ira! novamente.
+
+```csharp
+************************
+Exibir detalhes da banda
+************************
+
+Digite o nome da banda que deseja conhecer melhor: Ira!
+
+A média da banda Ira! é 8.
+
+Discografia:
+
+Isso é amor -> 0
+Clandestino -> 9
+Invisível DJ -> 0
+
+Digite uma tecla para voltar ao menu principal
+```
+
+Guilherme: Funcionou corretamente e agora temos a média do álbum. Provavelmente, funcionará da mesma forma para os outros álbuns.
+
+Daniel: Muito bem, Gui. Fizemos com que os álbuns também pudessem ser avaliados, ou seja, implementamos a interface IAvaliavel, e também colocamos isso na nossa aplicação. Agora conseguimos registrar um álbum, avaliá-lo, e visualizar os detalhes com a média do álbum.
+
+Caso queira, você pode fazer o mesmo para cada uma das músicas do álbum. O processo é muito semelhante, precisamos apenas implementar a interface IAvaliavel e criar os respectivos menus.
+
+Conhecemos mais um recurso para anexar comportamentos às classes!
+
+continuar lendo
+
+### Aula 4 - Para saber mais: ancestral-raiz
+
+Em um dos vídeos, sobrescrevemos o método Executar(), declarado em Menu, usando um atalho do Visual Studio em que digitamos a palavra override, seguida de um espaço. Isso resulta na apresentação de todos os métodos que podem ser sobrescritos. Neste momento, apareceram dois métodos que não havíamos utilizado e outro já conhecido: ToString(), GetHashCode() e Equals(). Afinal, de onde vêm esses métodos, uma vez que não estão declarados no seu único ancestral, Menu?
+
+Na verdade, todas as classes herdam de um “ancestral-raiz”: a classe Object. Podemos dizer que objetos criados a partir de qualquer classe são Object. E é nessa classe que estão declarados esses três métodos.
+
+Para que serve cada um desses métodos?
+
+- O método ToString() pode ser utilizado para gerar uma representação textual do tipo cujo objeto pertence. A implementação padrão existente em Object somente imprime o nome do tipo. Lembra daquela vez que corrigimos a nota para exibir o valor porque estava exibindo um texto “estranho”, ScreenSound.Modelos.Avaliacao? Pois é, tal texto estranho é a implementação padrão de ToString(), o nome do tipo do objeto. Podemos sobrescrever esse método para retornar um texto mais significativo.
+
+- O método Equals() retorna um valor booleano para indicar se o objeto é equivalente a outro passado como argumento do método. Podemos sobrescrever esse método para representar uma nova lógica de equivalência.
+
+- O método GetHashCode() é usado em conjunto com a sobrescrita de Equals(). Em algumas coleções, usamos um código hash para identificar o objeto no conjunto. Se a condição de igualdade for alterada, é preciso também alterar o código identificador para o objeto.
+
+> No repositório do Github, [deixei uma versão da classe de avaliações](https://github.com/alura-cursos/ScreenSound03/blob/aula-4/ScreenSound/Modelos/AvaliacaoComSobrescrita.cs), chamada AvaliacaoComSobrescrita, com os três métodos de Object como referência para você.
+
+### Aula 4 - Modelando o acesso a um prédio - Exercício
+
+Em um sistema de registro de acesso a um prédio comercial existem três formas de entrada:
+
+Como um representante de uma empresa que entrega encomendas, alimentos, dentre outros itens;
+
+Como uma pessoa colaboradora que trabalha no prédio; neste caso, essa pessoa já possui um identificador de acesso; ou
+
+Como uma pessoa visitante; aqui registra-se nome, documento e sala onde a visita será feita.
+
+Marcelo vem estudando C# até aqui e criou o código abaixo com classes que representam esses tipos de acesso:
+
+```csharp
+namespace RegistroDeAcesso.Modelos;
+
+internal class Colaborador
+{
+    public Colaborador(int idAcesso)
+    {
+        IdAcesso = idAcesso;
+    }
+
+    public int IdAcesso { get; }
+}
+
+internal class Entrega
+{
+    public Entrega(string representante)
+    {
+        Representante = representante;
+    }
+
+    public string Representante { get; }
+}
+
+internal class Visitante
+{
+    public Visitante(string nome, string documento, string sala)
+    {
+        Nome = nome;
+        Documento = documento;
+        Sala = sala;
+    }
+
+    public string Nome { get; }
+    public string Documento { get; }
+    public string Sala { get; }
+}
+```
+
+Além disso, Marcelo criou um módulo que imprime o registro e impressão de entradas no mês. Ele criou a classe que simboliza o registro:
+
+```csharp
+namespace RegistroDeAcesso.Relatorios;
+
+internal class AcessoAoPredio
+{
+    public AcessoAoPredio(DateTime entrada, string resumo)
+    {
+        Entrada = entrada;
+        Resumo = resumo;
+    }
+
+    public DateTime Entrada { get; }
+    public string Resumo { get; }
+}
+```
+
+Contudo, ficou na dúvida sobre como implementar a classe com o relatório mensal. Ele chegou até este ponto:
+
+```csharp
+namespace RegistroDeAcesso.Relatorios;
+
+internal class RelatorioDeAcesso
+{
+    private List<AcessoAoPredio> acessos = new();
+
+    public void RegistrarEntrada(??? entrada)
+    {
+        acessos.Add(new AcessoAoPredio(DateTime.Now, ???));
+    }
+
+    public void ExibirRegistroDoMes()
+    {
+        Console.WriteLine("Acessos registrados no mês:");
+        foreach (var acesso in acessos)
+        {
+            Console.WriteLine($"- {acesso.Resumo} em {acesso.Entrada}");
+        }
+    }
+}
+```
+
+Observe que a classe RelatorioDeAcesso está incompleta no método RegistrarEntrada(). Marcelo precisa garantir que todos os tipos de acesso sejam aceitos como argumentos deste método para que o código de exemplo listado abaixo funcione:
+
+```csharp
+using RegistroDeAcesso.Modelos;
+using RegistroDeAcesso.Relatorios;
+
+Entrega entregaDePizza = new Entrega(representante: "Marcela");
+Colaborador joseDaAlura = new Colaborador(idAcesso: 25);
+Colaborador mariaDaAcme = new Colaborador(idAcesso: 14);
+Visitante filhoDeMaria = new Visitante(nome: "Pedro", documento: "12938732", sala: "1002");
+
+RelatorioDeAcesso acessoMensal = new RelatorioDeAcesso();
+acessoMensal.RegistrarEntrada(entregaDePizza);
+acessoMensal.RegistrarEntrada(joseDaAlura);
+acessoMensal.RegistrarEntrada(mariaDaAcme);
+acessoMensal.RegistrarEntrada(filhoDeMaria);
+
+// ao final do mês...
+acessoMensal.ExibirRegistroDoMes();
+```
+
+Sabendo disso, analise as alternativas abaixo e marque somente aquela que irá completar o código do sistema e fazer com que o código de exemplo compile.
+
+Selecione uma alternativa
+
+Resposta:  
+Criar uma interface que representa a informação de acesso.
+
+```csharp
+internal interface IResumoAcesso
+{
+string Resumo { get; }
+}
+```
+
+Fazer com que os tipos de acesso a implementem. Por fim, usar o tipo IResumoAcesso como argumento do método RegistrarEntrada().
+
+> Com uma interface criamos uma extensão que exige que todas implementações obrigatoriamente forneçam um texto com o resumo do acesso. O mais legal desta solução é que novos tipos de acesso podem ser acrescentados sem impacto no módulo de relatórios. Deixei o código com a resolução deste exercício neste repositório.
+
+### Aula 4 - Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Criar uma interface chamada IForma que declare métodos para calcular a área e o perímetro de uma forma geométrica. Implemente esta interface em duas classes: Circulo e Retangulo.
+
+2. Criar duas interfaces adicionais, IPilotavel e IVoavel. Implemente essas interfaces na classe Veiculo.
+
+3. Criar uma interface chamada IPagavel com um método CalcularPagamento. Implemente essa interface em duas classes, Produto e Servico. O método CalcularPagamento deve retornar o valor total a ser pago, levando em consideração a quantidade para produtos e a taxa horária para serviços.
+
+4. Criar uma interface chamada INotificavel com um método EnviarNotificacao. Implemente essa interface em duas classes, Email e SMS. O método EnviarNotificacao deve exibir mensagens diferentes para cada tipo de notificação.
+
+5. Criar uma interface chamada IArmazenavel com métodos Salvar e Recuperar. Implemente essa interface em duas classes, Arquivo e BancoDeDados. Os métodos Salvar e Recuperar devem exibir mensagens simulando a ação de salvar e recuperar dados.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-3-aula-4).
+
+Boa sorte nos estudos!
+
+### Aula 4 - Faça como eu fiz: protegendo nossa lógica
+
+Abra a classe Banda e observe o tipo da propriedade Albuns. Está declarada como List<Album>. Ela de fato representa uma lista de álbuns, mas existe um problema nesta declaração: o método AdicionarAlbum() é usado para adicionar álbuns à banda, porém na documentação da classe List vemos que ela também possui um método Add(). E isso faz com que os consumidores de Banda consigam fazer isso:
+
+```csharp
+Banda beatles = new Banda(“The Beatles”);
+beatles.Albuns.Add(new Album(“White Album”)); // não era para usar AdicionarAlbum?
+```
+
+Se você tivesse investido algumas horas codando uma regra de negócio que impedisse que qualquer álbum fosse incluído numa banda, infelizmente preciso comunicar que você perdeu tempo. E a causa desta brecha é a declaração da propriedade como List`<Album>`. Toda List tem o método Add(), não tem jeito!
+
+E nada é ruim que não possa piorar! Veja o absurdo que o hacker fez:
+
+```csharp
+Banda beatles = new Banda(“The Beatles”);
+beatles.AdicionarAlbum(new Album(“White Album”));
+beatles.AdicionarAlbum(new Album(“Revolver”));
+beatles.AdicionarAlbum(new Album(“Abbey Road”));
+
+beatles.Albuns.Clear(); // nãaaaao!
+```
+
+Ele simplesmente apagou da história álbuns clássicos e revolucionários dos Beatles. Tudo porque List possui o método Clear(), que limpa todos os elementos de uma lista.
+
+Muito bem, Daniel, me convenceu. Mas qual a solução? Usar outro tipo para representar esta propriedade. E é aqui que as interfaces brilham. Quando declaramos um tipo como uma interface escondemos o como ela está sendo implementada. Para este cenário, a recomendação é declarar a propriedade Album como IEnumerable`<Album>`, e deixar o campo interno como uma List, porque List implementa tal interface. Quando fizermos isso, o código do hacker não vai mais compilar. Rá, te peguei!
+
+Agora é sua vez! Troque todas as propriedades públicas que retornam List por IEnumerable.
+
+Opinião do instrutor
+
+Veja como seria a implementação da classe Banda:
+
+```csharp
+internal class Banda
+{
+    private List<Avaliacao> notas = new List<Avaliacao>();
+
+// código omitido
+
+public IEnumerable<Album> Albuns => albuns;
+}
+```
+
+Sugerimos também a consulta à [documentação sobre List](https://learn.microsoft.com/pt-br/dotnet/api/system.collections.generic.list-1) e à [documentação sobre IEnumerable](https://learn.microsoft.com/pt-br/dotnet/api/system.collections.generic.ienumerable-1).
+
+### Aula 4 - O que aprendemos?
+
+Estes foram os pontos principais abordados nesta aula:
+
+Herança não é a única maneira de incluir comportamentos e características comuns a um tipo.
+
+> Interfaces são tipos mais leves e mais abstratos que podem ser usados para garantir que tipos de hierarquias diferentes implementem os mesmos métodos e propriedades;
+
+Interfaces não possuem código concreto e não podem ser instanciadas através de new.
+
 ### Aula 4 -  - Vídeo 8

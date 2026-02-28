@@ -1,6 +1,8 @@
-﻿namespace AluraDesafios.Aula3;
+﻿using AluraDesafios.Aula_3_4;
 
-internal class FormaGeometrica
+namespace AluraDesafios.Aula3;
+
+internal class FormaGeometrica : IFormaGeometrica
 {
     public virtual double CalcularArea()
     {

@@ -1,41 +1,26 @@
 ﻿namespace ScreenSound.Models;
 
-internal class Banda
+internal class Banda : IAvaliavel
 {
-    private List<Album> albuns = new List<Album>();
-    private List<Avaliacao> notas = new List<Avaliacao>();
+    private readonly List<Album> albunsDaBanda = new List<Album>();
+    //Com get, Retorna a lista de álbuns da banda. Sem set, pois a lista de álbuns deve ser gerenciada apenas pela classe Banda.
+    public IEnumerable<Album> ListaAlbunsDaBanda => albunsDaBanda;
+    private readonly List<Avaliacao> notas = new();
+    public List<Avaliacao> ListaNotasBanda => notas;
+    public string Nome { get; }
+    public static int ContadorDeObjetos;
+    int IAvaliavel.ContadorDeObjetos => ContadorDeObjetos;
     public Banda(string nome)
     {
         Nome = nome;
+        ContadorDeObjetos++;
     }
-    public string Nome { get; }
-    public double Media
-    {
-        get
-        {
-            if (notas.Count == 0) return 0;
-            else return notas.Average(n => n.Nota);
-        }
-    }
-    // Retorna a lista de álbuns da banda.
-    public List<Album> Albuns => albuns;
-    // Adiciona um álbum à banda.
-    public void AdicionarAlbum(Album album) 
-    { 
-        albuns.Add(album);
-    }
-    // Adiciona uma avaliação (nota) à banda.
-    public void AdicionarNota(Avaliacao nota)
-    {
-        notas.Add(nota);
-    }
-    // Exibe a discografia da banda.
+    public double MediaNotas => notas.Count == 0 ? 0 : notas.Average(n => n.Nota);
+    public void AdicionarNota(Avaliacao nota) => notas.Add(nota);
+    public void AdicionarAlbum(Album album) => albunsDaBanda.Add(album);
     public void ExibirDiscografia()
     {
         Console.WriteLine($"Discografia da banda {Nome}");
-        foreach (Album album in albuns)
-        {
-            Console.WriteLine($"Álbum: {album.Nome} ({album.DuracaoTotal})");
-        }
+        albunsDaBanda?.ForEach(album => Console.WriteLine($"Álbum: {album.Nome} ({album.DuracaoTotalAlbum})"));
     }
 }
