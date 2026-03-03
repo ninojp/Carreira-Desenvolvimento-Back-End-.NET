@@ -7,6 +7,7 @@ internal class Pedido : IExpiravel
     public string Cliente { get; }
     public DateTime Data { get; }
     public decimal ValorTotal { get; }
+    public Avalicao Avalicao { get; }
     public Pedido(int id, string cliente, decimal valorTotal)
     {
         Id = id;

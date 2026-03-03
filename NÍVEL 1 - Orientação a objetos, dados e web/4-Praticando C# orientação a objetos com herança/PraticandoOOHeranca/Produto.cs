@@ -8,6 +8,7 @@ internal class Produto
     public string Nome { get; }
     public string Descricao { get; }
     public decimal Preco { get; private set; }
+    public Avalicao Avalicao { get; private set; }
     public Produto(string nome, string descricao, decimal preco, string imagem)
     {
         this.Nome = nome;
@@ -32,6 +33,10 @@ internal class Produto
                 this.imagem = value;
             }
         }
+    }
+    public void Avaliar(int nota, string comentario)
+    {
+        Avalicao = new Avalicao(nota, comentario);
     }
 
 }
