@@ -172,12 +172,10 @@ class Produto
     public string descricao;
     public decimal preco;
     public int estoque;
-
     public bool EstaDisponivel()
     {
         return estoque > 0;
     }
-
     public void AlterarPrecoComDesconto(decimal desconto)
     {
         preco = preco * (1 - desconto/100);
@@ -220,12 +218,10 @@ internal class Produto
     private string descricao;
     private decimal preco;
     private int estoque;
-
     public bool EstaDisponivel()
     {
         return estoque > 0;
     }
-
     public void AlterarPrecoComDesconto(decimal desconto)
     {
         preco = preco * (1 - desconto/100);
@@ -242,7 +238,6 @@ public class Produto
     private string descricao;
     private decimal preco;
     private int estoque;
-
     public bool EstaDisponivel()
     {
         return estoque > 0;
@@ -361,7 +356,9 @@ public Produto(string nome, string descricao, decimal preco)
 
 Dessa forma, garantimos que o encapsulamento seja mantido, inicializando os valores necessários e protegendo os dados da classe.
 
-### Aula 1 - Getters e Setters - Vídeo 5
+## Aula 2 - Getters, Setters e Propriedades
+
+### Aula 2 - Getters e Setters - Vídeo 1
 
 Transcrição  
 Nós já conseguimos começar a desenvolver o encapsulamento da nossa classe. Por isso, nossos atributos estão privados, os métodos estão públicos, e temos um método especial, que é o construtor, responsável por criar o objeto e inicializá-lo com determinados valores. No entanto, ainda enfrentamos alguns problemas em nossa classe.
@@ -495,7 +492,139 @@ No final, sobre o encapsulamento, temos nossos atributos, que devem ser encapsul
 
 No C#, há um recurso interessante que nos ajuda a trabalhar com esses métodos getters e setters. Na sequência, vamos conferir melhor qual é esse recurso.
 
-### Aula 1 -  - Vídeo 6
-### Aula 1 -  - Vídeo 7
-### Aula 1 -  - Vídeo 8
-### Aula 1 -  - Vídeo 9
+### Aula 2 -  Propriedades - Vídeo 2
+
+Transcrição  
+Nós conhecemos os métodos getters e setters e, anteriormente, já definimos os métodos getNome e setImagem. Para adiantar nosso trabalho, criamos um novo método, o getImagem. Na classe Program.cs, podemos ver esses métodos sendo utilizados. Utilizamos um Console.WriteLine para imprimir o valor atual da imagem, usando o getImagem. Em seguida, alteramos a imagem com o setImagem e, novamente, pegamos o valor para verificar se a mudança foi feita.
+
+```csharp
+public string GetImagem()
+{
+    return imagem;
+}
+
+Console.WriteLine($"Imagem: {item1.GetImagem()}");
+item1.SetImagem("Nova Imagem");
+Console.WriteLine($"Imagem: {item1.GetImagem()}");
+```
+
+Ao executar a classe, podemos ver que, inicialmente, foi impressa a imagem definida no construtor. Depois, a imagem foi alterada para a nova imagem, conforme a modificação realizada. Dessa forma, nossos métodos estão funcionando corretamente.
+
+**Problemas com Getters e Setters e Introdução às Propriedades**  
+No entanto, ao observar a classe Program.cs, notamos uma confusão com os métodos get e set. Temos três métodos sendo chamados para uma única operação. Se precisássemos obter e alterar dados constantemente, isso resultaria em uma confusão de get e set no código, tornando-o ilegível. Para melhorar isso, o C# fornece um recurso chamado propriedades. Com elas, não precisamos escrever get e set o tempo todo, tornando o código mais legível.
+
+**Criando Propriedades na Classe Produto**  
+Para criar uma propriedade dentro de uma classe, vamos ao arquivo produto.cs. Após o setImagem, declaramos uma propriedade public string Imagem com "I" maiúsculo. A sintaxe padrão de uma propriedade é pública e do mesmo tipo do atributo ao qual se refere. Neste caso, como estamos nos referindo à imagem, que é uma string, a propriedade Imagem também será uma string. Abrimos e fechamos chaves e, dentro delas, definimos como queremos os get e set.
+
+```csharp
+public string Imagem { }
+```
+
+Utilizamos palavras-chave para isso. O get retorna os dados com um return imagem.
+
+```csharp
+public string Imagem
+{
+    get
+    {
+        return imagem;
+    }
+    set { }
+}
+```
+
+No set, validamos o tamanho da imagem que queremos adicionar, copiando o if de cima. O set não possui parâmetros, então utilizamos a palavra-chave value para calcular o tamanho e, se estiver correto, atribuímos esse value.
+
+```csharp
+public string Imagem
+{
+    get
+    {
+        return imagem;
+    }
+    set
+    {
+        if (value.Length > 0)
+        {
+            this.imagem = value;
+        }
+    }
+}
+```
+
+**Substituindo Métodos por Propriedades**  
+Uma vez que declaramos o get e o set, já definimos como a imagem será acessada, eliminando a necessidade de métodos específicos para getters e setters. No program.cs, substituímos o getImagem por item1.Imagem com "I" maiúsculo, representando a propriedade. O compilador entende que queremos pegar um valor e chama o método get. Para o setImagem, fazemos item1.Imagem = novaImagem, onde novaImagem é o value que estamos tentando atribuir. O compilador verifica o tamanho do value e, se estiver correto, faz a atribuição.
+
+```csharp
+Console.WriteLine($"Imagem: {item1.Imagem}");
+item1.Imagem = "Nova Imagem";
+Console.WriteLine($"Imagem: {item1.Imagem}");
+```
+
+Se quisermos pegar esse valor novamente, chamamos a propriedade, que usará o método get. Ao executar o código, o resultado no console será o mesmo comportamento anterior. Estamos trabalhando com propriedades que implementamos, definindo a lógica para o get e o set. No entanto, existem casos em que não há lógica específica para tratar esses gets ou sets. Nesses casos, podemos utilizar as chamadas propriedades autoimplementadas.
+
+**Propriedades Autoimplementadas**  
+Dessa forma, vamos apenas declarar uma propriedade com o get e o set, se necessário. Uma vez que declaramos, podemos utilizar essa propriedade, em vez de precisar criar manualmente um método get e um método set. Como faremos isso? Alterando nossos atributos. Na classe atributo, no lugar de private string nome, por exemplo, podemos declarar public string Nome. Agora, não será mais um atributo, mas sim uma propriedade. Ao declarar essa propriedade, estamos criando um campo oculto que será acessado por um get e, se necessário, por um set. Podemos criar um get; e depois um set;.
+
+```csharp
+public string Nome { get; set; }
+```
+
+Quando usamos o get, estamos indicando que faremos um retorno padrão. Para acessar esse valor, simplesmente faremos um return nome. Já para o set, faremos uma alteração padrão, alterando o valor sem validação prévia. Poderíamos deixar assim, mas não faz sentido ter um set para o nome, pois antes não estávamos alterando esse nome em lugar algum. Portanto, podemos deixar o nome apenas como leitura, com apenas um get.
+
+```csharp
+public string Nome { get; }
+```
+
+**Aplicando Propriedades a Outros Atributos**  
+Vamos aplicar o mesmo procedimento aos outros atributos. Copiaremos o get e colaremos nas linhas posteriores, renomeando os atributos para nome, descrição, preço e estoque. Eles estão privados, então os tornaremos públicos: public string Descrição, public decimal Preço, e public int Estoque. O ideal é que deixemos os campos, os atributos da classe, antes das propriedades, então os separaremos dessa forma.
+
+```csharp
+public string Descricao { get; }
+public decimal Preco { get; }
+public int Estoque { get; }
+```
+
+Já temos o atributo privado imagem e as propriedades autoimplementadas com esse get padrão. Ainda há alguns erros relacionados às alterações nos nomes que fizemos. Vamos corrigir rapidamente: des.Nome = nome, des.Descricao = descricao, des.Preco = preco, e des.Estoque = estoque. Renomearemos também o estoque e o preço para os nomes das propriedades.
+
+private string imagem;
+
+```csharp
+public string Nome { get; };
+public string Descricao { get; };
+public decimal Preco { get; };
+public int Estoque { get; };
+```
+
+**Ajustando o Acesso às Propriedades**  
+Note que o preço ainda apresenta um erro de compilação. Isso ocorre porque estamos usando diretamente a propriedade, tentando alterá-la, mas ela só possui um get, sem set. Para alterá-la, precisamos declarar explicitamente um set. Ao voltar para o método alterarPreçoComDesconto, o erro desaparece. No entanto, se declararmos um set dessa forma, poderemos alterar o preço em outra classe, o que não desejamos. Queremos que a alteração do preço ocorra apenas no método alterarPreçoComDesconto. Assim, podemos declarar o set como private set. Dessa forma, conseguimos modificar os dados, mas a modificação fica restrita aos métodos dentro da classe.
+
+```csharp
+public decimal Preco { get; private set; }
+```
+
+**Removendo Métodos Redundantes e Utilizando Propriedades**  
+Os métodos getNome, getImagem e setImagem podem ser removidos, pois já definimos tudo corretamente. Por fim, podemos substituir o atributo imagem pela própria propriedade Imagem. Ao utilizar o operador =, ele acionará o set da imagem e fará a validação desde a primeira atribuição, verificando se a string é vazia ou se o link é válido, por exemplo. Assim, garantimos que todas as atribuições sejam válidas.
+
+```csharp
+this.Imagem = imagem;
+```
+
+**Testando as Propriedades no Program.cs**  
+Já utilizamos nossas propriedades, então vamos voltar ao Program.cs para utilizá-las. Vamos descomentar o Console.WriteLine e substituir obterNome por Nome, fazendo o mesmo para Descrição, Preço e Estoque. Vamos verificar se tudo está funcionando corretamente. Ao executar o código, os dados do item 1, como nome, descrição, preço, estoque e imagem, são obtidos corretamente. Assim, garantimos o encapsulamento com getters e setters, mantendo a legibilidade das propriedades.
+
+```csharp
+Nome: {item1.Nome};
+Descricao: {item1.Descricao};
+Preco: {item1.Preco};
+Estoque: {item1.Estoque};
+```
+
+**Conclusão e Próximos Passos**  
+Esses são tópicos importantes sobre encapsulamento que precisam ser praticados para internalizarmos. Na sequência, teremos exercícios para visualizar a aplicação prática desses conceitos. Vamos começar?
+
+### Aula 3 -  - Vídeo 3
+### Aula 4 -  - Vídeo 4
+### Aula 5 -  - Vídeo 5
+### Aula 5 -  - Vídeo 6
+### Aula 5 -  - Vídeo 7

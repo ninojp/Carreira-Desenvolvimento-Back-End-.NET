@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../TesteModificador/TesteModificador.csproj" />
+  <Project Path="PraticandoOOEncaps.csproj" />
+</Solution>

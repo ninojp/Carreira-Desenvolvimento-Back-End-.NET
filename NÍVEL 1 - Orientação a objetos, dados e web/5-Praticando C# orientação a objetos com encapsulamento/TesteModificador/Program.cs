@@ -1,0 +1,17 @@
+﻿Produto novoProduto = new Produto();
+novoProduto.nome = "Smartphone";
+novoProduto.descricao = "Smartphone de última geração";
+novoProduto.preco = 3000.00m;
+novoProduto.estoque = 20;
+Console.WriteLine("\nAula 1 - Encapsulamento e Modificadores de Acesso");
+Console.ForegroundColor = ConsoleColor.DarkGreen;
+Console.WriteLine($"\nProduto: {novoProduto.nome}");
+Console.WriteLine($"Descrição: {novoProduto.descricao}");
+Console.WriteLine($"Preço: {novoProduto.preco}");
+Console.WriteLine($"Estoque: {novoProduto.estoque}");
+Console.WriteLine($"Disponível: {novoProduto.EstaDisponivel()}");
+novoProduto.AlterarPrecoComDesconto(0.1m);
+Console.WriteLine($"Preço com desconto: {novoProduto.preco}");
+novoProduto.preco = 1000.00m;
+Console.WriteLine($"Preço alterado diretamente: {novoProduto.preco}");
+Console.ResetColor();

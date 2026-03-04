@@ -1,0 +1,18 @@
+﻿Produto produto = new Produto("Notebook", "Ótimo Notebook Gamer", 5000.00m, 10);
+//produto.CriarProduto("Notebook2", "Segundo Notebook Gamer", 3000.00m, 5);
+//produto.nome = "Notebook";
+//produto.descricao = "Notebook Gamer";
+//produto.preco = 5000.00m;
+//produto.estoque = 10;
+Console.WriteLine("\nAula 1 - Encapsulamento e Modificadores de Acesso");
+Console.ForegroundColor = ConsoleColor.DarkGreen;
+//Console.WriteLine($"\nProduto: {produto.nome}");
+//Console.WriteLine($"Descrição: {produto.descricao}");
+//Console.WriteLine($"Preço: {produto.preco}");
+//Console.WriteLine($"Estoque: {produto.estoque}");
+Console.WriteLine($"Disponível: {produto.EstaDisponivel()}");
+produto.AlterarPrecoComDesconto(0.1m);
+//Console.WriteLine($"Preço com desconto: {produto.preco}");
+//produto.preco = 1000.00m;
+//Console.WriteLine($"Preço alterado diretamente: {produto.preco}");
+Console.ResetColor();
