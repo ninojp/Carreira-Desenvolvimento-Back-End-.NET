@@ -623,8 +623,1008 @@ Estoque: {item1.Estoque};
 **Conclusão e Próximos Passos**  
 Esses são tópicos importantes sobre encapsulamento que precisam ser praticados para internalizarmos. Na sequência, teremos exercícios para visualizar a aplicação prática desses conceitos. Vamos começar?
 
-### Aula 3 -  - Vídeo 3
-### Aula 4 -  - Vídeo 4
-### Aula 5 -  - Vídeo 5
-### Aula 5 -  - Vídeo 6
-### Aula 5 -  - Vídeo 7
+### Aula 2 - Faça como eu fiz, 1: controle de velocidade
+
+Você está criando um sistema de monitoramento de veículos para uma empresa de transporte. A classe Veiculo precisa controlar a velocidade atual, mas a empresa quer garantir que ninguém consiga alterar diretamente esse valor, para evitar fraudes. O valor só pode ser alterado através de um método autorizado.
+
+Crie uma classe chamada Veiculo que tenha:
+
+- Uma propriedade pública Placa.
+- Um campo privado velocidadeAtual.
+- Um método público AtualizarVelocidade(double novaVelocidade) que atualize a velocidade.
+- Uma propriedade pública de leitura (get) chamada VelocidadeAtual que retorne a velocidade atual.
+
+Exemplo de entrada:
+
+```csharp
+Veiculo veiculo = new Veiculo("ABC-1234");
+veiculo.AtualizarVelocidade(72.5);
+```
+
+Exemplo de saída:
+
+```csharp
+Veículo: ABC-1234
+Velocidade atual: 72,5 km/h
+```
+
+Opinião do instrutor
+
+O foco dessa atividade é mostrar por que encapsular certos dados — neste caso, a velocidade. Perceba que o campo velocidadeAtual foi declarado como private, ou seja, não pode ser acessado diretamente fora da classe. Isso garante que a alteração de um dado sensível (como velocidade) só aconteça de forma controlada, por meio de métodos.
+
+O método AtualizarVelocidade é o único ponto onde esse valor pode ser modificado. E a propriedade VelocidadeAtual fornece acesso somente leitura, via get.
+
+Esse é um caso clássico onde encapsulamento evita problemas de integridade de dados. Em sistemas reais, isso pode representar segurança, legalidade ou validação de regras de negócio.
+
+Veja como podemos fazer:
+
+```csharp
+public class Veiculo
+{
+    public string Placa { get; set; }
+
+    private double velocidadeAtual;
+
+    public Veiculo(string placa)
+    {
+        Placa = placa;
+    }
+
+    public void AtualizarVelocidade(double novaVelocidade)
+    {
+        velocidadeAtual = novaVelocidade;
+    }
+
+    public double VelocidadeAtual
+    {
+        get { return velocidadeAtual; }
+    }
+}
+Veiculo veiculo = new Veiculo("ABC-1234");
+veiculo.AtualizarVelocidade(72.5);
+Console.WriteLine("Veículo: " + veiculo.Placa);
+Console.WriteLine("Velocidade atual: " + veiculo.VelocidadeAtual + " km/h");
+```
+
+Teste o código, pratique e compartilhe sua solução no fórum com as outras pessoas.
+
+### Aula 2 - Faça como eu fiz, 2: validação de nota mínima
+
+Você está desenvolvendo um sistema de avaliação para uma escola. Um professor só pode atribuir notas maiores ou iguais a 0 e menores ou iguais a 10. Nenhum outro ponto do sistema pode alterar a nota de um aluno diretamente.
+
+Crie uma classe chamada Avaliacao com:
+
+- Uma propriedade pública Aluno.
+- Uma propriedade Nota, com get público e set privado.
+- Um método público AtribuirNota(double nota) que só permita valores entre 0 e 10. Se o valor for inválido, exiba uma mensagem de erro.
+
+Exemplo de entrada:
+
+```csharp
+Avaliacao avaliacao = new Avaliacao("Carla Silva");
+avaliacao.AtribuirNota(11);   // inválido
+avaliacao.AtribuirNota(8.5);  // válido
+```
+
+Exemplo de saída:
+
+```csharp
+Erro: A nota deve estar entre 0 e 10.
+Aluno: Carla Silva
+Nota atribuída: 8,5
+```
+
+Opinião do instrutor
+
+Esse exercício mostra o uso estratégico de um set privado — ou seja, apenas a própria classe pode definir o valor da nota, e isso sempre passa por uma validação. Assim, evitamos que alguém, por acidente, insira uma nota fora do intervalo permitido.
+
+Isso é um bom exemplo de como o encapsulamento ajuda a proteger a integridade dos dados. A propriedade Nota só pode ser alterada usando o método AtribuirNota(), onde colocamos a lógica de validação.
+
+Para deixar mais claro o que está acontecendo dentro do método AtribuirNota, veja esse fluxograma com as decisões que o programa toma internamente:
+
+Diagrama de fluxo que representa a validação de uma nota. O processo começa com o bloco "Receber valor da nota", seguido por um losango com a pergunta "Nota entre 0 e 10?". Se a resposta for "Sim", a próxima etapa é "Atribuir à propriedade Nota", e então "Fim". Se a resposta for "Não", o fluxo segue para "Exibir mensagem de erro", e depois também finaliza em "Fim". As setas indicam o caminho de decisão e execução. As bordas dos blocos são coloridas com um gradiente azul e vermelho.
+
+Esse tipo de lógica é muito comum em sistemas que precisam garantir regras de negócio. Ao encapsular o set, você centraliza o controle da regra em um único lugar. Isso facilita a manutenção e protege seu código de alterações indesejadas.
+
+Observe o código:
+
+```csharp
+public class Avaliacao
+{
+    public string Aluno { get; set; }
+
+    public double Nota { get; private set; }
+
+    public Avaliacao(string aluno)
+    {
+        Aluno = aluno;
+    }
+
+    public void AtribuirNota(double nota)
+    {
+        if (nota >= 0 && nota <= 10)
+        {
+            Nota = nota;
+        }
+        else
+        {
+            Console.WriteLine("Erro: A nota deve estar entre 0 e 10.");
+        }
+    }
+}
+
+Avaliacao avaliacao = new Avaliacao("Carla Silva");
+avaliacao.AtribuirNota(11);
+avaliacao.AtribuirNota(8.5);
+
+Console.WriteLine("Aluno: " + avaliacao.Aluno);
+Console.WriteLine("Nota atribuída: " + avaliacao.Nota);
+```
+
+Agora é sua vez! Experimente alterar os valores, simule notas inválidas e poste sua explicação no fórum para ajudar os colegas.
+
+### Aula 2 - Faça como eu fiz, 3: controlando acesso
+
+Você está desenvolvendo um sistema de acesso a dados médicos. Informações sensíveis, como um código de prontuário, não devem ser acessadas de fora da aplicação, mas ainda podem ser lidas por classes dentro do mesmo projeto.
+
+Crie duas classes:
+
+- Paciente (pública), com propriedades públicas Nome e Idade.
+- HistoricoMedico (com modificador internal), contendo uma propriedade CodigoProntuario e um método ExibirCodigo() que imprime o código no console.
+- No programa principal, crie um paciente e um histórico médico, e exiba os dados.
+
+Exemplo de entrada:
+
+```csharp
+Paciente paciente = new Paciente("Luiz Costa", 42);
+HistoricoMedico historico = new HistoricoMedico("XPT-9987");
+historico.ExibirCodigo();
+```
+
+Exemplo de saída:
+
+```csharp
+Código do prontuário: XPT-9987
+```
+
+Opinião do instrutor
+
+A classe HistoricoMedico foi declarada como internal, o que significa que ela só pode ser acessada dentro do mesmo projeto — nenhuma biblioteca externa pode usar essa classe.
+
+Isso é muito útil para proteger dados sensíveis, como um código de prontuário médico, que só deve ser acessado por quem está “dentro da casa”.
+
+O fluxo de acesso a esses dados pode ser representado assim:
+
+Fluxograma com quatro caixas conectadas por setas verticais pretas. A primeira caixa diz "Código do prontuário é informado ao construtor". A segunda, "Armazenado na classe internal". A terceira, "Método ExibirCodigo imprime o valor". E a quarta, "Valor visível apenas dentro do projeto". As bordas das caixas têm um gradiente de azul para rosa.
+
+Esse tipo de encapsulamento acontece não só no nível de campos e propriedades, mas também na estrutura do projeto. E quanto maior o sistema, mais importante isso se torna.
+
+Observe a solução:
+
+```csharp
+public class Paciente
+{
+    public string Nome { get; set; }
+    public int Idade { get; set; }
+
+    public Paciente(string nome, int idade)
+    {
+        Nome = nome;
+        Idade = idade;
+    }
+}
+internal class HistoricoMedico
+{
+    public string CodigoProntuario { get; set; }
+
+    public HistoricoMedico(string codigo)
+    {
+        CodigoProntuario = codigo;
+    }
+
+    public void ExibirCodigo()
+    {
+        Console.WriteLine("Código do prontuário: " + CodigoProntuario);
+    }
+}
+Paciente paciente = new Paciente("Luiz Costa", 42);
+HistoricoMedico historico = new HistoricoMedico("XPT-9987");
+historico.ExibirCodigo();
+```
+
+Agora é com você! Tente mudar a visibilidade da classe para public e veja como isso afeta o acesso. Compartilhe suas conclusões no fórum e veja o que os colegas estão descobrindo também.
+
+### Aula 2 - Faça como eu fiz, 4: encapsulando reajuste de salário
+
+Imagine que você está desenvolvendo um sistema de folha de pagamento. A classe Funcionario possui um salário que só pode ser aumentado via método, e o novo valor não pode ser menor que o atual. Você quer garantir que essa regra não seja burlada.
+
+Crie uma classe Funcionario com:
+
+- Uma propriedade pública Nome.
+- Um campo privado salario.
+- Um construtor que receba nome e salário inicial.
+- Um método público ReajustarSalario(double novoValor) que apenas aceite valores maiores que o salário atual.
+- Uma propriedade pública de leitura Salario (apenas get).
+
+Exemplo de entrada:
+
+```csharp
+Funcionario f = new Funcionario("Fernanda Lima", 4000);
+f.ReajustarSalario(3500); // Inválido
+f.ReajustarSalario(4200); // Válido
+```
+
+Exemplo de saída:
+
+```csharp
+Erro: O novo salário deve ser maior que o atual.
+Funcionário: Fernanda Lima
+Salário atual: R$ 4200,00
+```
+
+Opinião do instrutor
+
+Esse exercício mostra como o encapsulamento pode proteger regras de negócio. Aqui, o campo salario é private justamente para impedir alterações diretas de fora da classe — dessa forma, ninguém consegue reduzir o salário de um funcionário sem passar pela lógica definida.
+
+O método ReajustarSalario é o único ponto autorizado a alterar o valor. Nele, colocamos a lógica de validação: só aceitamos novos valores se forem maiores que o salário atual. A propriedade Salario possui apenas um get, permitindo leitura externa com segurança.
+
+Veja como essa proteção se encaixa no fluxo de decisão do sistema:
+
+Fluxograma com cinco etapas e setas direcionais pretas. A primeira caixa retangular diz: "Usuário chama ReajustarSalário(valor)". A seguir, há um losango com a pergunta: "Valor > salário atual?". Dois caminhos saem do losango — à esquerda, com a palavra "Sim", leva a uma caixa que diz: "Atualiza campo salário"; à direita, com a palavra "Não", leva a "Exibe mensagem de erro". Ambos os caminhos convergem para a última caixa que diz: "Fim". As bordas das caixas têm gradiente azul e rosa.
+
+Observe a resolução em código:
+
+```csharp
+public class Funcionario
+{
+    public string Nome { get; set; }
+    private double salario;
+
+    public Funcionario(string nome, double salarioInicial)
+    {
+        Nome = nome;
+        salario = salarioInicial;
+    }
+
+    public void ReajustarSalario(double novoValor)
+    {
+        if (novoValor > salario)
+        {
+            salario = novoValor;
+        }
+        else
+        {
+            Console.WriteLine("Erro: O novo salário deve ser maior que o atual.");
+        }
+    }
+
+    public double Salario
+    {
+        get { return salario; }
+    }
+}
+
+Funcionario f = new Funcionario("Fernanda Lima", 4000);
+f.ReajustarSalario(3500);
+f.ReajustarSalario(4200);
+
+Console.WriteLine("Funcionário: " + f.Nome);
+Console.WriteLine("Salário atual: R$ " + f.Salario.ToString("F2"));
+```
+
+Teste variações e compartilhe sua solução com sua explicação no fórum.
+
+### Aula 2 - Faça como eu fiz, 5: controle de tarefas
+
+Você está desenvolvendo um sistema de gestão de projetos. Cada projeto possui uma lista de tarefas internas, que não pode ser acessada nem modificada diretamente de fora da classe. O sistema só permite adicionar tarefas, e precisa mostrar quantas já existem.
+
+Crie uma classe Projeto com:
+
+- Uma propriedade pública Nome.
+- Uma lista privada de strings chamada tarefas.
+- Um método público AdicionarTarefa(string tarefa) que insere uma nova tarefa.
+- Um método público ExibirTarefas() que imprime todas as tarefas.
+- Uma propriedade somente leitura QuantidadeTarefas, baseada no tamanho da lista.
+
+Exemplo de entrada:
+
+```csharp
+Projeto projeto = new Projeto("Sistema de Inventário");
+projeto.AdicionarTarefa("Criar tela de login");
+projeto.AdicionarTarefa("Implementar banco de dados");
+projeto.ExibirTarefas();
+```
+
+Exemplo de saída:
+
+```csharp
+Projeto: Sistema de Inventário
+Tarefas:
+- Criar tela de login
+- Implementar banco de dados
+Total: 2 tarefas
+```
+
+Opinião do instrutor
+
+Aqui demos mais um passo no uso do encapsulamento para proteger estruturas de dados mais complexas, como coleções. A lista tarefas foi declarada como private para que nenhuma parte externa possa remover, alterar ou substituir tarefas diretamente.
+
+A única forma de adicionar uma tarefa é por meio do método AdicionarTarefa(), que futuramente poderia ter regras, como impedir tarefas duplicadas ou vazias. Essa é uma prática extremamente comum em sistemas reais: proteger coleções internas e expor métodos controlados.
+
+A leitura das tarefas também é controlada: em vez de retornar diretamente a lista, usamos o método ExibirTarefas(), que imprime internamente o conteúdo. Isso ajuda a evitar modificações externas não autorizadas.
+
+E, para fechar, a propriedade QuantidadeTarefas permite acompanhar a evolução do projeto com segurança e sem risco de inconsistência.
+
+Veja como podemos fazer:
+
+```csharp
+public class Projeto
+{
+    public string Nome { get; set; }
+    private List<string> tarefas;
+
+    public Projeto(string nome)
+    {
+        Nome = nome;
+        tarefas = new List<string>();
+    }
+
+    public void AdicionarTarefa(string tarefa)
+    {
+        tarefas.Add(tarefa);
+    }
+
+    public void ExibirTarefas()
+    {
+        Console.WriteLine("Projeto: " + Nome);
+        Console.WriteLine("Tarefas:");
+        foreach (string tarefa in tarefas)
+        {
+            Console.WriteLine("- " + tarefa);
+        }
+        Console.WriteLine("Total: " + QuantidadeTarefas + " tarefas");
+    }
+
+    public int QuantidadeTarefas
+    {
+        get { return tarefas.Count; }
+    }
+}
+
+Projeto projeto = new Projeto("Sistema de Inventário");
+projeto.AdicionarTarefa("Criar tela de login");
+projeto.AdicionarTarefa("Implementar banco de dados");
+projeto.ExibirTarefas();
+```
+
+Agora é com você! Rode o código e compartilhe no fórum como você organizou o acesso.
+
+### Aula 2 - Faça como eu fiz, 6: validação de saque
+
+Imagine que você está desenvolvendo uma aplicação bancária e precisa encapsular o comportamento de um saque de dinheiro.
+
+Por questões de segurança, a lógica de validação do saque não pode ficar dentro da própria conta, mas deve ser delegada a uma classe interna de segurança, responsável por validar os limites permitidos para a operação.
+
+Crie:
+
+Uma classe ContaBancaria, com:
+
+- Propriedade pública Titular
+- Campo privado saldo
+- Construtor para definir o titular e saldo inicial
+- Método público Sacar(double valor) que só realiza o saque se a classe interna de segurança permitir
+- Propriedade Saldo (somente leitura)
+- Uma classe SegurancaConta (com modificador internal), com:
+
+Um método ValidarSaque(double valor) que apenas autoriza saques de até R$ 1000
+
+Exemplo de entrada:
+
+```csharp
+ContaBancaria conta = new ContaBancaria("Carlos Silva", 2500);
+conta.Sacar(1500); // inválido
+conta.Sacar(800);  // válido
+```
+
+Exemplo de saída:
+
+```csharp
+Saque negado pela política de segurança.
+Saque realizado com sucesso.
+Saldo atual: R$ 1700,00
+```
+
+Opinião do instrutor
+
+Nessa atividade, a gente começou a trabalhar com encapsulamento não só de dados, mas de comportamentos. Até agora, você aprendeu a proteger campos com private, limitar escrita com set privado, e até esconder listas inteiras dentro de um objeto.
+
+Mas neste caso, o desafio é diferente: e se a regra de validação não for só um número que pode ou não ser aceito, mas uma lógica completa? É o que acontece com o saque de uma conta bancária. O valor não pode ser qualquer um — precisa ser validado por uma política de segurança, que pode mudar com o tempo ou com o perfil do cliente, por exemplo.
+
+Por isso, criamos uma segunda classe chamada SegurancaConta, que tem a função exclusiva de dizer se o saque pode ser feito ou não. E essa classe foi marcada como internal, o que significa que apenas outras partes do mesmo sistema podem usá-la — bibliotecas externas, por exemplo, nem sabem que ela existe.
+
+Dentro da classe ContaBancaria, deixamos o saldo como um campo private, e criamos o método Sacar, que só faz o saque se a classe de segurança permitir. Isso é importante porque a ContaBancaria não decide sozinha — ela depende da validação externa para proteger o dinheiro. Esse padrão é muito comum em aplicações que lidam com regras sensíveis, como bancos, hospitais e governos.
+
+Outra coisa importante é a separação de responsabilidades. A conta cuida dos dados (titular, saldo, operações), e a segurança cuida das regras de validação. Isso deixa o código mais organizado, mais testável e mais seguro.
+
+Veja como aplicamos isso no código:
+
+```csharp
+public class ContaBancaria
+{
+    public string Titular { get; set; }
+    private double saldo;
+
+    public ContaBancaria(string titular, double saldoInicial)
+    {
+        Titular = titular;
+        saldo = saldoInicial;
+    }
+
+    public void Sacar(double valor)
+    {
+        SegurancaConta seguranca = new SegurancaConta();
+        if (seguranca.ValidarSaque(valor))
+        {
+            saldo -= valor;
+            Console.WriteLine("Saque realizado com sucesso.");
+        }
+        else
+        {
+            Console.WriteLine("Saque negado pela política de segurança.");
+        }
+    }
+
+    public double Saldo
+    {
+        get { return saldo; }
+    }
+}
+
+internal class SegurancaConta
+{
+    public bool ValidarSaque(double valor)
+    {
+        return valor <= 1000;
+    }
+}
+
+ContaBancaria conta = new ContaBancaria("Carlos Silva", 2500);
+conta.Sacar(1500);
+conta.Sacar(800);
+Console.WriteLine("Saldo atual: R$ " + conta.Saldo.ToString("F2"));
+```
+
+Agora é com você! Rode o código e poste sua solução no fórum explicando qual foi sua ideia e o que aprendeu com isso.
+
+### Aula 2 - Faça como eu fiz, 7: agenda com controle de contatos duplicados
+
+Você está desenvolvendo um sistema de agenda pessoal. Cada agenda pode conter vários contatos, mas você quer garantir que:
+
+A lista de contatos não possa ser acessada nem modificada diretamente por fora da classe.
+Nenhum contato com o mesmo nome seja adicionado duas vezes.
+O sistema informe se o contato foi adicionado ou recusado, para que outras partes possam reagir.
+Então para isso, crie:
+
+- Uma classe Contato, com:
+- Propriedades públicas Nome e Telefone.
+- Uma classe Agenda, com:
+- Propriedade pública Proprietario.
+- Um campo privado e readonly contatos (do tipo List`<Contato>`).
+- Um método público bool AdicionarContato(Contato contato), que verifica se o nome já existe.
+- Um método ListarContatos(), que imprime os contatos.
+- Uma propriedade pública somente leitura QuantidadeContatos.
+
+Exemplo de entrada:
+
+```csharp
+Agenda agenda = new Agenda("Marina Souza");
+agenda.AdicionarContato(new Contato("Carlos", "11998887777"));
+agenda.AdicionarContato(new Contato("Carlos", "11991112222")); // duplicado
+agenda.AdicionarContato(new Contato("Julia", "21988776655"));
+agenda.ListarContatos();
+```
+
+Exemplo de saída:
+
+```csharp
+Contato com esse nome já está na agenda.
+Agenda de: Marina Souza
+Contatos:
+- Carlos | 11998887777
+- Julia  | 21988776655
+Total de contatos: 2
+```
+
+Opinião do instrutor
+
+Até aqui, trabalhamos com listas internas, propriedades derivadas e regras básicas de acesso. Agora, você começa a tratar regras de integridade, ou seja, proteger os dados de incoerências e repetições.
+
+A lista contatos foi declarada como private readonly, o que significa que ninguém de fora pode acessá-la diretamente, nem mesmo substituir a lista inteira. Apenas a própria classe Agenda pode adicionar contatos, e isso acontece por meio do método AdicionarContato.
+
+Mas repare que não é só adicionar — agora o método toma uma decisão: se o nome do contato já existe na lista, ele não permite duplicar. Esse tipo de lógica é essencial em sistemas reais. Imagine se uma agenda aceitasse dois "Carlos" diferentes — como o sistema saberia qual é qual?
+
+E, o método AdicionarContato retorna um bool, que indica se a operação foi bem-sucedida. Esse retorno pode ser usado futuramente para mostrar alertas, registrar logs ou até salvar em banco de dados apenas os contatos válidos. É mais uma forma de encapsular a operação e permitir que o resto do sistema reaja com base no resultado da lógica interna.
+
+Observe a solução abaixo:
+
+```csharp
+public class Contato
+{
+    public string Nome { get; set; }
+    public string Telefone { get; set; }
+
+    public Contato(string nome, string telefone)
+    {
+        Nome = nome;
+        Telefone = telefone;
+    }
+}
+
+public class Agenda
+{
+    public string Proprietario { get; set; }
+    private readonly List<Contato> contatos;
+
+    public Agenda(string proprietario)
+    {
+        Proprietario = proprietario;
+        contatos = new List<Contato>();
+    }
+
+    public bool AdicionarContato(Contato contato)
+    {
+        if (contatos.Any(c => c.Nome == contato.Nome))
+        {
+            Console.WriteLine("Contato com esse nome já está na agenda.");
+            return false;
+        }
+
+        contatos.Add(contato);
+        return true;
+    }
+
+    public void ListarContatos()
+    {
+        Console.WriteLine("Agenda de: " + Proprietario);
+        Console.WriteLine("Contatos:");
+        foreach (var c in contatos)
+        {
+            Console.WriteLine("- " + c.Nome + " | " + c.Telefone);
+        }
+        Console.WriteLine("Total de contatos: " + QuantidadeContatos);
+    }
+
+    public int QuantidadeContatos
+    {
+        get { return contatos.Count; }
+    }
+}
+
+Agenda agenda = new Agenda("Marina Souza");
+agenda.AdicionarContato(new Contato("Carlos", "11998887777"));
+agenda.AdicionarContato(new Contato("Carlos", "11991112222")); // duplicado
+agenda.AdicionarContato(new Contato("Julia", "21988776655"));
+agenda.ListarContatos();
+```
+
+Agora é com você! Teste o código, explore e compartilhe no fórum sua versão explicada para inspirar seus colegas no fórum.
+
+### Aula 2 -  Faça como eu fiz, 8: determinando a situação de um estudante com base na média
+
+Você está desenvolvendo um sistema de boletim escolar. Cada estudante possui duas notas, e a situação final (“Aprovado” ou “Reprovado”) não deve ser inserida manualmente. Em vez disso, a situação deve ser calculada automaticamente com base na média das duas notas.
+
+Crie uma classe Estudante, com:
+
+- Propriedade pública Nome
+- Propriedades públicas Nota1 e Nota2, ambas com get e set
+- Propriedade pública somente leitura Media
+- Propriedade pública somente leitura Situacao, que retorna:
+- "Aprovado" se a média for maior ou igual a 6
+- "Reprovado" se for menor
+
+Exemplo de entrada:
+
+```csharp
+Estudante estudante = new Estudante("Lucas Rocha");
+estudante.Nota1 = 7.5;
+estudante.Nota2 = 5.0;
+```
+
+Exemplo de saída:
+
+```csharp
+Estudante: Lucas Rocha
+Média: 6,25
+Situação: Aprovado
+```
+
+Opinião do instrutor
+
+Nesta atividade, queremos usar os dados disponíveis para derivar informações automaticamente — e manter tudo sempre coerente.
+
+A propriedade Situacao não pode ser alterada manualmente. Afinal, faz sentido uma pessoa com média 3 aparecer como “Aprovada”? Não. Por isso, usamos propriedades somente leitura (get sem set) com lógica interna, para garantir que a situação sempre corresponda à média real da pessoa estudante.
+
+Já a propriedade Media também é calculada dinamicamente com base em Nota1 e Nota2. Isso garante que, se uma nota for alterada, a média e a situação se atualizem automaticamente, sem precisar recalcular em outro lugar.
+
+Esse tipo de encapsulamento é muito útil quando você tem dados interdependentes: você expõe os dados-base (notas), mas protege as informações derivadas (média e situação) com regras claras dentro do próprio objeto.
+
+Veja o código abaixo:
+
+```csharp
+public class Estudante
+{
+    public string Nome { get; set; }
+    public double Nota1 { get; set; }
+    public double Nota2 { get; set; }
+
+    public Estudante(string nome)
+    {
+        Nome = nome;
+    }
+
+    public double Media
+    {
+        get { return (Nota1 + Nota2) / 2; }
+    }
+
+    public string Situacao
+    {
+        get
+        {
+            return Media >= 6.0 ? "Aprovado" : "Reprovado";
+        }
+    }
+}
+
+Estudante estudante = new Estudante("Lucas Rocha");
+estudante.Nota1 = 7.5;
+estudante.Nota2 = 5.0;
+
+Console.WriteLine("Estudante: " + estudante.Nome);
+Console.WriteLine("Média: " + estudante.Media.ToString("F2"));
+Console.WriteLine("Situação: " + estudante.Situacao);
+```
+
+Teste com diferentes notas, veja como a lógica reage automaticamente, e poste sua versão no fórum explicando o que aprendeu sobre propriedades calculadas e lógica encapsulada.
+
+### Aula 2 - Faça como eu fiz, 9: controle de matrícula
+
+Você está desenvolvendo um sistema de controle de matrículas para uma escola. Nesse sistema, um estudante só pode ser matriculado se o curso ainda tiver vagas disponíveis. A regra é clara: se o número de estudantes já matriculados alcançar o limite, novas matrículas devem ser recusadas.
+
+Você precisa modelar duas classes:
+
+Classe Curso:
+
+- Propriedade pública Nome
+- Propriedade pública VagasTotais (definida no construtor)
+- Campo privado matriculas (lista de estudantes)
+- Método bool Matricular(Estudante estudante) que:
+  - Adiciona o estudante se houver vaga
+  - Exibe mensagem de erro e retorna false caso contrário
+- Método ListarMatriculados(), que mostra todos os estudantes matriculados
+- Propriedade somente leitura VagasDisponiveis
+
+Classe Estudante:
+
+Propriedade pública Nome (com construtor)
+
+Exemplo de entrada:
+
+```csharp
+Curso curso = new Curso("Lógica de Programação", 2);
+curso.Matricular(new Estudante("Rafaela"));
+curso.Matricular(new Estudante("João"));
+curso.Matricular(new Estudante("Mirela")); // excede o limite
+curso.ListarMatriculados();
+```
+
+Exemplo de saída:
+
+```csharp
+Estudante matriculado com sucesso.
+Estudante matriculado com sucesso.
+Erro: Não há vagas disponíveis para este curso.
+
+Estudantes matriculados em Lógica de Programação:
+- Rafaela
+- João
+Vagas disponíveis: 0
+```
+
+Opinião do instrutor
+
+Essa atividade traz um ponto-chave da programação orientada a objetos: um objeto precisa saber como reagir quando outro objeto tenta interagir com ele. Aqui, o curso precisa decidir se aceita ou não um novo estudante com base no seu estado interno — mais especificamente, na quantidade de vagas.
+
+O campo matriculas é uma lista private, pois ninguém fora da classe Curso deve conseguir manipular os estudantes diretamente. O único caminho para adicionar uma matrícula é através do método Matricular, que implementa a lógica de verificação de vagas.
+
+Esse método retorna bool, o que permite saber se a matrícula foi bem-sucedida. Isso é ótimo para tomada de decisão no restante do sistema, e ainda ajuda a manter o controle sobre as regras de negócio.
+
+Outro detalhe importante é a propriedade VagasDisponiveis, que é calculada automaticamente com base no total de vagas e na quantidade de estudantes já matriculados. Isso garante que o valor esteja sempre correto, sem precisar ser atualizado manualmente.
+
+Veja a implementação completa no código abaixo:
+
+```csharp
+public class Estudante
+{
+    public string Nome { get; set; }
+
+    public Estudante(string nome)
+    {
+        Nome = nome;
+    }
+}
+
+public class Curso
+{
+    public string Nome { get; set; }
+    public int VagasTotais { get; set; }
+
+    private List<Estudante> matriculas;
+
+    public Curso(string nome, int vagasTotais)
+    {
+        Nome = nome;
+        VagasTotais = vagasTotais;
+        matriculas = new List<Estudante>();
+    }
+
+    public bool Matricular(Estudante estudante)
+    {
+        if (matriculas.Count >= VagasTotais)
+        {
+            Console.WriteLine("Erro: Não há vagas disponíveis para este curso.");
+            return false;
+        }
+
+        matriculas.Add(estudante);
+        Console.WriteLine("Estudante matriculado com sucesso.");
+        return true;
+    }
+
+    public void ListarMatriculados()
+    {
+        Console.WriteLine($"Estudantes matriculados em {Nome}:");
+        foreach (var estudante in matriculas)
+        {
+            Console.WriteLine("- " + estudante.Nome);
+        }
+        Console.WriteLine("Vagas disponíveis: " + VagasDisponiveis);
+    }
+
+    public int VagasDisponiveis
+    {
+        get { return VagasTotais - matriculas.Count; }
+    }
+}
+
+Curso curso = new Curso("Lógica de Programação", 2);
+curso.Matricular(new Estudante("Rafaela"));
+curso.Matricular(new Estudante("João"));
+curso.Matricular(new Estudante("Mirela"));
+curso.ListarMatriculados();
+```
+
+Agora é com você! Experimente testar com diferentes limites de vagas, valide a lógica, e compartilhe sua versão explicada no fórum para ajudar outras pessoas a entender como usar encapsulamento com objetos que se relacionam.
+
+### Aula 2 - Faça como eu fiz, 10: sistema de reservas em hotel
+
+Imagine que você está desenvolvendo um sistema para um hotel que deseja organizar suas reservas. Ao realizar uma reserva, é necessário associar um hóspede a um quarto, registrar a quantidade de diárias e calcular automaticamente o valor total da estadia. Mas, é importante garantir que:
+
+- A quantidade de diárias seja obrigatoriamente maior que zero;
+- O valor da diária do quarto não seja negativo nem nulo;
+- O sistema não permita alterações manuais no valor total da reserva.
+
+Você deve garantir essas regras usando encapsulamento adequado, protegendo os dados e centralizando a lógica de verificação e cálculo dentro das próprias classes.
+
+Crie:
+
+Classe Hospede:
+
+Propriedade pública Nome, definida no construtor
+
+Classe Quarto:
+
+Propriedade pública Numero
+
+Propriedade ValorDiaria, com get e set, validando que o valor seja positivo
+
+Classe Reserva:
+
+- Campo privado diarias
+- Propriedade somente leitura Hospede (objeto)
+- Propriedade somente leitura Quarto (objeto)
+- Propriedade somente leitura ValorTotal (calculada)
+- Construtor que receba Hospede, Quarto e diarias, e valide se as diárias são maiores que zero
+
+Exemplo de entrada:
+
+```csharp
+Hospede hospede = new Hospede("Juliana Moura");
+Quarto quarto = new Quarto(101);
+quarto.ValorDiaria = 250;
+
+Reserva reserva = new Reserva(hospede, quarto, 3);
+```
+
+Exemplo de saída:
+
+```csharp
+Reserva para: Juliana Moura
+Quarto: 101
+Valor total: R$ 750,00
+```
+
+Opinião do instrutor
+
+Nesta atividade, você vai praticar o uso do encapsulamento para garantir que os dados de uma reserva sejam sempre consistentes e que regras importantes sejam respeitadas automaticamente. Aqui, não basta apenas armazenar informações — é preciso controlar como elas são criadas, validadas e usadas.
+
+Começamos pela classe Hospede, que guarda o nome da pessoa associada à reserva. Depois, temos a classe Quarto, onde aplicamos um set com validação no ValorDiaria. Isso é muito importante: não podemos permitir que um quarto tenha uma diária negativa ou igual a zero, pois isso comprometeria o cálculo final.
+
+Na classe Reserva, colocamos a quantidade de diárias como um campo privado (diarias) e exigimos, no construtor, que esse valor seja maior que zero. Essa verificação é feita logo no início, usando um throw com ArgumentException caso a regra não seja cumprida. Isso impede que a reserva seja criada de forma inválida.
+
+As propriedades Hospede, Quarto e ValorTotal são todas somente leitura — ou seja, não podem ser modificadas depois que a reserva foi criada. Isso traz segurança ao sistema, pois uma reserva confirmada não deve sofrer alterações estruturais de forma livre.
+
+A propriedade ValorTotal aplica um dos conceitos mais importantes do encapsulamento: cálculo baseado no estado atual do objeto. Ela não depende de uma variável que precisa ser atualizada manualmente, mas sempre pega os valores reais de diarias e ValorDiaria, garantindo precisão e consistência no resultado.
+
+Para ajudar a visualizar o que acontece quando uma reserva é criada, veja o fluxo de validação e cálculo dentro da classe:
+
+Fluxograma representando a validação de uma reserva de hospedagem. O processo inicia com a entrada de dados: hóspede, quarto e número de diárias. Em seguida, há uma verificação se o número de diárias é maior que zero. Se não for, ocorre o erro 'reserva inválida'. Se for, verifica-se se o valor da diária é maior que zero. Caso não seja, o erro exibido é 'valor inválido'. Se o valor for válido, calcula-se o valor total da reserva (diária × diárias) e a reserva é confirmada com dados imutáveis.
+
+Observe a implementação completa:
+
+```csharp
+public class Hospede
+{
+    public string Nome { get; set; }
+
+    public Hospede(string nome)
+    {
+        Nome = nome;
+    }
+}
+
+public class Quarto
+{
+    public int Numero { get; set; }
+    private double valorDiaria;
+    public double ValorDiaria
+    {
+        get { return valorDiaria; }
+        set
+        {
+            if (value > 0)
+                valorDiaria = value;
+            else
+                Console.WriteLine("Erro: O valor da diária deve ser maior que zero.");
+        }
+    }
+    public Quarto(int numero)
+    {
+        Numero = numero;
+    }
+}
+
+public class Reserva
+{
+    private int diarias;
+    public Hospede Hospede { get; }
+    public Quarto Quarto { get; }
+    public Reserva(Hospede hospede, Quarto quarto, int diarias)
+    {
+        if (diarias <= 0)
+        {
+            throw new ArgumentException("O número de diárias deve ser maior que zero.");
+        }
+        Hospede = hospede;
+        Quarto = quarto;
+        this.diarias = diarias;
+    }
+    public double ValorTotal
+    {
+        get { return Quarto.ValorDiaria * diarias; }
+    }
+}
+Hospede hospede = new Hospede("Juliana Moura");
+Quarto quarto = new Quarto(101);
+quarto.ValorDiaria = 250;
+
+Reserva reserva = new Reserva(hospede, quarto, 3);
+
+Console.WriteLine("Reserva para: " + reserva.Hospede.Nome);
+Console.WriteLine("Quarto: " + reserva.Quarto.Numero);
+Console.WriteLine("Valor total: R$ " + reserva.ValorTotal.ToString("F2"));
+```
+
+Agora é a sua vez. Experimente criar reservas com diferentes valores, testar diárias inválidas e alterar o valor da diária após a reserva. Depois, compartilhe sua versão no fórum com sua explicação sobre o que fez e o que aprendeu.
+
+### Aula 2 - Para saber mais: encapsulamento versus acoplamento, qual a relação?
+
+Durante este curso, falamos bastante sobre encapsular dados e comportamentos dentro de uma classe, mas existe outro conceito que anda lado a lado com o encapsulamento: o acoplamento.
+
+Encapsulamento diz respeito a esconder detalhes internos de uma classe e oferecer apenas uma interface segura e controlada para interagir com o objeto. Isso te ajuda a proteger regras, validar dados e manter o objeto sempre em um estado consistente.
+
+Já o acoplamento é o grau de dependência entre diferentes partes do seu sistema. Quando uma classe conhece demais os detalhes internos de outra, dizemos que há alto acoplamento, o que pode dificultar a manutenção, testes e evolução do software.
+
+Agora vem o ponto chave: Quanto mais bem encapsulada uma classe for, menor será o acoplamento entre os objetos.
+
+Isso acontece porque, ao esconder a implementação interna e expor apenas o que é necessário, você força os outros objetos a se relacionarem apenas com aquilo que foi planejado, e não com os detalhes internos. É como um contrato: a classe se compromete com um comportamento, não com uma estrutura específica.
+
+Veja a seguir um exemplo de alto acoplamento (sem encapsulamento)
+
+```csharp
+public class ContaBancaria
+{
+    public double Saldo; // público!
+
+    public ContaBancaria(double saldoInicial)
+    {
+        Saldo = saldoInicial;
+    }
+}
+
+public class CaixaEletronico
+{
+    public void Sacar(ContaBancaria conta, double valor)
+    {
+        conta.Saldo -= valor; // acesso direto ao saldo
+    }
+}
+```
+
+Nesse exemplo, a classe CaixaEletronico conhece e manipula diretamente o estado interno da conta. Se amanhã o banco mudar a regra de saque, todas as partes que acessam Saldo diretamente terão que ser ajustadas. Isso é alto acoplamento.
+
+Agora veja o mesmo exemplo com baixo acoplamento (com encapsulamento)
+
+```csharp
+public class ContaBancaria
+{
+    private double saldo;
+
+    public ContaBancaria(double saldoInicial)
+    {
+        saldo = saldoInicial;
+    }
+
+    public bool Sacar(double valor)
+    {
+        if (valor <= saldo)
+        {
+            saldo -= valor;
+            return true;
+        }
+        return false;
+    }
+
+    public double Saldo => saldo;
+}
+
+public class CaixaEletronico
+{
+    public void Sacar(ContaBancaria conta, double valor)
+    {
+        if (!conta.Sacar(valor))
+        {
+            Console.WriteLine("Saldo insuficiente.");
+        }
+    }
+}
+```
+
+Agora, CaixaEletronico depende apenas da interface pública de ContaBancaria.
+
+Ele não sabe (nem precisa saber) como o saldo é armazenado ou validado. Isso reduz o acoplamento, tornando o sistema mais modular e flexível a mudanças.
+
+Agora, quando for projetar suas classes, pense sempre: o que realmente precisa ser exposto?!
+
+### Aula 2 - Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você colocou a mão no código e aplicou conceitos fundamentais de encapsulamento em C#. Agora, você é capaz de:
+
+- Controlar o acesso a atributos sensíveis, protegendo regras de negócio e evitando alterações indevidas.
+- Utilizar get e set de forma estratégica, encapsulando validações e garantindo a integridade dos dados.
+- Aplicar modificadores de acesso como private, internal e readonly para organizar a estrutura do seu sistema com segurança.
+- Separar responsabilidades entre classes, criando soluções mais coesas, seguras e de fácil manutenção.
+
+Quer continuar se aprofundando? Recomendamos a [formação C# e Orientação a Objetos: coleções](https://cursos.alura.com.br/formacao-avancando-c-sharp), arquivos e bibliotecas para seguir evoluindo na linguagem e construir aplicações ainda mais completas.
+
+Nos vemos nos próximos cursos práticos!
