@@ -369,12 +369,584 @@ Agora temos a resposta da requisição no console do nosso programa. Realizar re
 
 ## Aula 2: Linq e ordenação
 
-### Aula 2:  - Vídeo 1
-### Aula 2:  - Vídeo 2
-### Aula 2:  - Vídeo 3
-### Aula 2:  - Vídeo 4
-### Aula 2:  - Vídeo 5
-### Aula 2:  - Vídeo 6
+### Aula 2: Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 01](https://github.com/alura-cursos/ScreenSound/archive/refs/heads/aula-1.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/ScreenSound/tree/aula-1)
+
+### Aula 2: Modelo de música - Vídeo 1
+
+Transcrição  
+Guilherme: Conseguimos capturar as respostas que contêm os dados desejados. No entanto, notamos que todas as respostas são do tipo string, como pode ser visto no trecho de código a seguir:
+
+Program.cs
+
+```csharp
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        Console.WriteLine(resposta);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Temos um problema: {ex.Message}");
+    }
+}
+```
+
+Essa situação se torna complicada, uma vez que, supondo que precisemos manipular essa string como texto, torna-se bastante desafiador.
+
+Endereço da API do instrutor:
+
+```csharp
+guilhermeonrails.github.io/api-csharp-songs/songs.json
+```
+
+Ao analisarmos a API, seria interessante extrair campos como o nome do artista ou da música, para que possamos utilizar esses dados e solicitá-los a apontar para uma classe específica.
+
+Daniel: Existe uma estrutura na resposta, então podemos estruturar o código.
+
+**Criando a classe Musica**  
+Guilherme: No VS Code, vamos clicar no menu superior e selecionar as opções "Exibir > Gerenciador de soluções". Na janela exibida à direita, iremos criar uma nova pasta chamada Modelos. Isso nos permitirá criar a classe que fará referência a essa resposta e, assim, seremos capazes de manipulá-la adequadamente.
+
+Daniel: Para cada elemento da coleção, certo?
+
+Guilherme: Isso mesmo.
+
+Clicamos com o botão direito em "ScreenSound-04" e escolhemos as opções "Adicionar > Nova pasta". Digitamos o nome da pasta como "Modelos". Dentro dessa pasta, criamos uma classe chamada Musica. Para isso, clicamos com o botão direito em Modelos e escolhemos as opções "Adicionar > Classe". Na janela seguinte, selecionamos a opção "Arquivo de Código" e, em seguida, clicamos no botão "Adicionar" localizado no canto inferior direito.
+
+Musica.cs
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScreenSound_04.Modelos
+{
+        internal class Musica
+        {
+        }
+}
+```
+
+Podemos remover todos os using, dado que não estamos usando e inserir ; no final no namespace.
+
+Musica.cs
+
+```csharp
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+}
+```
+
+Agora, enfrentamos um desafio: quais campos precisamos serializar?
+
+JSON da API
+
+```json
+[
+    {
+        "artist": "The Chainsmokers",
+        "song": "#SELFIE - Original Mix",
+        "duration_ms": 183750,
+        "explicit": "False",
+        "year": "2014",
+        "popularity": "0",
+        "danceability": "0.789",
+        "energy": "0.915",
+        "key": 0,
+        "loudness": "-3.263",
+        "mode": "1",
+        "speechiness": "0.248",
+        "acousticness": "0.0135",
+        "instrumentalness": "8.77e-06",
+        "liveness": "0.0818",
+        "valence": "0.66",
+        "tempo": "127.955",
+        "genre": "pop, Dance/Electronic"
+    },
+(restante omitido …)
+```
+
+Isso é bem comum, dado que não é obrigatório utilizar todos os dados ao recebermos uma API. Por uma questão de otimização de tempo, não incluiremos todos os campos. Sugerimos selecionar quatro campos, sendo:
+
+artist  
+song  
+duration_ms  
+genre
+
+A pergunta é: ao montarmos a classe, qual nome devemos atribuir para apontar cada uma dessas propriedades?
+
+Daniel: Por enquanto acho que vamos usar o mesmo nome que consta na API.
+
+Guilherme: Isso é uma boa prática?
+
+Daniel: Não, outra situação comum na carreira de pessoas desenvolvedoras é a necessidade de traduzir uma estrutura de dados para outra. Pode ser para alterar a hierarquia ou tradução mesmo.
+
+Guilherme: Para criar o primeiro campo Nome (nome da música), utilizamos a sintaxe public string Nome {}. No entanto, é importante ressaltar que esse campo não está disponível na API.
+
+Existe uma maneira de especificar que a propriedade "Nome" será associada a um campo específico no JSON. É possível utilizar atributos de serialização, como o atributo [JsonProperty], para indicar o nome do campo correspondente no JSON.
+
+Para realizar essa associação, utilizamos o atributo [JsonPropertyName] acima da propriedade Nome. Em seguida, pressionamos "Enter" e inserimos entre parênteses o nome do campo que desejamos utilizar, no caso: ("song").
+
+Musica.cs
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+        [JsonPropertyName("song")]
+        public string Nome { get; set;}
+}
+```
+
+Dessa forma, a propriedade Nome será mapeada para o campo song no JSON.
+
+Daniel: Vamos incluir uma atividade que forneça uma explicação mais detalhada sobre o assunto. Em resumo, o atributo utilizado, como o [JsonPropertyName], é responsável por adicionar metadados específicos à propriedade Nome.
+
+Esses metadados auxiliam na serialização e desserialização de objetos JSON, permitindo a associação adequada entre as propriedades e os campos correspondentes.
+
+Guilherme: Exatamente.
+
+Aplicaremos a mesma lógica para os demais campos e propriedades que iremos inserir no código:
+
+Os pontos de interrogação indicam que o campo pode ser nulo, por exemplo: public string? Nome { get; set;}.
+
+Musica.cs
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+        [JsonPropertyName("song")]
+        public string? Nome { get; set;}
+
+        [JsonPropertyName("artist")]
+        public string? Artista { get; set; }
+}
+```
+
+Estamos traduzindo as propriedades.
+
+Daniel: O atributo em C# é análogo à anotação em outras linguagens, como Java. Em Java, a sintaxe utiliza o símbolo "@" seguido do nome da anotação, enquanto em C# utilizamos colchetes para definir o atributo.
+
+Apesar dessa diferença na sintaxe, ambos os conceitos têm o mesmo propósito, que é adicionar metadados ou informações adicionais a um elemento do código. No caso específico do C#, o uso de colchetes para definir atributos é uma convenção adotada pela linguagem.
+
+Guilherme: Interessante, Daniel.
+
+Vamos fazer para os outros dois campos:
+
+Musica.cs
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+        [JsonPropertyName("song")]
+        public string? Nome { get; set;}
+
+        [JsonPropertyName("artist")]
+        public string? Artista { get; set; }
+        
+        [JsonPropertyName("duration_ms")]
+        public int Duracao { get; set; }
+        
+        [JsonPropertyName("genre")]
+        public string? Genero { get; set; }
+}
+```
+
+Para finalizar, vamos criar um método apenas para exibir as informações.
+
+Criaremos um método público chamado ExibirDetalhesDaMusica(), sem valor de retorno e sem parâmetros. Dentro do corpo do método, utilizaremos o Console.WriteLine() para exibir os respectivos campos:
+
+Musica.cs
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+        [JsonPropertyName("song")]
+        public string? Nome { get; set;}
+
+        [JsonPropertyName("artist")]
+        public string? Artista { get; set; }
+        
+        [JsonPropertyName("duration_ms")]
+        public int Duracao { get; set; }
+        
+        [JsonPropertyName("genre")]
+        public string? Genero { get; set; }
+        
+    public void ExibirFichaTecnica()
+    {
+        Console.WriteLine($"Artista: {Artista}");
+        Console.WriteLine($"Música: {Nome}");
+        Console.WriteLine($"Duração em segundos: {Duracao / 1000}");
+        Console.WriteLine($"Gênero musical: {Genero}");
+        }
+}
+```
+
+Para exibir a duração em segundos, considerando que a unidade de medida esteja em milissegundos (ms), podemos realizar o cálculo Duracao / 1000 para converter para segundos.
+
+Conclusão  
+Para criar uma lista de músicas com base na resposta desse trecho de código, é necessário realizar algumas etapas adicionais no arquivo Program.cs.
+
+Faremos isso no próximo vídeo. Até mais!
+
+### Aula 2: Deserializando os dados - Vídeo 2
+
+Transcrição  
+Daniel: Criamos a classe e a estrutura, utilizando o JsonProperty para realizar a tradução dos campos. Agora, necessitamos que a partir desta string resposta seja exibida uma lista de músicas. É isso mesmo, Gui?
+
+Guilherme: Isso mesmo, Daniel. Vamos capturar o JSON e informar para qual classe ele irá apontar. Dessa forma, obtemos um objeto com a lista criada.
+
+Daniel: O bom é que sabemos quantas músicas irão retornar.
+
+Guilherme: Primeiramente, no arquivo Program.cs, vamos criar uma variável sem especificar o tipo. Para isso, utilizamos a declaração var musicas =. Essa variável irá armazenar o JSON que será obtido a partir da resposta capturada.
+
+Vamos informar que desejamos criar uma lista dessa resposta em JSON, ou seja, baseado nesse objeto. Para tal, usamos a propriedade JsonSerializer do tipo System.Text.Json após o console da resposta.
+
+Há alguns anos, existia uma biblioteca em C# chamada Newtonsoft, cujos recursos foram incorporados ao System.Text.Json. Inclusive, o using System.Text.Json aparece na parte superior do arquivo.
+
+Program.cs
+
+```csharp
+using System.Text.Json;
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        Console.WriteLine(resposta);
+                var musicas = JsonSerializer.
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Temos um problema: {ex.Message}");
+    }
+}
+```
+
+O que desejamos fazer agora é uma desserialização. Portanto, após o JsonSerializer, escrevemos Deserialize. Aqui vamos informar para que o JSON seja capturado e convertido em um objeto manipulável no C#.
+
+Essa é uma prática comum em todas as linguagens de programação: recebemos um JSON e precisamos manipular suas variáveis, convertendo-o para o tipo de dados usado na linguagem em que estamos trabalhando. O processo de transformação do JSON para a linguagem chamamos de desserialização.
+
+Desserialização é o processo de converter dados serializados, como JSON, em objetos ou estruturas de dados utilizáveis em uma linguagem de programação específica.
+
+Continuando, a função Deserialize retornará uma lista, então passamos uma lista de músicas: `<List<Musica>>`. Em seguida, fornecemos a string `<resposta>` como entrada para o processo de desserialização.
+
+Program.cs
+
+```csharp
+using System.Text.Json;
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        Console.WriteLine(resposta);
+                var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Temos um problema: {ex.Message}");
+    }
+}
+```
+
+Daniel: No caso do método estático Deserialize para JSON, não é necessário criar uma instância, mas sim utilizá-lo diretamente. Em vez de instanciar, chamamos o método estático Deserialize para realizar a operação de desserialização do JSON.
+
+Guilherme: Não precisamos criar um new JSON Deserialize. Observem que o `<Musica>` está com um sublinhado na cor vermelha, passando o mouse por cima, obtemos a seguinte mensagem:
+
+CS0246: O nome do tipo ou do namespace "Musica" não pode ser encontrado (esta faltando uma diretiva using ou uma referência de assembly?)
+
+Vamos clicar no ícone de lâmpada do lado esquerdo da linha, será exibido um menu flutuante e vamos clicar em "using ScreenSound_04.Modelos". No topo no arquivo temos a importação: using ScreenSound_04.Modelos;, e o erro não consta mais. Para determinar o número de músicas na API, podemos utilizar o método Console.WriteLine() passando musicas.Count. De fato, se a lista de músicas é um objeto manipulável, ela terá a propriedade Count, que nos fornecerá a quantidade de músicas presentes na lista.
+
+Program.cs
+
+```csharp
+using ScreenSound_04.Modelos;
+using System.Text.Json;
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        Console.WriteLine(resposta);
+                var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta);
+                Console.WriteLine(musicas.Count);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Temos um problema: {ex.Message}");
+    }
+}
+```
+
+Vamos executar clicando no botão ":arrow_forward:" e como retorno, obtemos:
+
+O retorno abaixo foi parcialmente transcrito. Para conferi-lo na íntegra, execute o código na sua máquina.
+
+```csharp
+{
+    "artist":"Post Malone", 
+    "song": "Circles",
+    "duration_ms": 215280,
+    "explicit": "False", "year": "2019",
+    "popularity": "85",
+    "danceability": "0.695",
+    "energy": "0.762",
+    "key": 0,
+    "Loudness":"-3.497",
+    "mode": "1",
+    "speechiness": "0.0395",
+    "acousticness": "0.192",
+    "instrumentalness": "0.00244",
+    "Liveness": "0.0863",
+    "valence": "0.553",
+    "tempo": "120.042"
+    "genre": "hip hop"
+}
+```
+
+Temos 1999 músicas, interessante. Podemos remover tanto o resposta quanto a propriedade Count. Agora, vamos exibir os detalhes de uma música. Para fazer isso, criamos o método ExibirDetalhesDaMusica() no arquivo Musica.cs. Em seguida, de forma aleatória, se tivermos uma lista de músicas, podemos utilizar o índice 0 para exibir os detalhes dessa música: musicas[0].ExibirDetalhesDaMusica();.
+
+Program.cs
+
+```csharp
+using ScreenSound_04.Modelos;
+using System.Text.Json;
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+                var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta);
+                musicas[0].ExibirDetalhesDaMusica();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Temos um problema: {ex.Message}");
+    }
+}
+```
+
+Clicamos no botão ":arrow_forward:" e obtemos:
+
+Artista: The Chainsmokers
+
+Música: #SELFIE Original Mix
+
+Duração em segundos: 183
+
+Gênero musical: pop, Dance/Electronic
+
+Vamos alterar o índice para 1998 (dado que começa no índice zero): musicas[1998].ExibirDetalhesDaMusica();. Clicamos em ":arrow_forward:" e obtemos:
+
+Artista: Post Malone
+
+Música: Circles
+
+Duração em segundos: 215
+
+Gênero musical: hip hop
+
+Daniel: Estamos realizando testes na tradução que fizemos, em que o campo artist foi transformado em Artista, song virou Nome, duration_ms se tornou Duração e genre foi traduzido para gênero. Até o momento, tudo está funcionando conforme o esperado.
+
+Guilherme: Observem que o musicas[] está com um sublinhado, passando o mouse por cima, temos a seguinte mensagem:
+
+(variável local) List`<Musica>` ? musicas
+
+'musicas' pode ser nulo aqui.
+
+CS8602: Desreferência de uma referência possivelmente nula.
+
+É comunicado que a lista de músicas pode ser nula. Para garantir que não seja nula, adicionamos um sinal de exclamação após a resposta da lista de músicas. Dessa forma, ao realizar o parsing, precisamos de uma classe que não seja nula para receber os dados.
+
+```csharp
+var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+```
+
+Observem que não temos mais o erro.
+
+Conclusão  
+Guilherme: Agora, após concluirmos a desserialização dos dados em uma classe, temos uma base de dados contendo 1999 músicas. Além disso, implementamos um método que nos permite exibir os detalhes de cada música. Com isso, estamos prontos para acessar e visualizar as informações detalhadas das músicas presentes na base de dados.
+
+### Aula 2: Desafios - Vídeo 3
+
+Transcrição  
+Daniel: Já possuímos uma lista de músicas e estamos prontos para manipulá-la.
+
+Desafio
+
+Exibir todos os gêneros musicais da lista;
+
+Ordenar os artistas por nome;
+
+Filtrar artistas por gênero musical;
+
+Filtrar as músicas de um artista.
+
+Recebemos um desafio que será comum no dia-a-dia de uma pessoa desenvolvedora: lidar com uma demanda que envolve trabalhar com uma coleção de dados. Primeiro, será necessário exibir todos os gêneros musicais da lista, algo que não é realizado de forma tão fácil e rápida.
+
+Em seguida, é preciso ordenar os artistas por nome, podendo ser em ordem crescente ou decrescente, seguindo a ordem alfabética. Depois disso, será feita a filtragem dos artistas por gênero musical e também das músicas de um determinado artista.
+
+Guilherme: Manualmente, de fato, esses processos podem ser complicados, mesmo com apenas 1999 dados. No entanto, ao transformarmos a lista em uma classe, será possível utilizar os recursos do C# para exibir as músicas de um gênero específico ou de um determinado artista. Dessa forma, encontraremos uma maneira de realizar essas operações de forma mais eficiente e automatizada.
+
+Daniel: De fato, utilizando um loop foreach na lista e aplicando uma estrutura condicional if(), podemos realizar algumas operações básicas. No entanto, é importante destacar que nem todos os desafios podem ser resolvidos dessa forma.
+
+Guilherme: Nas equipes de pessoas desenvolvedoras, é comum que as pessoas responsáveis pelo desenvolvimento backend, como em C#, lidem com a lógica de negócios, manipulação e entrega dos dados.
+
+Nesse contexto, a exibição dos gêneros musicais da lista pode não ser uma informação relevante para a lógica de backend em si, mas pode ser importante para a equipe de front-end, que utilizará esses dados para a construção da interface do usuário.
+
+Na interface do usuário, é possível implementar recursos como a ordenação dos dados por gênero musical, a filtragem por artista e outros recursos interativos, como as setas para cima e para baixo para alterar a ordem de classificação.
+
+Na interface, é possível listar e mencionar os diferentes gêneros musicais, como Jazz, Rock, Pop e outros, de forma interativa. As pessoas usuárias poderão clicar em um determinado gênero musical e visualizar os artistas associados a ele.
+
+Precisamos garantir que as informações e métodos necessários estejam disponíveis para o front-end, de modo a assegurar a entrega dos dados quando necessário.
+
+Faremos isso na próxima aula!
+
+### Aula 2: Gryffindor - Execício
+
+Uma pessoa que estava estudando C#, resolveu realizar uma requisição para uma API que contém recursos relacionados aos personagens da casa Gryffindor, da série Harry Potter, no seguinte endpoint:
+
+```csharp
+https://hp-api.onrender.com/api/characters/house/gryffindor
+```
+
+Para isso, ela desenvolveu o seguinte código:
+
+```csharp
+using (HttpClient client = new HttpClient())
+{
+    string json = await client.GetStringAsync("https://hp-api.onrender.com/api/characters/house/gryffindor");
+    // código restante omitido…
+}
+```
+
+Com base nas informações acima e no código desenvolvido, analise as afirmações abaixo e marque apenas as verdadeiras.
+
+**Alternativa correta**  
+O HttpClient é uma classe na biblioteca padrão do .NET que fornece um cliente HTTP para enviar e receber requisições e respostas HTTP.
+
+> Isso aí! O HttpClient oferece recursos poderosos e flexíveis para trabalhar com requisições e respostas HTTP. Ele permite especificar cabeçalhos personalizados, enviar e receber dados em formato JSON, lidar com autenticação, definir timeouts e muito mais. Além disso, o HttpClient é projetado para suportar operações assíncronas, o que é crucial para manter a responsividade e a eficiência em aplicativos modernos.
+
+**Alternativa correta**  
+O GetStringAsync é um método assíncrono que faz uma requisição HTTP GET para um determinado URI e retorna a resposta como uma string.
+
+> Isso aí! O método GetStringAsync nesse caso está sendo usado para obter o conteúdo de uma página ou serviço web como uma string no formato JSON.
+
+### Aula 2: Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Modelar e desserializar a classe Filme, que pode ser encontrada no [endpoint disponibilizado](https://raw.githubusercontent.com/ArthurOcFernandes/Exerc-cios-C-/curso-4-aula-2/Jsons/TopMovies.json)
+
+2. Modelar e desserializar a classe Pais, que pode ser encontrada no [endpoint disponibilizado](https://raw.githubusercontent.com/ArthurOcFernandes/Exerc-cios-C-/curso-4-aula-2/Jsons/Paises.json)
+
+3. Modelar e desserializar a classe Carro, que pode ser encontrada no [endpoint disponibilizado](https://raw.githubusercontent.com/ArthurOcFernandes/Exerc-cios-C-/curso-4-aula-2/Jsons/Carros.json)
+
+4. Modelar e desserializar a classe Livro, que pode ser encontrada no [endpoint disponibilizado](https://raw.githubusercontent.com/ArthurOcFernandes/Exerc-cios-C-/curso-4-aula-2/Jsons/Livros.json)
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-4-aula-2).
+
+Boa sorte nos estudos!
+
+### Aula 2: Faça como eu fiz: refatorando uma função
+
+[Nesta API do Game Of Thrones API](https://anapioficeandfire.com/) com recursos dos personagens da série pelo ID, por exemplo o Margaery Tyrell possui o ID 16 :
+
+```csharp
+https://www.anapioficeandfire.com/api/characters/16
+```
+
+Ao realizar uma requisição para este endpoint, temos a seguinte resposta:
+
+```csharp
+{"url":"https://www.anapioficeandfire.com/api/characters/16","name":"Margaery Tyrell","gender":"Female","culture":"Westeros","born":"In 283 AC, at Highgarden","died":"","titles":["Queen of the Seven Kingdoms"],"aliases":["The Little Queen","The Little Rose","Maid Margaery"],"father":"","mother":"","spouse":"https://www.anapioficeandfire.com/api/characters/862","allegiances":["https://www.anapioficeandfire.com/api/houses/398"],"books":["https://www.anapioficeandfire.com/api/books/1","https://www.anapioficeandfire.com/api/books/2","https://www.anapioficeandfire.com/api/books/3","https://www.anapioficeandfire.com/api/books/5","https://www.anapioficeandfire.com/api/books/8"],"povBooks":[],"tvSeries":["Season 2","Season 3","Season 4","Season 5","Season 6"],"playedBy":["Natalie Dormer"]}
+```
+
+Agora é sua vez! Crie uma classe e faça a deserialização deste recurso nela, e exibe a classe no console. Sinta-se livre para escolher quais dados você deseja utilizar na classe.
+
+Opinião do instrutor
+
+Inicialmente, vamos criar uma classe que utiliza 2 informações da API: o nome do personagem e seus apelidos.
+
+```csharp
+class Personagem
+{
+    public string name { get; set; }
+    public List<string>? aliases { get; set; }
+
+    public void ExibirApelidosDaPersonagem()
+    {
+        Console.WriteLine($"Nome: {name}");
+        Console.WriteLine("Apelidos:");
+        foreach (string apelido in aliases)
+        {
+            Console.WriteLine($"- {apelido}");
+        }
+    }
+}
+```
+
+Vamos realizar a deserialização utilizando a classe:
+
+using screensound_04.Models;
+using System.Text.Json;
+using (HttpClient client = new HttpClient())
+{
+    string json = await client.GetStringAsync("https://www.anapioficeandfire.com/api/characters/16");
+
+    Personagem margaery = JsonSerializer.Deserialize<Personagem>(json)!;
+    margaery.ExibirApelidosDaPersonagem();
+}
+```
+
+A saída do console será:
+
+Nome: Margaery Tyrell
+Apelidos:
+- The Little Queen
+- The Little Rose
+- Maid Margaery
+```
+
+Os campos do JSON precisam ter o mesmo nome das propriedades?
+No caso de deserialização de JSON sem o [JsonPropertyName("")], as propriedades da classe em que você está deserializando precisam ter nomes correspondentes aos campos no JSON para que a deserialização seja bem-sucedida por padrão, como vimos no exemplo acima.
+
+No exemplo fornecido, a classe Personagem possui propriedades name e aliases, e a resposta JSON contém campos com os mesmos nomes. Portanto, a deserialização funcionará corretamente, e os valores correspondentes no JSON serão atribuídos às propriedades da classe Personagem.
+
+[JsonProperty]
+Se os nomes das propriedades da classe forem diferentes dos campos no JSON, você pode usar atributos de serialização, como o atributo [JsonProperty("nomeCampoJson")] assim como fizemos as aulas.
+
+Lembrando: Ao fazer a deserialização de um objeto JSON para uma classe em C#, você não precisa ter todas as propriedades correspondentes no objeto. O processo de deserialização é flexível e apenas as propriedades presentes no JSON serão mapeadas para as propriedades da classe.
+
 ### Aula 2:  - Vídeo 7
 ### Aula 2:  - Vídeo 8
 ### Aula 2:  - Vídeo 9
