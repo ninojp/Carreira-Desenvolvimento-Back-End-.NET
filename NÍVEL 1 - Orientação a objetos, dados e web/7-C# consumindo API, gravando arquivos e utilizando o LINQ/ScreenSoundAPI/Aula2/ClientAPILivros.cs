@@ -1,11 +1,10 @@
 ﻿using System.Text.Json;
-
 namespace ScreenSoundAPI.Aula2;
 internal class ClientAPILivros
 {
     public static async Task<List<Livro>?> ConectAPILivros()
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new();
         try
         {
             string resposta = await client.GetStringAsync("https://raw.githubusercontent.com/ArthurOcFernandes/Exerc-cios-C-/curso-4-aula-2/Jsons/Livros.json");
@@ -20,7 +19,9 @@ internal class ClientAPILivros
         }
         finally
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\nClasse ClientAPILivros - Conexão finalizada.");
+            Console.ResetColor();
         }
     }
 }

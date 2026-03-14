@@ -917,6 +917,7 @@ class Personagem
 
 Vamos realizar a deserialização utilizando a classe:
 
+```csharp
 using screensound_04.Models;
 using System.Text.Json;
 using (HttpClient client = new HttpClient())
@@ -930,6 +931,7 @@ using (HttpClient client = new HttpClient())
 
 A saída do console será:
 
+```csharp
 Nome: Margaery Tyrell
 Apelidos:
 - The Little Queen
@@ -937,17 +939,38 @@ Apelidos:
 - Maid Margaery
 ```
 
-Os campos do JSON precisam ter o mesmo nome das propriedades?
+**Os campos do JSON precisam ter o mesmo nome das propriedades?**  
 No caso de deserialização de JSON sem o [JsonPropertyName("")], as propriedades da classe em que você está deserializando precisam ter nomes correspondentes aos campos no JSON para que a deserialização seja bem-sucedida por padrão, como vimos no exemplo acima.
 
 No exemplo fornecido, a classe Personagem possui propriedades name e aliases, e a resposta JSON contém campos com os mesmos nomes. Portanto, a deserialização funcionará corretamente, e os valores correspondentes no JSON serão atribuídos às propriedades da classe Personagem.
 
-[JsonProperty]
+**[JsonProperty]**  
 Se os nomes das propriedades da classe forem diferentes dos campos no JSON, você pode usar atributos de serialização, como o atributo [JsonProperty("nomeCampoJson")] assim como fizemos as aulas.
 
 Lembrando: Ao fazer a deserialização de um objeto JSON para uma classe em C#, você não precisa ter todas as propriedades correspondentes no objeto. O processo de deserialização é flexível e apenas as propriedades presentes no JSON serão mapeadas para as propriedades da classe.
 
-### Aula 2:  - Vídeo 7
-### Aula 2:  - Vídeo 8
-### Aula 2:  - Vídeo 9
-### Aula 2:
+### Aula 2: O que aprendemos?
+
+Estes foram os pontos principais abordados nesta aula:
+
+- Criamos uma classe com propriedades mapeadas para alguns campos da API com JsonPropertyName e realizamos a desserialização da resposta;
+
+- Desserializamos os dados recebidos em um formato adequado para manipulação em nosso código. A serialização nos permite converter os dados recebidos em um formato como JSON em objetos que podemos trabalhar em nosso programa, facilitando a manipulação e extração das informações relevantes.
+
+**Na próxima aula:**  
+Vamos aprender de forma prática como usar uma poderosa tecnologia disponível no C# que oferece recursos avançados para consulta e manipulação de dados!
+
+## Aula 3: LINQ
+
+### Aula 3: Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 02](https://github.com/alura-cursos/csharp-curso-4/archive/refs/heads/aula_2.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-curso-4/tree/aula_2)
+
+### Aula 3:  - Vídeo 1
+### Aula 3:  - Vídeo 2
+### Aula 3:  - Vídeo 3
+### Aula 3:  - Vídeo 4
+### Aula 3:  - Vídeo 5
+### Aula 3:  - Vídeo 6
+### Aula 3:  - Vídeo 7
+### Aula 3:  - Vídeo 8
