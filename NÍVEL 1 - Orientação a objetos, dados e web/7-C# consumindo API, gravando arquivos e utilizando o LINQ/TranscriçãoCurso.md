@@ -966,11 +966,700 @@ Vamos aprender de forma prática como usar uma poderosa tecnologia disponível n
 
 Aqui você pode [baixar o zip da Aula 02](https://github.com/alura-cursos/csharp-curso-4/archive/refs/heads/aula_2.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-curso-4/tree/aula_2)
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 8
+### Aula 3: Selecionando gêneros musicais - Vídeo 1
+
+Transcrição  
+Guilherme: Vamos começar a desenvolver esses filtros. Não vamos criar os filtros dentro da pasta de "Modelos", porque não faz sentido. Pensando na forma como a aplicação vai ser desenvolvida, queremos criar um filtro que seja possível manipular e reutilizar, independente da lista passada.
+
+**Selecionar todos os gêneros musicais da lista**  
+Guilherme: Por isso, vamos clicar com o botão direito pasta "ScreenSound-04 > Adicionar > Nova Pasta". Vamos chamar essa nova pasta de "Filtros". Dentro dela, vamos clicar com o botão direito e escolher "Adicionar > Classe".
+
+O nome dessa classe já apareceu nos cursos anteriores, mas não a tínhamos enfatizado. Quem pode nos ajudar nessa tarefa de ordenar, selecionar e filtrar é um método chamado LINQ. Por isso, nomeamos a classe como LinqFilter.
+
+O que esse método vai fazer? Nele, vamos criar a responsabilidade de realizar alguns filtros. Antes, colocamos um ponto e vírgula após o namespace.
+
+Dentro das chaves de LinqFilter, podemos começar a desenvolver a classe.
+
+O primeiro desafio é exibir todos os gêneros musicais da lista.
+
+É interessante notar que toda vez que criamos uma nova classe, a IDE sempre traz o using System.Linq. Vamos deletar os outros using e deixar somente essa linha, pois vamos utilizá-la.
+
+LinqFilter.cs:
+
+```csharp
+using System.Linq;
+
+namespace ScreenSound_04.Filtros;
+
+internal class LinqFilter
+{
+}
+```
+
+Por enquanto a linha using System.Linq está acinzentada, porque ainda não a usamos.
+
+Queremos criar um método em que não precisamos dar um new para usar esse filtro, como fizemos com o JSON Serializer. Por isso, vamos chamar o método de public e colocar a palavra static.
+
+Já que esse método não vai ter nenhum retorno, vamos deixá-lo como void e vamos chamá-lo de FiltrarTodosOsGenerosMusicais().
+
+O que vamos precisar para conseguir filtrar todos os gêneros musicais? Vamos precisar da lista. Portanto, entre parênteses, vamos passar uma List`<Musica>` que vamos chamar de musicas.
+
+Para resolver o erro que apareceu, basta clicar na lâmpada e pedir para colocar o using ScreenSound_04.Modelos na primeira linha.
+
+```csharp
+using ScreenSound_04.Modelos;
+using System.Linq;
+
+namespace ScreenSound_04.Filtros;
+
+internal class LinqFilter
+{
+    public static void FiltrarTodosOsGenerosMusicais(List<Musica> musicas)
+    {
+    }
+}
+```
+
+Nesse método, vamos criar uma variável var chamada todosOsGenerosMusicais por inferência, ou seja, não vamos definir o tipo dela. Ela vai ser igual a lista de musicas onde vamos usar a propriedade .Select() para selecionar esses gêneros.
+
+Poderíamos passar o Select para uma outra função para que essa função nos retornasse todas as listas com base no gênero. Mas, não vamos fazer isso. Podemos usar uma função anônima.
+
+Entre os parênteses do Select, digitamos generos, uma arrow funcion (=>) , generos.Genero.
+
+Agora, queremos apenas os gêneros únicos, ou seja, não queremos gêneros repetidos. Para isso, vamos colocar um ponto e a função Distinct(). No final, queremos que o resultado seja de fato uma lista. Por isso, colocamos .ToList() e ponto e vírgula.
+
+Com esse Select() conseguimos pegar todos os gêneros musicais distintos passados através da lista.
+
+Em seguida, vamos criar um foreach(). Poderíamos colocá-lo em outro lugar para maior clareza, mas vamos criá-lo na próxima linha por enquanto.
+
+A condição será uma variável genero para a lista de todosOsGenerosMusicais. No corpo do foreach(), colocamos um Console.WriteLine(). Nele, vamos passar uma interpolação com cifrão e, entre aspas duplas, - {genero}.
+
+```csharp
+internal class LinqFilter
+{
+    public static void FiltrarTodosOsGenerosMusicais(List<Musica> musicas)
+    {
+        var todosOsGenerosMusicais = musicas.Select(generos => generos.Genero).Distinct().ToList();
+        foreach (var genero in todosOsGenerosMusicais)
+        {
+            Console.WriteLine($"- {genero}");
+        }
+    }
+```
+
+Vamos salvar o documento.
+
+Apesar de usar o Select(), não precisamos usar o System.Linq.
+
+Daniel: Nesse caso, alguns namespaces já são importados por padrão pelo .NET para economiza digitação. O System.Linq é um deles.
+
+Guilherme: Então, podemos apagar using System.Linq.
+
+Para conseguir de fato utilizar esse método, vamos no Program.cs para trazer o using ScreenSound_04.Filtros.
+
+No lugar de exibir musicas[1998] dentro do try, vamos chamar o tipo LinqFilter e o método FiltrarTodosOsGenerosMusicais(), passando a lista de musicas.
+
+Program.cs:
+
+```csharp
+using ScreenSound_04.Filtros;
+
+using (HttpClient client = new HttpClient())
+{
+    try
+    {
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+        LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+    }
+
+// código omitido…
+```
+
+Vamos clicar no botão "Iniciar Sem Depurar" (ou "Ctrl + F5") para executar a aplicação.
+
+```csharp
+pop, Dance/Electronic
+hip hop, pop
+hip hop
+pop
+hip hop, pop, R&B pop, R&B
+pop, latin hip hop, pop, R&B, Dance/Electronic - rock
+Dance/Electronic hip hop, pop, Dance/Electronic rock, pop
+rock, easy listening
+Folk/Acoustic, pop
+hip hop, latin, Dance/Electronic
+rock, metal
+country, latin
+pop, Folk/Acoustic
+set()
+R&B
+rock, blues
+hip hop, Dance/Electronic
+country
+```
+
+Uma questão importante é a base de dados não classifica uma música por apenas um gênero. Então, uma mesma música pode ser pop, folk e rock juntos.
+
+Daniel: É como se colocasse umas tags (etiquetas).
+
+Guilherme: Tem até um gênero chamado set() que está sinalizado errado. Já escutou esse gênero?
+
+O primeiro desafio foi concluído! Já listamos os gêneros musicais da nossa base de dados.
+
+### Aula 3: Ordenando os artistas - Vídeo 2
+
+Transcrição  
+Daniel: Concluímos um primeiro desafio que era exibir os gêneros musicais. Foram exibidos como uma lista. Agora, vamos para o próximo desafio: ordenar artistas por nome.
+
+**Ordenar artistas por nome**  
+Guilherme: Podemos manter cada arquivo com um tipo de filtro específico para não ficar muito grande. Vamos criar mais uma classe na pasta "Filtros", chamada de LinqOrder.
+
+Primeiro, vamos criar mais um método que vai ser responsável por fazer a ordenação nessa classe. Em internal class LinqOrder, vamos criar um método public static void chamado de ExibirListaDeArtistasOrdenados().
+
+Como não está especificado se a ordenação é em ordem ascendente ou descendente, podemos mostrar as duas possibilidades. Entre os parênteses do método, vamos receber uma lista de música, ou seja, List`<Musica>`, chamada musicas. Por fim, abre e fecha chaves.
+
+Precisamos colocar o using ScreenSound_04.Modelos na primeira linha do arquivo. Podemos usar a sugestão do "ações rápidas" ("Alt+Enter" ou "Ctrl + .") clicando na lâmpada amarela à esquerda.
+
+LinqOrder.cs:
+
+```csharp
+using ScreenSound_04.Modelos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScreenSound_04.Filtros
+{
+    internal class LinqOrder
+    {
+        public static void ExibirListaDeArtistasOrdenados(List<Musica> musicas)
+        {
+
+        }
+    }
+}
+```
+
+Entre as chaves do método ExibirListaDeArtistasOrdenados(), vamos criar uma variável var chamada artistasOrdenados que vai ser igual à lista de musicas, ponto e o método de ordenação.
+
+Existem dois métodos de ordenação: OrderBy() que ordena de forma ascendente (A a Z) e OrderByDescending() que ordena de forma descendente (Z a A).
+
+Nesse caso, vamos colocar OrderBy() que vai pegar o elemento musica e ordenar com arrow function (=>) através do tipo musica.Artista.
+
+Daniel: Com isso, vamos ordenar pela propriedade Artista.
+
+Guilherme: Segundo passo é exibir apenas os nomes dos artistas ordenados. Por isso, vamos precisar realizar um Select(). Se deixamos apenas com OrderBy(), o código vai ordenar com base nos artistas, mas vai mostrar o nome da música, o gênero e duração.
+
+Por isso, após o OrderBy() ser concluído, vamos colocar .Select(). O que queremos selecionar? Só artistas. Então, digitamos musica => musica.Artista.
+
+Temos mais uma questão: se o artista estiver em mais de uma música, vai aparecer repetidamente. Logo, vamos colocar .Distinct() para aparecer somente uma única vez.
+
+Precisamos novamente do .ToList()?
+
+Daniel: É bom colocar, porque assim o resultado já vai ser traduzido em uma lista. Não é obrigatório fazê-lo, mas vamos manter o padrão que usamos anteriormente.
+
+Guilherme: Podemos tirar os using que não vamos usar da linha 2 a linha 6. E vamos colocar um ponto e vírgula ao final do namespace, ao invés das chaves.
+
+using ScreenSound_04.Modelos;
+
+```csharp
+namespace ScreenSound_04.Filtros;
+internal class LinqOrder
+{
+    public static void ExibirListaDeArtistasOrdenados(List<Musica> musicas)
+    {
+        var artistasOrdenados = musicas.OrderBy(musica => musica.Artista).Select(musica => musica.Artista).Distinct().ToList();
+    }
+}
+```
+
+Vamos recapitular o que fizemos? Primeiro, ordenamos todas as músicas com base no artista.
+
+Daniel: Depois, a partir do resultado da lista de músicas ordenada, vamos selecionar somente a propriedade artista. Com isso, temos uma lista de strings que representam os artistas.
+
+Após o resultado de lista de strings, vamos tirar o que está repetido. Por fim, vamos colocar em memória como uma lista de strings sem repetição.
+
+Se você passar o mouse em cima da variável artistasOrdenados, você vai notar que tem uma lista de strings ali: (variável local) List`<string?>`? artistasOrdenados.
+
+Guilherme: Para fechar, vamos fazer um Console.WriteLine() com a Lista de artistas ordenados entre aspas duplas. Na próxima linha, vamos fazer um foreach(), onde vamos criar uma variável var chamada artista.
+
+Para cada artista em artistasOrdenados, queremos colocar um Console.WriteLine() com interpolação de string. Isto é, cifrão e, entre aspas duplas, - {artista}.
+
+using ScreenSound_04.Modelos;
+
+namespace ScreenSound_04.Filtros;
+
+```csharp
+internal class LinqOrder
+{
+    public static void ExibirListaDeArtistasOrdenados(List<Musica> musicas)
+    {
+        var artistasOrdenados = musicas.OrderBy(musica => musica.Artista).Select(musica => musica.Artista).Distinct().ToList();
+        Console.WriteLine("Lista de artistas ordenados");
+        foreach (var artista in artistasOrdenados)
+        {
+            Console.WriteLine($"- {artista}");
+        }
+    }
+}
+```
+
+Agora, vamos no Program.cs. Em try, vamos comentar o LinqFilter.FiltrarTodosOsGenerosMusicais() para não aparecer no console.
+
+Na próxima linha, vamos digitar LinqOrder.ExibirListaDeArtistasOrdenados(), passando a lista de musicas.
+
+Program.cs:
+
+```csharp
+try
+{
+    string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+    var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+
+    // LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+    LinqOrder.ExibirListaDeArtistasOrdenados(musicas);
+}
+// código omitido…
+```
+
+Após executar o aplicativo, temos uma lista de artistas ordenados de A a Z sem repetição.
+
+Lista de artistas ordenados
+
+```csharp
+(…)
+Wyclef Jean
+X Ambassadors XXXTENTACION
+Years & Years YG
+Ying Yang Twins
+Ylvis
+Yo Gotti
+Yolanda Be Cool Young Money
+Young T & Bugsey
+Young Thug Youngbloodz
+Yung Joc
+Zara Larsson
+Zay Hilfigerrr
+ZAYN
+Zedd
+ZHU
+```
+
+Quantos artistas desses o Daniel conhece?
+
+Daniel: Todos, é claro!
+
+Guilherme: Tem muitas bandas boas! Você pode escolher os artistas que você mais gosta.
+
+Nosso próximo desafio é filtrar artistas por gênero musical. Vamos descobrir mais gêneros que o Daniel adora na sequência.
+
+### Aula 3: Artistas por gênero musical - Vídeo 3
+
+Transcrição  
+Guilherme: Desafio dado é desafio vencido! O próximo passo é filtrar artistas por um determinado gênero musical.
+
+**Filtrar artista por gênero musical**  
+Guilherme: No Visual Studio, podemos usar o mesmo arquivo LinqFilter.cs com mais um método estático após o FiltrarTodosOsGenerosMusicais(). Na próxima linha, vamos criar um public static void chamado FiltrarArtistasPorGeneroMusical().
+
+Como parâmetro, devemos receber uma lista de música chamada musicas. Porém, também vamos precisa saber o gênero musical. Por isso, também colocamos como parâmetro, uma string com o genero.
+
+Daniel: Aquele campo que você tinha falado do front-end, onde a pessoa digitou ou clicou.
+
+LinqFilter.cs:
+
+```csharp
+internal class LinqFilter
+{
+
+// código omitido…
+
+    public static void FiltrarArtistasPorGeneroMusical(List<Musica> musicas, string genero) 
+    {
+    }
+}
+```
+
+Guilherme: Dentro do método FiltrarArtistasPorGeneroMusical(), vamos criar uma variável var chamada artistasPorGeneroMusical que vai ser igual à variável musicas, ponto e uma propriedade diferente.
+
+Já conhecemos o Select() e OrderBy(). Mas, nesse caso, vamos precisar de uma propriedade para filtrar a lista de músicas onde o gênero seja igual ao gênero que recebemos como parâmetro.
+
+Daniel: Onde uma condição seja atendida. No caso desse exemplo, é a questão do gênero musical.
+
+Guilherme: Para isso, vamos usar a palavra Where(), passando a musica => onde genero == musica.Genero.
+
+Daniel: Mas, uma música pode ter mais de um gênero. Por isso, quando formos passar o argumento genero nessa string, teríamos que passar pop, poprock e ficaria complicado. E se queremos só pop, por exemplo?
+
+Nesse caso, seria melhor usar o método Contains() que faz parte da classe string.
+
+Guilherme: Sim! Na verdade, ao invés de genero == musica.Genero, vamos colocar musica.Genero.Contains(), passando o genero. Por fim, poderíamos colocar o ToList() para transformar em lista.
+
+Só isso já pegaria todas as músicas que contém determinado gênero? Sim. Porém, repare que o nome do método diz que devemos filtrar artistas.
+
+Com base nesse resultado do Where(), precisamos selecionar apenas os artistas. Por isso, após Where(), vamos colocar .Select() passando musica => musica.Artista. Como não queremos receber artistas duplicados, vamos colocar um .Distinct antes do .ToList().
+
+```csharp
+internal class LinqFilter
+{
+// código omitido…
+    public static void FiltrarArtistasPorGeneroMusical(List<Musica> musicas, string genero) 
+    {
+        var artistasPorGeneroMusical = musicas.Where(musica => musica.Genero.Contains(genero)).Select(musica => musica.Artista).Distinct().ToList();
+    }
+}
+```
+
+Por fim, vamos colocar um Console.WriteLine() com cifrão no começo para interpolar as strings Exibindo os artistas por gênero musical >>> {genero}.
+
+Agora, queremos fazer o foreach(), onde vamos ter a condição para cada var artista na nossa lista artistasPorGeneroMusical. No corpo, vamos colocar um Console.WriteLine() com interpolação de string. Isto é, cifrão e, entre aspas duplas, - {artista}.
+
+A IDE coloca uma marcação amarela abaixo de musica.Genero, pois Genero pode ser nulo.
+
+Daniel: Para resolver isso, podemos colocar uma exclamação após Genero. Assim, garantimos ao compilador que não é nulo.
+
+```csharp
+internal class LinqFilter
+{
+// código omitido…
+    public static void FiltrarArtistasPorGeneroMusical(List<Musica> musicas, string genero) 
+    {
+        var artistasPorGeneroMusical = musicas.Where(musica => musica.Genero!.Contains(genero)).Select(musica => musica.Artista).Distinct().ToList();
+        Console.WriteLine($"Exibindo os artistas por gênero musical >>> {genero}");
+        foreach(var artista in artistasPorGeneroMusical)
+        {
+            Console.WriteLine($"- {artista}");
+        }
+    }
+}
+```
+
+Guilherme: Antes de chamar o método, vamos visualizar todos os gêneros musicais que temos? Para isso, vamos em Program.cs e comentamos a linha LinqOrder.ExibirListaDeArtistasOrdenados() e descomentamos o LinqFilter.FiltrarTodosOsGenerosMusicais().
+
+Program.cs:
+
+```csharp
+try
+{
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+
+        LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+        // LinqOrder.ExibirListaDeArtistasOrdenados(musicas);
+}
+
+// código omitido…
+```
+
+Com isso, podemos executar o método de filtrar os gêneros. Dentre os gêneros musicais exibidos no console, vamos escolher rock e pop.
+
+Podemos fechar o console e comentar a linha desse filtro novamente. Agora, podemos escrever LinqFilter.FiltrarArtistasPorGeneroMusical().
+
+Precisamos passar como argumento a lista de musicas e uma string para o gênero. Primeiro, vamos colocar o rock.
+
+```csharp
+try
+{
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+
+        //LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+        // LinqOrder.ExibirListaDeArtistasOrdenados(musicas);
+        LinqFilter.FiltrarArtistasPorGeneroMusical(musicas, "rock");
+}
+// código omitido…
+```
+
+Após executar, descobrimos que existem muitos artistas que tocam rock. Não estamos com a lista ordenada, mas isso não foi pedido.
+
+Exibindo os artistas por gênero musical >>> rock
+
+```csharp
+(…)
+Muse
+Marilyn Manson
+My Chemical Romance
+Thirty Seconds To Mars
+Jimmy Eat World
+Hoobastank
+Scouting For Girls
+Grouplove
+Hot Chelle Rae
+Alex Clare
+```
+
+Daniel: Temos Red Hot Chili Peppers, Artic Monkeys, Paramore, Switchfoot, entre outros.
+
+Guilherme: Vamos colocar outro estilo musical, o pop. Basta substituir o argumento rock por pop em LinqFilter.FiltrarArtistasPorGeneroMusical() em Program.cs.
+
+Nesse caso, temos artistas como The Chainsmokers, Sean Paul, Taylor Swift entre outros.
+
+Desse modo, terminamos o desafio de exibir artistas por gênero musical.
+
+### Aula 3: Exibindo músicas por artistas - Vídeo 4
+
+Transcrição  
+Guilherme: Nosso próximo desafio é filtrar as músicas de determinado artista. Depois, o Daniel vai escolher um artista para usarmos como exemplo.
+
+**Filtrar música por artista**  
+Já estamos usando o LinqFilter.cs para dois propósitos: filtrar os gêneros e filtrar artistas. Assim, podemos usá-lo para filtrar músicas de um artista, já que também é um filtro.
+
+Na classe LinqFilter, vamos criar mais um método public static void chamado FiltrarMusicasDeUmArtista(). Como parâmetro, devemos receber a lista de músicas chamada musicas e também a string com o nomeDoArtista.
+
+Entre as chaves, vamos começar a desenvolver esse método. Para isso, vamos criar uma variável var por inferência, ou seja, sem declarar seu tipo. Vamos chamá-la de musicasDoArtista.
+
+Queremos pegar todas as músicas de um artista da lista de musicas. Nesse caso, vamos usar o Select() ou Where()?
+
+Daniel: Sempre que queremos pegar o subconjunto de uma lista, usamos o Where().
+
+Guilherme: Por isso, a variável vai ser igual à lista de musicas.Where(), a partir da musica vamos pegar musica.Artista, garantindo que não é uma propriedade nula com !ao final. Isto é, musica => musica.Artista!.
+
+Agora, queremos conferir se essa musica.Artista é igual ao nomeDoArtista que recebemos como parâmetro. Para isso, devemos usar == ou um método específico?
+
+Daniel: Como é uma string, podemos usar o Equals(). As strings são recursos muito utilizados nas aplicações e vão ter uma área de memória específica para essa gestão.
+
+Por exemplo, tanto o .NET quanto o JVM do Java o fazem. Vamos colocar uma atividade para nos aprofundar mais nesse tema.
+
+Guilherme: Após musica.Artista!, vamos digitar Equals(), passando o nomeDoArtista. No final, vamos usar também o .ToList() para transformar esses dados em uma lista.
+
+LinqFilter.cs:
+
+```csharp
+internal class LinqFilter
+{
+// código omitido…
+    public static void FiltrarMusicasDeUmArtista(List<Musica> musicas, string nomeDoArtista)
+    {
+        var musicasDoArtista = musicas.Where(musica => musica.Artista!.Equals(nomeDoArtista)).ToList();
+    }
+}
+```
+
+Com isso, se temos as músicas desse artista, vamos colocá-las dentro da variável musicasDoArtista.
+
+Em seguida, vamos colocar um Console.WriteLine() com o nomeDoArtista. Depois, fazemos um foreach para saber quantas músicas esse artista tem.
+
+Na condição, criamos uma variável var musica para cada música em musicasDoArtista.
+
+No corpo, passamos um Console.WriteLine() somente com o nome da música que está na propriedade musica.Nome. Para isso, vamos usar interpolação de string com cifrão e, entre aspas duplas, - {musica.Nome}.
+
+```csharp
+internal class LinqFilter
+{
+
+// código omitido…
+
+    public static void FiltrarMusicasDeUmArtista(List<Musica> musicas, string nomeDoArtista)
+    {
+        var musicasDoArtista = musicas.Where(musica => musica.Artista!.Equals(nomeDoArtista)).ToList();
+        Console.WriteLine(nomeDoArtista);
+        foreach (var musica in musicasDoArtista)
+        {
+            Console.WriteLine($"- {musica.Nome}");
+        }
+    }
+}
+```
+
+Já temos nosso método concluído. Agora, podemos voltar para o Program.cs.
+
+Antes de exibir os artistas específicos, vamos comentar o LiqFilter.FiltrarArtistasPorGeneroMusical() e descomentar a linha LinqOrder.ExibirListaDeArtistasOrdenados() para o Daniel escolher um artista que ele gosta.
+
+Após executar a aplicação, conferimos a lista de artistas ordenados.
+
+Daniel: Um artista que fez parte da minha infância foi o Michael Jackson.
+
+Guilherme Mas, perto do nome dele, temos o nome de um artista brasileiro, o Michel Teló. Essa base de dados foi feita em inglês, mas temos um artista nacional.
+
+Daniel: Queremos conhecer quais são as músicas do Michel Teló.
+
+Guilherme: Podemos fechar a aplicação. Em try no Program.cs, vamos digitar LinqFilter.FiltrarMusicasDeUmArtista(), passando a lista de musicas e a string com o nome do Michel Teló.
+
+Program.cs:
+
+```csharp
+try
+{
+        string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+        var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+
+        //LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+        // LinqOrder.ExibirListaDeArtistasOrdenados(musicas);
+        // LinqFilter.FiltrarArtistasPorGeneroMusical(musicas, "pop");
+        LinqFilter.FiltrarMusicasDeUmArtista(musicas, "Michel Teló");
+}
+// código omitido…
+```
+
+Já imagino qual música deve ser. Ao executar o código, vamos conferir qual música temos.
+
+Michel Teló
+
+Ai Se Eu Te Pego - Live
+
+Também podemos filtrar as músicas da banda U2. Basta substituir, o argumento Michel Teló por U2 e executar novamente.
+
+U2
+
+Sometimes You Can't Make It On Your Own  
+Vertigo
+
+Com isso, terminamos o último desafio de filtrar as músicas de um artista.
+
+Daniel: Para isso, usamos o LINQ, uma biblioteca do .NET usada para separar os dados/coleções que pegamos de um banco ou API em métodos como Select(), Where(), OrderBy(), OrderByDescending(). Assim, podemos fazer todo o trabalho de operações em listas.
+
+Guilherme: Nas próximas aulas, vamos criar uma classe específica para definir nossas músicas preferidas.
+
+### Aula 3: Determinando os campos para deserializar - Execício
+
+Trabalhar com JSON é importante para desenvolvedores porque é um formato de dados amplamente utilizado em comunicações entre sistemas, facilitando a interoperabilidade e o compartilhamento de informações. Além disso, a manipulação e análise de JSON são tarefas comuns no desenvolvimento de aplicativos web e móveis, permitindo a criação de interfaces dinâmicas e a integração com serviços e APIs externas.
+
+Abaixo temos um exemplo de uma resposta JSON de uma determinada API:
+
+```json
+{
+  "temperatura": "25°C",
+  "umidade": "60%",
+  "condicao": "ensolarado"
+}
+```
+
+Para realizar a deserialização o JSON em uma classe chamada Clima, poderíamos usar o seguinte código:
+
+```csharp
+using System.Text.Json;
+
+Clima clima = JsonSerializer.Deserialize<Clima>(json);
+```
+
+Com base nos conhecimentos adquiridos durante o curso, analise as classes abaixo e marque aqueles que podem realizar a deserialização de forma correta apenas dos campos temperatura e condicao.
+
+Respostas:
+
+```csharp
+class Clima
+{
+[JsonProperty("temperatura")]
+public string RegistroDeTemperatura { get; set; }
+[JsonProperty("condicao")]
+public string CondicaoDoTempo { get; set; }
+}
+```
+
+> As propriedades RegistroDeTemperatura e CondicaoDoTempo são atualizadas com os respectivos atributos [JsonPropertyName] para mapear os campos do JSON.
+
+Alternativa correta
+
+```csharp
+class Clima
+{
+           public string Temperatura { get; set; }
+          public string Condicao { get; set; }
+}
+```
+
+> Isso aí! As propriedades da classe em que você está deserializando precisam ter nomes correspondentes aos campos no JSON.
+
+### Aula 3: Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Dada uma lista de números, criar uma consulta LINQ para retornar apenas os elementos únicos da lista.
+
+2. Dada uma lista de livros com título, autor e ano de publicação, criar uma consulta LINQ para retornar uma lista com os títulos dos livros publicados após o ano 2000, ordenados alfabeticamente.
+
+3. Dada uma lista de produtos com nome e preço, criar uma consulta LINQ para calcular o preço médio dos produtos.
+
+4. Dada uma lista de inteiros, criar uma consulta LINQ para retornar apenas os números pares.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma [lista com as possíveis soluções](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-4-aula-3) no Github.
+
+Boa sorte nos estudos!
+
+### Aula 3: Faça como eu fiz: mais uma classe
+
+No geral, o uso do LINQ no C# oferece uma sintaxe elegante e eficaz para consultas e manipulação de dados, tornando o código mais legível, conciso e fácil de manter. Durante as aulas, realizamos diferentes tipos de filtros criando métodos estáticos e agora chegou a sua vez.
+
+Sua vez: que tal filtrar as músicas por ano?
+
+Opinião do instrutor
+
+Para iniciar, vamos criar uma propriedade para receber o campo Ano:
+
+```csharp
+[JsonPropertyName("year")]
+    public string? AnoString { get; set; }
+    public int Ano
+    {
+        get
+        {
+            return int.Parse(AnoString!);
+        }
+    }
+```
+
+Observe que na API o campo year é uma string e criamos uma propriedade chamada AnoString apenas para receber o valor do ano em texto. Em seguida, criamos uma variável chamada Ano, onde convertemos o tipo do AnoString para um inteiro. Com base no modelo atualizado e preparado para receber o ano das músicas, podemos criar o filtro das músicas pelo ano:
+
+```csharp
+public static void FiltrarMusicasPeloAno(List<Musica> musicas, int ano)
+{
+    var musicasDoAno = musicas.Where(musica => musica.Ano == ano)
+        .OrderBy(musicas => musicas.Nome) // ordena as músicas pelo nome
+        .Select(musicas => musicas.Nome) // seleciona apenas o nome das músicas
+        .Distinct() // remove as duplicidades
+        .ToList(); // converte o resultado em uma lista
+    Console.WriteLine($"Músicas de {year}");
+    foreach (var musica in musicasDoAno)
+    {
+        Console.WriteLine($"- {musica}");
+    }
+}
+```
+
+De forma resumida, o código filtra as músicas de um determinado ano, as ordena pelo nome, seleciona apenas o nome das músicas, remove as duplicidades e retorna uma lista com os nomes das músicas correspondentes ao ano especificado.
+
+No Program.cs podemos ver o filtro que criamos em ação:
+
+```csharp
+LinqFilter.FiltrarMusicasPeloAno(songs,  2012);
+```
+
+Nosso resultado será:
+
+```csharp
+Músicas de 2012
+- 22
+- Ai Se Eu Te Pego - Live
+- As Long As You Love Me
+- Battle Scars (feat. Lupe Fiasco)
+- Beauty And A Beat
+- Blown Away
+…e muitas outras…
+```
+
+Lembrando: é comum receber os dados de uma API em um tipo específico e, durante a manipulação desses dados, realizar conversões para outros tipos, conforme necessário, para atender às necessidades da aplicação.
+
+### Aula 3: O que aprendemos?
+
+**Estes foram os pontos principais abordados nesta aula:**  
+Aplicamos o LINQ (Language Integrated Query) no C# e vimos que ele é importante porque oferece uma forma poderosa e expressiva de realizar consultas e manipulações de dados em diversas fontes, como coleções, bancos de dados e serviços web. Com o LINQ, podemos simplificar nosso código, melhorar a legibilidade e aumentar nossa produtividade durante o desenvolvimento;
+
+Entendemos que podemos realizar uma ampla variedade de operações, como selecionar, filtrar, ordenar, projetar, agrupar e juntar dados de diferentes fontes, de forma fácil e eficiente.
+
+**Na próxima aula:**  
+Vamos criar um arquivo json com nossas músicas favoritas e utilizar um front-end que utiliza este arquivo!
+
+## Aula 4: 
+
+### Aula 4:  - Vídeo 1
+### Aula 4:  - Vídeo 2
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
+
