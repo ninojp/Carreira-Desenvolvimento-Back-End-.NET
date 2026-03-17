@@ -18,7 +18,7 @@ internal class DividirAB
         }
         catch (DivideByZeroException ex)
         {
-            Console.WriteLine($"Erro: na matemática não é permitida a divisão por 0.");
+            Console.WriteLine($"Erro: {ex.Message}");
         }
     }
 }

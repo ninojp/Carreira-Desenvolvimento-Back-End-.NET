@@ -29,7 +29,7 @@ internal class ClassInicial
         catch (ArgumentOutOfRangeException ex)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Erro: índice inexistente na lista.");
+            Console.WriteLine($"Erro: {ex.Message}");
             Console.ResetColor();
         }
         //==============================================================

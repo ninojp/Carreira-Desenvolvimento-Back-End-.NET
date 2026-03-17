@@ -1,5 +1,6 @@
 ﻿using ScreenSoundAPI.Aula2;
 using ScreenSoundAPI.Aula3;
+using ScreenSoundAPI.Aula4;
 using ScreenSoundAPI.Filtros;
 using ScreenSoundAPI.Models;
 using System.Text.Json;
@@ -16,7 +17,16 @@ using (HttpClient client = new HttpClient())
         //LinqOrder.ExibirListaArtistasOrdenados(musicas);
         //LinqFilter.FiltrarArtistasPorGenero(musicas, "Rock");
         //LinqFilter.FiltrarMusicasDeUmArtista(musicas, "Linkin Park");
-        LinqFilter.FiltrarMusicasPeloAno(musicas, 2020);
+        //LinqFilter.FiltrarMusicasPeloAno(musicas, 2020);
+        var musicasPreferidasEmilly = new MusicasPreferidas("Emy");
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[500]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[637]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[428]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[13]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[71]);
+        musicasPreferidasEmilly.ExibirMusicasFavoritas();
+        musicasPreferidasEmilly.GerarArquivoJSONMusicasFavoritas();
+        musicasPreferidasEmilly.GerarArquivoTXTMusicasFavoritas();
         Console.ResetColor();
     }
     catch (Exception ex)
@@ -128,4 +138,39 @@ using (HttpClient client = new HttpClient())
 //Console.ForegroundColor = ConsoleColor.DarkYellow;
 //Aula3Desafios.Desafio4();
 //Console.ResetColor();
+//===============================================================
+
+// Aula 4 - Desafio 1. Criar uma classe Pessoa com propriedades como Nome, Idade e Email. Em seguida, criar um método para serializar um objeto Pessoa em formato JSON e salvar em um arquivo.
+Console.WriteLine($"\nAula 4 - Desafio 1. Criar uma classe Pessoa com propriedades como Nome, Idade e Email. serializar o objeto Pessoa em formato JSON e salvar em um arquivo.");
+//Console.ForegroundColor = ConsoleColor.DarkYellow;
+//Aula4Desafios.Desafio1();
+//Console.ResetColor();
+//===============================================================
+
+// Aula 4 - Desafio 2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.
+Console.WriteLine($"\nAula 4 - Desafio 2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.");
+//Console.ForegroundColor = ConsoleColor.DarkYellow;
+//Aula4Desafios.Desafio2();
+//Console.ResetColor();
+//===============================================================
+
+// Aula 4 - Desafio 3. Criar um programa que permite ao usuário inserir informações de várias pessoas, armazena essas informações em uma lista, serializa a lista em formato JSON e salva em um arquivo.
+Console.WriteLine($"\nAula 4 - Desafio 3. Criar um programa que permite ao usuário inserir informações de várias pessoas...");
+//Console.ForegroundColor = ConsoleColor.DarkYellow;
+//Aula4Desafios.Desafio3();
+//Console.ResetColor();
+//===============================================================
+
+// Aula 4 - Desafio 4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.
+Console.WriteLine($"\nAula 4 - Desafio 4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.");
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+Aula4Desafios.Desafio4();
+Console.ResetColor();
+//===============================================================
+
+// Aula 4 - Desafio 5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.
+Console.WriteLine($"\nAula 4 - Desafio 5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.");
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+Aula4Desafios.Desafio5();
+Console.ResetColor();
 //===============================================================

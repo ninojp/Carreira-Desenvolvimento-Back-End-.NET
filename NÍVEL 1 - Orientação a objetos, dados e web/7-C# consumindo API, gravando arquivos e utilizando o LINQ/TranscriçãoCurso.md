@@ -1654,12 +1654,418 @@ Entendemos que podemos realizar uma ampla variedade de operações, como selecio
 **Na próxima aula:**  
 Vamos criar um arquivo json com nossas músicas favoritas e utilizar um front-end que utiliza este arquivo!
 
-## Aula 4: 
+## Aula 4: Criando arquivos com C#
 
-### Aula 4:  - Vídeo 1
-### Aula 4:  - Vídeo 2
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
+### Aula 4: Projeto da aula anterior
 
+Aqui você pode [baixar o zip da Aula 03](https://github.com/alura-cursos/csharp-curso-4/archive/refs/heads/aula_3.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-curso-4/tree/aula_3)
+
+### Aula 4: Músicas preferidas - Vídeo 1
+
+Transcrição  
+Guilherme: Agora, nosso desafio é realizar uma ação contrária ao que fizemos. Nós pegamos a resposta e fizemos a desserialização dos dados que estavam em JSON para um formato que o C# entende.
+
+Agora, faremos o oposto. De alguma forma, queremos manipular um determinado valor, criar uma classe e dessa classe exportar para um arquivo JSON.
+
+Daniel: Da memória da aplicação para um arquivo JSON.
+
+Guilherme: Vamos criar uma nova classe dentro da pasta "Modelos" chamada MusicasPreferidas.
+
+Vamos criar um public string Nome, que pode ser nulo, para informar de quem é a lista. Em seguida teremos public List`<Musica>` ListaDeMusicasFavoritas.
+
+A convenção de nomenclatura determina que os nomes de propriedades iniciem com letra maiúscula.
+
+```csharp
+namespace ScreenSound_04.Modelos;
+
+internal class MusicasPreferidas
+{
+
+  public string? Nome { get; set; }
+  public List<Musica> ListaDeMusicasFavoritas;
+}
+```
+
+Sempre que criarmos uma playlist de músicas preferidas, queremos criar um construtor que atribua sempre um nome para essa playlist. Nesse construtor precisaremos apenas do Nome e informaremos que o Nome será o nome que passarmos como propriedade.
+
+Podemos também começar com a lista vazia.
+
+```csharp
+namespace ScreenSound_04.Modelos;
+internal class MusicasPreferidas
+{
+  public string? Nome { get;set; }
+  public List<Musica> ListaDeMusicasFavoritas { get; }
+  public MusicasPreferidas(string nome){
+     Nome = nome;
+     ListaDeMusicasFavoritas = new List<Musica>();
+    }
+}
+```
+
+Agora, podemos pensar em algum método para nossa classe. Precisamos adicionar as músicas favoritas. Vamos colocar um public void AdicionarMusicasFavoritas, que vai ser do tipo Musica. Precisamos apenas pegar a ListaDeMusicasFavoritas.
+
+```csharp
+public void AdicionarMusicasFavoritas(Musica musica)
+{
+    ListaDeMusicasFavoritas.Add(musica);
+}
+```
+
+Em seguida, precisamos de um método para visualizar as informações.Faremos isso com o ExibirMusicasFavoritas().
+
+```csharp
+public void ExibirMusicasFavoritas()
+{
+
+}
+```
+
+Primeiro, colocaremos um Console.WriteLine() com a mensagem "Essas são as músicas favoritas -> {Nome}", onde está {Nome} vai aparecer o nome da pessoa.
+
+```csharp
+public void ExibirMusicasFavoritas()
+{
+    Console.WriteLine($"Essas são as músicas favoritas -> {Nome}");
+}
+```
+
+Depois, faremos um foreach informando que para cada música de ListaDeMusicasFavoritasqueremos exibir as músicas. Podemos colocar duas informações: o nome da música e o artista.
+
+```csharp
+public void ExibirMusicasFavoritas()
+{
+    Console.WriteLine($"Essas são as músicas favoritas -> {Nome}");
+    foreach (var musica in ListaDeMusicasFavoritas)
+    {
+        Console.WriteLine($"- {musica.Nome} de {musica.Artista}");
+    }
+}
+```
+
+Temos dois métodos, um para adicionar e outro para exibir as músicas. No próximo vídeo, vamos instanciar esse método e criar uma lista de músicas preferidas!
+
+### Aula 4: Instanciando a classe - Vídeo 2
+
+Transcrição  
+Daniel: Agora, que já criamos a classe que representa as músicas preferidas, vamos instanciar essa classe e usar o método para exibir a lista.
+
+Guilherme: Vamos instanciar. No Program.cs, na linha 17, primeiro, vamos criar uma variável chamada musicasPreferidasDoDaniel que será igual a new MusicasPreferidas. O argumento vai ser o nome da playlista, deixaremos "Daniel".
+
+> var musicasPreferidasDoDaniel = new MusicasPreferidas("Daniel");
+
+Agora, vamos para um momento incrível. Vamos criar cinco músicas, ou seja, cinco linhas e vamos alterar apenas o valor do índice. Vou colocar valores que eu selecionei anteriormente.
+
+```csharp
+var musicasPreferidasDoDaniel = new MusicasPreferidas("Daniel");
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[377]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[4]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[6]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1467]);
+```
+
+Daniel: Agora, vem o método para exibir, certo?
+
+Guilherme: Sim. Vamos chamar o método ExibirMusicasFavoritas().
+
+```csharp
+var musicasPreferidasDoDaniel = new MusicasPreferidas("Daniel");
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[377]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[4]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[6]);
+musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1467]);
+
+musicasPreferidasDoDaniel.ExibirMusicasFavoritas();
+```
+
+Podemos salvar e executar a aplicação. Tivemos o seguinte retorno:
+
+Essas são as músicas favoritas -> Daniel
+
+```csharp
+#thatPOWER de will.i.am
+Dangerous de Kardinal Offishall
+... Ready for It? de Taylor Swift
+1 Thing de Amerie
+Shalala lala de Vengaboys
+```
+
+Podemos inserir as músicas favoritas de outra pessoa. Vamos colocar cinco músicas para a Emilly:
+
+```csharp
+        var musicasPreferidasDoDaniel = new MusicasPreferidas("Daniel");
+        sicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1]);
+        musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[377]);
+        musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[4]);
+        musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[6]);
+        musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1467]);
+        musicasPreferidasDoDaniel.ExibirMusicasFavoritas();
+        var musicasPreferidasEmilly = new MusicasPreferidas("Emy");
+
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[500]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[637]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[428]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[13]);
+        musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[71]);
+        musicasPreferidasEmilly.ExibirMusicasFavoritas();
+```
+
+Para pular uma linha e termos um espaço quando listarmos mais de uma pessoa, no final de MusicasPreferidas.cs vamos inserir um Console.WriteLine() vazio. Assim garantimos que da próxima vez que for executado, vai ter uma linha em branco entre as listas.
+
+```csharp
+    public void ExibirMusicasFavoritas()
+    {
+        Console.WriteLine($"Essas são as músicas favoritas -> {Nome}");
+        foreach (var musica in ListaDeMusicasFavoritas)
+        {
+            Console.WriteLine($"- {musica.Nome} de {musica.Artista}");
+        }
+        Console.WriteLine();
+    }
+```
+
+Agora, o desafio é o seguinte: como construir um JSON com base nessas informações? Além disso, como criar um arquivo com C#? Aprenderemos isso no próximo vídeo.
+
+### Aula 4: Criando arquivos com C# - Vídeo 3
+
+Transcrição  
+Daniel: Agora vamos pegar essas músicas favoritas, que foram gravadas nesses objetos, e colocá-las em um arquivo JSON.
+
+Guilherme: Sim. Minha ideia é fazer um método chamado GerarArquivoJson(). Assim poderíamos fazer algo como a linha abaixo e a aplicação vai gerar um arquivo com a músicas:
+
+```csharp
+musicasPreferidasEmilly.GerarArquivoJson();
+```
+
+Para isso, no MusicasPreferidas.cs, vamos criar esse novo método. Não precisamos receber nenhuma informação nele porque tanto a lista das músicas quanto o nome e outras propriedades já fazem parte da instância.
+
+```csharp
+public void GerarArquivoJson()
+{
+}
+```
+
+Primeiro, vamos criar uma string que contenham essas informações. Agora, nós queremos fazer a serialização de dados, queremos transformar em uma string. Usaremos o Json Serializer. Não queremos serializar só as músicas, queremos o nome da pessoa também. Podemos usar um objeto anônimo para isso.
+
+```csharp
+public void GerarArquivoJson()
+{
+    string json = Json Serializer.Serialize(new 
+    {
+            nome = Nome,
+            musicas = ListaDeMusicasFavoritas
+    });
+}
+```
+
+Daniel: Estamos muito acostumados a fazer new com o tipo do lado, para representar aquela estrutura que queremos criar. Nesse caso, é um objeto anônimo, não tem tipo. É algo específico para esse tipo de situação em que queremos criar uma estrutura temporária.
+
+Guilherme: O próximo passo é: queremos que o nome do arquivo gerado tenha o nome da pessoa. Para isso, vamos criar uma string nomeDoArquivo que será uma interpolação de string onde colocaremos $"musica-favoritas-{Nome}.json".
+
+```csharp
+public void GerarArquivoJson()
+{
+    string json = Json Serializer.Serialize(new 
+    {
+            nome = Nome,
+            musicas = ListaDeMusicasFavoritas
+    });
+    string nomeDoArquivo = $"musica-favoritas-{Nome}.json";
+}
+```
+
+Para criar o arquivo usaremos o método File.WriteAllText(), entre parênteses passaremos o nomeDoArquivo e o json que vamos gerar, o conteúdo em texto.
+
+```csharp
+    public void GerarArquivoJson()
+    {
+        string json = JsonSerializer.Serialize(new
+        {
+            nome = Nome,
+            musicas = ListaDeMusicasFavoritas
+        });
+        string nomeDoArquivo = $"musicas-favoritas-{Nome}.json";
+
+        File.WriteAllText(nomeDoArquivo, json);
+```
+
+No final vamos exibir uma mensagem informando que o arquivo JSON foi criado com sucesso.
+
+```csharp
+    public void GerarArquivoJson()
+    {
+        string json = JsonSerializer.Serialize(new
+        {
+            nome = Nome,
+            musicas = ListaDeMusicasFavoritas
+        });
+        string nomeDoArquivo = $"musicas-favoritas-{Nome}.json";
+        File.WriteAllText(nomeDoArquivo, json);
+                Console.WriteLine("O arquivo Json foi criado com sucesso!");
+        }
+```
+
+Podemos salvar e testar.
+
+No Program.cs vamos ficar só com as músicas da Emilly. Podemos selecionar as linhas referentes às músicas do Daniel e pressionar "Ctrl + K + C" para comentar as linhas selecionadas.
+
+```csharp
+var musicasPreferidasEmilly = new MusicasPreferidas("Emy");
+musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[500]);
+musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[637]);
+musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[428]);
+musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[13]);
+musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[71]);
+musicasPreferidasEmilly.ExibirMusicasFavoritas();
+musicasPreferidasEmilly.GerarArquivoJson();
+```
+
+Vamos executar. Tivemos o seguinte retorno no console:
+
+Essa são as músicas favoritas -> Emy
+
+```csharp
+Face Down de The Red Jumpsuit Apparatus
+Harde de Rihanna
+Don't Give Up de Chicane
+2 Phones de Kevin Gates
+All The Small Things de Blink-182
+O arquivo Json foi criado com sucesso!
+```
+
+Ele informou que o arquivo Json foi criado com sucesso. Será que foi mesmo? Vamos descobrir no próximo vídeo!
+
+### Aula 4:  Para saber mais: criando um arquivo txt
+
+Para criar um arquivo de texto com C# de forma simples, você pode usar a classe StreamWriter juntamente com o método WriteLine() para escrever conteúdo no arquivo. Primeiro, você precisa instanciar a classe StreamWriter passando o caminho e o nome do arquivo como parâmetro. Em seguida, você pode usar o método WriteLine() para escrever linhas de texto no arquivo. Por fim, lembre-se de fechar o arquivo usando o método Close() para garantir que todas as alterações sejam salvas.
+
+```csharp
+public void GerarDocumentoTXTComAsMusicasFavoritas()
+{
+    string nomeDoArquivo = $"musicas-favoritas-{Nome}.txt";
+    using (StreamWriter arquivo = new StreamWriter(nomeDoArquivo))
+    {
+        arquivo.WriteLine($"Músicas favoritas do {Nome}\n");
+        foreach (var musica in listaDasMusicasFavoritas)
+        {
+            arquivo.WriteLine($"- {musica.Song}");
+        }
+    }
+    Console.WriteLine("txt gerado com sucesso!");
+}
+```
+
+Agora podemos instânciar as músicas favoritas no Program.cs, como ilustra o código abaixo:
+
+```csharp
+var musicasFavoritasDoGuilherme = new MusicasFavoritas("Guilherme");
+musicasFavoritasDoGuilherme.AdicionarMusicaFavorita(songs[980]);
+musicasFavoritasDoGuilherme.AdicionarMusicaFavorita(songs[513]);
+musicasFavoritasDoGuilherme.AdicionarMusicaFavorita(songs[1024]);
+musicasFavoritasDoGuilherme.AdicionarMusicaFavorita(songs[999]);
+musicasFavoritasDoGuilherme.AdicionarMusicaFavorita(songs[37]);
+musicasFavoritasDoGuilherme.GerarDocumentoTXTComAsMusicasFavoritas();
+```
+
+Ao executar o código, a saída do console será txt gerado com sucesso! seguido do caminho onde o arquivo se encontra. Ao abrir o arquivo txt teremos as seguintes informações:
+
+Músicas favoritas do Guilherme
+
+```csharp
+- Locked out of Heaven
+- Feel This Moment (feat. Christina Aguilera)
+- LoveGame
+- Lost in the Fire (feat. The Weeknd)
+- A Thousand Years
+```
+
+> Lembre-se: Com C#, você é capaz de criar diversos tipos de arquivos, incluindo arquivos de texto, arquivos binários, arquivos XML, arquivos JSON e muitos outros.
+
+### Aula 4: Comparando tipos - Exercício
+
+A criação, leitura e manipulação de arquivos são habilidades essenciais na carreira de um desenvolvedor. Os arquivos desempenham um papel fundamental no armazenamento e compartilhamento de dados em qualquer aplicativo ou sistema. Isso permite que os dados sejam salvos entre as execuções do programa e compartilhados entre diferentes partes do sistema.
+
+Agora, analise as afirmações abaixo e marque apenas as verdadeiras.
+
+Respostas:
+
+Com C#, você pode criar e manipular vários tipos de arquivos.
+
+> Isso aí! Durante o curso, aprendemos como criar um arquivo JSON e na atividade para saber mais, como criar um arquivo TXT. Porém, é possível criar outros tipos de arquivos como binários, xml, csv, entre outros.
+
+### Aula 4: Desafio: hora da prática
+
+A prática é um elemento essencial ao iniciar os estudos em programação, pois é por meio da aplicação prática dos conceitos teóricos que se solidificam os conhecimentos. Ao escrever código, resolver problemas e construir projetos reais, os iniciantes não apenas internalizam a sintaxe das linguagens de programação, mas também desenvolvem a habilidade de pensar logicamente e abordar desafios de maneira eficiente.
+
+Pensando nisso, criamos uma lista de atividades (não obrigatórias) focada em prática para melhorar ainda mais sua experiência de aprendizagem. Bora praticar, então?
+
+1. Criar um programa que permite ao usuário inserir informações de uma pessoa (nome, idade, e e-mail), serializa essas informações em formato JSON e salva em um arquivo.
+
+2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.
+
+3. Criar um programa que permite ao usuário inserir informações de várias pessoas, armazena essas informações em uma lista, serializa a lista em formato JSON e salva em um arquivo.
+
+4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.
+
+5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.
+
+Opinião do instrutor
+
+Para te ajudar a verificar seus códigos, disponibilizamos uma lista com as [possíveis soluções no Github](https://github.com/ArthurOcFernandes/Exerc-cios-C-/tree/curso-4-aula-4).
+
+Boa sorte nos estudos!
+
+### Aula 4: O que aprendemos?
+
+Estes foram os pontos principais abordados nesta aula:
+
+- Criamos uma lista com as nossas 5 músicas preferidas e utilizamos o C# para criar um arquivo JSON contendo o nome da playlist e as músicas;
+
+- Exploramos a forma de vincular o arquivo JSON com o frontend da aplicação, possibilitando a exibição das músicas preferidas de cada pessoa.
+
+**Na próxima aula:**  
+Você terá a chance de colocar todo o conhecimento que adquiriu em prática resolvendo um desafio. Até lá!
+
+## Aula 5: Desafios
+
+### Aula 5: Projeto da aula anterior
+
+Aqui você pode [baixar o zip da Aula 04](https://github.com/alura-cursos/csharp-curso-4/archive/refs/heads/aula_4.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-curso-4/tree/aula_4)
+
+### Aula 5: Apresentação do desafio #1 - Vídeo 1
+
+Transcrição
+Daniel: Chegou a hora de você colocar em prática os ensinamentos que vimos no curso! Qual será seu primeiro desafio?
+
+Desafio #1
+O desafio será novamente a partir da API que estamos buscando, composta por uma coleção de músicas. Nessa coleção, já mapeamos algumas propriedades na classe Musica.cs.
+
+Agora queremos trazer mais uma propriedade, chamada key. O objetivo é mapear essa propriedade, porém, ela está com um valor numérico. Você precisa traduzir esse número para a tonalidade conforme a tabela abaixo:
+
+Valor do Key	Como exibir no console
+0	C
+1	C#
+2	D
+3	D#
+4	E
+5	F
+6	F#
+7	G
+8	G#
+9	A
+10	A#
+11	B
+Não é necessário que você entenda de música. A ideia é você conseguir fazer a tradução e apresentar as músicas com suas respectivas tonalidades da segunda coluna. Vamos lá?
+
+continuar lendo
+
+### Aula 5:  - Vídeo 2
+### Aula 5:  - Vídeo 3
+### Aula 5:  - Vídeo 4
+### Aula 5:  - Vídeo 5
+### Aula 5:  - Vídeo 6
+### Aula 5:  - Vídeo 7
+### Aula 5:  - Vídeo 8
+### Aula 5:  - Vídeo 9
