@@ -53,4 +53,20 @@ internal class LinqFilter
             Console.ResetColor();
         }
     }
+    public static void FiltrarMusicasTonalidade(List<Musica> musicas, string tonalidade)
+    {
+        var musicasTonalidade = musicas.Where(m => m.Tonalidade != null && m.Tonalidade.Equals(tonalidade, StringComparison.OrdinalIgnoreCase))
+                                       .Select(m => m.SongNome)
+                                       .Distinct()
+                                       .ToList();
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine($"\nMúsicas na tonalidade {tonalidade}:");
+        Console.ResetColor();
+        foreach (var musica in musicasTonalidade)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(musica);
+            Console.ResetColor();
+        }
+    }
 }

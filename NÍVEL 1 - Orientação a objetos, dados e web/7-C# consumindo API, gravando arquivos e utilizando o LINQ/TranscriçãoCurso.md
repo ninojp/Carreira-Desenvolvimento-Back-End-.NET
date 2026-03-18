@@ -2036,36 +2036,476 @@ Aqui você pode [baixar o zip da Aula 04](https://github.com/alura-cursos/csharp
 
 ### Aula 5: Apresentação do desafio #1 - Vídeo 1
 
-Transcrição
+Transcrição  
 Daniel: Chegou a hora de você colocar em prática os ensinamentos que vimos no curso! Qual será seu primeiro desafio?
 
-Desafio #1
-O desafio será novamente a partir da API que estamos buscando, composta por uma coleção de músicas. Nessa coleção, já mapeamos algumas propriedades na classe Musica.cs.
+**Desafio #1**  
+O desafio será novamente a [partir da API](https://guilhermeonrails.github.io/api-csharp-songs/songs.json) que estamos buscando, composta por uma coleção de músicas. Nessa coleção, já mapeamos algumas propriedades na classe Musica.cs.
 
 Agora queremos trazer mais uma propriedade, chamada key. O objetivo é mapear essa propriedade, porém, ela está com um valor numérico. Você precisa traduzir esse número para a tonalidade conforme a tabela abaixo:
 
-Valor do Key	Como exibir no console
-0	C
-1	C#
-2	D
-3	D#
-4	E
-5	F
-6	F#
-7	G
-8	G#
-9	A
-10	A#
-11	B
+|Valor do Key|Como exibir no console|
+|---|---|
+|0|C|
+|1|C#|
+|2|D|
+|3|D#|
+|4|E|
+|5|F|
+|6|F#|
+|7|G|
+|8|G#|
+|9|A|
+|10|A#|
+|11|B|
+
 Não é necessário que você entenda de música. A ideia é você conseguir fazer a tradução e apresentar as músicas com suas respectivas tonalidades da segunda coluna. Vamos lá?
 
-continuar lendo
+### Aula 5: Resolvendo o desafio #1 - Vídeo 2
 
-### Aula 5:  - Vídeo 2
-### Aula 5:  - Vídeo 3
-### Aula 5:  - Vídeo 4
-### Aula 5:  - Vídeo 5
-### Aula 5:  - Vídeo 6
-### Aula 5:  - Vídeo 7
-### Aula 5:  - Vídeo 8
-### Aula 5:  - Vídeo 9
+Transcrição  
+Guilherme: O primeiro passo para resolver o desafio #1 é buscar de fato o valor da propriedade key. Algo importante é que todos os outros valores na API estão entre aspas duplas. Já o valor de key está sem as aspas, ou seja, é representado por um número inteiro.
+
+```JSON
+[
+    {
+        "artist": "The Chainsmokers",
+        "song": "#SELFIE - Original Mix",
+        "duration_ms": 183750,
+        "explicit": "False",
+        "year": "2014",
+        "popularity": "0",
+        "danceability": "0.789",
+        "energy": "0.915",
+        "key": 0,
+        "loudness": "-3.263",
+        "mode": "1",
+        "speechiness": "0.248",
+        "acousticness": "0.0135",
+        "instrumentalness": "8.77e-06",
+        "liveness": "0.0818",
+        "valence": "0.66",
+        "tempo": "127.955",
+        "genre": "pop, Dance/Electronic"
+    },
+
+// Código suprimido
+```
+
+Antes de manipular para representar a propriedade key com outro valor, a primeira coisa que faremos será exibir key no método ExibirDetalhesDaMusica() do arquivo Musica.cs.
+
+Para isso, na classe Musica, vamos declarar uma nova propriedade chamada Key, que será pública (public) e inteira (int).
+
+Assim como em todas as outras classes, vamos usar o atributo JsonPropertyName, passando entre parênteses e entre aspas duplas o nome key.
+
+```csharp
+[JsonPropertyName("key")]
+public int Key { get; set; }
+```
+
+Um ponto importante: se não colocarmos o JsonPropertyName() antes da declaração da propriedade, e quisermos que o valor tenha o mesmo conteúdo mapeado para a propriedade Key, precisaríamos escrever o Key da mesma forma que ele está marcado na API.
+
+```csharp
+"key": 0
+```
+
+Note que a inicial "k" está minúscula.
+
+Então, temos duas opções de código: ou mantemos o Key da forma como está, com letra maiúscula e usando o atributo JsonPropertyName recebendo o nome com inicial minúscula; ou deixamos a inicial da propriedade minúscula (key) e removemos o atributo.
+
+Agora, no método ExibirDetalhesDaMusica(), criaremos um novo Console.WriteLine() interpolando a string ($), e vamos digitar entre aspas duplas "Tonalidade: {Key}".
+
+```csharp
+public void ExibirDetalhesDaMusica()
+{
+    Console.WriteLine($"Artista: {Artista}");
+    Console.WriteLine($"Música: {Nome}");
+    Console.WriteLine($"Duração em segundos: {Duracao /1000}");
+    Console.WriteLine($"Gênero musical: {Genero}");
+    Console.WriteLine($"Tonalidade: {Key}");
+}
+```
+
+Feito isso, vamos retornar ao programa principal (arquivo Program.cs) e comentar as músicas preferidas da Emilly. Para isso, podemos usar o atalho "Ctrl + K + C".
+
+```csharp
+//musicas[1].ExibirDetalhesDaMusica();
+//LinqFilter.FiltrarTodosOsGenerosMusicais(musicas);
+//LinqOrder.ExibirListaDeArtistasOrdenados(musicas);
+//LinqFilter.FiltrarArtistasPorGeneroMusical(musicas, "rock");
+//LinqFilter.FiltrarMusicasDeUmArtista(musicas, "U2");
+
+//var musicasPreferidasDoDaniel = new MusicasPreferidas("Daniel");
+//musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1]);
+//musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[377]);
+//musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[4]);
+//musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[6]);
+//musicasPreferidasDoDaniel.AdicionarMusicasFavoritas(musicas[1467]);
+
+//var musicasPreferidasEmilly = new MusicasPreferidas("Emy");
+
+//musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[500]);
+//musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[637]);
+//musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[428]);
+//musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[13]);
+//musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[71]);
+
+//musicasPreferidasEmilly.ExibirMusicasFavoritas();
+
+//musicasPreferidasEmilly.GerarArquivoJson();
+```
+
+Em seguida, criaremos uma variável para exibir a primeira música. Primeiro, teremos a lista; depois, será feita a desserialização; e por último, teremos o método musicas[0].ExibirDetalhesDaMusica(), com o índice 0 para musicas.
+
+```csharp
+try
+{
+    string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+    var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+    musicas[0].ExibirDetalhesDaMusica();
+```
+
+Retornando à API, identificamos que a primeira música da banda "The Chainsmokers" está definida com key igual a 0. Agora vamos executar a aplicação para verificar se temos a tonalidade 0.
+
+Resultado no console:
+
+```csharp
+Artista: The Chainsmokers
+Música: #SELFIE - Original Mix
+Duração em segundos: 183
+Gênero musical: pop, Dance/Electronic
+Tonalidade: 0
+```
+
+Vamos verificar com o segundo elemento, para conferir se os valores estão funcionando corretamente. Para isso, alteramos o índice de musica para 1.
+
+```csharp
+try
+{
+    string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+    var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+    musicas[1].ExibirDetalhesDaMusica();
+```
+
+Nesse índice, temos a tonalidade 6.
+
+Resultado no console:
+
+```csharp
+Artista: will.i.am
+Música: #thatPOWER
+Duração em segundos: 279
+Gênero musical: hip hop, pop
+Tonalidade: 6
+```
+
+Nosso próximo desafio é de fato mapear os valores do método ExibirDetalhesDaMusica(), para que eles exibam a tonalidade representada por uma letra, algo comum na música.
+
+Pensando nisso, criamos um arquivo .txt que contém a lista de tonalidades que iremos utilizar. Quando o índice for 0, por exemplo, o que queremos mostrar de fato na tonalidade é o valor "C"; quando o índice for 1, queremos mostrar "C#"; e assim por diante.
+
+tonalidades.txt
+
+```csharp
+"C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"
+```
+
+Logo após a declaração da classe Musica, vamos criar um campo privado (private) que será uma lista de string (string[]). Chamaremos esse campo de tonalidades, com inicial minúscula, e ele será igual a uma abertura de chaves contendo o conteúdo do arquivo .txt.
+
+```csharp
+private string[] tonalidades = { "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" };
+```
+
+Agora precisamos criar uma propriedade cujo modo de leitura será alterado, isto é, o modo get. Vamos indicar que quando essa propriedade estiver no modo de leitura e ela for solicitada, exibiremos o campo tonalidades com base no índice de key.
+
+Dessa forma, se key for igual a 0, iremos retornar "C"; se o key for 1, retornaremos "C#"; se o key for 2, retornaremos "D"; e assim por diante.
+
+Abaixo da propriedade Key, na linha 22, vamos declarar uma nova propriedade. Ela será uma string, pois são os valores exibidos no campo tonalidades, e o nome da propriedade será Tonalidade, no singular e com inicial maiúscula.
+
+Para esse caso, não precisamos do método set, apenas do get. Além disso, vamos reescrever o get. Abriremos chaves após sua declaração, e entre elas teremos um return.
+
+Nós queremos retornar com base na lista tonalidades com a chave da propriedade Key, então após o return vamos digitar tonalidades seguida de Key entre colchetes.
+
+```csharp
+public string Tonalidade {
+    get
+    {
+        return tonalidades[Key];
+    }
+}
+```
+
+Isso já é suficiente para conseguirmos exibir as tonalidades como "C", "C#", "D", "D#", e assim por diante. Para finalizar, no lugar de Key no Console.WriteLine() que adicionamos, que até então exibia os valores 0, 1, 2…, colocaremos a propriedade Tonalidade.
+
+Resultado do código de Musica.cs:
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace ScreenSound_04.Modelos;
+
+internal class Musica
+{
+    private string[] tonalidades = { "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" };
+
+    [JsonPropertyName("song")]
+    public string? Nome { get; set; }
+    [JsonPropertyName("artist")]
+    public string? Artista { get; set; }
+
+    [JsonPropertyName("duration_ms")]
+    public int Duracao { get; set; }
+    [JsonPropertyName("genre")]
+    public string? Genero { get; set; }
+
+    [JsonPropertyName("key")]
+    public int Key { get; set; }
+
+    public string Tonalidade {
+        get
+        {
+            return tonalidades[Key];
+        }
+    }
+    public void ExibirDetalhesDaMusica()
+    {
+        Console.WriteLine($"Artista: {Artista}");
+        Console.WriteLine($"Música: {Nome}");
+        Console.WriteLine($"Duração em segundos: {Duracao /1000}");
+        Console.WriteLine($"Gênero musical: {Genero}");
+        Console.WriteLine($"Tonalidade: {Tonalidade}");
+    }
+}
+```
+
+Agora vamos testar na aplicação a exibição da música com índice 0. Indicamos isso no arquivo Program.cs:
+
+```csharp
+try
+{
+    string resposta = await client.GetStringAsync("https://guilhermeonrails.github.io/api-csharp-songs/songs.json");
+    var musicas = JsonSerializer.Deserialize<List<Musica>>(resposta)!;
+    musicas[0].ExibirDetalhesDaMusica();
+```
+
+Resultado no console:
+
+```csharp
+Artista: The Chainsmokers
+Música: #SELFIE - Original Mix
+Duração em segundos: 183
+Gênero musical: pop, Dance/Electronic
+Tonalidade: C
+```
+
+Podemos testar também com o índice 1:
+
+Resultado no console:
+
+```csharp
+Artista: will.i.am
+Música: #thatPOWER
+Duração em segundos: 279
+Gênero musical: hip hop, pop
+Tonalidade: F#
+```
+
+Assim, concluímos nosso desafio #1!
+
+### Aula 5: Apresentação do desafio #2 - Vídeo 3
+
+Transcrição  
+Guilherme: Se você pensou que os desafios acabaram, ainda não! Temos um desafio final para esse curso.
+
+**Desafio #2**  
+Já conseguimos visualizar as tonalidades das músicas com a letra C, que representa o dó, F, que representa o fá, e assim por diante. Agora quero passar um desafio extremo para você!
+
+O desafio é o seguinte: você deverá criar um método que exiba o nome de todas as músicas que estejam na tonalidade de C#, ou seja, dó sustenido.
+
+Lembrando que, na nossa lista do GitHub, a tonalidade que representa o C# corresponde ao índice 1. Então, a ideia é que você busque todas as músicas com índice 1 e exiba apenas elas.
+
+Na sequência, teremos um vídeo com uma possível resolução para o desafio.
+
+Boa sorte!
+
+### Aula 5: Resolvendo o desafio #2 - Vídeo 4
+
+Transcrição  
+Daniel: Vamos resolver o desafio #2? Precisamos filtrar as músicas em C# (dó sustenido). Começaremos criando mais um método estático no arquivo LinqFilter.cs, agora para fazer a filtragem e exibir as músicas.
+
+Primeiro, vamos comentar a linha 11 do arquivo Program.cs, que não será usada:
+
+```csharp
+// musicas[1].ExibirDetalhesDaMusica();
+```
+
+No lugar dessa linha, vamos começar a chamar o método FiltrarMusicasEmCSharp() que criaremos em breve. Para isso, digitamos LinqFilter.FiltrarMusicasEmCSharp().
+
+```csharp
+LinqFilter.FiltrarMusicasEmCSharp();
+```
+
+Como ainda não exite esse método em static, podemos pedir para o Visual Studio gerá-lo, usando o atalho "Ctrl + ." e selecionando a primeira opção. Feito isso, ao clicar sobre o método com a tecla "Ctrl" pressionada, somos direcionados para a declaração do método estático FiltrarMusicasEmCSharp() no arquivo LinqFilter.cs.
+
+```csharp
+internal static void FiltrarMusicasEmCSharp()
+{
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Precisamos passar a lista do tipo Musica como parâmetro do método FiltrarMusicasEmCSharp(). Podemos copiar esse trecho do componente List<> da linha 26, no método FiltrarMusicasDeUmArtista().
+
+```csharp
+internal static void FiltrarMusicasEmCSharp(List<Musica> musicas)
+{
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Agora vamos completar a declaração. Começaremos removendo o bloco throw new. Em seguida, podemos criar uma variável chamada musicasEmCSharp, e a partir da lista musicas, pegar aquelas onde (Where()) a tonalidade (musica.Tonalidade) seja igual a "C#" (para isso, usamos o método Equals()).
+
+Vamos quebrar a linha a partir de .Where() para facilitar a visualização.
+
+```csharp
+internal static void FiltrarMusicasEmCSharp(List<Musica> musicas)
+{
+    {
+        var musicasEmCSharp = musicas
+            .Where(musica => musica.Tonalidade.Equals("C#"))
+    }
+}
+```
+
+Dessa forma, obtemos as músicas que possuem tonalidade em C#. Porém, essa lista ainda é de músicas. Queremos só o nome das músicas, então iremos transformar a lista de músicas (musica) em uma lista de string (musica.Nome). Para transformar, usamos o método Select().
+
+```csharp
+internal static void FiltrarMusicasEmCSharp(List<Musica> musicas)
+{
+    {
+        var musicasEmCSharp = musicas
+            .Where(musica => musica.Tonalidade.Equals("C#"))
+            .Select(musica => musica.Nome)
+    }
+}
+```
+
+Assim, selecionamos de cada elemento musica apenas o Nome.
+
+Para finalizar, vamos colocar todos os elementos em uma lista, usando o método ToList().
+
+```csharp
+internal static void FiltrarMusicasEmCSharp(List<Musica> musicas)
+{
+    {
+        var musicasEmCSharp = musicas
+            .Where(musica => musica.Tonalidade.Equals("C#"))
+            .Select(musica => musica.Nome)
+            .ToList();
+    }
+}
+```
+
+Agora que temos a nossa lista de nomes de músicas, vamos usar o foreach() para indicar que, para cada música, será exibido o nome da música, isto é, {musica}. Usaremos interpolação, então adicionamos $ antes do texto.
+
+Além disso, antes do foreach(), podemos adicionar um método Console.WriteLine() com o texto "Músicas em C#:".
+
+```csharp
+internal static void FiltrarMusicasEmCSharp(List<Musica> musicas)
+{
+    var musicasEmCSharp = musicas
+        .Where(musica => musica.Tonalidade.Equals("C#"))
+        .Select(musica => musica.Nome)
+        .ToList();
+    Console.WriteLine("Músicas em C#:");
+    foreach (var musica in musicasEmCSharp)
+    {
+        Console.WriteLine($"- {musica}");
+    }
+}
+```
+
+Temos nossa solução! Geramos a lista de nomes de músicas, uma lista de strings. Ao passar o cursor sobre a variável musicasEmCSharp, temos a indicação List<string?>.
+
+Adicionamos também um cabeçalho, e por fim a exibição da lista.
+
+Para finalizar, no arquivo Program.cs, precisamos passar como argumento do método FiltrarMusicasEmCSharp() a lista musicas.
+
+```csharp
+LinqFilter.FiltrarMusicasEmCSharp(musicas);
+```
+
+Assim, serão exibidas todas as músicas da API que estiverem na tonalidade C#. Será que existe alguma música em dó sustenido? Vamos testar!
+
+Com "Ctrl + F5", abrimos o console:
+
+```csharp
+Músicas em C#:
+- 'Till I Collapse
+- 1, 2, 3 (feat. Jason Derulo & De La Ghetto)
+- 2002
+- 21 Seconds
+- 24K Magic
+- 4 My People (feat. Eve)
+- 7 rings
+- About You Now
+- Adan y Eva
+- Against All Odds (Take A Look at Me Now) (feat. Westlife)
+- All Day And Night
+- All I Have (feat. LL Cool J)
+- All Of The Lights
+- Alors on danse - Radio Edit
+- American Idiot
+- Animals - Radio Edit
+// Retorno suprimido. Para visualizá-lo na íntegra, execute o código na sua máquina.
+```
+
+Conseguimos gerar a lista de músicas em C#, a partir do LINQ, tema que também abordamos ao longo do curso!
+
+### Aula 5: Projeto final do curso
+
+Aqui você pode [baixar o zip da Aula 05](https://github.com/alura-cursos/csharp-curso-4/archive/refs/heads/aula_5.zip) ou acessar os [arquivos no Github!](https://github.com/alura-cursos/csharp-curso-4/tree/aula_5)
+
+### Aula 5: Referências
+
+1. [Chamar uma API Web de um cliente .NET](https://learn.microsoft.com/pt-br/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre a utilização de uma Web API e exemplos de implementação.
+
+2. [Usando Exceções](https://learn.microsoft.com/pt-br/dotnet/csharp/fundamentals/exceptions/using-exceptions) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre exceções em C# e exemplos de implementação.
+
+3. [LINQ (Consulta Integrada à Linguagem)](https://learn.microsoft.com/pt-br/dotnet/csharp/linq/) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre LINQ e exemplos de implementação.
+
+4. [Introdução a consultas LINQ](https://learn.microsoft.com/pt-br/dotnet/csharp/programming-guide/concepts/linq/introduction-to-linq-queries) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre LINQ e um tutorial de implementação.
+
+5. [Como gravar texto em um arquivo](https://learn.microsoft.com/pt-br/dotnet/standard/io/how-to-write-text-to-a-file) (gratuito, português, documentação)
+
+> Documentação oficial da Microsoft que apresenta conceitos sobre criação de arquivos em C# e exemplos de implementação.
+
+### Aula 5: Conclusão - Vídeo 7
+
+Transcrição
+Guilherme: Se você chegou até aqui, meus parabéns! Você está finalizando mais um curso na Alura! Daniel, nesse curso aprendemos várias coisas. O que somos capazes de fazer com esses conhecimentos?
+
+Daniel: Agora você consegue pegar uma fonte de dados, independentemente de onde ela vier, e manipular as coleções por meio do LINQ, uma biblioteca muito importante que você usará bastante na sua carreira de dev.
+
+No nosso caso, usamos uma API e HttpClient, mas essa fonte pode vir de banco de dados, de leitura de arquivos, ou da própria memória da aplicação.
+
+Guilherme: Esses conceitos serão muito utilizados no dia a dia, não é?
+
+Daniel: Sim, é muito comum!
+
+Guilherme: Espero que você tenha gostado desse curso, se divertido, e aprendido bastante, consolidando ainda mais seus conhecimentos em C#.
+
+Lembre-se de dar a sua nota ao final do curso e falar o que você mais gostou.
+
+Nos encontramos em uma próxima oportunidade!

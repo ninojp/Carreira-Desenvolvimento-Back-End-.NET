@@ -25,9 +25,18 @@ using (HttpClient client = new HttpClient())
         musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[13]);
         musicasPreferidasEmilly.AdicionarMusicasFavoritas(musicas[71]);
         musicasPreferidasEmilly.ExibirMusicasFavoritas();
-        musicasPreferidasEmilly.GerarArquivoJSONMusicasFavoritas();
-        musicasPreferidasEmilly.GerarArquivoTXTMusicasFavoritas();
         Console.ResetColor();
+        //musicasPreferidasEmilly.GerarArquivoJSONMusicasFavoritas();
+        //musicasPreferidasEmilly.GerarArquivoTXTMusicasFavoritas();
+        //Console.WriteLine(musicas);
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine($"\nAula 4 - Exibindo detalhes da musica (Desafio 1, Tonalidade).");
+        Console.ResetColor();
+        musicas[1].ExibirDetalhesDaMusica();
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine($"\nAula 4 - Filtrar músicas por tonalidade (Desafio 2, Filtro Tonalidade).");
+        Console.ResetColor();
+        LinqFilter.FiltrarMusicasTonalidade(musicas, "f#");
     }
     catch (Exception ex)
     {
@@ -141,36 +150,36 @@ using (HttpClient client = new HttpClient())
 //===============================================================
 
 // Aula 4 - Desafio 1. Criar uma classe Pessoa com propriedades como Nome, Idade e Email. Em seguida, criar um método para serializar um objeto Pessoa em formato JSON e salvar em um arquivo.
-Console.WriteLine($"\nAula 4 - Desafio 1. Criar uma classe Pessoa com propriedades como Nome, Idade e Email. serializar o objeto Pessoa em formato JSON e salvar em um arquivo.");
+//Console.WriteLine($"\nAula 4 - Desafio 1. Criar uma classe Pessoa com propriedades como Nome, Idade e Email. serializar o objeto Pessoa em formato JSON e salvar em um arquivo.");
 //Console.ForegroundColor = ConsoleColor.DarkYellow;
 //Aula4Desafios.Desafio1();
 //Console.ResetColor();
 //===============================================================
 
 // Aula 4 - Desafio 2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.
-Console.WriteLine($"\nAula 4 - Desafio 2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.");
+//Console.WriteLine($"\nAula 4 - Desafio 2. Criar um programa que lê um arquivo JSON contendo informações de uma pessoa, desserializa essas informações e exibe na tela.");
 //Console.ForegroundColor = ConsoleColor.DarkYellow;
 //Aula4Desafios.Desafio2();
 //Console.ResetColor();
 //===============================================================
 
 // Aula 4 - Desafio 3. Criar um programa que permite ao usuário inserir informações de várias pessoas, armazena essas informações em uma lista, serializa a lista em formato JSON e salva em um arquivo.
-Console.WriteLine($"\nAula 4 - Desafio 3. Criar um programa que permite ao usuário inserir informações de várias pessoas...");
+//Console.WriteLine($"\nAula 4 - Desafio 3. Criar um programa que permite ao usuário inserir informações de várias pessoas...");
 //Console.ForegroundColor = ConsoleColor.DarkYellow;
 //Aula4Desafios.Desafio3();
 //Console.ResetColor();
 //===============================================================
 
 // Aula 4 - Desafio 4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.
-Console.WriteLine($"\nAula 4 - Desafio 4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.");
-Console.ForegroundColor = ConsoleColor.DarkYellow;
-Aula4Desafios.Desafio4();
-Console.ResetColor();
+//Console.WriteLine($"\nAula 4 - Desafio 4. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, desserializa essas informações em uma lista e exibe na tela.");
+//Console.ForegroundColor = ConsoleColor.DarkYellow;
+//Aula4Desafios.Desafio4();
+//Console.ResetColor();
 //===============================================================
 
 // Aula 4 - Desafio 5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.
-Console.WriteLine($"\nAula 4 - Desafio 5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.");
-Console.ForegroundColor = ConsoleColor.DarkYellow;
-Aula4Desafios.Desafio5();
-Console.ResetColor();
+//Console.WriteLine($"\nAula 4 - Desafio 5. Criar um programa que lê um arquivo JSON contendo informações de várias pessoas, permite ao usuário inserir uma idade e exibe as pessoas com aquela idade.");
+//Console.ForegroundColor = ConsoleColor.DarkYellow;
+//Aula4Desafios.Desafio5();
+//Console.ResetColor();
 //===============================================================
