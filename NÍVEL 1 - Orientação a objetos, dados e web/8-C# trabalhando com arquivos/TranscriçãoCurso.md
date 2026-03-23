@@ -1752,5 +1752,830 @@ Perceba que apesar do retorno de Read() ser um char do arquivo, seu tipo de reto
 
 ## Aula 3: Fazendo Parse e StreamWriter
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 1
+### Aula 3: Projeto da aula anterior
+
+Você pode baixar os códigos que desenvolvemos até agora em [zip neste link](https://github.com/alura-cursos/CsharpArquivos/archive/refs/heads/aula-2.zip) ou acessar o repositório da [aula no GitHub!](https://github.com/alura-cursos/CsharpArquivos/tree/aula-2)
+
+### Aula 3: Convertendo o texto para conta - Vídeo 1
+
+Transcrição  
+Agora que já exploramos algumas ferramentas para facilitar nosso trabalho ao lidar com arquivos, começaremos a entender como usar as informações desse arquivo para criar uma conta-corrente no ByteBank. Temos um conjunto de strings, mas como podemos utilizá-las? Vamos ler linha a linha, talvez?
+
+No arquivo Program.cs, após o método Main, vamos inserir o método ConverterStringParaContaCorrente, que receberá uma string linha :
+
+```csharp
+// ...
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+
+    var resultado = new ContaCorrente(agencia, numero);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Por enquanto, o compilador está alegando alguns erros nesse método, sublinhando-os em vermelho. Na sequência, vamos solucionar esses problemas e desenvolver esse método, de modo a criar contas-correntes com os números da agência e da conta, o saldo e o nome do titular, utilizando informações do nosso arquivo. Assim, não precisaremos declarar uma variável específica, como fizemos em cursos anteriores.
+
+**Fragmentando o texto**  
+Repare que deixamos como comentário um exemplo da estrutura de uma linha do documento contas.txt:
+
+375 4644 2483.13 Jonatan
+
+O primeiro elemento refere-se à agência (375); o segundo, ao número da conta (4644); o terceiro, ao saldo do cliente (R$2.483,13); e, por fim, temos o nome do titular (Jonatan). Trata-se de uma única string com informações de quatro campos diferentes, separados por um espaço.
+
+Vamos utilizar esse espaço para fragmentar a string e separar esses quatro campos, invocando o método Split. Ele receberá como parâmetro o caractere de espaço, para delimitar essas quatro subcadeias de caracteres.
+
+No método ConverterStringParaContaCorrente, criaremos a variável campos para armazenar o retorno dessa chamada:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var resultado = new ContaCorrente(agencia, numero);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Em seguida, guardaremos cada um desses fragmentos em uma variável distinta, conforme seus índices. Na primeira posição (índice 0), temos o número da agência, por exemplo:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2];
+    var nomeTitular = campos [3];
+
+    var resultado = new ContaCorrente(agencia, numero);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+**Convertendo tipos**  
+Assim, separamos cada um dos campos, mas ainda não conseguimos usá-los como argumentos na instanciação de uma nova ContaCorrente — o compilador continua alegando erros na linha em que declaramos a variável resultado.
+
+Esse problema ocorre porque originalmente tínhamos uma string e, através do método Split, a fragmentamos em quatro strings menores. Ou seja, não estamos interpretando os números da agência e da conta como números, mas como strings! Então, precisamos convertê-los para um int ou double.
+
+Utilizaremos o método estático Parse, que transformará a string em um número inteiro. Vale ressaltar que futuramente podemos usá-lo para converter uma string em um tipo double, por exemplo.
+
+No método ConverterStringParaContaCorrente, vamos criar as variáveis agenciaComInt e numeroComInt para armazenar os números da agência e da conta, respectivamente, convertidos em inteiros:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2];
+    var nomeTitular = campos [3];
+
+    var agenciaComInt = int.Parse(agencia);
+    var numeroComInt = int.Parse(numero);
+
+    var resultado = new ContaCorrente(agencia, numero);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Também precisamos converter o nosso saldo. No caso, usaremos o Parse para convertê-lo para um tipo double:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2];
+    var nomeTitular = campos [3];
+
+    var agenciaComInt = int.Parse(agencia);
+    var numeroComInt = int.Parse(numero);
+    var saldoComDouble = double.Parse(saldo);
+
+    var resultado = new ContaCorrente(agencia, numero);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+O compilador continuará acusando os erros na linha em que declaramos resultado, porque os nomes das variáveis não correspondem. Guardamos os valores nas variáveis agenciaComInt e numeroComInt, contudo, na instanciação da nova ContaCorrente, informamos agencia e numero. Vamos corrigir:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2];
+    var nomeTitular = campos [3];
+
+    var agenciaComInt = int.Parse(agencia);
+    var numeroComInt = int.Parse(numero);
+    var saldoComDouble = double.Parse(saldo);
+
+    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Desse modo, os erros dessa linha serão resolvidos.
+
+A seguir, vamos instanciar um novo Cliente e atribuir seu nome como nomeTitular. Vale lembrar que não precisamos converter a variável nomeTitular, visto que é uma string e continuaremos trabalhando com esse tipo:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(' ');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2];
+    var nomeTitular = campos [3];
+
+    var agenciaComInt = int.Parse(agencia);
+    var numeroComInt = int.Parse(numero);
+    var saldoComDouble = double.Parse(saldo);
+
+    var titular = new Cliente();
+    titular.Nome = nomeTitular;
+
+    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Assim, conseguimos desenvolver o método ConverterStringParaContaCorrente para criar uma conta-corrente e um cliente, bem como fazer um depósito.
+
+Aplicando o método ConverterStringParaContaCorrente
+Agora, vamos aplicar nosso método, em Main. Dentro do laço while, após declarar a variável linha, chamaremos ConverterStringParaContaCorrente. Passaremos linha como parâmetro e armazenaremos o retorno na variável contaCorrente:
+
+```csharp
+static void Main(string[] args)
+{
+    var enderecoDoArquivo = "contas.txt";
+
+    using(var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    {
+        var leitor = new StreamReader(fluxoDeArquivo);
+
+        while (!leitor.EndOfStream)
+        {
+            var linha  = leitor.ReadLine();
+            var contaCorrente = ConverterStringParaContaCorrente(linha);
+            Console.WriteLine(linha);
+        }
+    }
+    Console.ReadLine();
+}
+```
+
+Em seguida, mostraremos uma mensagem na tela, informando o número da conta, o número da agência e o saldo do cliente. Vamos criar uma variável chamada msg e exibi-la no Console.WriteLine, em lugar de linha:
+
+```csharp
+static void Main(string[] args)
+{
+    var enderecoDoArquivo = "contas.txt";
+
+    using(var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    {
+        var leitor = new StreamReader(fluxoDeArquivo);
+        while (!leitor.EndOfStream)
+        {
+            var linha  = leitor.ReadLine();
+            var contaCorrente = ConverterStringParaContaCorrente(linha);
+            var msg = $"Conta número {contaCorrente.Numero}, ag {contaCorrente.Agencia}, Saldo {contaCorrente.Saldo}";
+            Console.WriteLine(msg);
+        }
+    }
+    Console.ReadLine();
+}
+```
+
+Ao compilar e executar nosso código, o resultado no console será uma lista em que cada linha contém os dados de um cliente. Por exemplo, na primeira linha, temos:
+
+Conta número 4644, ag 375, Saldo 248313
+
+Trata-se do cliente Jonatan, com o qual trabalhamos há pouco. O número da conta-corrente está correto (4644), o número da agência também (375), contudo saldo não confere. Anteriormente, anotamos que o saldo de Jonatan é R$2483,13, porém no console temos 248313 — está faltando um ponto para separar os centavos.
+
+Para solucionar esse problema, utilizaremos o método Replace para substituir o ponto por uma vírgula. No método ConverteStringParaContaCorrente, na linha em que declaramos a variável saldo, vamos acrescentar o método Replace:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+    {
+        // 375 4644 2483.13 Jonatan
+        var campos = linha.Split(' ');
+
+        var agencia = campos[0];
+        var numero = campos[1];
+        var saldo = campos[2].Replace('.', ',');
+        var nomeTitular = campos[3];
+
+        var agenciaComInt = int.Parse(agencia);
+        var numeroComInt = int.Parse(numero);
+        var saldoComDouble = double.Parse(saldo);
+
+        var titular = new Cliente();
+        titular.Nome = nomeTitular;
+
+        var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+        resultado.Depositar(saldoComDouble);
+        resultado.Titular = titular;
+
+        return resultado;
+    }
+```
+
+Esse método selecionará a string e fará a troca do caractere de ponto pelo caractere de vírgula. Agora, ao executar nosso programa, o resultado mostrará o saldo com a vírgula no local correto, por exemplo:
+
+Conta número 4644, ag 375, Saldo 2483,13
+
+Assim, o número da conta, o número da agência e o saldo estão de acordo com o documento contas.txt, alcançamos nosso objetivo!
+
+Se antes precisávamos criar conta a conta manualmente, agora conseguimos usar os dados do arquivo dentro da nossa aplicação ByteBank para criar diversas contas rapidamente, de uma única vez.
+
+### Aula 3: Lendo arquivo csv - Vídeo 2
+
+Transcrição  
+Já aprendemos como utilizar os dados de um arquivo para criar uma conta-corrente na nossa aplicação ByteBank, agora vamos estudar como deixar essas informações mais claras.
+
+**Exibindo o titular**  
+Atualmente, mostramos no console uma mensagem que indica a conta, a agência e o saldo, porém não exibimos o cliente a que esses dados estão associados. Então, vamos modificar a variável msg para incluir essa informação:
+
+```csharp
+static void Main(string[] args)
+{
+    var enderecoDoArquivo = "contas.txt";
+
+    using(var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    {
+        var leitor = new StreamReader(fluxoDeArquivo);
+
+        while (!leitor.EndOfStream)
+        {
+            var linha  = leitor.ReadLine();
+            var contaCorrente = ConverterStringParaContaCorrente(linha);
+
+            var msg = $"{contaCorrente.Titular.Nome} : Conta número {contaCorrente.Numero}, ag {contaCorrente.Agencia}, Saldo {contaCorrente.Saldo}";
+
+            Console.WriteLine(msg);
+        }
+    }
+    Console.ReadLine();
+}
+```
+
+Agora, ao executar a aplicação, os dados ficarão mais claros, pois cada conta estará associada a um titular. Por exemplo, na última linha:
+
+Josiane : Conta número 1223, ag 223, Saldo 1833,99
+
+**Incluindo o nome completo**  
+Vamos abrir o arquivo contas.txt no Bloco de Notas e alterar a primeira linha, adicionando um sobrenome ao cliente Jonatan:
+
+375 4644 2483.13 Jonatan Silva
+
+Em seguida, vamos salvar a modificação e executar novamente a aplicação ByteBank. Na primeira linha do console, notaremos que Jonatan continuará aparecendo sem o sobrenome. Por que essa informação foi suprimida?
+
+No método ConverterStringParaContaCorrente, usamos o método Split para fragmentar a string e delimitar os quatro campos, usando o caractere de espaço como critério de separação. Em seguida, atribuímos o quarto campo à variável nomeTitular. Como o sobrenome "Silva" está separado do nome "Jonatan" por um espaço também, o programa interpreta que "Silva" é outro campo. Ou seja, não faz parte do quarto campo.
+
+Talvez usar um caractere de espaço como separador não seja uma boa escolha, pois podemos perder algumas informações, por exemplo, relativas ao nome do titular. Uma alternativa seria criar outra variável chamada sobrenome e atribuir o valor campos[4] a ela. Mas e se quisermos usar o nome completo e o usuário tiver mais de um sobrenome? Nem todos os clientes terão a mesma quantidade de sobrenomes.
+
+Em vez do espaço, usaremos vírgulas para separar os valores. Vamos abrir o arquivo contas.txt no Bloco de Notas e desfazer a última modificação, retirando o sobrenome "Silva":
+
+375 4644 2483.13 Jonatan
+
+No menu superior do Bloco de Notas, vamos selecionar "Editar > Substituir" (ou usar o atalho "Ctrl + H") para substituir os caracteres de espaço por vírgulas em todo o arquivo. Basta digitar um espaço no primeiro campo, uma vírgula no segundo campo e pressionar o botão "Substituir tudo".
+
+Agora, podemos inserir o sobrenome de Jonatan novamente, na primeira linha de contas.txt:
+
+375 4644 2483.13 Jonatan Silva
+
+Vamos salvar a alteração e voltar ao Visual Studio. Agora, no método Split, em vez do caractere de espaço, usaremos uma vírgula como separador:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+    // 375 4644 2483.13 Jonatan
+    var campos = linha.Split(',');
+
+    var agencia = campos[0];
+    var numero = campos[1];
+    var saldo = campos[2].Replace('.', ',');
+    var nomeTitular = campos[3];
+
+    var agenciaComInt = int.Parse(agencia);
+    var numeroComInt = int.Parse(numero);
+    var saldoComDouble = double.Parse(saldo);
+
+    var titular = new Cliente();
+    titular.Nome = nomeTitular;
+
+    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+    resultado.Depositar(saldoComDouble);
+    resultado.Titular = titular;
+
+    return resultado;
+}
+```
+
+Vamos compilar e executar nossa aplicação. Na primeira linha do console, o resultado terá o nome completo do cliente:
+
+Jonatan Silva : Conta número 4644, ag 375, Saldo 2486,13
+
+A estratégia que utilizamos é um formato de arquivo bastante comum chamado CSV (comma-separated values). Em português, arquivo de valores separados por vírgulas. Até então, estávamos utilizando o espaço como separador, porém é comum encontrar arquivos cujos valores são separados por vírgulas. Trata-se de uma ótima solução para problemas como o que tivemos, em que perderíamos informações relacionadas ao nome do titular.
+
+### Aula 3: Criando arquivo csv - Vídeo 3
+
+Transcrição  
+Anteriormente, estudamos como informações de um arquivo TXT ou CSV podem ser trazidas para dentro do nosso código, por exemplo, para criar contas-correntes na aplicação do Bytebank. Agora, em vez de trabalhar com arquivos prontos, vamos desenvolver um código responsável pela criação de um arquivo, que receberá dados de uma conta, por exemplo.
+
+Para essa aula, organizamos nosso projeto. Guardamos o código referente ao StreamReader em um arquivo chamado 2_UsandoStreamReader.cs. Em seguida, criamos outro arquivo, chamado 3_CriandoArquivo, no qual trabalharemos a seguir. A base dele é a seguinte:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+
+    }
+}
+```
+
+De início, temos as diretivas para o ByteBank_IO e o System.Text. Continuaremos usando a classe Program com o partial, para que o compilador compreenda que dividimos essa classe em vários arquivos. Também criamos o método CriarArquivo.
+
+**Criando um arquivo**  
+Nosso primeiro passo será estipular o nome do novo arquivo CSV. Vamos declarar uma variável chamada caminhoNovoArquivo, que receberá o local onde guardaremos o novo documento. Assim como contas.txt que usamos em aulas passadas, escolheremos a mesma pasta do executável, para facilitar nosso acesso durante o curso:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+    }
+}
+```
+
+Note que colocamos a extensão .csv. Para o C#, esse detalhe não é relevante no momento, porém ele é importante para o nosso sistema operacional entender com que tipo de arquivo estamos lidando. Na sequência, criaremos o fluxo de arquivo, que permitirá colocar os bytes desse novo arquivo e os utilizar dentro de um fluxo — um processo semelhante ao que fazíamos na leitura.
+
+Utilizaremos o using para fazer o tratamento de possíveis exceções. Nele, declararemos o fluxoDeArquivo, em que vamos instanciar um novo FileStream. Este receberá dois argumentos: o caminho do arquivo e o FileMode. Anteriormente, usamos o FileMode.Open para abrir o documento; agora, aplicaremos o FileMode.Create para criá-lo:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        {
+
+        }
+
+    }
+}
+```
+
+Em seguida, trabalharemos com o buffer e os bytes. A princípio, criaremos uma variável chamada contaComoString, que receberá a string que pretendemos escrever no arquivo contasExportadas.csv:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        {
+            var contaComoString = "456, 7895, 4785.40, Gustavo Santos";
+        }
+
+    }
+}
+```
+
+Anteriormente, selecionávamos os bytes e os transformávamos em caracteres conforme o encoding. Nesse caso, faremos o oposto. Então, criaremos uma variável encoding para guardar o encoding UTF8:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        {
+            var contaComoString = "456, 7895, 4785.40, Gustavo Santos";
+
+            var encoding = Encoding.UTF8;
+
+        }
+
+    }
+}
+```
+
+Se antes usamos o GetString para obter uma string a partir dos bytes, agora utilizaremos o GetBytes para obter os bytes da string. Vamos criar uma variável chamada bytes para armazenar o resultado dessa transformação:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        {
+            var contaComoString = "456, 7895, 4785.40, Gustavo Santos";
+
+            var encoding = Encoding.UTF8;
+
+            var bytes = encoding.GetBytes(contaComoString);
+
+        }
+
+    }
+}
+```
+
+Na sequência, usaremos o conceito de fluxo de arquivo. Assim como tínhamos o método Read para ler, também temos o Write para escrever. Ele receberá os mesmos argumentos, isto é, o buffer, o índice onde iniciar a escrita e quantas posições deve ocupar:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void CriarArquivo()
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        {
+            var contaComoString = "456, 7895, 4785.40, Gustavo Santos";
+
+            var encoding = Encoding.UTF8;
+
+            var bytes = encoding.GetBytes(contaComoString);
+
+            fluxoDeArquivo.Write(bytes, 0, bytes.Length);
+
+        }
+
+    }
+}
+```
+
+Como não sabemos a quantidade de bytes e queremos escrever a informação completa, utilizamos o bytes.Length para usar o tamanho exato. Por fim, vamos chamar o método EscreverArquivo no arquivo Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        CriarArquivo();
+
+        Console.ReadLine();
+    }
+}
+```
+
+Após salvar as alterações, podemos executar a aplicação. No console, não teremos nenhuma mensagem sendo exibida, pois não utilizamos nenhum Console.WriteLine.
+
+O resultado esperado é um novo arquivo na pasta do executável. Então, vamos abrir o Gerenciador de Soluções, usando o atalho "Ctrl + Alt + L" ou acessando "Exibir > Gerenciador de Soluções" no menu superior do Visual Studio. Na lateral direita, clicaremos com o botão direito sobre a solução e selecionaremos "Abrir Pasta no Gerenciador de Arquivos". Em seguida, navegaremos até "ByteBank_IO > bin > Debug > net6.0", onde encontraremos o arquivo contasExportadas.csv! Vamos clicar sobre ele com o botão direito do mouse e selecionar "Abrir com > Bloco de Notas". O seu conteúdo é a seguinte linha:
+
+456, 7895, 4785.40, Gustavo Santos
+
+É exatamente a string que guardamos na variável contaComoString! Ou seja, conseguimos criar um arquivo a partir de uma string com dados de um cliente.
+
+### Aula 3: Usando StreamWriter e CreateNew - Vídeo 4
+
+Transcrição  
+Em aulas anteriores, aprendemos a ler um arquivo de texto aplicando conceitos de buffer e bytes, e descobrimos formas menos complexas de lidar com esses processos, por exemplo, usando recursos como ReadLine, ReadToEnd, Read e EndOfStream. Depois, usamos os conceitos de buffer e bytes para escrever um novo arquivo CSV.
+
+A seguir, exploraremos ferramentas que facilitam nosso trabalho ao gravar arquivos. Mais especificamente, estudaremos a classe StreamWriter e seus recursos.
+
+**StreamWriter**  
+Ao final do arquivo 3_CriandoArquivo.cs, vamos desenvolver o método CriarArquivoComWriter():
+
+```csharp
+static void CriarArquivoComWriter()
+{
+    var caminhoNovoArquivo = "contasExportadas.csv";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+}
+```
+
+De início, temos a variável caminhoNovoArquivo com o caminho do novo arquivo e a estrutura using para verificar o fluxo, utilizando o FileStream com o caminho e o FileMode.Create. Na sequência, usaremos o StreamWriter em nosso favor, para simplificar a gravação de arquivos.
+
+Após o using, utilizaremos outro using para verificar o escritor, em que instanciaremos um new StreamWriter que receberá o fluxoDeArquivo:
+
+```csharp
+static void CriarArquivoComWriter()
+{
+    var caminhoNovoArquivo = "contasExportadas.csv";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+}
+```
+
+Note que estamos usando duas estruturas using. Uma opção seria abrir chaves e posicionar o segundo using dentro do primeiro, mas optamos por uma sintaxe mais simples e que também funciona.
+
+Em seguida, utilizaremos o método Write do escritor:
+
+```csharp
+static void CriarArquivoComWriter()
+{
+    var caminhoNovoArquivo = "contasExportadas.csv";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        escritor.Write("456,65465,456.0,Pedro");
+    }
+}
+```
+
+Em vez de Gustavo, agora informamos ao método Write os dados da conta do cliente Pedro, assim conseguiremos notar a diferença no novo arquivo. Desse modo, preencheremos nosso documento com dados da agência, conta, saldo e nome do cliente, sem a necessidade de trabalhar com conceitos de buffer e bytes.
+
+Vamos chamar o método CriarArquivoComWriter no arquivo Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        CriarArquivoComWriter();
+
+        Console.ReadLine();
+    }
+}
+```
+
+Após salvar todas as alterações, vamos executar a aplicação. Novamente, não exibimos nada no console. Basta acessarmos a pasta do executável no gerenciador de arquivos e abrir contasExportadas.csv com o Bloco de Notas. O seu conteúdo será a seguinte linha:
+
+456,65465,456.0,Pedro
+
+Ou seja, exatamente a string que informamos ao método Write, com o número da agência, a conta, o saldo e o nome do usuário. Assim, simplificamos a criação de um arquivo, utilizando o StreamWriter.
+
+**FileMode.Create e FileMode.CreateNew**  
+No método CriarArquivoComWriter, usamos o FileMode.Create e averiguamos que o código funciona corretamente. Agora, vamos utilizar o FileMode.CreateNew para descobrir a diferença entre eles:
+
+```csharp
+static void CriarArquivoComWriter()
+{
+    var caminhoNovoArquivo = "contasExportadas.csv";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        escritor.Write("456,65465,456.0,Pedro");
+    }
+}
+```
+
+Ao rodar o projeto, uma exceção será lançada, porque o CreateNew é responsável por criar um arquivo somente se não houver nenhum outro arquivo com o mesmo nome dentro do diretório em questão. No caso, já tínhamos o arquivo contasExportadas.csv na pasta, então o CreateNew lança uma exceção.
+
+Em outras palavras, o CreateNew deve ser usado para criar arquivo que ainda não existem. Se ele já existe e a intenção é substituí-lo, optaremos pelo Create:
+
+```csharp
+static void CriarArquivoComWriter()
+{
+    var caminhoNovoArquivo = "contasExportadas.csv";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        escritor.Write("456,65465,456.0,Pedro");
+    }
+}
+```
+
+Podemos rodar a aplicação mais uma vez para nos certificar de que ela continua funcionando. Com o Create, nenhuma exceção será lançada.
+
+### Aula 3: Copiando um arquivo - Exercício
+
+Carlos criou um código para gerar manualmente a cópia de um arquivo. A estratégia dele foi um stream para a leitura do arquivo original e outro stream para a escrita do novo arquivo:
+
+```csharp
+var arquivoOriginal = new FileStream("c:/temp/teste.txt", FileMode.Open);
+var arquivoNovo = new FileStream("c:/temp/teste_copia.txt", FileMode.Create);
+var buffer = new byte[1024];
+
+using(arquivoOriginal)
+using(arquivoNovo)
+{
+    var bytesLidos = -1;
+    while(bytesLidos != 0)
+    {
+        bytesLidos = arquivoOriginal.Read(buffer, 0, 1024);
+        arquivoNovo.Write(buffer, 0, bytesLidos);
+    }
+}
+
+var rodape = Encoding.UTF8.GetBytes("Este documento é uma cópia do original");
+arquivoNovo.Write(rodape, 0, rodape.Length);
+```
+
+Note que o código realiza uma cópia, byte a byte, dentro de um laço while corretamente. Ao fim, escreve a nota "Este documento é uma cópia do original" no arquivo novo.
+
+Selecione a opção que corresponde ao comportamento da aplicação ao executar.
+
+Resposta:  
+A tentativa de escrever o rodapé lançará uma exceção, pois o arquivo foi fechado.
+
+> O bloco using será o responsável por chamar o método Dispose() em nossos streams, o que fechará o arquivo.
+
+### Aula 3: Faça como eu fiz
+
+Agora sabemos converter a linha de texto do nosso arquivo para uma instância de conta corrente. Além disso, sabemos criar e ler um arquivo csv.
+
+Então, vamos colocar em prática escrevendo o código responsável por converter a linha de texto do nosso arquivo para uma instância de ContaCorrente?
+
+Opinião do instrutor
+
+1) Vamos escrever o código responsável por converter a linha de texto do nosso arquivo para uma instância de ContaCorrente:
+
+```csharp
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+}
+```
+
+2) Em nosso documento, temos os campos separados por um espaço ' '. Então usamos o método Split com o nosso caractere separador para dividir a linha original em um array:
+
+```csharp
+string[] campos = linha.Split(' ');
+```
+
+Conforme o layout de nosso arquivo, em cada linha temos o formato <agencia> <numero> <saldo> <titular>. Seguindo este padrão, vamos criar uma variável para cada campo:
+
+```csharp
+var agencia = campos[0];
+var numero = campos[1];
+var saldo = campos[2];
+var nomeTitular = campos[3];
+```
+
+3) Note que nossas variáveis são todas do tipo string! Precisamos realizar a conversão, o Parse(), dos números de agência, conta e saldo:
+
+```csharp
+var agenciaComoInt = int.Parse(agencia);
+var numeroComoInt = int.Parse(numero);
+var saldoComoDouble = double.Parse(saldo);
+```
+
+Se realizarmos o Parse() de double usando o ponto como separador da casa decimal do saldo, não teremos o retorno esperado. Então, vamos dar um Replace do caractere '.' por ',', para o Parse() realizar a conversão que esperamos: var saldo = campos[2].Replace('.', ',');. Agora, basta construir nosso objeto e retornar:
+
+```csharp
+var titular = new Cliente();
+titular.Nome = nomeTitular;
+
+var resultado = new ContaCorrente(agenciaComoInt, numeroComoInt);
+resultado.Depositar(saldoComoDouble);
+resultado.Titular = titular;
+
+return resultado;
+```
+
+4) Para testar nosso código, altere o código do bloco using do StreamReader:
+
+```csharp
+while (!leitor.EndOfStream)
+{
+    var linha = leitor.ReadLine();
+    var contaCorrente = ConverterStringParaContaCorrente(linha);
+    var msg = $"{contaCorrente.Titular.Nome} : Conta número {contaCorrente.Numero}, ag. {contaCorrente.Agencia}. Saldo: {contaCorrente.Saldo}";
+    Console.WriteLine(msg);
+}
+```
+
+Verifique a saída na console. O resultado deverá ser o que esperamos conforme os dados no arquivo de texto!
+
+5) Usar o espaço como caractere separador nos traz um problema: como tratar os nomes? Eles possuem espaço entre as palavras e a chamada do método Split() separa o nome em várias strings diferentes. Para lidar com isso, vamos alterar o arquivo e usar como caractere separador a vírgula ,.
+
+Assim, abra o arquivo com seu editor de texto preferido e substitua o espaço em branco pela vírgula. No curso, eu abri o bloco de notas do Windows, posicionei o cursor antes do primeiro caractere, usei o atalho “CTRL + H”, preenchi o campo “Localizar” com um espaço em branco e o campo “Substituir por” com uma vírgula. Feito isso, cliquei em “Substituir tudo”.
+
+Feita a mudança no documento, vamos alterar a chamada linha.Split(' '); para linha.Split(',');.
+
+Esse arquivo com valores separados por vírgula é chamado de CSV e é bastante utilizado np mercado.
+
+6) Agora que conseguimos ler um arquivo e interpretar seus valores, é o momento de criar nosso próprio arquivo! Crie o método CriarArquivo():
+
+```csharp
+static void CriarArquivo()
+{
+}
+```
+
+7) Vamos precisar definir o nome do arquivo e criar um fluxo de arquivo com modo de operação FileMode.Create!
+
+```csharp
+var caminhoNovoArquivo = "contasExportadas.csv";
+using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+{
+}
+```
+
+Vamos escrever neste arquivo a string abaixo:
+
+```csharp
+var contaComoString = "456,78945,4785.50,Gustavo Santos";
+```
+
+8) É necessário transformar a string contaComoString em uma cadeia de bytes. Para tal, precisamos do encoding! No curso, usamos o UTF-8:
+
+```csharp
+var contaComoString = "456,78945,4785.50,Gustavo Santos";
+var encoding = Encoding.UTF8;
+var bytes = encoding.GetBytes(contaComoString);
+```
+
+Com nosso array de bytes criado, basta usar o método Write para escrever no stream:
+
+```csharp
+fluxoDeArquivo.Write(bytes, 0, bytes.Length);
+```
+
+Execute a aplicação e verifique o conteúdo do arquivo!
+
+9) Aprendemos como usar esse método, lidando com bytes diretamente, agora podemos usar uma abstração que torna isso mais fácil e simples para nós, o StreamWriter:
+
+```csharp
+using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+using (var escritor = new StreamWriter(fluxoDeArquivo, Encoding.UTF8))
+{
+    escritor.Write("456,65465,456.0,Pedro");
+}
+```
+
+### Aula 3: O que aprendemos?
+
+Nessa aula, você aprendeu:
+
+- Os métodos int.Parse() e double.Parse() e como podemos convertê-los em ponto flutuante de dupla precisão;
+- O formato de arquivo .csv, usado para armazenar dados, de forma similar a uma tabela;
+- Como escrever diretamente no stream;
+- Diferença entre FileMode.Create e FileMode.CreateNew referentes a classe FileMode, que nos ajudam a especificar como o sistema deve abrir o arquivo;
+- Como usar o StreamWriter para gravar caracteres em um fluxo com uma codificação específica.
+
+## Aula 4: O Flush e os arquivos Binários
+
+### Aula 3:  - Vídeo 9
+### Aula 3:  - Vídeo 10

@@ -1,27 +1,11 @@
-﻿using ByteBankIO;
-using System.Text;
-
+﻿using System.Text;
 partial class Program
 {
     static void Main(string[] args)
     {
-        var enderecoArquivo = "contas.txt";
-        using (var fluxoDoArquivo = new FileStream(enderecoArquivo, FileMode.Open))
-        {
-            var leitor = new StreamReader(fluxoDoArquivo, Encoding.UTF8);
-            //var linha = leitor.ReadLine();
-            //var todoTexto = leitor.ReadToEnd();
-            //Read(), retorna o código do próximo caractere a ser lido, ou -1 se não houver mais caracteres para ler.
-            //var numero = leitor.Read();
-            while (!leitor.EndOfStream)
-            {
-                var linha = leitor.ReadLine();
-                Console.WriteLine(linha);
-            }
-        }
+        CriarArquivo();
+        CriarArquivoComWriter();
         Console.ReadLine();
-
-
 
         //Aula 1 e 2 ==========================================================
         //var enderecoArquivo = "contas.txt";

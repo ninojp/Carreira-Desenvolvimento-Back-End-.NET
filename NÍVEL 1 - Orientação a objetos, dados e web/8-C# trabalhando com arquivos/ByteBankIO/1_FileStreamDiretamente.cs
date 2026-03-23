@@ -1,6 +1,4 @@
-﻿using ByteBankIO;
-using System.Text;
-
+﻿using System.Text;
 partial class Program
 {
     static void FileStreamDiretamente()
