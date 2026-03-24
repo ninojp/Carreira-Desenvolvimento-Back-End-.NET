@@ -2577,5 +2577,663 @@ Nessa aula, você aprendeu:
 
 ## Aula 4: O Flush e os arquivos Binários
 
-### Aula 3:  - Vídeo 9
-### Aula 3:  - Vídeo 10
+### Aula 4: Projeto da aula anterior
+
+Você pode baixar os códigos que desenvolvemos até agora em [zip neste link](https://github.com/alura-cursos/CsharpArquivos/archive/refs/heads/aula-3.zip) ou acessar o repositório da [aula no GitHub!](https://github.com/alura-cursos/CsharpArquivos/tree/aula-3)
+
+### Aula 4: Método Flush - Vídeo 1
+
+Transcrição  
+Na aula anterior, conhecemos o StreamWriter, útil para não precisarmos lidar com bytes, a chamada de Encoding e os limites e intervalos do nosso array.
+
+No arquivo 3_CriandoArquivo.cs, temos a chamada do método Write, com o qual colocamos os dados do usuário Pedro em um arquivo CSV. Será que o arquivo é atualizado imediatamente, quando chamamos esse método? A seguir, vamos fazer esse teste para ter certeza do momento em que uma informação aparece dentro do arquivo.
+
+**Verificando o tempo de latência**  
+Ao final do arquivo 3_CriandoArquivo.cs, vamos criar um método estático chamado TestaEscrita:
+
+```csharp
+static void TestaEscrita()
+{
+}
+```
+
+Esse método será bastante parecido com o que fizemos anteriormente, utilizando recursos como StreamWriter e o fluxo de arquivo, bem com FileStream e FileMode:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+
+    }
+}
+```
+
+Note que mudamos o nome do arquivo de contasExportadas.csv para teste.txt e não trabalharemos mais com o escritor.Write.
+
+Em seguida, vamos testar quanto tempo uma mensagem demora para ser gravada no nosso arquivo. A ideia é fazer várias chamadas ao método WriteLine e abrir o arquivo enquanto a aplicação está sendo executada:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+        escritor.WriteLine("Linha 0");
+    }
+}
+```
+
+Contudo, há um problema: o método WriteLine será executado muito rapidamente e, antes de abrirmos o arquivo no diretório, a aplicação já terá finalizado a tarefa. Então, entre uma chamada e outra, vamos gerar algo que "trave" nossa aplicação, assim conseguiremos acompanhar a escrita das mensagens no arquivo e averiguar quando a informação é gravada, de fato, no documento.
+
+```csharp
+Para realizar esse "travamento", podemos usar o Console.ReadLine entre as chamadas. Para evitar o uso repetitivo de WriteLine e ReadLine, vamos desenvolver um laço for com um número alto de iterações:
+
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        for(int i = 0; i < 1000000; i++)
+        {
+            escritor.WriteLine("Linha 0");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+Além disso, em vez de repetir "Linha 0", podemos modificar a mensagem a cada iteração, usando interpolação de strings com a variável i:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        for(int i = 0; i < 1000000; i++)
+        {
+            escritor.WriteLine($"Linha {i}");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+Antes do Console.ReadLine, exibiremos uma mensagem explicativa no console, para esclarecer ao usuário sobre os processos que ocorreram:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        for(int i = 0; i < 1000000; i++)
+        {
+            escritor.WriteLine($"Linha {i}");
+            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter...");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+Para testar, no arquivo Program.cs, vamos substituir a chamada de CriarArquivoComWriter pelo método TestaEscrita:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        TestaEscrita();
+
+        Console.ReadLine();
+    }
+}
+```
+
+Vamos salvar todas as alterações e executar a aplicação. No console, aparecerá a seguinte mensagem:
+
+Linha 0 foi escrita no arquivo. Tecle enter...
+
+Ao pressionar a tecla "Enter", teremos:
+
+Linha 0 foi escrita no arquivo. Tecle enter...
+
+Linha 1 foi escrita no arquivo. Tecle enter...
+
+Para verificar se, de fato, essa escrita está acontecendo, abriremos o arquivo teste.txt no Bloco de Notas. Sem encerrar a aplicação, vamos acessar o Gerenciador de Soluções ("Ctrl + Alt + L"), clicar com o botão direito sobre a solução, selecionar "Abrir Pasta no Gerenciador de Arquivos" e navegar até "ByteBank_IO > bin > Debug > net6.0".
+
+Ao abrir o arquivo teste.txt, vamos reparar que ele está vazio! Não estamos escrevendo essa mensagem tão rapidamente quanto gostaríamos. Apesar de lermos a mensagem "Linha 0 foi escrita no arquivo", constatamos que a informação ainda não foi gravada.
+
+Vamos fechar o Bloco de Notas, minimizar o gerenciador de arquivos, parar a aplicação e procurar entender o que está acontecendo.
+
+**Entendendo e resolvendo o problema**  
+Em que momento, de fato, nossa informação é passada para o HD? Quando estamos escrevendo em um arquivo, o que acontece internamente entre a nossa aplicação, nosso sistema e o nosso dispositivo externo?
+
+Ao escrever algo no HD, paramos a nossa aplicação e uma mensagem é enviada ao sistema operacional para que ele escreva o número de bytes nos HD. Esse tempo de envio e recebimento tem uma alta latência, ou seja, é um pouco demorado.
+
+Até agora, estamos acostumados a trabalhar com variáveis, buffer, arrays e listas. Nesses casos, sempre usamos memória RAM, que é bastante rápida — diferentemente do HD. Para escrevermos no HD (ou no SSD, que funciona da mesma forma), o processo é mais lento, principalmente quando perdemos tempo notificando o sistema operacional dessa ação que queremos executar.
+
+Sempre que utilizamos o WriteLine para escrever no arquivo, perdemos bastante tempo. O StreamWriter possui um buffer. No caso do WriteLine, não estamos escrevendo no arquivo, de fato. Na verdade, enviamos determinada informação para o buffer do StreamWriter. Enquanto não encerramos o buffer interno do StreaamWriter, a informação não é despejada no FilStream, tornando o processo mais demorado. Para economizar tempo, temos algumas ferramentas à disposição.
+
+No contexto desse treinamento, se a escrita for demorada, não é um problema. Contudo, haverá situações em que precisaremos que a escrita no arquivo seja mais rápida e imediatamente no HD — por exemplo, um log que dita os processos de uma aplicação. Nesses casos, a demora pode ser prejudicial, já que acompanhamos o log para resolver possíveis quebras no programa. Se a informação demora para chegar até nós, isso é problemático.
+
+É necessário saber lidar com esses obstáculos e trabalhar de maneira rápida com informações que precisamos colocar em um arquivo.
+
+Em resumo, há cenários em que é interessante evitar o uso do buffer para não ocorrer essa demora na escrita. Nesses casos, podemos usar o método Flush, responsável por despejar o buffer para a stream. Ou seja, ele evita o processo de guardar o buffer para, depois, mandar para o FileStream.
+
+Em TestaEscrita, após o WriteLine, vamos aplicar o método Flush:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoNovoArquivo = "teste.txt";
+
+    using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+    using(var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        for(int i = 0; i < 1000000; i++)
+        {
+            escritor.WriteLine($"Linha {i}");
+            escritor.Flush(); //Despeja o buffer para o Stream
+
+            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter...");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+Assim, toda vez que colocarmos uma linha dentro do arquivo, vamos despejar o buffer no stream logo em seguida. Será um processo mais rápido. Para testar, vamos executar a aplicação. No console, teremos o seguinte resultado:
+
+Linha 0 foi escrita no arquivo. Tecle enter...
+
+Ao pressionar a tecla "Enter", teremos:
+
+Linha 0 foi escrita no arquivo. Tecle enter...
+
+Linha 1 foi escrita no arquivo. Tecle enter...
+
+Ao pressionar "Enter" mais uma vez, teremos:
+
+Linha 0 foi escrita no arquivo. Tecle enter...
+
+Linha 1 foi escrita no arquivo. Tecle enter...
+
+Linha 2 foi escrita no arquivo. Tecle enter...
+
+Sem parar a aplicação, vamos ao gerenciador de arquivos para abrir contasExportadas.txt. Dessa vez, o arquivo não está vazio:
+
+Linha 0
+
+Linha 1
+
+Linha 2
+
+As linhas foram escritas, de fato, no nosso documento. Agora, o processo foi bem rápido, quase instantâneo. Assim, usamos o método Flush para solucionar a demora, despejando o buffer para o stream.
+
+### Aula 4: Escrita binária - Vídeo 2
+
+Transcrição  
+No arquivo 3_CriandoArquivo.cs, desenvolvemos o código responsável por criar arquivos na pasta do executável. Nele, utilizamos a classe StreamWriter, que conta com métodos para auxiliar nosso trabalho, de modo que não precisemos lidar diretamente com buffer e bytes.
+
+Um desses métodos é o StreamWriter.WriteLine, bastante semelhante ao Console.WriteLine que usamos com frequência em nossos cursos. Ambos possuem sobrecargas para string, char, long, números inteiros, valores booleanos, entre outros tipos definidos no .NET. A seguir, vamos realizar testes com esses diferentes valores, no arquivo Program.cs.
+
+**Valores booleanos e números longos**  
+Primeiramente vamos remover a chamada ao TestaEscrita, em Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        Console.ReadLine();
+
+    }
+}
+```
+
+No arquivo 3_CriandoArquivo.cs, copiaremos o conteúdo do método CriarArquivoComWriter. Vamos colá-lo dentro do método Main, em Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        using(var escritor = new StreamWriter(fluxoDeArquivo))
+        {
+            escritor.Write("456,65465,456.0,Pedro");
+        }
+
+        Console.ReadLine();
+
+    }
+}
+```
+
+Em seguida, vamos adaptar esse trecho que colamos. Em vez de escrever uma string no nosso arquivo, gravaremos valores booleanos — testaremos tanto com true quanto com false. Além disso, também escreveremos um número inteiro grande:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        var caminhoNovoArquivo = "contasExportadas.csv";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        using(var escritor = new StreamWriter(fluxoDeArquivo))
+        {
+            escritor.WriteLine(true);
+            escritor.WriteLine(false);
+            escritor.WriteLine(454545454545);
+        }
+
+        Console.ReadLine();
+
+    }
+}
+```
+
+De resto, vamos modificar o nome do nosso arquivo de contasExportadas.csv para TestaEscrita.txt:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        var caminhoNovoArquivo = "TestaEscrita.txt";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        using(var escritor = new StreamWriter(fluxoDeArquivo))
+        {
+            escritor.WriteLine(true);
+            escritor.WriteLine(false);
+            escritor.WriteLine(454545454545);
+        }
+
+        Console.ReadLine();
+
+    }
+}
+```
+
+Assim, estamos usando o escritor para escrever esses dados no arquivo TestaEscrita.txt. Após as estruturas using, adicionaremos a exibição de uma mensagem no console para informar quando a aplicação for finalizada:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        var caminhoNovoArquivo = "TestaEscrita.txt";
+
+        using(var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+        using(var escritor = new StreamWriter(fluxoDeArquivo))
+        {
+            escritor.WriteLine(true);
+            escritor.WriteLine(false);
+            escritor.WriteLine(454545454545);
+        }
+
+        Console.WriteLine("Aplicação Finalizada...");
+
+        Console.ReadLine();
+
+    }
+}
+```
+
+Vamos executar a aplicação e analisar os resultados do uso do StreamWriter.WriteLine para escrever outros tipos de variáveis. No console, temos a seguinte mensagem:
+
+Aplicação Finalizada...
+
+Podemos pressionar "Enter". Em seguida, abriremos o arquivo TestaEscrita.txt, na pasta do executável. Dentro dele, temos as seguintes informações gravadas:
+
+True
+
+False
+
+454545454545
+
+Nesse arquivo, temos três informações: os valores literais (true e false) e um número inteiro.
+
+Na memória do nosso computador, o true e o false ocupam espaços pequenos — apenas 1 byte, pois trabalhamos com 0 ou 1. Já o número inteiro ocupa 4 bytes. Logo, atualmente estamos usando muito mais espaço que o necessário, já que representamos as informações com texto puro, por exemplo, optando pelo texto "True" em vez de apenas 1.
+
+Nas próximas aulas, aprenderemos a usar a forma binária para otimizar nossos arquivos, especialmente os mais extensos. Faremos alguns testes, explorando métodos e classes disponíveis no .NET para representar informações de forma binária. Assim, economizaremos espaço e otimizaremos a quantidade de memória utilizada no hardware.
+
+### Aula 4: BinaryWriter e BinaryReader - Vídeo 3
+
+Transcrição  
+Nosso próximo objetivo é testar e descobrir como armazenar conteúdo em um arquivo de forma binária, de modo que ainda consigamos lê-lo no console. Assim, utilizaremos menos memória da nossa máquina.
+
+**Escrita binária**  
+De início, vamos adicionar um novo arquivo de código chamado 4_StreamBinario.cs e inserir o seguinte código nele:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void EscritaBinaria()
+    {
+        using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+        using (var escritor = new BinaryWriter(fs))
+        {
+            escritor.Write(456);           //número da Agência
+            escritor.Write(546544);   //número da conta
+            escritor.Write(4000.50); //Saldo
+            escritor.Write("Gustavo Braga");
+        }
+    }
+}
+```
+
+Este código é bem parecido com que fizemos anteriormente, a diferença é que agora entenderemos como armazenar uma escrita binária, em lugar de um texto puro. Vamos examinar o conteúdo desse arquivo, a seguir.
+
+Criamos um método estático chamado EscritaBinaria. A variável fs armazenará um FileStream que recebe dois argumentos: o endereço "contaCorrente.txt" e o FileMode.Create para gerar o arquivo. Depois, temos a variável escritor, que não lidará mais com StreamWriter, responsável por gravar um texto puro. Agora, utilizaremos a classe BinaryWriter, que produz uma representação do nosso stream de maneira binária. Passaremos fs como argumento e esse método escreverá nosso fluxo de arquivo de forma binária.
+
+A classe BinaryWriter não conta com o método WriteLine, já que o conceito de linha é referente a um texto e não a representações binárias. Então, trabalharemos com o Write para armazenar os dados do cliente.
+
+Para testar, vamos chamar o método EscritaBinaria no arquivo Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        EscritaBinaria();
+        
+        Console.ReadLine();
+    }
+}
+```
+
+Após salvar as alterações, vamos executar o projeto. No console, não haverá nenhuma mensagem, pois não colocamos nenhum comando nesse sentido. Sem parar a aplicação, vamos acessar a pasta do executável e abrir o arquivo contaCorrente.txt.
+
+O conteúdo do arquivo está com um formato estranho, parte dele é ininteligível para nós. Entendemos apenas a segunda linha, que contém o nome do cliente:
+
+È⍰ ðV⍰ A¯@
+
+Gustavo Braga
+
+O formato está estranho porque não estamos escrevendo numa codificação do tipo UTF-8, por exemplo. Trata-se de uma representação binária. O Bloco de Notas tenta transformar os bytes em um texto, ele consegue representar a string, mas é incapaz de decodificar os números.
+
+Então, precisamos desenvolver um leitor para interpretar esse arquivo, que está em formato binário. Apesar de não conseguirmos entender as informações no Bloco de Notas, podemos ler e exibi-las no console da nossa aplicação.
+
+Vamos fechar o Bloco de Notas, para que ele possa sofrer modificações e nada interfirá nele. Podemos fechar o gerenciador de arquivos e parar a aplicação.
+
+**Leitura binária**  
+No arquivo 4_StreamBinario.cs, vamos criar um método estático para ler o arquivo binário. Ele será bem parecido com a estrutura do método EscritaBinaria:
+
+```csharp
+static void LeituraBinaria()
+{
+    using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+    using (var leitor = new BinaryReader(fs))
+    {
+        
+    }
+}
+```
+
+Anteriormente, no método EscritaBinaria, aplicamos o BinaryWriter. Agora, no método LeituraBinaria, usaremos o BinaryReaderpara ler o arquivo que já escrevemos. Isto é, substituiremos a escrita pela leitura, assim como quando trocamos o StreamWriter pelo StreamReader.
+
+Assim, temos o FileStream para fazer a leitura do documento contaCorrente.txt. Utilizamos o FileMode.Open em lugar de FileMode.Create, uma vez que a intenção é abrir o arquivo. Por fim, aplicamos o BinaryReader para realizar a leitura.
+
+Relembrando: o conteúdo do nosso arquivo são dois números inteiros, um double e uma string. A seguir, vamos criar as variáveis para receber o que será lido pelo leitor.
+
+No método EscritaBinaria, ao posicionar o mouse sobre o número 456 no comando escritor.Write(456), reparamos que esse valor é representado com 32 bits. Portanto, em LeituraBinaria, usaremos o ReadInt32 ao declarar a variável agencia:
+
+```csharp
+static void LeituraBinaria()
+{
+    using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+    using (var leitor = new BinaryReader(fs))
+    {
+        var agencia = leitor.ReadInt32();
+    }
+}
+```
+
+Vale ressaltar que existem outras opções para representação de números inteiros, a depender da especificação da variável, como Int16.
+
+Na sequência, criaremos a variável numeroConta para receber o número da conta, também representado por 32 bits. Depois, vamos declarar saldo, que lerá um número do tipo double, e titular que lerá uma string:
+
+```csharp
+static void LeituraBinaria()
+{
+    using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+    using (var leitor = new BinaryReader(fs))
+    {
+        var agencia = leitor.ReadInt32();
+        var numeroConta = leitor.ReadInt32();
+        var saldo = leitor.ReadDouble();
+        var titular = leitor.ReadString();
+    }
+}
+```
+
+Criamos as variáveis que passarão pelo leitor e decodificarão as informações do arquivo, apesar de estarem escritas de forma binária. Como não estamos lidando com texto, não há necessidade de usar o Parse, como fizemos anteriormente. No caso, estamos trabalhando diretamente com uma representação binária, então podemos usar métodos especializados para cada tipo.
+
+A seguir, vamos exibir os dados no console com Console.WriteLine:
+
+```csharp
+static void LeituraBinaria()
+{
+    using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+    using (var leitor = new BinaryReader(fs))
+    {
+        var agencia = leitor.ReadInt32();
+        var numeroConta = leitor.ReadInt32();
+        var saldo = leitor.ReadDouble();
+        var titular = leitor.ReadString();
+        
+        Console.WriteLine($"{agencia}/{numeroConta} {titular} {saldo}");
+    }
+}
+```
+
+Vamos chamar o método LeituraBinaria no arquivo Program.cs:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        EscritaBinaria();
+        LeituraBinaria();
+        
+        Console.ReadLine();
+    }
+}
+```
+
+Após a leitura, vamos mostrar uma mensagem para nos avisar quando a aplicação for finalizada:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        EscritaBinaria();
+        LeituraBinaria();
+        
+        Console.WriteLine("Aplicação Finalizada ...");
+        
+        Console.ReadLine();
+    }
+}
+```
+
+Antes de executar a aplicação, é importante que o arquivo contaCorrente.txt não esteja aberto, para nos certificarmos de que não haverá interferências. Depois, vamos rodar o projeto. No console, o resultado será o seguinte:
+
+456/546544 Gustavo Braga 4000,5
+
+Aplicação Finalizada ...
+
+Apesar de termos armazenado as informações de forma binária no nosso arquivo, conseguimos lê-las claramente no console, através do método que desenvolvemos com o BinaryReader e seus recursos.
+
+Ao abrir o arquivo contaCorrente.txt no Bloco de Notas, ainda temos as informações em um formato estranho e pouco claro, pois as armazenamos de forma binária e o Bloco de Notas é incapaz de realizar a decodificação perfeitamente. Todavia, com nosso método de leitura binária, conseguimos decodificar e exibir os dados no console.
+
+Vale lembrar que o armazenamento de informações de forma binária emprega bem menos memória que guardar texto puro, como fazíamos antes.
+
+### Aula 4: Trabalhando com arquivos binários
+
+Giovana quis testar a diferença entre o BinaryWriter e o StreamWriter. O código abaixo escreve o inteiro 691693903 usando os dois writers:
+
+```csharp
+var numero = 691693903;
+
+using(var fs = new FileStream("c:/temp/BinaryWriter.txt", FileMode.Create))
+using(var writer = new BinaryWriter(fs))
+{
+    writer.Write(numero);
+}
+
+using(var fs = new FileStream("c:/temp/StreamWriter.txt", FileMode.Create))
+using(var writer = new StreamWriter(fs))
+{
+    writer.Write(numero);
+}
+```
+
+Selecione a opção que responde se haverá diferença na saída dos arquivos.
+
+Resposta:  
+Sim! O BinaryWriter usará o formato binário de números inteiros e seu arquivo possuirá 4 bytes de tamanho.
+
+> Boa! O BinaryWriter grava tipos primitivos em binário em um fluxo e com isso irá usar o formato binário de números inteiros e nesse caso, seu arquivo possuirá 4 bytes de tamanho.
+
+### Aula 4: Faça como eu fiz
+
+Vimos que para liberar buffers e sinalizar o sistema operacional que desejamos atualizar um arquivo com o conteúdo do buffer interno, usamos o método Flush(). Vamos aplicar esse método na nossa solução?
+
+Opinião do instrutor
+
+1) Para descobrir mais detalhes sobre o funcionamento do StreamWriter e Stream, escrevemos o código abaixo:
+
+```csharp
+static void TestaEscrita()
+{
+    var caminhoArquivo = "teste.txt";
+
+    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+    using (var escritor = new StreamWriter(fluxoDeArquivo))
+    {
+        for (int i = 0; i < 100000000; i++)
+        {
+            escritor.WriteLine($"Linha {i}");
+            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+Execute o código acima! Nele, criamos o arquivo "teste.txt'' no mesmo diretório do executável. A cada linha escrita, a aplicação aguarda no Console.ReadLine que o usuário dê um enter para a escrita da linha seguinte. Veja que não é imediatamente após a chamada do método escritor.WriteLine() que o conteúdo é despejado no disco do computador!
+
+2) Existe um buffer interno no StreamWriter e no Stream. Para liberarmos esses buffers e sinalizar o sistema operacional que desejamos atualizar o arquivo com o conteúdo do buffer interno, usamos o método Flush():
+
+```csharp
+escritor.WriteLine($"Linha {i}");
+escritor.Flush();
+```
+
+Faça o mesmo teste agora e verifique que o arquivo será atualizado a cada enter.
+
+3) Note que o StreamWriter sempre usa a representação de texto para qualquer valor: booleanos, inteiros ou qualquer outro tipo. Se não é necessário mantermos um arquivo com texto legível, podemos criar este documento escrevendo os valores em formato binário! Para tal, começamos com o stream de arquivo e um Writer diferente, o BinaryWriter:
+
+```csharp
+using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+using (var escritor = new BinaryWriter(fs))
+{
+
+}
+```
+
+O BinaryWriter possui construtores com argumentos de encoding, mas o encoding é utilizado apenas no momento da escrita dechar e string. Os outros tipos, como int, double, bool, etc. são representados no formato binário.
+
+Crie uma conta corrente com este formato:
+
+```csharp
+escritor.Write(456); // Número da Agência
+escritor.Write(546544); // Número da conta
+escritor.Write(4000.50); // Saldo
+escritor.Write("Gustavo Braga");
+```
+
+4) Ao executar a aplicação e verificarmos o conteúdo do arquivo com um editor de texto, como o Notepad++, encontramos vários caracteres estranhos até o texto Gustavo Braga. Isso acontece pois o editor de texto não espera um documento em formato binário, e tenta converter a sequência de bytes dos números inteiros e do double em um texto. Para recuperarmos o conteúdo deste arquivo, vamos usar o BinaryReader:
+
+```csharp
+static void LeituraBinaria()
+{
+    using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+    using (var leitor = new BinaryReader(fs))
+    {
+        var agencia = leitor.ReadInt32();
+        var numeroConta = leitor.ReadInt32();
+        var saldo = leitor.ReadDouble();
+        var titular = leitor.ReadString();
+
+        Console.WriteLine($"{agencia}/{numeroConta} {titular} {saldo}");
+    }
+}
+```
+
+### Aula 4:  O que aprendemos?
+
+Nessa aula, você aprendeu:
+
+- O método Flush limpa os buffers do fluxo fazendo com que os dados armazenados nele sejam gravados no arquivo;
+- BinaryReader e BinaryWriter leem e escrevem dados primitivos, como binários, em uma determinada codificação.
+
+## Aula 5: Streams da Console
+
+### Aula 5:  - Vídeo 1

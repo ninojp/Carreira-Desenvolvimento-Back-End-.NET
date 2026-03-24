@@ -3,8 +3,14 @@ partial class Program
 {
     static void Main(string[] args)
     {
-        CriarArquivo();
-        CriarArquivoComWriter();
+        //CriarArquivo();
+        //CriarArquivoComWriter();
+        //TestaEscrita();
+        //TestaEscritaBinaria();
+        EscritaBinaria();
+        LeituraBinaria();
+        Console.WriteLine("Aplicação finalizada!");
+
         Console.ReadLine();
 
         //Aula 1 e 2 ==========================================================
