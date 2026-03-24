@@ -7,10 +7,27 @@ partial class Program
         //CriarArquivoComWriter();
         //TestaEscrita();
         //TestaEscritaBinaria();
-        EscritaBinaria();
-        LeituraBinaria();
-        Console.WriteLine("Aplicação finalizada!");
+        //EscritaBinaria();
+        //LeituraBinaria();
+        //UsarStreamDeEntrada();
 
+        //Console.WriteLine("Digite seu nome:");
+        //var nome = Console.ReadLine();
+
+        var linhas = File.ReadAllLines("contas.txt");
+        Console.WriteLine(linhas.Length);
+
+        //foreach (var linha in linhas)
+        //{
+        //    Console.WriteLine(linha);
+        //}
+
+        var bytesArquivo = File.ReadAllBytes("contas.txt");
+        Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+        File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+        Console.WriteLine("Aplicação finalizada!");
         Console.ReadLine();
 
         //Aula 1 e 2 ==========================================================

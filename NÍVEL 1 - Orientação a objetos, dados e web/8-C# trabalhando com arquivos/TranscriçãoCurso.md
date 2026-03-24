@@ -3236,4 +3236,601 @@ Nessa aula, você aprendeu:
 
 ## Aula 5: Streams da Console
 
-### Aula 5:  - Vídeo 1
+### Aula 5: Projeto da aula anterior
+
+Você pode baixar os códigos que desenvolvemos até agora em [zip neste link](https://github.com/alura-cursos/CsharpArquivos/archive/refs/heads/aula-4.zip) ou acessar o repositório da [aula no GitHub!](https://github.com/alura-cursos/CsharpArquivos/tree/aula-4)
+
+### Aula 5: Stream da Console - Vídeo 1
+
+Transcrição  
+Até o momento, desenvolvemos bastante código com o conceito de stream, utilizando métodos Writer e Reader. Mais especificamente, trabalhamos longamente com a classe FileStream. Contudo, existem outras possibilidades de streams no ecossistema .NET. Nesta aula, vamos explorá-los e averiguar se tudo que aprendemos até então pode ser aplicado a eles.
+
+A princípio, vamos executar nossa aplicação para examinar alguns comportamentos do console. Ao rodá-la, temos o seguinte resultado:
+
+456/546544 Gustavo Braga 4000,5
+
+Aplicação Finalizada ...
+
+Apesar da mensagem "Aplicação Finalizada ...", nosso programa não parou. O cursor está posicionado na última linha e podemos digitar o que quisermos, como uma sequência aleatória:
+
+456/546544 Gustavo Braga 4000,5
+
+Aplicação Finalizada ...
+
+Alura ksjkdfskjdnfjdbfjsdbjfsjjjdbsjsj
+
+A aplicação só responderá se pressionarmos "Enter". Depois, podemos pressionar qualquer tecla para encerrar a aplicação.
+
+De alguma forma, o console acompanha o comportamento do usuário e, somente quando um caractere específico do método ReadLine é apresentado como entrada, ele libera a quebra de linha. Isto é, quando pressionamos o "Enter".
+
+Se o console examina a entrada de dados, isso significa que existe uma stream interna. Então, vamos explorá-la e verificar se os métodos que estudamos com o FileStream são os mesmos do console.
+
+**Stream do console**  
+Seria interessante trazer para dentro de um arquivo qualquer informação digitada pelo usuário no console. A seguir, vamos aprender como fazer isso. Primeiramente, no arquivo Program.cs, vamos remover as chamadas aos métodos EscritaBinaria e LeituraBinaria:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Aplicação Finalizada ...");
+
+        Console.ReadLine();
+    }
+}
+```
+
+Em seguida, vamos criar outro arquivo de código, chamado 5_UsandoStreamDeEntradaDaConsole.cs. Nele, colocaremos o seguinte código:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void UsarStreamDeEntrada()
+    {
+        using (var fluxoDeEntrada = Console.OpenStandardInput())
+        {
+            var buffer = new byte[1024]; //1kb
+
+            var byteslidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+            Console.WriteLine($"Bytes lidos na console: {byteslidos}");
+        }
+    }
+}
+```
+
+Nesse arquivo, criamos um método estático chamado UsarStreamDeEntrada. Nosso objetivo será desenvolvê-lo para construir uma forma de ler os dados inseridos pelo usuário no console. Por enquanto, a estrutura está bem parecida com o que fizemos anteriormente. Como estamos utilizando uma stream, continuamos empregando o bloco using que recebe o fluxo. A grande diferença desse código é que não usamos mais o FileStream. Em lugar dele, aplicamos o Console.OpenStandardInput, que permitirá a leitura do que for digitado no console.
+
+No bloco using, criamos um buffer para guardar até 1 kB. Além disso, temos a variável byteslidos com o método Read, que receberá o buffer, a indicação de onde começar a preenchê-lo e a quantidade de posições a serem ocupadas. Por fim, incluímos um Console.WriteLine para mostrar a quantidade de bytes lidos no console.
+
+Como comentamos, há outras opções pra trabalharmos com stream, mas vamos focar no console, por enquanto.
+
+Em Program.cs, vamos chamar o método UsarStreamDeEntrada:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        UsarStreamDeEntrada();
+
+        Console.WriteLine("Aplicação Finalizada ...");
+
+        Console.ReadLine();
+    }
+}
+```
+
+Em seguida, vamos executar a aplicação. Como resultado, o console permanecerá vazio, o que significa que não chegamos ao comando Console.Write com a mensagem "Aplicação Finalizada". O programa está aguardando que o usuário escreva uma informação.
+
+Ao digitar "Alura" e pressionar a tecla "Enter", teremos o seguinte retorno no console:
+
+Alura
+
+Bytes lidos na console: 7
+
+Aplicação Finalizada ...
+
+O cursor continuará piscando na última linha, então vamos tentar escrever mais informações. Ao digitar "Cursos Online" e pressionar a tecla "Enter", constataremos que esse texto não foi armazenado e temos apenas a opção de pressionar qualquer tecla para fechar a aplicação.
+
+Usando o WriteLine, o método Read liberou os 7 bytes lidos, então terminamos de usar o stream e a aplicação foi finalizada. O que podemos fazer para que o usuário possa escrever mais informações? A primeira ideia que vem em mente é usar um loop. No arquivo 5_UsandoStreamDeEntradaDaConsole, vamos desenvolver um laço while e posicionar a variável byteslidos e o Console.WriteLine dentro dele:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void UsarStreamDeEntrada()
+    {
+        using (var fluxoDeEntrada = Console.OpenStandardInput())
+        {
+            var buffer = new byte[1024]; //1kb
+
+            while(true)
+            {
+                var byteslidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+                Console.WriteLine($"Bytes lidos na console: {byteslidos}");
+            }
+        }
+    }
+}
+```
+
+Ao executar a aplicação, o console ficará esperando uma entrada do usuário. Digitaremos "Alura" e o resultado será o seguinte:
+
+Alura
+
+Bytes lidos na console: 7
+
+Em seguida, vamos digitar "Cursos Online". Como retorno, teremos:
+
+Alura
+
+Bytes lidos na console: 7
+
+Cursos Online
+
+Bytes lidos na console: 15
+
+Podemos digitar mais dados e o programa continuará armazenando tudo que escrevermos no buffer. O código está funcionando como esperado, conseguimos guardar mais informações que o usuário escreve no console. Vamos fechar a aplicação.
+
+**Armazenando em um arquivo**
+Até agora, esses dados foram guardados no buffer. Vamos passar a armazená-los em um arquivo, com o FileStream. Primeiramente, precisaremos de um novo stream. Usaremos o using novamente para tratar possíveis exceções:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void UsarStreamDeEntrada()
+    {
+        using (var fluxoDeEntrada = Console.OpenStandardInput())
+        using (var fs = new FileStream("entradaConsole.txt", FileMode.Create))
+        {
+            var buffer = new byte[1024]; //1kb
+
+            while(true)
+            {
+                var byteslidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+                Console.WriteLine($"Bytes lidos na console: {byteslidos}");
+            }
+        }
+    }
+}
+```
+
+Assim, empregamos o FileMode.Create para criar um arquivo de nome entradaConsole.txt. Para testar, vamos executar a aplicação. No console, digitaremos "Alura" e pressionaremos "Enter". Depois digitaremos "Cursos Online" e pressionaremos "Enter" novamente. O resultado será o seguinte:
+
+Alura
+
+Bytes lidos na console: 7
+
+Cursos Online
+
+Bytes lidos na console: 15
+
+No Visual Studio, vamos parar a aplicação. Em seguida, vamos à pasta do executável para verificar se o arquivo foi criado e se as informações que digitamos no console foram inseridas nele. Basta abrir o Gerenciador de Soluções (Ctrl + Alt + L"), clicar com o botão direito sobre a solução, selecionar "Abrir Pasta no Gerenciador de Arquivos" e navegar até "ByteBank_IO > bin > Debug > net6.0".
+
+Encontraremos o arquivo entradaConsole.txt. Ao abri-lo, notaremos que nada foi salvo nele, está em branco. Vamos voltar ao código para entender o que aconteceu.
+
+No método UsarStreamDeEntrada, criamos um FileStream e, em seguida, ficamos "presos" no laço de repetição. O while(true) sempre será verdadeiro, então continuará esperando novas informações. Ou seja, o bloco using nunca chega ao fim e, consequentemente, o método Close não é chamado. Somente quando fechamos o stream, ele libera o buffer interno e o despeja no destino (o HD do computador).
+
+Anteriormente, ao estudar o StreamWriter, aprendemos sobre a metodologia de despejamento de informação para evitar essa demora, então podemos reutilizá-la agora. Trata-se do método Flush. Dentro do laço while, usaremos o Write para escrever os dados e o Flush para despejá-las no arquivo-destino:
+
+```csharp
+using ByteBank_IO;
+using System.Text;
+
+partial class Program
+{
+    static void UsarStreamDeEntrada()
+    {
+        using (var fluxoDeEntrada = Console.OpenStandardInput())
+        using (var fs = new FileStream("entradaConsole.txt", FileMode.Create))
+        {
+            var buffer = new byte[1024]; //1kb
+
+            while(true)
+            {
+                var byteslidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+                fs.Write(buffer, 0, byteslidos);
+                fs.Flush();
+
+                Console.WriteLine($"Bytes lidos na console: {byteslidos}");
+            }
+        }
+    }
+}
+```
+
+Após salvar, vamos rodar a aplicação. No console, vamos digitar "Alura" e pressionar a tecla "Enter", depois escreveremos "Cursos Online" e apertaremos "Enter" mais uma vez. O retorno será:
+
+Alura
+
+Bytes lidos na console: 7
+
+Cursos Online
+
+Bytes lidos na console: 15
+
+No Visual Studio, vamos parar a execução. Depois, acessaremos o arquivo entradaConsole.txt, na pasta do executável. Ao abri-lo, seu conteúdo será o seguinte:
+
+Alura
+
+Cursos Online
+
+Alcançamos nosso objetivo: todas as informações que digitamos no console foram gravadas nesse documento. Desse modo, aprendemos a usar o stream do console em situações nas quais esperamos alguma interação do usuário, mais especificamente com o Open StandardInput. Agora, conseguimos armazenar em um arquivo informações inseridas pelo usuário no console.
+
+### Aula 5: Auxiliares da classe File - Vídeo 2
+
+Transcrição  
+Será que, toda vez que precisarmos de um dado do usuário (como número da agência), teremos que manipular o stream de entrada e usar OpenStandardInput? Ou será necessário construir um bloco using com todos aqueles procedimentos que fizemos anteriormente?
+
+**Descomplicando a entrada de dados**  
+Na verdade, já trabalhamos com uma forma simples de obter entradas do usuário: o Console.ReadLine, que nos retorna uma string. Com esse método, aplicamos todos os conceitos de buffer, bytes e decodificação de maneira descomplicada.
+
+Para ilustrar esse processo, vamos inserir o seguinte código no método Main, no arquivo Program.cs:
+
+```csharp
+static void Main(string [] args)
+{
+    Console.WriteLine("Digite seu nome:");
+    var nome = Console.ReadLine();
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Ao executar a aplicação, teremos a mensagem "Digite seu nome" no console. Ao digitar um nome (por exemplo, "Larissa") e pressionar a tecla "Enter", o retorno será o seguinte:
+
+Digite seu nome":
+
+Larissa
+
+Aplicação Finalizada ...
+
+Assim, armazenamos esse texto em uma variável.
+
+Ou seja, o código que desenvolvemos na aula passada faz o mesmo que o Console.ReadLine. Agora, sabemos que o ReadLine usa a stream de entrada do console, que fica vigilante até o momento em que for pressionado um caractere de quebra de linha (a tecla "Enter"). Então, será realizado o encoding da cadeia de bytes e a string será enviada.
+
+**Descomplicando a leitura de arquivos**  
+Descobrimos como lidar de maneira mais simples com entradas do usuário, com o Console.ReadLine. E quantos aos arquivos? Será que existem recursos que facilitam nosso trabalho com eles? Precisaremos sempre usar o stream e o BinaryReader, por exemplo?
+
+No C#, temos uma classe estática chamada File, que possui uma série de métodos que nos ajudarão em tarefas relacionadas a arquivos, por exemplo, ler todas as linhas de um documento. A seguir, vamos explorar a utilização dessa classe e seus métodos, além de apontar em que momentos é importante tomar cuidado, pois existem cenários em que não é ideal empregar a classe File.
+
+No método Main, vamos inserir um código com vários métodos da classe File, inicialmente comentados. Na sequência, vamos estudá-los e testá-los um a um:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+
+    //var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+
+    /*
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    */
+
+    //var bytesArquivo = File.ReadAllBytes("contas.txt");
+    //Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    //File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Para contar o número de linhas de determinado arquivo, criamos uma variável chamada linhas. Ela armazenará o retorno do método ReadAllLines, da classe File. Este método recebe como argumento o caminho do arquivo (no caso, "contas.txt") e retornará um array de strings com todas as linhas desse documento.
+
+Na linha seguinte, empregamos o Console.WriteLine para exibir quantas linhas temos no arquivo contas.txt, usando a propriedade Length. Vamos descomentar essa linha e a anterior:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+
+    var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+
+    /*
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    */
+
+    //var bytesArquivo = File.ReadAllBytes("contas.txt");
+    //Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    //File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Após salvar as alterações, vamos executar a aplicação. No console, teremos o seguinte resultado:
+
+1000
+
+Aplicação Finalizada ...
+
+Ou seja, temos 1000 linhas no arquivo contas.txt. Vamos parar o programa.
+
+Para mostrar o conteúdo desse documento linha a linha, podemos utilizar um loop. Vamos descomentar o bloco foreach:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+
+    var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    //var bytesArquivo = File.ReadAllBytes("contas.txt");
+    //Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    //File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Executando a aplicação, visualizaremos todo o conteúdo do arquivo no console, isto é, a lista completa dos clientes. Além disso, continuamos exibindo o número 1000 na primeira linha, referente à quantidade de linhas. Vamos parar novamente a aplicação e comentar o loop, assim não exibiremos todo o conteúdo do arquivo nos próximos testes:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+
+    var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+    /*
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    */
+    //var bytesArquivo = File.ReadAllBytes("contas.txt");
+    //Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    //File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Semelhante ao ReadAllLines, também contamos com o método ReadAllBytes, responsável pela leitura dos bytes do arquivo. Para verificar a quantidade de bytes em contas.txt, vamos descomentar a linha em que declaramos a variável bytesArquivo e o Console.WriteLine que aparece na sequência:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+    var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+    /*
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    */
+    var bytesArquivo = File.ReadAllBytes("contas.txt");
+    Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    //File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Ao compilar e executar a aplicação, o resultado no console será:
+
+1000
+
+Arquivo contas.txt possui 25166 bytes
+
+Aplicação Finalizada ...
+
+Desse modo, constatamos que temos 1000 linhas e 25166 bytes no arquivo contas.txt. Vamos parar a aplicação novamente.
+
+**Descomplicando a gravação em arquivos**  
+Por fim, temos o método WriteAllText, que criará um arquivo e gravará informações nele. Vamos descomentar a chamada a esse método:
+
+```csharp
+static void Main(string [] args)
+{
+    //Console.WriteLine("Digite seu nome:");
+    //var nome = Console.ReadLine();
+    var linhas = File.ReadAllLines("contas.txt");
+    Console.WriteLine(linhas.Length);
+    /*
+    foreach (var linha in linhas)
+    {
+        Console.WriteLine(linha);
+    }
+    */
+    var bytesArquivo = File.ReadAllBytes("contas.txt");
+    Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+    File.WriteAllText("escrevendoComClasseFile.txt", "Testando File.WriteAllText");
+
+    Console.WriteLine("Aplicação Finalizada ...");
+
+    Console.ReadLine();
+}
+```
+
+Ao rodar a aplicação, o resultado no console será igual ao da última execução. Porém, ao acessar o gerenciador de arquivos na pasta do executável, encontraremos um documento chamado escrevendoComAClasseFile.txt. Ao abri-lo no Bloco de Notas, teremos o seguinte conteúdo:
+
+Testando File.WriteAllText
+
+O WriteAllText cria um arquivo já com uma mensagem, conforme os argumentos que informamos. Para mensagens curtas, esse método é um recurso interessante. Para mensagens longas, já não é tão indicado.
+
+Todos os métodos que estudamos nessa aula facilitam nosso trabalho ao lidar com arquivos, porém é essencial ter certos cuidados. Se quiséssemos ler todo o texto de um documento, por exemplo, uma opção seria o método ReadAllText. Ele retorna uma string com todo o conteúdo de um arquivo, porém essa prática vai contra nosso objetivo de não ler arquivos de uma única vez, especialmente se forem grandes. Para arquivos pequenos, esse método é uma boa opção.
+
+É importante avaliar cada contexto para optar pela melhor estratégia. Haverá casos em que será mais interessante ter um controle mais preciso do buffer e das posições ocupadas nele, por exemplo. Por isso, é importante entendermos o funcionamento dessas classes e desses métodos.
+
+### Aula 5: Lidando com arquivos - Exercício
+
+Carlos quer lidar com arquivos por meio dos métodos auxiliares da classe File:
+
+```csharp
+var arquivo = "teste.txt";
+
+string todoDocumento = File. [    ] (arquivo, Encoding.UTF8);
+byte[] todosOsBytes = File.ReadAllBytes( [    ] );
+string[] todasAsLinhas = File. [    ] (arquivo, Encoding.UTF8);
+```
+
+Selecione a alternativa que corresponde a como devemos preencher os espaços [ ] para o código funcionar.
+
+Resposta:  
+ReadAllText, arquivo e ReadAllLines.
+
+> Isso mesmo! Ambos os métodos existem na classe File e além disso utilizam o encoding.
+
+### Aula 5: Faça como eu fiz
+
+Uma forma de trabalhar com arquivos pequenos com mais agilidade e facilidade, é por meio dos métodos auxiliares da classe File. Bora utilizar esses métodos na nossa aplicação?
+
+Opinião do instrutor
+
+1) Nesta aula começamos usando um stream diferente do FileStream. O Stream de entrada da Console:
+
+```csharp
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+{
+}
+```
+
+Para trabalhar com esse stream, vamos criar um buffer de 1kb:
+
+```csharp
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+{
+    var buffer = new byte[1024]; // 1 kb
+```
+
+Agora, em um laço While vamos verificar o que o usuário digita na Console:
+
+```csharp
+while(true)
+{
+    var bytesLidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+    Console.WriteLine($"Bytes lidos da console: {bytesLidos}");
+}
+```
+
+Teste a aplicação. Digite na console, dê enter e observe a saída! Note que estamos trabalhando diretamente com o stream de entrada da Console.
+
+2) Podemos ainda redirecionar a entrada da Console para a saída em um arquivo, basta criarmos um FileStream e reutilizar o buffer:
+
+```csharp
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+using (var fs = new FileStream("entradaConsole.txt", FileMode.Create))
+{
+    var buffer = new byte[1024]; // 1 kb
+
+    while (true)
+    {
+        var bytesLidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+        fs.Write(buffer, 0, bytesLidos);
+
+        Console.WriteLine($"Bytes lidos da console: {bytesLidos}");
+    }
+}
+```
+
+Contudo, para nosso arquivo ser atualizado, é preciso liberar o buffer interno da FileStream com o uso do método Flush:
+
+```csharp
+fs.Write(buffer, 0, bytesLidos);
+fs.Flush();
+```
+
+3) Mas para obter informações da Console, raramente utilizamos o Stream. Usamos o retorno do método Console.ReadLine(); - uma string:
+
+```csharp
+Console.WriteLine("Digite seu nome:");
+string nome = Console.ReadLine();
+
+Console.WriteLine($"Olá, {nome}");
+```
+
+4) Uma forma de trabalhar com arquivos pequenos com mais agilidade e facilidade, é por meio dos métodos auxiliares da classe File:
+
+```csharp
+File.WriteAllText("escrevendoComAClasseFile.txt", "Testando File.WriteAllText");
+Console.WriteLine("Arquivo escrevendoComAClasseFile.txt criado!");
+
+var bytesArquivo = File.ReadAllBytes("contas.txt");
+Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+var linhas = File.ReadAllLines("contas.txt");
+Console.WriteLine(linhas.Length);
+```
+
+### Aula 5: Projeto final do curso
+
+Você pode baixar os códigos que desenvolvemos no curso em [zip neste link](https://github.com/alura-cursos/CsharpArquivos/archive/refs/heads/aula-5.zip) ou acessar o repositório da [aula no GitHub!](https://github.com/alura-cursos/CsharpArquivos/tree/aula-5)
+
+### Aula 5: O que aprendemos?
+
+Nessa aula, você aprendeu:
+
+- Como a console funciona com streams;
+- O método Console.OpenStandardInput() e como ele adquire o fluxo de entrada padrão;
+- Métodos auxiliares na classe File ajudam na criação, cópia, abertura, dentre outras ações referentes a um arquivo.
+
+### Aula 5: Conclusão - Vídeo
+
+Transcrição  
+Parabéns por chegar ao final deste treinamento! Fico muito feliz que você tenha encarado comigo este desafio de lidar com arquivos, utilizando a linguagem C#. A seguir, vamos fazer um resumo do que estudamos neste curso.
+
+Começamos criando um file stream por meio do Open e conseguimos ler nosso arquivo, criando o buffer e o passando ao método Read. Inclusive, tivemos toda a preocupação com os intervalos que esse método pode usar para gravar os dados do buffer.
+
+De início, visualizamos apenas os bytes, o que não era muito útil para nós. Então, partimos para a decodificação desses dados para exibir um texto. Para realizar essa conversão, trabalhamos com a classe Encoding. Conhecemos o Unicode, o conceito de code point e nos aprofundamos nos formatos de transformação, como UTF-8 e UTF-32. Com o método GetString, conseguimos converter a cadeia de bytes para string.
+
+Mais adiante, aprendemos sobre o StreamReader, para que não tenhamos que nos preocupar sempre com o buffer, seus intervalos e o Encoding. Exploramos como ler linhas e mostrar mensagens no console referentes ao conteúdo do arquivo, desenvolvendo um código para converter strings em ContaCorrente. Nesse processo, utilizamos o Parse para transformar strings em números inteiros e double, e também usamos o método Replace. Assim, conseguimos trazer o conteúdo do arquivo para dentro do nosso código e mostrá-lo no console.
+
+Depois, exploramos como criar arquivos e inserir informações neles, utilizando o FileMode.Create. Desenvolvemos o método CriarArquivo empregando o GetBytes, semelhante ao GetString. Também aprendemos sobre o funcionamento de arquivos binários e como eles podem nos ajudar a otimizar o uso de memória do computador. Descobrimos como fazer tanto a escrita quanto a leitura de arquivos binários, com BinaryWriter e BinaryReader. Desse modo, pudemos mostrar as informações do arquivo binário no nosso console de forma legível para nós.
+
+Por fim, exploramos o stream do console. Armazenamos os dados inseridos pelo usuário em arquivos, usando o OpenStandardInput. Ademais, também aprendemos sobre o método Flush, responsável por despejar diretamente no stream.
+
+Trabalhamos diversos conceitos nesse curso! Agora, você é capaz de lidar com arquivos dentro do ecossistema .NET. Espero que você tenha gostado do treinamento, te espero nos próximos cursos.
