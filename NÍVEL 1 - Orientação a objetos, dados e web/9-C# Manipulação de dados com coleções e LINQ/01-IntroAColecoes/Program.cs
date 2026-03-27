@@ -142,7 +142,7 @@ Console.WriteLine($"\nNumerosParesComYield, com, {paresComYield.Count()} número
 foreach (var pares in paresComYield) // ...só executa quando forem percorridos!
 {
     Console.Write($"{pares} ");
-    if (contador >= 10) break; // ...e quando necessários (sob demanda; no caso, 10)
+    //if (contador >= 10) break; // ...e quando necessários (sob demanda; no caso, 10)
 }
 
 class DiasDaSemana : IEnumerable<string>
@@ -167,8 +167,6 @@ class DiasDaSemana : IEnumerable<string>
         return GetEnumerator();
     }
 }
-
-
 public class Produto
 {
     public required string Id { get; set; }
