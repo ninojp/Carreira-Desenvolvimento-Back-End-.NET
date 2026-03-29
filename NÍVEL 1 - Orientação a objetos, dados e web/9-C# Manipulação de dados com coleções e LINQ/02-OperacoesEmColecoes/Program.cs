@@ -1,5 +1,4 @@
 ﻿using _02_OperacoesEmColecoes;
-using System.Collections;
 
 Musica musica1 = new() { Titulo = "Tempo Perdido", Artista = "Legião Urbana", Duracao = 455 };
 Musica musica2 = new() { Titulo = "Pro Dia Nascer Feliz", Artista = "Barão Vermelho", Duracao = 205 };
@@ -213,8 +212,6 @@ void OrdenarPorTitulo(PlayList playList)
 }
 //OrdenarPorTitulo(rockNacional);
 //-----------------------------------------------------------------------
-
-
 /***********************************************************************************************************************
     Seja um aplicativo de gerenciamento de músicas onde os usuários podem organizar suas faixas favoritas em 
     playlists personalizadas. Para cada playlist, é essencial que o usuário tenha controle total sobre a sequência
@@ -232,9 +229,9 @@ void OrdenarPorTitulo(PlayList playList)
     //     [X] Remover música da playlist
     //     [X] Tocar músicas da playlist em modo aleatório 
     //     [X] Reordenar músicas segundo alguma lógica específica (ex. duração)
-    //     [ ] Uma playlist não pode ter músicas repetidas
-    //     [ ] Exibir as 10 músicas mais tocadas em todas as playlists (ranking)
-    //     [ ] Player de música com:
-    //     [ ] - Fila de reprodução (para músicas avulsas e/ou playlists)
-    //     [ ] - Histórico de reprodução 
+    //     [X] Uma playlist não pode ter músicas repetidas
+    //     [X] Exibir as 3 músicas mais tocadas em todas as playlists (ranking)
+    //     [X] Player de música com:
+    //     [X] - Fila de reprodução (para músicas avulsas e/ou playlists)
+    //     [X] - Histórico de reprodução 
 */

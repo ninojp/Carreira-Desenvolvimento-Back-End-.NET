@@ -1859,67 +1859,84 @@ Na aula anterior, avançamos na realização de operações práticas com listas
 
 ### Aula 3: Manipulando músicas vindas de um arquivo - Vídeo 1
 
-Transcrição
+Transcrição  
 Agora que já conhecemos as principais estruturas de dados que representam coleções no .NET, vamos avançar em nosso estudo e pensar na origem dos dados. Queremos manipular coleções e, para isso, precisamos obter esses dados a partir de alguma fonte. Por enquanto, utilizaremos um arquivo para gerar uma coleção relativamente grande, permitindo que trabalhemos operações específicas com os elementos dessa coleção.
 
 No Visual Studio, vamos fechar a classe Program disponível no projeto 2, pois agora passaremos para o projeto 3. Fecharemos essa aba e também o projeto 2 no gerenciador de soluções, abrindo o projeto 3. Neste projeto, temos um arquivo diferente, que contém as músicas com as quais trabalharemos. Vamos abrir esse arquivo, musicas.csv, com um duplo clique. Trata-se de um arquivo de texto onde, em cada linha, há uma série de informações separadas por ponto e vírgula. Essa é uma característica comum de arquivos no formato CSV (Comma Separated Values), que são valores separados por vírgula ou outro separador qualquer. No nosso caso, o separador é ponto e vírgula. Cada linha representa uma música, com título, nome do artista, duração em segundos e o gênero categorizado para aquela música. As músicas são fictícias, mas os artistas são reais.
 
-Preparando o ambiente de desenvolvimento
+**Preparando o ambiente de desenvolvimento**  
 Precisaremos ler esse arquivo e trazer as músicas como uma coleção. Esse será nosso primeiro trabalho neste estudo. Vamos fechar o arquivo de músicas e abrir a classe Program disponível no projeto 3. Essa é a classe inicial que contém o console "Hello World". Podemos apagar esse conteúdo, selecionando tudo e pressionando "Delete". Em seguida, traremos da área de transferência o enunciado dos exercícios que faremos com o arquivo de músicas, colando-o com "Ctrl+V". Esse é o enunciado com as tarefas para nosso estudo inicial. Realizaremos uma série de atividades baseadas em uma coleção originada de um arquivo.
 
 Vamos salvar o progresso com "Ctrl+S". Para organizar melhor, na barra inicial do Visual Studio, onde há a lista suspensa com os projetos, selecionaremos o projeto número 3. Estamos avançando no estudo. Agora, começaremos a escrever código. O primeiro código será a classe Musica. Vamos criar essa classe diretamente, pois será mais rápido do que copiar e colar de outros lugares.
 
+```csharp
 class Musica
 {
 }
-Copiar código
-Criando a classe Musica
+```
+
+**Criando a classe Musica**  
 Acabamos de iniciar a criação de uma estrutura para manipular dados de músicas. Vamos criar uma propriedade chamada Título, que será do tipo String.
 
+```csharp
 class Musica
 {
     public string Titulo { get; set; }
 }
-Copiar código
+```
+
 Em seguida, adicionamos outra propriedade chamada Artista, também do tipo String.
 
+```csharp
 class Musica
 {
     public string Titulo { get; set; }
     public string Artista { get; set; }
 }
-Copiar código
+```
+
 Por fim, adicionamos uma propriedade do tipo int, que será a Duração.
 
+```csharp
 class Musica
 {
     public string Titulo { get; set; }
     public string Artista { get; set; }
     public int Duracao { get; set; }
 }
-Copiar código
-Inicializando o arquivo de músicas
+```
+
+**Inicializando o arquivo de músicas**  
 Para inicializar o arquivo, a primeira coisa que precisamos fazer é criar uma variável que representará esse arquivo, do tipo FileStream. No FileStream, devemos passar o nome do arquivo, que será músicas.csv. O modo de abertura será de leitura, utilizando FileAccess para leitura somente. Assim, pegamos esse arquivo.
 
+```csharp
 var arquivo = new FileStream("musicas.csv", FileMode.Open, FileAccess.Read);
-Copiar código
+```
+
 Quando trabalhamos com arquivos, é importante gerenciar esse recurso, pois ele representa um ponteiro no sistema operacional. Precisamos liberar esse recurso após o uso, e a palavra reservada using faz isso automaticamente ao término da execução. Portanto, não precisamos nos preocupar em liberar manualmente o recurso. Vamos colocar o using na frente da variável do arquivo.
 
+```csharp
 using var arquivo = new FileStream("musicas.csv", FileMode.Open, FileAccess.Read);
-Copiar código
-Lendo o arquivo de músicas
+```
+
+**Lendo o arquivo de músicas**  
 Além disso, precisamos ler esse arquivo. Vamos criar um StreamReader a partir do arquivo, também utilizando using, pois precisamos liberar esse recurso que representa um fluxo de bytes lido linha a linha.
 
+```csharp
 using var stream = new StreamReader(arquivo);
-Copiar código
+```
+
 Agora, estamos prontos para ler o arquivo e entregar uma coleção de músicas. Vamos criar um método que não será void, mas sim um método que retornará um IEnumerable de músicas. Nomearemos esse método como ObterMusicas a partir de um StreamReader, e o argumento de entrada será chamado de stream.
 
+```csharp
 IEnumerable<Musica> ObterMusicas(StreamReader stream)
 {
 }
-Copiar código
+```
+
 O que esse stream fará? Primeiro, precisamos pegar a linha, pois leremos linha a linha. Enquanto a linha não for null, significa que não terminamos a leitura do arquivo, então permaneceremos nesse loop.
 
+```csharp
 IEnumerable<Musica> ObterMusicas(StreamReader stream)
 {
     var linha = stream.ReadLine();
@@ -1927,10 +1944,12 @@ IEnumerable<Musica> ObterMusicas(StreamReader stream)
     {
     }
 }
-Copiar código
-Convertendo linhas em objetos Musica
+```
+
+**Convertendo linhas em objetos Musica**  
 O próximo passo será converter essa linha em uma música. Vamos criar um objeto do tipo Musica com new Musica. Inicialmente, o Título será uma String vazia, e a Duração será zero.
 
+```csharp
 var partes = linha.Split(';');
 var musica = new Musica
 {
@@ -1938,29 +1957,37 @@ var musica = new Musica
     Artista = string.Empty,
     Duracao = 0
 };
-Copiar código
+```
+
 Após criar o objeto, precisamos colocá-lo em uma lista ou não. Quando temos métodos que retornam um IEnumerable, podemos entregar diretamente um processamento de elemento sob demanda, usando yield return Musica.
 
+```csharp
 yield return musica;
-Copiar código
+```
+
 Já temos praticamente tudo pronto, mas falta pegar os valores de fato: Título, Artista e Duração de cada linha. Para isso, dividiremos a linha em partes usando o método Split da String, que quebra a linha através do separador ponto e vírgula.
 
+```csharp
 var musica = new Musica
 {
     Titulo = partes[0],
     Artista = partes[1],
     Duracao = Convert.ToInt32(partes[2])
 };
-Copiar código
-Exibindo as músicas no terminal
+```
+
+**Exibindo as músicas no terminal**  
 Com isso, terminamos o código que processa o arquivo de músicas para um enumerado de músicas. Agora, vamos criar um método que lerá e exibirá as músicas no terminal. Esse método receberá um IEnumerable de músicas.
 
+```csharp
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
 }
-Copiar código
+```
+
 Vamos percorrer as músicas com foreach (var musica in musicas) e exibir cada música usando interpolação de strings, com um "Tab" e um hífen, seguido do nome da música, musica.Titulo.
 
+```csharp
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
     foreach(var musica in musicas)
@@ -1968,9 +1995,11 @@ void ExibirMusicas(IEnumerable<Musica> musicas)
         Console.WriteLine($"\t - {musica.Titulo}");
     }
 }
-Copiar código
+```
+
 Também adicionaremos um título à exibição, pulando uma linha e escrevendo "Exibindo as músicas:".
 
+```csharp
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
     Console.WriteLine($"\nExibindo as músicas:");
@@ -1979,10 +2008,12 @@ void ExibirMusicas(IEnumerable<Musica> musicas)
         Console.WriteLine($"\t - {musica.Titulo}");
     }
 }
-Copiar código
-Limitando a exibição das músicas
+```
+
+**Limitando a exibição das músicas**  
 Para não exibir todas as músicas, já que o arquivo contém mais de mil músicas, faremos uma quebra. Vamos criar um contador e exibir apenas as primeiras 10 músicas. O contador começará em 1, e após exibir cada música, incrementaremos o contador. Se o contador for maior que 10, sairemos do loop e pararemos de exibir músicas.
 
+```csharp
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
     var contador = 1;
@@ -1994,26 +2025,544 @@ void ExibirMusicas(IEnumerable<Musica> musicas)
         if (contador > 10) break;
     }
 }
-Copiar código
-Finalizando a execução do projeto
+```
+
+**Finalizando a execução do projeto**  
 Agora, podemos criar uma variável do tipo Músicas que receberá o método ObterMusicas, retornando um IEnumerable de músicas. Por fim, chamaremos o método ExibirMusicas, passando o IEnumerable criado.
 
+```csharp
 var musicas = ObterMusicas(stream);
 ExibirMusicas(musicas);
-Copiar código
+```
+
 Criamos o modelo e a estrutura inicial que usaremos para este estudo de coleções. Vamos executar o projeto atual, que é o projeto número 3, e pressionar F5. Se tudo der certo, ele exibirá as 10 primeiras músicas do arquivo. Caso contrário, verificaremos o motivo. No nosso caso, percebemos que esquecemos de ler a próxima linha dentro do loop.
 
+```csharp
 linha = stream.ReadLine();
-Copiar código
+```
+
 Após corrigir isso, pressionamos F5 novamente, e agora sim, ele exibirá as 10 primeiras músicas do arquivo: "The Broken Road", "Midnight Echo of Shadows", "Lonely Star", entre outras.
 
 Utilizamos a estratégia de processamento sob demanda, deixando para a própria máquina virtual do .NET gerar o enumerador para nós. Assim, não precisamos percorrer todo o arquivo, apenas as 10 primeiras linhas que nos interessavam. Na sequência, continuaremos trabalhando com esses exercícios.
 
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 8
+### Aula 3: Gerenciamento de dados de clientes no Serenatto - Exercício
 
+A equipe de TI do Serenatto - Café & Bistrô, que oferece uma variedade de refeições e bebidas, está desenvolvendo um sistema para gerenciar os dados dos clientes que frequentam o bistrô. Esses dados incluem nome, preferências alimentares, histórico de pedidos e feedbacks. A equipe decidiu armazenar essas informações em arquivos CSV para facilitar a manipulação e análise. No entanto, durante a implementação, surgiu a dúvida sobre como garantir que o sistema leia e processe apenas os dados necessários, sem sobrecarregar o sistema com informações desnecessárias.
+
+Como a equipe pode implementar um sistema eficiente que leia e processe apenas os dados necessários dos arquivos CSV, garantindo que o Serenatto - Café & Bistrô possa oferecer um serviço personalizado sem comprometer a eficiência do sistema?
+
+Resposta:  
+Implementar um sistema que utilize o conceito de processamento sob demanda, lendo os arquivos CSV linha a linha com um fluxo de dados (StreamReader), dividindo os dados com o método split e processando apenas as informações necessárias, como preferências alimentares e histórico de pedidos.
+
+> Correta, pois essa abordagem permite que o sistema leia e processe apenas os dados necessários sem carregar todo o arquivo na memória, mantendo a eficiência e personalização do serviço.
+
+### Aula 3: Filtrando por artista - Vídeo 2
+
+Transcrição  
+Já obtivemos as músicas a partir do arquivo, uma coleção de músicas, e vamos ver qual é o próximo desafio. No nosso Program.cs atual, conseguimos ler uma coleção de músicas usando yield para ter um processamento otimizado. Agora, queremos filtrar a coleção por algum artista, por exemplo, Coldplay. Selecionamos a palavra "Coldplay" e queremos filtrar essa coleção.
+
+A primeira coisa que faríamos seria, ao obter a música, entregar um elemento apenas se a condição for atendida. Se o artista da música for Coldplay, retornamos o elemento, filtrando assim o arquivo pelo artista Coldplay. Vamos começar implementando essa lógica de filtragem:
+
+```csharp
+if (musica.Artista == "Coldplay") yield return musica;
+```
+
+**Melhorando a exibição das músicas**  
+Antes de executar, vamos melhorar a exibição, colocando o nome do artista entre parênteses, pois usaremos isso depois. Vamos incluir também a duração da música, resultando no título da música, artista entre parênteses, um hífen e a duração em segundos. Para isso, ajustamos a exibição da seguinte forma:
+
+```csharp
+Console.WriteLine($"{contador++}\t - {musica.Titulo}({musica.Artista}) - {musica.Duracao} seg");
+```
+
+Após executar, verificamos se realmente filtramos as músicas do Coldplay, pegando as 10 primeiras músicas. "Dancing Dream" já não é a primeira música, então conseguimos atender a necessidade solicitada. No entanto, precisamos pensar em outros casos, como filtrar por Metallica, por gênero, por duração, ou ordenar a coleção por artista.
+
+**Criando um método de filtragem por artista**  
+Quando fazemos a condição diretamente ao obter músicas, restringimos muito a obtenção. O ideal seria realizar esse filtro em um segundo estágio. O primeiro passo é obter os dados, que podem vir de arquivo ou outra fonte. Depois, aplicamos operações para manipular esses dados em etapas subsequentes, conforme necessário.
+
+**Vamos criar um método responsável por filtrar por Coldplay. Esse método retornará um enumerável, chamado**  FiltrarPorColdplay, que receberá um enumerável de músicas como entrada. Vamos iniciar com a definição do método:
+
+```csharp
+IEnumerable<Musica> FiltrarPorColdplay(IEnumerable<Musica> musicas)
+{
+    foreach(var musica in musicas)
+    {
+        if (musica.Artista == "Coldplay") yield return musica;
+    }
+}
+```
+
+Primeiro, obtemos as músicas e, depois, podemos filtrar as músicas do Coldplay. A variável que usaremos para filtrar será a variável musicas. Se pressionarmos F5, teremos a mesma exibição. No entanto, não temos a mesma exibição porque estamos desatentos. Precisamos exibir as músicas que vierem da variável musicas do Coldplay. Para testar a execução, temos as músicas do Coldplay:
+
+```csharp
+var musicasDoColdplay = FiltrarPorColdplay(musicas);
+ExibirMusicas(musicasDoColdplay);
+```
+
+**Tornando o método de filtragem mais genérico**  
+Não precisamos filtrar apenas por Coldplay; podemos filtrar por qualquer artista. Podemos passar uma string com o nome do artista, tornando o método mais genérico. Em vez de um nome fixo como Coldplay, podemos passar o nome do artista como argumento. Assim, o método de filtragem se torna mais flexível:
+
+```csharp
+IEnumerable<Musica> FiltrarPor(IEnumerable<Musica> musicas, string artista)
+{
+    foreach (var musica in musicas)
+    {
+        if (musica.Artista == artista) yield return musica;
+    }
+}
+```
+
+O que queremos observar é que estamos aplicando estágios para manipular os dados. O primeiro estágio é sempre a obtenção dos dados. Após isso, aplicamos vários passos para manipular a coleção à medida que ela é entregue. O segundo estágio pega o enumerável do primeiro e entrega mais um enumerável, e assim por diante. Criamos uma cadeia de operações que manipulam os dados gradualmente.
+
+**Criando métodos de extensão para filtragem**  
+Para isso, podemos usar um recurso no C# chamado método de extensão. Queremos criar um método que estenda um tipo específico, adicionando mais funcionalidade. O tipo que queremos estender é o IEnumerable de música, retornado por obter músicas. Vamos criar a classe de extensão:
+
+```csharp
+static class MusicasExtensions
+{
+    public static IEnumerable<Musica> FiltrarPor(this IEnumerable<Musica> musicas, string artista)
+    {
+        foreach (var musica in musicas)
+        {
+            if (musica.Artista == artista) yield return musica;
+        }
+    }
+}
+```
+
+Concluímos a criação de um método de extensão para o enumerável de músicas. Agora, temos essa funcionalidade e legibilidade. O primeiro estágio é sempre a obtenção dos dados. A partir do segundo estágio, podemos manipular as coleções como desejarmos, encadeando operações. Aqui, estamos filtrando por artista, e as músicas do Coldplay serão entregues e filtradas a partir do arquivo:
+
+```csharp
+var musicasDoColdplay = ObterMusicas(stream).FiltrarPor("Coldplay");
+ExibirMusicas(musicasDoColdplay);
+```
+
+**Concluindo a implementação e próximos passos**  
+A execução está igual, mas o código agora está mais legível, pois organizamos em uma cadeia de manipulação de dados. O primeiro estágio é sempre a obtenção dos dados, e o segundo estágio, neste caso, é a filtragem por artista. Utilizamos métodos de extensão, que seguem o checklist de três itens: classe estática, método público estático e o primeiro argumento de entrada marcado com this.
+
+Na sequência, continuaremos trabalhando com as atividades mencionadas no enunciado.
+
+### Aula 3: Filtrando projetos por linguagem de programação na CodeConnect - Exercício
+
+A CodeConnect, uma rede social para programadores, que permite curtidas, compartilhamento e comentários em projetos e códigos, está desenvolvendo uma nova funcionalidade para permitir que pessoas usuárias filtrem projetos por linguagem de programação. Atualmente, todos os projetos são exibidos em uma lista única, dificultando a busca por projetos específicos.
+
+Como você aplicaria o conceito de encadeamento de operações para implementar essa funcionalidade de forma eficiente e legível?
+
+Resposta:  
+Implementar um método de extensão que recebe a lista de projetos e a linguagem desejada como parâmetros, iterando sobre a lista e retornando apenas os projetos que correspondem à linguagem especificada.
+
+> Correta, pois ao criar um método de extensão que encadeia a obtenção da lista de projetos com a filtragem pela linguagem, o código se mantém legível e eficiente, permitindo que a pessoa usuária encontre rapidamente os projetos de seu interesse.
+
+### Aula 3: Condições como argument - Vídeo 3
+
+Transcrição  
+Vamos recapitular as atividades que já realizamos em nosso exercício. Lemos uma coleção de músicas, filtramos por artista e, para isso, aprendemos os métodos de extensão. Agora, precisamos trabalhar com outros filtros. Vamos começar com o filtro da coleção por duração.
+
+Para isso, criaremos mais um método de extensão. Vamos copiar e colar a linha onde está o método filtrarPor e chamá-lo de filtrarPorDuracao. Esse método precisa receber a duração que queremos filtrar, sendo maior ou igual à duração especificada. Assim, criamos um método rápido de filtrar por duração, mas não é apenas a duração igual, e sim músicas mais longas que um determinado tempo.
+
+**Definindo o método FiltrarPorDuracao**  
+Primeiro, vamos definir o método FiltrarPorDuracao:
+
+```csharp
+public static IEnumerable<Musica> FiltrarPorDuracao(this IEnumerable<Musica> musicas, int duracao)
+{
+    foreach (var musica in musicas)
+    {
+        if (musica.Duracao >= duracao) yield return musica;
+    }
+}
+```
+
+Estamos filtrando as músicas do Coldplay e adicionaremos mais um estágio na manipulação, filtrando por duração. Vamos executar o código e verificar se há algum erro ou se realmente não existe nenhuma música maior que 500 segundos. A execução mostrou músicas cuja duração é maior que 300 segundos. Vamos ajustar para músicas maiores que 400 segundos. Após salvar e executar novamente, temos um subconjunto de cinco músicas que são maiores que 400 segundos.
+
+```csharp
+var musicasDoColdplay =
+    ObterMusicas(stream)
+        .FiltrarPorArtista("Coldplay") // 2. filtragem por artista
+        .FiltrarMaisLongasQue(400); // 3. filtragem por duração
+```
+
+**Melhorando a estrutura dos métodos de extensão**
+No entanto, há um detalhe que pode ser melhorado. Quando criamos o método de extensão na classe MusicasExtensions, o código é muito parecido. O que muda é a condição. O método retorna uma coleção enumerável de músicas e possui um argumento this para estender esse tipo. A diferença está no segundo argumento: duração em um caso e artista no outro. Podemos melhorar isso.
+
+Vamos criar um método com uma assinatura semelhante, identificando as características comuns. O que muda é a condição. Temos um tipo Musica e o nome da variável é musica. O retorno é booleano, uma condição que avalia para verdadeiro ou falso. No meio do caminho, manipulamos a música e executamos uma expressão avaliada em booleano, chamada de condição.
+
+Podemos criar um método que represente essa condição. O retorno é booleano, e o método recebe como entrada a música. Podemos nomear a variável como quisermos. Por exemplo, no caso de filtrar por artista, a expressão seria musica.artista == "Coldplay". Para filtrar músicas mais longas, teríamos m.duracao >= duracao.
+
+```csharp
+bool FiltrarPorArtista(Musica musica) => musica.Artista == "Coldplay";
+bool FiltrarMaisLongas(Musica m) => m.Duracao >= 400;
+```
+
+**Unificando assinaturas de métodos**  
+Precisamos que esses métodos estejam ainda mais parecidos. O nome do método não faz parte da assinatura, mas sim o retorno e os tipos de entrada. Os métodos filtrarPorArtista e filtrarMaisLongas não têm a mesma assinatura porque o segundo argumento é de tipos diferentes: string e int. Podemos tentar unificar as assinaturas, mas isso exigiria passar valores fixos para o nome do artista e a duração. Vamos seguir com essa abordagem e ver como podemos melhorar.
+
+Por que isso é importante? Porque agora temos métodos que possuem a mesma assinatura. O tipo de saída é booleano e o tipo de entrada é único e do tipo música. Para melhorar nossa situação, vamos reduzir mais o código. Quando temos apenas uma instrução dentro do método e é um método que retorna algo, no caso booleano, podemos simplesmente escrever esse método de uma forma mais concisa. Utilizamos uma seta => seguida da instrução que será retornada. Assim, removemos as chaves {} e eliminamos um excesso de código desnecessário, já que temos apenas uma instrução a ser retornada.
+
+**Aplicando a simplificação de métodos**  
+Vamos aplicar isso. Pegamos a instrução, transferimos para a nova forma e removemos o código antigo. Com isso, temos uma série de métodos que nos entregam uma condição, como artista == "Metálica". Podemos ter uma série de métodos para filtrar por título que começa com "A". Todos esses métodos possuem a mesma assinatura. Quando isso acontece, temos um recurso do C# que nos permite capturar essa assinatura em uma variável.
+
+Podemos fazer isso sem gerar erros. Vamos criar uma variável chamada condição. Estamos falando de condição aqui. Condição recebe filtrarPorArtista. O interessante é que não vamos executar esse método. A execução ocorre quando chamamos o método, abrimos parênteses e passamos o objeto música que queremos. No caso, não vamos executar; estamos apenas apontando para esse método. Assim, a variável condição está apontando para o método indicado pelo nome filtrarPorArtista.
+
+**Utilizando Delegates para generalizar filtros**  
+Qual é o tipo deste método? Qual é o tipo desta variável? Quando passamos o mouse sobre ela, vemos que é um Func de dois tipos genéricos: primeiro, música; segundo, booleano. O Func de música e booleano indica que é uma função que recebe como entrada um objeto do tipo música e retorna um booleano. Essa é a leitura que fazemos desse tipo no C#. Nomes de tipos que representam métodos com a mesma assinatura são chamados de grupo de métodos na documentação do .NET. O nome desse recurso é Delegate. Um Delegate é um tipo que representa métodos que possuem a mesma assinatura.
+
+Agora que sabemos qual é o tipo, podemos declarar essa variável explicitamente. Ela é um Func que recebe uma música como entrada e retorna um booleano. O interessante é que, além de filtrar por artista, podemos também usar filtrarMaisLongas. Todos esses métodos podem ser atribuídos a essa variável porque possuem a mesma assinatura. Isso é um Delegate: tipos que representam métodos com a mesma assinatura.
+
+**Generalizando o método de filtro**  
+O que queremos dizer com isso é que, agora, se podemos declarar uma variável de um tipo Delegate, podemos recebê-la como argumento também. Em vez de fazer filtrarMaisLongas passando a duração, vamos receber como argumento de entrada um Delegate que representa essa condição. Generalizamos a duração, removemos da jogada e colocamos o Delegate como argumento de entrada. Como avaliamos essa condição? Agora, sim, executamos a condição passando a música como argumento de entrada. A condição, que é a expressão que vai avaliar o booleano, está sendo recebida como argumento e retornará um booleano.
+
+```csharp
+public static IEnumerable<Musica> FiltrarPor(this IEnumerable<Musica> musicas, Func<Musica, bool> condicao)
+{
+    foreach (var musica in musicas)
+    {
+        if (condicao(musica)) yield return musica;
+    }
+}
+```
+
+Generalizamos esse filtro. Podemos até mudar o nome, chamando de filtrarPor. A estrutura repetida de código foi eliminada, pois podemos apagar o filtro filtrarPorArtista. FiltrarPorArtista também será filtrarPorDuração, filtrarPorTítuloQueComeçaComUmaLetra, tudo isso será atendido por esse mesmo método.
+
+**Testando a nova implementação**  
+Vamos executar para testar se realmente funciona. Não temos mais os métodos filtrarPorArtista e filtrarMaisLongas, mas temos o filtrarPor. O filtrarPor existe, mas está reclamando porque o argumento de entrada agora não é mais uma string, é uma função. Vamos usar filtrarPorMetálica como argumento de entrada e filtrarMaisLongas como argumento de entrada. São funções, são delegates que estão sendo entregues ao mesmo método.
+
+```csharp
+var musicasDoColdplay =
+    ObterMusicas(stream)
+        .FiltrarPor(musica => musica.Artista == "Metallica") // 2. filtragem por artista
+        .FiltrarPor(musica => musica.Duracao >= 400); // 3. filtragem por duração
+```
+
+Vamos ver se está tudo funcionando. Ao executar, estamos filtrando por "Metálica" e o filtro funcionou. Estamos filtrando músicas do "Metálica" cuja duração é maior que 400 segundos. O filtro continua funcionando corretamente e conseguimos generalizar a operação de filtro. A operação de filtro é um método de extensão único, e passamos como argumento dessa operação de filtro um delegate, que sabemos ser uma função cujo tipo de entrada é música e o retorno é booleano. Passamos agora um delegate como argumento de entrada, e ele avalia a condição dentro desse método de extensão único.
+
+Vamos continuar evoluindo esse estudo na sequência.
+
+### Aula 3: Dinamizando as condições - Vídeo 4
+
+Transcrição  
+Criamos um método de extensão genérico para filtrar objetos e elementos de uma coleção. Este método recebe como argumento de entrada um delegate que representa a condição desejada. No entanto, ainda há um detalhe que nos incomoda: precisamos criar um método para representar cada condição específica. Por exemplo, se quisermos filtrar por músicas da banda Coldplay, teríamos que criar um método chamado filtrarPorColdplay, que receberia a música e verificaria se música.artista é igual a Coldplay. Isso exige que escrevamos um método específico para cada condição.
+
+Vamos começar implementando esse método específico para Coldplay:
+
+```csharp
+bool FiltrarPorColdplay(Musica musica) => musica.Artista == "Coldplay";
+```
+
+**Melhorando a abordagem de filtragem**  
+Podemos melhorar essa abordagem. O mais importante nesses métodos, que possuem a mesma assinatura, é a expressão que gera o valor booleano, que vem após a setinha. O nome do método, como filtrarPorArtista, não é necessariamente importante. Precisamos apenas saber como gerar o valor booleano na expressão do delegate. A única coisa que realmente precisa ser declarada é o nome da variável que representa o objeto do tipo música. No nosso caso, estamos usando o nome música, mas poderia ser m ou mus.
+
+Vamos fazer um teste. Vamos copiar a linha onde estamos filtrando músicas que começam com uma letra específica e colá-la como argumento do método filtrarPor. Apagamos o nome do método e colamos a expressão. Isso inicialmente gera um erro de compilação, mas o que importa é a expressão após a setinha. Não precisamos declarar que a expressão retorna um booleano, pois o compilador já sabe que o método filtrarPor espera um delegate que retorne um booleano. Assim, podemos remover o nome do método e, ao fazer isso, o erro de compilação desaparece.
+
+```csharp
+.FiltrarPor((musica) => musica.Titulo.StartsWith('C'))
+```
+
+**Otimizando a declaração de tipos**  
+Com essa abordagem, conseguimos chamar o método filtrarPor de forma concisa, sem a necessidade de declarar métodos específicos para cada condição. Nossa condição se torna bastante dinâmica. Se quisermos agora filtrar músicas que começam com a letra C, basta alterar a expressão, sem a necessidade de criar um novo método.
+
+Um método foi implementado, o que já trouxe melhorias significativas. No entanto, podemos fazer mais uma otimização. Sabemos que o método filtrar-por espera uma função com um tipo de entrada que é música. Portanto, é desnecessário especificar o tipo aqui. Podemos simplesmente remover a declaração do tipo música e os parênteses associados. Assim, o código passa a representar um delegate de forma dinâmica. A variável do tipo música é chamada de música, e a parte seguinte da seta é a expressão que avalia uma condição booleana: música.titulo.startsWith("C"). Com isso, garantimos concisão e economizamos código, eliminando a necessidade de declarações redundantes. Além disso, dinamizamos completamente as condições, permitindo inserir qualquer condição que retorne true.
+
+Por exemplo, ao usar a expressão true, todos os elementos serão incluídos como saída, pois a condição é sempre verdadeira.
+
+```csharp
+.FiltrarPor(musica => true)
+```
+
+**Construindo filtros dinâmicos**  
+Vamos agora tentar construir um filtro sem copiar e colar. Queremos filtrar músicas que começam com "C" e cujo artista seja "Rolling Stones". Não sabemos se há músicas dos Rolling Stones que começam com "C", mas criamos rapidamente um delegate que representa uma função de música que retorna um booleano. A variável é chamada de m, seguindo uma convenção usada por pessoas desenvolvedoras do .NET para expressões delegates concisas. O nome da variável é a letra inicial do tipo, então música é m minúsculo. Se fosse artista, seria a minúsculo. Essa convenção não é obrigatória, mas ajuda na legibilidade quando entendida.
+
+```csharp
+.FiltrarPor(m => m.Artista == "Rolling Stones");
+```
+
+**Testando e ajustando condições de filtragem**  
+Vamos testar o código. Ao executar, verificamos que não há músicas dos Rolling Stones que começam com "C". Vamos então alterar a condição para verificar se a duração da música é menor que 350. Agora, encontramos uma música, "Chasing the River", que atende a essa condição.
+
+```csharp
+.FiltrarPor(m => m.Duracao < 350);
+```
+
+**Utilizando expressões lambda para filtragem**  
+O método filtrar-por é um método de extensão que utiliza um delegate como argumento de entrada. A construção concisa que estamos usando é chamada de expressão lambda. Em vez de escrever um método que é um delegate com a mesma assinatura, colocamos diretamente o necessário para o método existir. A expressão lambda tem uma parte à esquerda da seta, que é o nome da variável, e a parte à direita é a expressão que será executada. No caso de uma função de música que retorna um booleano, é uma expressão booleana, e o objeto de entrada é uma música.
+
+### Aula 3: Para saber mais: delegates e lambdas
+
+Quando trabalhamos com C#, muitas vezes precisamos passar um comportamento como se fosse um dado. Em vez de só enviar números, strings ou objetos, enviamos uma função para que outro método possa executá-la. É aqui que entram os delegates e as expressões lambda.
+
+**O que são delegates?**  
+Um delegate é como um controle remoto universal: ele não executa nada por conta própria, mas pode apontar para diferentes aparelhos (métodos) desde que eles sigam o mesmo padrão de funcionamento (a mesma assinatura de parâmetros e retorno).
+
+Exemplo:
+
+```csharp
+public delegate int Operacao(int a, int b);
+
+class Program
+{
+    static int Somar(int x, int y) => x + y;
+    static int Subtrair(int x, int y) => x - y;
+
+    static void Main()
+    {
+        Operacao op = Somar; 
+        Console.WriteLine(op(3, 4)); // Saída: 7
+
+        op = Subtrair;
+        Console.WriteLine(op(10, 5)); // Saída: 5
+    }
+}
+```
+
+➡️ Aqui, o delegate Operacao é como um controle remoto que ora aponta para a função Somar, ora para a função Subtrair.
+
+**Delegates prontos do .NET: Action, Func e Predicate**  
+Na prática, raramente criamos delegates do zero. O .NET já traz modelos prontos, como se fossem formas de bolo reutilizáveis:
+
+- Action → métodos que não retornam nada.
+- Func<T, TResult> → métodos que retornam um valor.
+- Predicate<T> → métodos que retornam um bool.
+
+```csharp
+Func<int, int, int> multiplicar = (a, b) => a * b;
+Console.WriteLine(multiplicar(5, 6)); // Saída: 30
+```
+
+➡️ Pense no Func como um molde de função: você só preenche com a lógica que deseja.
+
+**O que são expressões lambda?**  
+As expressões lambda são como bilhetes de instruções rápidas: em vez de escrever um manual inteiro (um método com nome, retorno, bloco de código), você escreve uma frase curta dizendo exatamente o que deve ser feito.
+
+```csharp
+// Forma tradicional
+Func<int, int> quadrado = delegate(int x) { return x * x; };
+
+// Com lambda (bilhete rápido)
+Func<int, int> quadradoLambda = x => x * x;
+
+Console.WriteLine(quadradoLambda(5)); // Saída: 25
+```
+
+➡️ O => pode ser lido como "transforma em". Exemplo: x => x * x é “pegue x e transforme em x * x”.
+
+**Por que usar delegates e lambdas?**  
+
+- Redução de código: menos verbosidade, mais clareza.
+- Flexibilidade: passamos funções como parâmetros sem precisar criar métodos auxiliares.
+
+Em resumo:
+
+- Delegate → é o controle remoto que aponta para métodos compatíveis.
+- Lambda → é o bilhete rápido que descreve uma função em poucas palavras.
+- Uso prático → tornam o código mais expressivo, ajudam em eventos, callbacks, LINQ e programação assíncrona.
+
+### Aula 3: Otimizando a busca de passagens aéreas com milhas - Exercício
+
+A Jornada Milhas, uma plataforma que facilita a compra de passagens aéreas utilizando milhas, está buscando melhorar a experiência de suas pessoas usuárias ao permitir que filtrem passagens de forma mais eficiente. A equipe de desenvolvimento, da qual você faz parte, está implementando um sistema de filtragem que permite às pessoas usuárias buscar passagens com base em critérios como companhia aérea, destino e duração do voo. No entanto, a equipe percebeu que criar métodos específicos para cada critério de filtragem está tornando o código extenso e difícil de manter.
+
+Como você aplicaria o conceito de expressões lambda para tornar o sistema de filtragem mais dinâmico e eficiente, permitindo que as pessoas usuárias combinem diferentes critérios de busca sem a necessidade de criar métodos específicos para cada combinação?
+
+Resposta:  
+Utilizar expressões lambda para criar um método de filtragem genérico que aceita um delegate como argumento, permitindo que as pessoas usuárias definam suas próprias condições de filtragem de forma concisa e flexível.
+
+> Correta, pois ao usar expressões lambda, podemos criar um método de filtragem genérico que aceita um delegate, permitindo que as pessoas usuárias combinem critérios de busca de forma dinâmica e eficiente, simplificando o código e melhorando a experiência de uso da plataforma.
+
+### Aula 3: Dos filtros específicos às operações genéricas - Vídeo 5
+
+Transcrição  
+Vamos recapitular tudo o que aprendemos até agora. Começamos com um arquivo de músicas, onde cada linha representava uma música, e essa linha estava separada por ponto e vírgula. A partir dessa linha, construímos um objeto do tipo música, e o arquivo representava uma coleção de músicas.
+
+Trabalhamos com a ideia de um fluxo de informações, um fluxo de manipulação de dados. O primeiro estágio é sempre a obtenção do dado. Estamos obtendo esse dado através de um arquivo, mas poderia ser uma base de dados, outro arquivo com outro formato, ou uma API, um serviço web. Esse é o primeiro estágio de obtenção desses dados. Esses dados são obtidos e transformados em uma coleção de um elemento que faça parte do nosso contexto, no nosso caso, música. A partir daí, os próximos estágios de manipulação são usados para aplicar operações que manipulam a coleção passo a passo.
+
+**Explorando métodos de extensão e LINQ**  
+Aprendemos que, para ter esse tipo de processamento como fluxo, utilizamos métodos de extensão, a ideia de delegates (delegados) e também expressões lambda. Esses três itens, somados ao fato de termos o YIELD, que é a construção que entrega um enumerável sob demanda, formam quatro blocos fundamentais que nos ajudam a compreender os recursos utilizados em uma biblioteca que faz exatamente isso: entrega uma série de passos, de estágios de operações que podemos usar para manipular coleções.
+
+Essa biblioteca, que já conhecemos e sobre a qual já falamos algumas vezes, é o LINQ (Language Integrated Query). Trata-se de uma linguagem para consulta de forma integrada. Por que integrada? Pode-se dizer uniforme, pois as operações, a partir do segundo passo, são as mesmas para qualquer coleção, não importa se essa coleção veio de um banco de dados, de um arquivo ou de uma API. As operações são realizadas da mesma maneira.
+
+**Utilizando LINQ para filtrar coleções**  
+Na prática, como usamos o LINQ aqui? Não há quase nenhuma mudança. A única coisa que permanece fixa é o passo de obtenção dos dados. Isso é um código proprietário nosso.
+
+Vamos discutir como transformar um arquivo CSV recebido em uma coleção de músicas. Esse é um passo inicial, mas a partir daqui, o filtro será feito pelo LINQ. Qual é o método que filtra elementos de uma coleção? O método Where. Note que não fiz mais nenhuma alteração. O método Where recebe como argumento de entrada uma expressão lambda que precisa ser avaliada em uma condição, resultando em um valor booleano.
+
+Para ilustrar isso, vamos ver um exemplo de como podemos usar o LINQ para filtrar músicas de um artista específico e com uma duração menor que 350 segundos:
+
+```csharp
+var musicasDoColdplay =
+    ObterMusicas(stream)
+        .Where(musica => musica.Titulo.StartsWith('C')) // 2. filtragem por artista
+        .Where(m => m.Duracao < 350); // 3. filtragem por duracao
+```
+
+**Comparando LINQ com o filtro ARPOR**  
+O LINQ oferece dezenas de métodos e operações para manipular uma coleção de elementos. Vamos tentar entender isso melhor em breve. A única diferença que o Where tem em relação ao nosso filtro FILTRARPOR é que eles não conhecem um tipo específico de música. A biblioteca LINQ, da Microsoft, precisa ser genérica, feita para qualquer tipo que seja um elemento de uma coleção. No nosso filtro FILTRARPOR, no método de extensão FILTRARPOR, a diferença é que ele pode receber qualquer tipo como argumento de entrada. Para isso, precisamos fazer algumas alterações.
+
+No filtro FILTRARPOR, a função também precisa ser um tipo de entrada. Em toda parte onde há definição de música, colocamos T na frente. A única mudança adicional é que esse é um método genérico, e precisamos definir qual é o tipo. Talvez o nome não devesse ser "músicas"; poderia ser "coleção", e em vez de "música", poderia ser "elemento". Assim, para cada elemento na coleção, se a condição for avaliada como verdadeira, retornamos esse elemento; caso contrário, não.
+
+**Transformando o método FILTRARPOR em genérico**  
+Vamos ver como podemos transformar o método FILTRARPOR para que ele seja genérico:
+
+```csharp
+public static IEnumerable<T> FiltrarPor<T>(this IEnumerable<T> colecao, Func<T, bool> condicao)
+{
+    foreach (var elemento in colecao)
+    {
+        if (condicao(elemento)) yield return elemento;
+    }
+}
+```
+
+Agora, transformamos o método FILTRARPOR, direcionado para elementos de uma coleção de músicas, em uma forma genérica, que é exatamente o que o FILTRARPOR faz. Ele é uma operação que filtra elementos de qualquer tipo de uma coleção de qualquer tipo para enumeráveis.
+
+**Concluindo o uso do LINQ**  
+Concluindo nossa ideia, o LINQ é uma biblioteca que oferece uma série de operações para manipular dados a partir de coleções, usando a ideia de um fluxo. Encadeamos operações que queremos utilizar em uma coleção de elementos, obtendo assim os dados necessários. Vamos usar o LINQ para concluir todas essas atividades que estão em sequência.
+
+### Aula 3: Para saber mais: método group conversion em delegates
+
+**O que é Method Group Conversion**  
+O método group conversion em delegates é um recurso do C# que permite atribuir um método a uma variável de delegate sem precisar invocar explicitamente o método. Em outras palavras, o compilador interpreta o nome do método como uma referência à função em si, contanto que a assinatura do método corresponda à do delegate. Isso torna o código mais limpo e facilita a manipulação de métodos como objetos.
+
+**Como funciona a conversão**  
+Quando atribuímos um método a uma variável do tipo delegate, o compilador realiza uma verificação para confirmar se a assinatura do método (tipos e número dos parâmetros, e o tipo de retorno) combina com a do delegate. Caso haja correspondência, a conversão – conhecida como method group conversion – acontece automaticamente. Dessa forma, em vez de escrever uma expressão lambda que simplesmente encaminha os mesmos parâmetros para o método, podemos referenciar o método diretamente, o que contribui para a clareza e concisão do código.
+
+Exemplo simplificado:
+
+```csharp
+// Definindo um método com uma assinatura compatível
+bool FiltrarPorArtista(Musica m) => m.Artista == "Metallica";
+
+// Declarando uma variável do tipo Func que recebe uma Musica e retorna um booleano
+Func<Musica, bool> condicao = FiltrarPorArtista;
+```
+
+Nesse exemplo, não precisamos invocar o método (isto é, não usamos parênteses). O compilador entende que "FiltrarPorArtista" é uma referência ao método e o associa à variável "condicao".
+
+**Por que essa abordagem funciona**  
+Esta abordagem é fundamentada na capacidade do C# de tratar métodos como cidadãos de primeira classe, o que significa que métodos podem ser passados como argumentos, armazenados em variáveis ou retornados de outras funções. A existência dos delegates torna a linguagem flexível para implementar padrões de design, como callbacks e eventos, e também promove a reutilização de funções sem amarrá-las a um contexto específico.
+
+A conversão de group method simplifica a sintaxe ao eliminar a necessidade de lambdas quando a intenção é simplesmente encaminhar os parâmetros para um método já existente. Assim, além de deixar o código mais enxuto, também facilita a legibilidade, principalmente em cenários onde múltiplos métodos com assinaturas idênticas podem ser trocados dinamicamente dentro de operações de filtragem ou processamento de dados.
+
+### Aula 3: Faça como eu fiz: manipule CSV com LINQ
+
+Nesta aula, vimos como ler um arquivo CSV e transformar suas linhas em objetos, além de encadear operações usando métodos de extensão, delegates e expressões lambda para filtrar e manipular os dados. Agora é a sua vez de praticar esses conceitos. Para isso:
+
+- Feche a classe do projeto anterior e abra o projeto 3 no Visual Studio.
+- Localize e abra o arquivo 'músicas.csv' para entender sua estrutura de dados com ponto e vírgula como separador.
+- Crie a classe Música com as propriedades: título, artista e duração (inteiro).
+- Implemente a leitura do arquivo CSV usando FileStream e StreamReader dentro de um bloco using.
+- Desenvolva um método que leia cada linha do arquivo, divida a string e converta os valores em um objeto Música.
+- Utilize yield return para gerar um IEnumerable de músicas de forma sob demanda.
+- Implemente a exibição dos dez primeiros registros da coleção de músicas no terminal.
+- Crie um método de extensão para filtrar músicas por artista, utilizando um delegate e expressão lambda.
+- Generalize o método de filtro para permitir outras condições (por exemplo, filtragem por duração ou título).
+- Teste o fluxo de obtenção e manipulação dos dados, verificando os filtros aplicados e o encadeamento de operações.
+
+### Aula 3: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Como utilizar FileStream e StreamReader para ler arquivos e utilizar a cláusula using para gerenciar recursos.
+- A criar métodos que retornam IEnumerable`<T>` utilizando yield return para processar dados sob demanda.
+- A converter tipos em C#, usando Convert.ToInt32.
+- A criar métodos de extensão e utilizar delegates em C# para aplicar filtros em coleções de forma modular.
+- A usar expressões lambda para simplificar métodos em C#.
+- A manipular coleções usando a biblioteca LINQ para realizar operações de filtragem e transformação.
+- A encadear operações em coleções usando métodos de extensão para criar pipelines de dados.
+- A construir filtros dinâmicos usando expressões lambda sem a necessidade de criar métodos específicos para cada condição.
+
+## Aula 4: Usando o LINQ
+
+### Aula 4: Projeto da aula anterior
+
+Na aula anterior, conectamos ideias de diferentes estruturas de coleção e suas operações a um fluxo real de manipulação de dados, lendo músicas de um arquivo CSV e aplicando filtragens com delegates, lambdas e métodos de extensão. Essa etapa mostra como estruturar a obtenção, filtragem e manipulação em camadas organizadas. Você pode acompanhar o código no [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/03-AbstraindoAFonteDeDados)
+
+### Aula 4: 02 Operações de filtro e ordenação - Vídeo 1
+
+Transcrição
+Conhecemos a Biblioteca Link, que consiste em uma série de operações para manipular coleções. Nós obtemos os dados na primeira parte do fluxo de manipulação de dados e, a partir daí, aplicamos métodos do Link como estágios para manipular essa coleção.
+
+Vamos conhecer essas operações e tentar explorar o máximo possível delas. Para isso, vamos organizar um pouco o ambiente no Visual Studio. A primeira ação é selecionar o projeto correto na lista de projetos. Na barra inicial, onde temos a lista de projetos e a indicação de qual projeto será executado, clicamos na lista suspensa e marcamos o projeto número 4, que é o Link.
+
+Preparando o código no Visual Studio
+Agora, vamos começar a escrever código dentro da classe Program.cs do projeto 4. Antes disso, vamos aproveitar o código já desenvolvido, evitando reescrever tudo. Selecionamos todo o conteúdo do Program.cs atual com "CTRL-A", copiamos com "Ctrl+C" e colamos no Program.cs do projeto 4. No gerenciador de soluções, abrimos o projeto 4, clicamos duas vezes no Program.cs, selecionamos tudo, apagamos com "Delete" e colamos o conteúdo copiado com "Ctrl+V". Assim, transferimos tudo para o novo projeto.
+
+Podemos fechar o Program.cs do projeto 3 e fazer algumas alterações no projeto 4. Precisamos da classe Música, então, no final do arquivo, a partir da linha 79, onde temos o método Filtrar-Por, vamos removê-lo, pois faremos tudo através do Link. Também apagamos os métodos que representavam Delegates para condição. Selecionamos e deletamos, e a partir daí já temos tudo o que precisamos.
+
+Mantendo e ajustando métodos essenciais
+Mantemos o método Obter Músicas, que é o primeiro estágio do fluxo de manipulação de dados, e o método Exibir Músicas, que exibe as músicas para testar o código. Por fim, temos um cenário de execução onde pegamos músicas que começam com a letra C e têm duração menor que 350, e as exibimos. Vamos ajustar o nome da variável, que não é mais "Músicas do Codeplay".
+
+O Link possui uma série de operações, que são métodos de extensão e, na maioria, recebem expressões lambda como argumento de entrada. Vamos apresentar essas operações de forma abrangente, mas não exaustiva, pois são muitas. Vamos organizá-las como um catálogo, dividido em sessões ou categorias.
+
+Explorando operações de filtro
+A primeira categoria que conhecemos é a de filtro, onde a entrada é uma coleção de elementos e a saída é uma coleção de elementos com tamanho menor. Esse tamanho é determinado por um argumento de entrada do método. No caso do WHERE, a primeira operação de filtro que conhecemos, aplicamos uma condição: se o elemento atender a condição, ele será incluído na coleção de saída; caso contrário, não será incluído. Operações de filtro têm essa característica: a coleção de entrada pode ser igual ou maior que a coleção de saída.
+
+Vamos aplicar o WHERE para filtrar músicas do Coldplay, onde música.artista é igual a "Coldplay". Temos essa filtragem e uma segunda filtragem por durações menores que 350.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay"); // 2. filtragem por artista
+Copiar código
+Implementando ordenação com Link
+Outra categoria que vamos explorar é a de ordenação. Para ordenar uma coleção por uma propriedade específica, anteriormente precisávamos implementar a interface IComparer ou IComparable. O Link simplifica esse processo, oferecendo ordenação de forma simples. Vamos usar o método ORDER BY para ordenar as músicas do Coldplay por título. Este método ordena de forma crescente, do menor para o maior.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderBy(musica => musica.Titulo);
+Copiar código
+Testando e exibindo resultados
+Vamos exibir o resultado e testar a organização do Visual Studio que fizemos, executando o código com F5.
+
+Estamos executando o código e vamos mostrar no terminal. Fizemos um ajuste no zoom para melhor visualização. Temos aqui as músicas do Coldplay, as dez primeiras, lembrando que no método Exibir Músicas há um contador que seleciona apenas as dez primeiras. As músicas estão ordenadas por título. Com isso, não precisamos mais realizar o trabalho de implementar ICompatible, pois o link já oferece um método de ordenação, que utiliza uma expressão lambda como argumento de entrada. Existem outros métodos de ordenação, como o OrderByDescending. Este método realiza a ordenação de forma decrescente, organizando os títulos alfabeticamente de trás para frente. Ao executar novamente, com F5, as músicas são exibidas começando pelas que iniciam com T, seguidas por S, e assim por diante. Note que ele está pegando as dez primeiras, e a que começava com B não está sendo exibida.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderByDescending(musica => musica.Titulo);
+Copiar código
+Explorando ordenação composta
+Além do OrderBy, temos a possibilidade de realizar uma ordenação composta. Podemos ordenar por título e, em seguida, por duração de forma decrescente. Assim, as músicas são ordenadas alfabeticamente e, depois, as mais longas são priorizadas. Embora não haja um grande efeito aqui, pois dificilmente há músicas do Coldplay com o mesmo título, esse método permite essa funcionalidade. O ThenBy é um estágio que ordena novamente uma coleção já ordenada.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderBy(musica => musica.Titulo)
+    .ThenByDescending(m => m.Duracao);
+Copiar código
+Utilizando métodos de filtro por quantidade
+Conhecemos agora as categorias de filtro e ordenação. Temos OrderBy, OrderByDescending, ThenBy e ThenByDescending. Essas são as operações de ordenação disponíveis. Em relação às operações de filtro, temos o Where. Outras operações de filtro permitem selecionar elementos da coleção de entrada não por condição, mas por quantidade. No método Exibir Músicas, exibimos as 10 primeiras músicas utilizando um contador. O link também possui um método para isso, chamado Take, que recebe como argumento de entrada uma quantidade. Por exemplo, podemos usar Take para pegar as 5 primeiras músicas ordenadas por título. Assim, ao invés de exibir 10, ele exibirá 5.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderBy(musica => musica.Titulo)
+    .Take(5);
+Copiar código
+Implementando paginação com Skip e Take
+O Take é uma maneira de filtrar elementos por quantidade. Além do Take, há outra operação que também filtra por quantidade, mas, ao invés de pegar os primeiros elementos, ela descarta os primeiros. Por exemplo, ao usar o argumento 5, ele descarta os primeiros 5 elementos e exibe os 10 seguintes, conforme a restrição no método Exibir Músicas. Ao pressionar F5, a exibição muda, não incluindo a música que começa com B, e mostrando as músicas de G a T.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderBy(musica => musica.Titulo)
+    .Skip(5);
+Copiar código
+Os métodos Skip e Take são frequentemente usados em sistemas que exibem listas de elementos de forma paginada. Imagine uma lista de elementos com páginas, exibindo, por exemplo, 10 elementos por página. Podemos navegar para a próxima ou última página através de setas na interface do usuário. Com Skip e Take, conseguimos implementar essa paginação. Por exemplo, se a página de músicas do Coldplay possui 5 elementos, podemos descartar a primeira página e pegar a segunda. Multiplicamos 5 pelo número da página anterior para pegar a terceira página. Ao pressionar F5, pulamos para a terceira página, pegando 5 elementos.
+
+var musicasDoColdplay =
+    ObterMusicas(stream)         // 1. obtenção dos dados
+    .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+    .OrderBy(musica => musica.Titulo)
+    .Skip(5 * 2)
+    .Take(5);
+Copiar código
+Conclusão sobre operações de filtragem e ordenação
+Na carreira de desenvolvimento, ao implementar paginação, manipulamos coleções usando Skip e Take para acessar uma página específica. Nesta primeira parte, conhecemos duas categorias de operações do link: filtragem, que leva a uma coleção de saída menor ou do mesmo tamanho a partir de uma condição ou quantidade, e ordenação, que aplica uma sequência diferente à coleção de entrada. Em seguida, continuaremos nosso estudo das operações do link por categoria.
+
+### Aula 4:  - Vídeo 1
+### Aula 4:  - Vídeo 2
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
+### Aula 4:  - Vídeo 7
+### Aula 4:  - Vídeo 8
+### Aula 4:  - Vídeo 9
