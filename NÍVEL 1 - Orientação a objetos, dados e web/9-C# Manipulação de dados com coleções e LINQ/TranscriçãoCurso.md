@@ -2971,9 +2971,11 @@ A tabela a seguir resume os métodos mais importantes do LINQ, separados por cat
 Show! Seguindo o formato “Para saber mais”, aqui vai um PSM de LINQ com os métodos mais usados, organizados por categoria. Incluí a função e um exemplo curtinho (C#) para cada um.
 
 Projeção
-Método	Função	Exemplo
-Select	Projeta cada item em uma nova forma.	nums.Select(n => n * 2)
-SelectMany	“Achata” sequências aninhadas.	pedidos.SelectMany(p => p.Itens)
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Select | Projeta cada item em uma nova forma. | nums.Select(n => n * 2) |
+| SelectMany | “Achata” sequências aninhadas. | pedidos.SelectMany(p => p.Itens) |
 
 ## Filtragem
 
@@ -3075,7 +3077,8 @@ SelectMany	“Achata” sequências aninhadas.	pedidos.SelectMany(p => p.Itens)
 | Concat | Concatena sequências. | `a.Concat(b)` |
 | Select com índice | Projeção com índice. | `itens.Select((x,i)=> new { i, x })` |
 
-**Algumas dicas**  
+Algumas dicas
+
 - Select vs SelectMany: se o seletor retorna coleção, use SelectMany para “achatar” (ex.: Pedidos → Itens).
 - First vs Single: First aceita 1+ itens; Single exige exatamente 1 (útil para chaves únicas).
 - Ordenação estável: OrderBy é estável; use ThenBy para chaves secundárias.
@@ -3280,10 +3283,749 @@ Nesta aula, aprendemos:
 
 Na aula anterior conhecemos o LINQ, uma poderosa biblioteca que unifica operações de consulta e transformação em coleções. Aplicamos filtros, projeções, agregações, agrupamentos e verificações de existência de forma concisa e legível. Para revisar e testar os exemplos no projeto, acesse o [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/04-LINQ)
 
-### Aula 5:  - Vídeo 1
-### Aula 5:  - Vídeo 2
-### Aula 5:  - Vídeo 3
-### Aula 5:  - Vídeo 4
-### Aula 5:  - Vídeo 5
-### Aula 5:  - Vídeo 6
+### Aula 5: Manipulando textos - Vídeo 1
 
+Transcrição  
+Muito bem, encerramos nosso estudo sobre LINQ, no qual mostramos as operações que ele disponibiliza. Apresentamos as operações de forma abrangente, embora não completa, e as categorizamos. No final desse estudo, mostramos uma tabela comentada e deixamos disponível para que possam explorar novas operações ainda não apresentadas, inserindo-as nessas categorias para estudo próprio.
+
+Agora, vamos avançar em nosso processo de aprendizado sobre manipulação de dados, mudando o foco de coleções para um tipo de dado fundamental e onipresente nas aplicações de software: o tipo texto, conhecido como string no .NET e em outras linguagens.
+
+**Organizando o ambiente no Visual Studio**  
+Antes disso, vamos organizar nosso ambiente no Visual Studio. Primeiro, fecharemos a aba que contém o arquivo program.cs do projeto 4, relacionado ao LINQ. Em seguida, na barra inicial do Visual Studio, selecionaremos o próximo projeto, número 5, chamado "string", que será nosso objeto de estudo. Fecharemos o projeto 4 e abriremos o projeto 5, além da classe program.cs, que contém o arquivo inicial de um projeto do tipo terminal. Notem que esse projeto inicial já contém o texto "Hello World", demonstrando a onipresença dos textos e a necessidade de manipulá-los em nossos programas.
+
+```csharp
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+```
+
+Vamos selecionar todo o conteúdo desse arquivo e apagá-lo, substituindo-o por um código pronto que vem do nosso estudo de coleções. Esse código, do projeto 5, é uma estrutura mais elaborada do trabalho com coleções que fizemos até aqui. Para recapitular, estamos obtendo uma coleção de músicas a partir de um arquivo CSV, usando uma operação de filtro para pegar as cinco primeiras músicas e exibi-las. A diferença neste código é que o arquivo CSV contém uma coluna adicional com a data de lançamento da música. Na linha 43, temos uma nova propriedade na classe Música, que é o lançamento da música, do tipo DateTime. Por fim, exibimos essa data de lançamento entre colchetes.
+
+Implementando a leitura de músicas de um arquivo CSV
+
+```csharp
+using var arquivo = new FileStream("musicas.csv", FileMode.Open, FileAccess.Read);
+using var stream = new StreamReader(arquivo);
+
+var musicas = ObterMusicas(stream)
+    .Take(50);
+
+ExibirMusicas(musicas);
+
+void ExibirMusicas(IEnumerable<Musica> musicas)
+{
+    Console.WriteLine("\nMúsicas do arquivo:");
+    foreach (var musica in musicas)
+    {
+        var linha = $"\t- {musica.Titulo} ({musica.Artista}) - {musica.Duracao}s [{musica.Lancamento}]";
+        Console.WriteLine(linha);
+    }
+}
+
+IEnumerable<Musica> ObterMusicas(StreamReader stream)
+{
+    var linha = stream.ReadLine();
+    while (linha is not null)
+    {
+        var partes = linha.Split(';');
+        var musica = new Musica
+        {
+            Titulo = partes[0],
+            Artista = partes[1],
+            Duracao = Convert.ToInt32(partes[2]),
+            Generos = partes[3].Split(',').Select(g => g.Trim()),
+            Lancamento = Convert.ToDateTime(partes[4])
+        };
+        yield return musica;
+        linha = stream.ReadLine();
+    }
+}
+
+class Musica
+{
+    public string Titulo { get; set; }
+    public string Artista { get; set; }
+    public int Duracao { get; set; }
+    public IEnumerable<string> Generos { get; set; }
+    public DateTime Lancamento { get; set; }
+}
+```
+
+Vamos salvar e executar o arquivo com F5. No terminal, as cinco primeiras músicas são exibidas segundo o padrão criado: título, artista entre parênteses, um hífen com a duração em segundos e, por fim, a data de lançamento entre colchetes.
+
+**Introduzindo o conceito de strings**  
+Vamos começar nosso estudo de strings pelo mais simples. Uma string é um objeto em memória, uma classe no .NET. Quando precisamos de uma string, alocamos um objeto em memória, mas, diferentemente do padrão normal de criação de objetos, não usamos new. Criamos usando o string literal, que é escrever um texto entre aspas duplas. No método de exibição de músicas, o título é uma string e está sendo alocado como um objeto. Vamos mover esse título para uma variável para demonstrar essa alocação.
+
+```csharp
+var titulo = "\nMúsicas do arquivo:";
+Console.WriteLine(titulo);
+```
+
+Ao passar o mouse sobre a variável título, vemos que é uma string ou nula, mas não será nula, pois estamos alocando diretamente. Essa alocação de um objeto do tipo string é chamada de string literal.
+
+**Explorando métodos de manipulação de strings**  
+Podemos criar um objeto de string de outra maneira, embora não seja comum nem recomendado. Poderíamos usar new String e passar o texto, mas isso não é o padrão. O string literal é a maneira natural de alocar memória para objetos do tipo string.
+
+Nos códigos anteriores, já manipulamos strings usando alguns métodos. Destacamos o método split, da classe string, que recebe como argumento o separador e divide uma linha em várias partes, criando um array de strings. Outro método é o trim, que remove espaços em branco do início e do fim da string. Existem variações como trimStart e trimEnd, que removem espaços apenas do início ou do fim, respectivamente.
+
+```csharp
+g.TrimStart();
+g.TrimEnd();
+```
+
+Outro método que já utilizamos é o startsWith, aplicado em uma operação de filtro na coleção de entrada. Ele verifica se o título da música começa com um determinado caractere. Usamos aspas simples para denotar um caractere único, enquanto aspas duplas são usadas para textos completos. O startsWith retorna um valor booleano, verificando se a string começa com o caractere especificado.
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Where(m => m.Titulo.StartsWith('T'))
+    .Take(50);
+```
+
+**Demonstrando a string como um array de caracteres**  
+Uma string é, na verdade, um array de caracteres. Sendo uma coleção, pode ser usada com métodos do LINQ. Podemos enumerar uma string. Por exemplo, ao criar uma string chamada título, podemos manipulá-la como uma coleção de caracteres.
+
+```csharp
+var titulo = "Músicas do arquivo";
+foreach(var letra in titulo) Console.WriteLine(letra);
+```
+
+Criei uma string utilizando string literal. Vamos comentar o char de letras, que foi apenas para demonstrar que a string é uma rede de caracteres. A variável se chama string e é do tipo string. Podemos fazer um for em cada var letra no título e imprimir cada letra. Vamos comentar que exibimos músicas para apresentar diretamente a letra. Repare que título é um enumerado de char, e a variável letra é do tipo char. Ela é um enumerado que implementa a interface enumerada para elementos do tipo char. Se executarmos este método, teremos a exibição de cada letra que está na string título. Utilizamos o Console.WriteLine, por isso foi apresentado linha a linha. Repare que o espaço também faz parte da string e está sendo exibido.
+
+**Validando a força de uma senha usando LINQ**
+Temos um enumerado, então podemos fazer operações de LINQ a partir de uma string. Vamos fazer um exercício sobre como usar o LINQ em uma string. Imagine que estamos trabalhando com um aplicativo de músicas, onde há um módulo específico para registro de usuários. A pessoa precisará inserir seus dados, como nome, e-mail, nome de usuário e uma senha. Essa senha, em algum momento, será transportada no nosso software. Se for um software web, ela sairá do navegador de um formulário, e isso chegará ao código em C#. Teremos uma string representando essa senha.
+
+Queremos validar se a senha é forte. Temos algumas regras para uma senha forte, que são cinco características. Vamos fazer uma operação de agregação para cada regra, utilizando LINQ. A primeira regra é verificar o total de caracteres, que pode ser feito a partir da propriedade Length da própria string. Poderíamos usar também o Count, que é um método de agregação do LINQ. Guardamos isso no totalDeCaracteres.
+
+```csharp
+var senha = "123";
+var totalCaracteres = senha.Length;
+```
+
+Agora, vamos obter o total de letras maiúsculas. Precisaremos de mais conhecimento aqui. Vamos usar uma operação de agregação, não o Count, mas uma expressão lambda dentro do Count para nos dar uma condição. Para cada char, vamos verificar se é maiúsculo. Para isso, usaremos o método estático Char.IsUpper. Ele nos diz se o caractere está em caixa alta. Vamos fazer uma contagem de todos os caracteres que estão em caixa alta.
+
+```csharp
+var totalLetrasMaiusculas = senha.Count(c => char.IsUpper(c));
+```
+
+Vamos copiar e colar essa linha e mudar o nome da variável para totalDeLetrasMinusculas. Da mesma forma, existe um IsLower. Já fizemos três regras, mas ainda não verificamos. Vamos escrever as três regras e verificar se existe um número. Vamos adicionar mais uma linha para totalDeNumeros. Mudamos o nome da variável para totalDeNumeros e vamos totalizar. O tipo char também tem um IsDigit, que verifica isso.
+
+```csharp
+var totalLetrasMinusculas = senha.Count(c => char.IsLower(c));
+var totalNumeros = senha.Count(c => char.IsDigit(c));
+```
+
+Por fim, verificamos se possui algum símbolo. Para totalDeSimbolos, consideraremos que não é uma letra nem um dígito. Vamos fazer uma negação usando a exclamação !Char.IsLetterOrDigit. Se não for letra e não for dígito, então é um símbolo, e será totalizado na variável totalDeSimbolos.
+
+```csharp
+var totalSimbolos = senha.Count(c => !char.IsLetterOrDigit(c));
+```
+
+**Determinando a força da senha**  
+Agora, precisamos apresentar uma mensagem para dizer se a senha é forte ou não. Vamos fazer um if que dirá "A senha digitada é forte". Teremos um else que dirá "A senha digitada é fraca". O if conterá todos esses contadores. Se totalDeCaracteres for menor que 8, totalDeLetrasMaiusculas for zero, totalDeLetrasMinusculas for zero, totalDeNumeros for zero ou totalDeSimbolos for zero, qualquer uma dessas condições fará com que o if imprima que a senha é fraca.
+
+```csharp
+if (totalCaracteres < 8 ||
+    totalLetrasMaiusculas == 0 ||
+    totalLetrasMinusculas == 0 ||
+    totalNumeros == 0 ||
+    totalSimbolos == 0 )
+{
+    Console.WriteLine("A senha digitada é fraca!");
+}
+else
+{
+    Console.WriteLine("A senha digitada é forte!");
+}
+```
+
+Vamos executar e, de fato, a senha digitada é fraca. Vamos fazer uma mudança na senha. Vamos colocar uma senha forte, como uma letra maiúscula, nosso nome, 123. Quase todas as condições estão sendo atendidas, exceto o símbolo. Temos nove caracteres, então estamos quase lá. Vamos executar novamente e a senha continua sendo fraca. Vamos adicionar um símbolo, como um percentual, e executar novamente. Agora, a senha passou a ser forte, atendendo a todas as regras.
+
+```csharp
+var senha = "Daniel123%";
+```
+
+**Concluindo o estudo inicial sobre strings**  
+Usamos o recurso do LINQ e conhecemos alguns métodos do tipo char que ajudam a validar isso. Fechamos este primeiro estudo sobre strings, apresentando como a alocação é feita através do string literal. Não é recomendado usar new string. Além disso, relembramos alguns métodos que já utilizamos em nosso estudo sobre coleções, como StartsWith, Split, Trim, TrimEnd e TrimStart. Mostramos também que a string é um enumerável de caracteres e usamos LINQ para validar a senha. Nos vemos no próximo estudo sobre strings.
+
+### Aula 5:  Alterando o título de uma música - Vídeo 2
+
+Transcrição  
+Vamos avançar no estudo sobre strings. Primeiramente, vamos organizar o código. Vamos criar um método para guardar o código de alteração de senha. Selecionamos o trecho de código da linha 40 até a linha 10, onde está toda a parte do estudo de strings, e movemos para a validação de senha. Não precisamos passar nenhum argumento como entrada. Assim, o código fica disponível para nós. Também deixamos dois códigos que mostram a questão das strings sendo um enumerável de caracteres.
+
+Para começar, vamos definir o método ValidandoSenha que será responsável por essa validação:
+
+```csharp
+void ValidandoSenha()
+{
+}
+```
+
+**Implementando a lógica de validação de senha**  
+Agora, vamos adicionar a lógica de validação de senha dentro desse método. A senha será considerada forte se atender a certos critérios, como ter pelo menos 8 caracteres, conter letras maiúsculas e minúsculas, números e símbolos.
+
+```csharp
+void ValidandoSenha()
+{
+    var senha = "Daniel123%";
+    /*
+     Senha será forte se:
+     0. possui pelo menos 8 caracteres
+     1. possui alguma letra maiúscula
+     2. possui alguma letra minúscula
+     3. possui algum número
+     4. possui algum símbolo
+    */
+    var totalCaracteres = senha.Length;
+    var totalLetrasMaiusculas = senha.Count(c => char.IsUpper(c));
+    var totalLetrasMinusculas = senha.Count(c => char.IsLower(c));
+    var totalNumeros = senha.Count(c => char.IsDigit(c));
+    var totalSimbilos = senha.Count(c => !char.IsLetterOrDigit(c));
+
+    if (totalCaracteres < 8 ||
+        totalLetrasMaiusculas == 0 ||
+        totalLetrasMinusculas == 0 ||
+        totalNumeros == 0 ||
+        totalSimbilos == 0)
+    {
+        Console.WriteLine("A senha digitada é fraca!");
+    }
+    else
+    {
+        Console.WriteLine("A senha digitada é forte!");
+    }
+}
+```
+
+**Formatando código no Visual Studio**  
+Percebemos que o código para exibir músicas saiu um pouco da formatação. Uma dica rápida: quando queremos formatar rapidamente o arquivo que estamos editando no Visual Studio, podemos pressionar as teclas Ctrl+K+D. Isso formata tudo automaticamente, sem precisar fazer manualmente.
+
+Agora, queremos pegar uma música e alterar o título dela. Nunca fizemos isso antes. Vamos mudar o título de uma música. Para isso, pegamos uma música nesse enumerável, utilizando FirstOrDefault. Não precisamos mais do argumento 50. Vamos chamar essa música de musica.
+
+```csharp
+var musica = ObterMusicas(stream)
+    .Where(m => m.Titulo.StartsWith('T'))
+    .FirstOrDefault();
+```
+
+**Usando interpolação de strings**  
+Primeiro, exibimos o título da música. Estamos usando interpolação, que é uma característica das strings. Podemos usar o símbolo de cifrão ($) e, a partir disso, o texto da string fica disponível para expressões de interpolação entre chaves.
+
+```csharp
+if (musica is not null)
+{
+    Console.WriteLine($"Título da música: {musica.Titulo}"); // interpolação
+}
+```
+
+Poderíamos também usar a concatenação tradicional. Por exemplo, poderíamos escrever "Título da música: " e somar com o título da música. A interpolação é uma forma mais moderna de concatenação, lançada nas versões mais atuais do C#. Não lembramos qual versão introduziu a interpolação, mas podemos pesquisar para saber.
+
+**Alterando o título da música e entendendo a imutabilidade**  
+Voltando ao nosso problema original, queremos mudar o título de uma música. Para evitar a mensagem do Visual Studio indicando que a variável pode ser nula, fazemos uma validação. Se a variável não for nula, colocamos o código dentro de chaves. Isso impede que o Visual Studio reclame, pois já fizemos a validação.
+
+```csharp
+if (musica is not null)
+{
+    musica.Titulo = musica.Titulo.Replace("The ", ""); // imutabilidade
+    Console.WriteLine($"Título da música: {musica.Titulo}"); // interpolação
+}
+```
+
+Ao executar, percebemos que o título da música continua igual, inalterado. Isso ocorre porque a classe string é imutável. Os métodos que manipulam strings sempre retornam uma nova instância. O método Replace retorna uma nova string, não altera a original. Para mudar o título, precisamos fazer com que musica.Titulo receba o novo objeto criado pelo método Replace. Assim, substituímos o objeto anterior por um novo, resultado da substituição.
+
+**Explorando métodos de strings e imutabilidade**  
+Agora, ao executar a aplicação, temos o efeito esperado: o título da música realmente muda de "The Broken Road" para "Broken Road". É importante entender que as strings são imutáveis. Quando alocadas, não mudam mais. O método Replace retorna uma nova string, assim como outros métodos da classe string que retornam strings. Por exemplo, para colocar a música em letras maiúsculas, usamos o método ToUpper. Ele também retorna uma nova string, então precisamos apontar musica.Titulo para esse novo objeto.
+
+```csharp
+musica.Titulo = musica.Titulo.ToUpper();
+```
+
+Os métodos da classe string que retornam strings sempre entregam um novo objeto, pois são imutáveis.
+
+**Melhorando o método obterMúsicas**  
+No nosso código, vamos comentar o método toUpper para que possamos ter uma referência. Já estamos utilizando um método no obterMúsicas, que transforma o CSV em um objeto do tipo música. Podemos melhorar esse método, especialmente agora que entendemos a questão da imutabilidade, o que faz ainda mais sentido.
+
+No método obterMúsicas, na linha 83, temos um código que lida com gêneros. Ele converte um segmento da nossa string de gêneros, que estão separados por vírgulas. Utilizamos o split e, em seguida, fazemos uma projeção usando o método select. Para evitar que os gêneros tenham espaço na frente, usamos o trim. O trim retorna uma string, e sabemos que strings são imutáveis. Portanto, ele cria um novo objeto, descartando o objeto original que começou no select e utilizando um novo objeto. Se tivermos 20 gêneros, teremos 40, pois estamos usando um segundo método que gera uma nova string. Neste caso, isso não afeta nossa performance, mas agora temos consciência do design da classe string e podemos pensar em melhorias.
+
+**Otimizando o uso de strings com StringSplitOptions**  
+Podemos melhorar o código utilizando uma sobrecarga do método split, onde passamos um segundo argumento, StringSplitOptions. Com isso, aplicamos o trim diretamente nas entradas do split, eliminando a necessidade de usar o select e o método trim separadamente. Isso torna nosso código mais performático.
+
+```csharp
+Generos = partes[3].Split(',', StringSplitOptions.TrimEntries);
+```
+
+**Concluindo o estudo sobre imutabilidade de strings**  
+Para concluir, entendemos que strings são imutáveis. Um objeto imutável, uma vez alocado, não muda mais até o fim de sua vida útil. No caso das strings, o conteúdo permanece igual. Para garantir essa imutabilidade e ainda assim modificar valores, atribuímos um novo objeto à propriedade desejada, como título ou artista. Os métodos que retornam strings entregam novos objetos.
+
+A Microsoft tornou as strings imutáveis porque são muito frequentes no código e usadas em diversos contextos, como em processamento paralelo. Se as strings fossem mutáveis, não teríamos garantia de que processamentos paralelos não alterariam seu valor. A imutabilidade nos dá segurança e garantia. Além disso, em coleções cuja chave é do tipo string, a imutabilidade garante que o valor da chave não seja alterado por outro código, preservando o elemento da coleção.
+
+A imutabilidade é fundamental para garantir segurança, especialmente em processamento paralelo e na manutenção de chaves de hashing. Vamos continuar nosso estudo na sequência.
+
+### Aula 5: Duração e lançamento formatados - Vídeo 3
+
+Transcrição  
+Avançando em nosso estudo, vamos organizar o ambiente primeiro, realizando o trabalho habitual. No topo, temos um código que utilizamos para alterar o título de uma música, o que serviu como base para discutirmos a imutabilidade de strings.
+
+Vamos selecionar todo esse código, da linha 6 até a linha 20, que realiza a alteração do título. Primeiro, ele seleciona uma música e, em seguida, altera o título. Vamos recortar esse trecho e criar um método chamado alterarTitulo. Abriremos e fecharemos as chaves e copiaremos o código para dentro delas. Receberemos como argumento de entrada o StringReader. Pronto, o método está disponível para referência futura.
+
+**Definindo o método AlterandoOTitulo**  
+Para começar, vamos definir o método AlterandoOTitulo que irá encapsular a lógica de alteração do título da música:
+
+```csharp
+void AlterandoOTitulo()
+{
+    var musica = ObterMusicas(stream)
+    .Where(m => m.Titulo.StartsWith('T'))
+    .FirstOrDefault();
+
+    if (musica is not null)
+    {
+        Console.WriteLine("Título da música: " + musica.Titulo); // concatenação tradicional
+        Console.WriteLine($"Título da música: {musica.Titulo}"); // interpolação
+        musica.Titulo = musica.Titulo.Replace("The ", ""); // imutabilidade
+        musica.Titulo = musica.Titulo.ToUpper();
+        Console.WriteLine($"Título da música: {musica.Titulo}"); // interpolação
+    }
+}
+```
+
+**Exibindo músicas e criando o método exibirMusicasEmTabela**  
+Outro processo importante na manipulação de texto é a exibição em algum local. Por exemplo, estamos executando o código e exibindo as informações no terminal. Podemos exibir isso em uma página web, em uma aplicação desktop ou em uma aplicação móvel. Esse processo de exibição das informações também requer manipulação de texto.
+
+Vamos criar novamente uma variável musicas, obtendo-a a partir do nosso stream. Selecionaremos 20 músicas e chamaremos a função para exibir essas músicas. Para exemplificar a exibição, ao pressionar F5, as músicas serão exibidas no terminal. A exibição está mostrando as informações, mas poderíamos organizá-las de maneira mais estruturada.
+
+Primeiro, vamos obter as músicas do stream e selecionar apenas 20 delas:
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Take(20);
+```
+
+Em seguida, chamamos a função para exibir essas músicas:
+
+```csharp
+ExibirMusicas(musicas);
+```
+
+Recebemos a demanda de exibir as músicas em formato de tabela, com colunas para título, artista, duração e lançamento. Podemos fazer isso utilizando métodos da String. Vamos descer para o método exibirMusicas. Manteremos o método original, mas selecionaremos todo o método novamente, da linha 68 a 79. Vamos copiá-lo e colá-lo logo abaixo.
+
+Está ocorrendo um erro de compilação porque não podemos ter dois métodos com a mesma assinatura. Vamos renomear o método para exibirMusicasEmTabela. Alteraremos o nome no topo para exibirMusicasEmTabela, para não esquecermos depois. Retornando ao método exibirMusicasEmTabela, precisamos primeiro mostrar um cabeçalho com as seguintes colunas: título, artista, duração e lançamento.
+
+**Formatação de Strings e Exibição de Dados**  
+Definimos as colunas artista, duração e lançamento para nossa tabela. O console será exibido com o título no topo. Queremos que a exibição em tabela tenha colunas com largura fixa. Para isso, utilizamos o método padLeft, que alinha a string à direita a partir de um tamanho especificado. Se não passarmos outro argumento além do tamanho, ele alinha com espaços. No entanto, queremos usar o padRight com um tamanho de 40 caracteres para a coluna título, 30 para artista, 10 para duração e 15 para lançamento. Caso haja algum erro, faremos a modificação posteriormente.
+
+Vamos definir as colunas com o tamanho apropriado:
+
+```csharp
+var colunaTitulo = "Titulo".PadRight(40);
+var colunaArtista = "Artista".PadRight(30);
+var colunaDuracao = "Duração".PadRight(10);
+var colunaLancamento = "Lançada Em".PadRight(15);
+```
+
+Podemos imprimir essas colunas diretamente, utilizando interpolação de strings para passar as variáveis. Além disso, imprimiremos uma linha para separar o cabeçalho das linhas das músicas. Essa linha terá um tamanho total de 100 caracteres, composta por sinais de igual repetidos. Utilizaremos console.writeLine para exibir essa linha, que chamaremos de borda, para evitar conflitos com outras variáveis.
+
+```csharp
+Console.WriteLine($"{colunaTitulo}{colunaArtista}{colunaDuracao}{colunaLancamento}");
+var borda = "".PadRight(100, '=');
+Console.WriteLine(borda);
+```
+
+Após recebermos as 50 músicas, verificamos que o título, artista, duração e lançamento estão corretos. No entanto, a linha não fez o pad corretamente. Precisamos pegar uma string vazia e fazer um padRight com o caractere igual para o preenchimento. Assim, a linha será impressa corretamente.
+
+O próximo passo é ajustar cada informação da música para que se encaixe nas larguras fixas. A interpolação de strings nos permite definir quantos caracteres cada expressão terá, utilizando um sinal de alinhamento. Por exemplo, para alinhar à direita, usamos um número negativo, como -40 para a coluna título. Testar o software é essencial para garantir que tudo esteja correto.
+
+```csharp
+var linha = $"{musica.Titulo,-40}{musica.Artista,-30}{musica.Duracao/60.0,-10:F3}{musica.Lancamento,-15:dd/MM/yyyy}";
+```
+
+Além do alinhamento, podemos formatar os valores. A duração, por exemplo, será exibida em minutos ao dividir os segundos por 60. Para exibir valores decimais, representamos 60 como 60.0. Utilizamos a expressão de interpolação com dois pontos para formatar o valor em ponto flutuante com duas casas decimais.
+
+Para formatar a data, não exibiremos as horas, apenas o dia, mês e ano. Usamos m maiúsculo para o mês e y para o ano. A tabela agora exibe as músicas com a formatação desejada, alinhadas à esquerda e com valores formatados.
+
+Para saber quais formatações estão disponíveis, consultamos a documentação da Microsoft. Caso a interpolação não esteja disponível, podemos usar o método estático string.format, passando a chave do índice do argumento e a formatação desejada. Ajustamos o alinhamento e a divisão por 60 para exibir a duração corretamente.
+
+A maioria dos tipos em .NET possui uma formatação básica através do método toString. Podemos sobrescrever esse método para formatar objetos personalizados, como músicas. Assim, formatamos valores e objetos de maneira customizada, utilizando diferentes métodos e técnicas de formatação.
+
+### Aula 5: Comparando strings - Vídeo 4
+
+Transcrição  
+Agora estamos exibindo as músicas em formato de tabela, com largura adequada, formatação de números, duração em minutos e data de lançamento. Vamos continuar nosso estudo com strings, abordando um processo bastante comum. Vamos pegar as primeiras 20 músicas de um artista específico. Utilizamos a variável música e música.artista igual a "Coldplay", nosso sempre querido Coldplay. Exibimos as músicas do Coldplay, e o resultado está em tabela.
+
+Para isso, começamos com o seguinte código:
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Where(musica => musica.Artista == "Coldplay")
+    .Take(20);
+```
+
+**Comparando objetos do tipo string**  
+O que estamos fazendo aqui é uma comparação entre dois objetos do tipo string: o objeto que está em artista e o objeto gerado. Lembre-se de que uma string literal aloca um novo objeto, portanto, são dois objetos diferentes. Nesse caso, é importante lembrar que já fizemos isso anteriormente quando precisávamos criar um hash set de músicas. Precisamos criar uma condição de igualdade para identificar o que é uma música igual, considerando título e artista como iguais. Para isso, sobrescrevemos os métodos equals e getHashCode. A classe string faz a mesma coisa, permitindo que essa comparação funcione. Ela sobrescreve o método equals e getHashCode para comparar o conteúdo. Mesmo que sejam dois objetos diferentes, música.artista e a string literal "Coldplay" retornarão true devido à sobrescrita do método equals.
+
+Se colocarmos o nome do artista em maiúsculas, será que funcionará? Vamos testar. Ao executar o código, obtemos uma tabela vazia, pois o conteúdo é diferente. "Coldplay" com caracteres diferentes do artista "Coldplay" apenas com "C" maiúsculo.
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Where(musica => musica.Artista == "COLDPLAY")
+    .Take(20);
+```
+
+**Resolvendo diferenças de maiúsculas e minúsculas**  
+Já vimos, inclusive, quando validamos uma senha forte, que existe diferença entre caracteres maiúsculos e minúsculos.
+
+Como resolver isso? Queremos que, mesmo escrevendo "Coldplay" com maiúsculas ou minúsculas, todas as músicas do Coldplay sejam exibidas, independentemente de como está escrito na fonte de dados. Para isso, precisamos sair da comparação com == e usar o método equals. Vamos pegar a string literal e colocá-la como argumento.
+
+```csharp
+.Where(musica => musica.Artista.Equals("COLDPLAY"))
+```
+
+Precisamos adicionar um segundo argumento ao equals para comparar independentemente de a letra ser maiúscula ou minúscula.
+
+```csharp
+.Where(musica => musica.Artista.Equals("COLDPLAY", StringComparison.OrdinalIgnoreCase))
+```
+
+**Utilizando string comparison**  
+O conceito de string comparison (comparação de strings) é importante, especialmente quando utilizamos o ordinal ignore case. O essencial aqui é o ignore case, que permite a comparação de strings sem considerar diferenças entre maiúsculas e minúsculas. Ao executar o código, mesmo que as músicas do Coldplay estejam escritas de forma diferente, elas serão reconhecidas corretamente.
+
+A comparação entre strings é frequente, e muitas vezes não sabemos se uma string está em maiúsculas ou minúsculas. Por isso, utilizamos bastante o string comparison. Já escrevemos muito código onde, por exemplo, usamos musica com M para ser mais rápido, e artista.toUpper() igual a "Coldplay".
+
+```csharp
+.Where(m => m.Artista.ToUpper() == "COLDPLAY")
+```
+
+**Considerando a imutabilidade das strings**  
+Isso funciona, mas é importante lembrar da imutabilidade das strings. Todos os métodos que retornam uma string criam um novo objeto. Já fizemos uma mudança no trim e no split para evitar a projeção do link usando o trim, pois um novo objeto estava sendo criado. Portanto, esse código é menos performático, pois aloca mais objetos em memória. Na maioria das vezes, isso não faz diferença em coleções pequenas, mas é importante estar ciente e usar as melhores práticas.
+
+Vamos comentar e trocar o código para mostrar que a comparação pode ser feita de forma mais elegante, garantindo que a string será comparada sem considerar maiúsculas e minúsculas. O tipo string comparison não é usado apenas no equals, mas em vários outros métodos.
+
+```csharp
+// métodos que utilizam StringComparison
+"Coldplay".Equals("coldplay", StringComparison.OrdinalIgnoreCase);
+"Coldplay".StartsWith("cold", StringComparison.OrdinalIgnoreCase);
+"Coldplay".EndsWith("coldplay", StringComparison.OrdinalIgnoreCase);
+"Coldplay".IndexOf("coldplay", StringComparison.OrdinalIgnoreCase);
+"Coldplay".Contains("OLD", StringComparison.OrdinalIgnoreCase);
+"Coldplay".Replace("cold", "warm", StringComparison.OrdinalIgnoreCase);
+```
+
+**Recomendando o uso de string comparison**  
+Recomendamos o uso do string comparison para facilitar o desenvolvimento e evitar erros inesperados. A classe string sobrescreve o equals e o getHashCode para comparação de conteúdo, e a comparação sem considerar maiúsculas e minúsculas é feita com string comparison e o valor ordinal ignore case. Vamos continuar nosso estudo sobre strings em seguida.
+
+### Aula 5: Comparação de títulos de vídeos na plataforma Screen Match - Exercício
+
+A Screen Match, uma plataforma de streaming de vídeos similar ao YouTube, está enfrentando um desafio com a busca de vídeos. A equipe de desenvolvimento que você faz parte está trabalhando em um sistema de busca que precisa ser capaz de encontrar vídeos independentemente de como as pessoas usuárias digitam os títulos. Por exemplo, se uma pessoa usuária procurar por "Aventuras no Espaço" ou "aventuras no espaço", o sistema deve retornar o mesmo conjunto de vídeos.
+
+Considerando a importância de uma busca eficiente e precisa, qual abordagem você implementaria para permitir a comparação de títulos de vídeos sem considerar diferenças entre letras maiúsculas e minúsculas?
+
+Resposta:  
+Implementar a comparação de strings utilizando o método equals com o argumento StringComparison.OrdinalIgnoreCase.
+
+> Correta, pois essa abordagem permite que o sistema de busca compare os títulos dos vídeos sem considerar diferenças entre letras maiúsculas e minúsculas, garantindo que "Aventuras no Espaço" e "aventuras no espaço" sejam tratados como equivalentes, melhorando a experiência da pessoa usuária.
+
+### Aula 5: Como o .NET trata strings - Vídeo 5
+
+Transcrição  
+Para continuarmos nosso estudo sobre dados textuais e manipulação de dados textuais com a classe String, vamos organizar o código. A parte de comparação será separada em um método para que possamos ter como referência. Vamos criar esse método chamado ComparandoStrings, passando o StreamReader como argumento.
+
+Primeiro, definimos o método vazio:
+
+```csharp
+void ComparandoStrings(StreamReader stream)
+{
+
+}
+```
+
+Agora, vamos transferir o código da linha 7 até a linha 20, que é onde realizamos a comparação entre strings, para dentro do método ComparandoStrings.
+
+```csharp
+void ComparandoStrings(StreamReader stream)
+{
+    var musicas = ObterMusicas(stream)
+        .Where(musica => musica.Artista.Equals("COLDPLAY", StringComparison.OrdinalIgnoreCase))
+        //.Where(m => m.Artista.ToUpper() == "COLDPLAY")
+        .Take(20);
+
+    // métodos que utilizam StringComparison
+    "Coldplay".Equals("coldplay", StringComparison.OrdinalIgnoreCase);
+    "Coldplay".StartsWith("cold", StringComparison.OrdinalIgnoreCase);
+    "Coldplay".EndsWith("coldplay", StringComparison.OrdinalIgnoreCase);
+    "Coldplay".IndexOf("coldplay", StringComparison.OrdinalIgnoreCase);
+    "Coldplay".Contains("OLD", StringComparison.OrdinalIgnoreCase);
+    "Coldplay".Replace("cold", "warm", StringComparison.OrdinalIgnoreCase);
+
+    ExibirMusicasEmTabela(musicas);
+}
+```
+
+**Explorando o comportamento de strings no .NET**  
+Agora, precisamos fazer uma pequena alteração. Vamos apagar a linha 1, que está completamente inútil. Provavelmente, foi um erro cometido durante os testes, resultando naquele using desnecessário.
+
+Precisamos nos desviar um pouco da discussão sobre músicas e playlists para abordar um assunto sobre strings: entender um pouco os bastidores de como o .NET trabalha com strings. Considerando que strings são dados muito frequentes e um recurso amplamente utilizado em programas e aplicações, o .NET tem um tratamento especial na alocação de objetos do tipo string.
+
+Para iniciar nosso estudo, vamos criar duas variáveis do tipo string: var artista1, que chamaremos de "Coldplay". Imagino que já estejamos cansados de ouvir Coldplay.
+
+```csharp
+var artista1 = "Coldplay";
+```
+
+Vamos criar uma segunda variável com o conteúdo codeplay. Vamos imprimir no console o resultado da igualdade entre essas duas variáveis. Perguntamos: o que será exibido? True ou False?
+
+```csharp
+var artista2 = "Coldplay";
+Console.WriteLine(artista1 == artista2);
+```
+
+Também vamos exibir um método que verifica se essas duas referências são iguais, ou seja, se as duas variáveis estão apontando para a mesma área de memória. Existe um método chamado ReferenceEquals, no qual passamos como argumentos as duas variáveis artista1 e artista2. Perguntamos novamente: o que aparecerá aqui?
+
+```csharp
+Console.WriteLine(ReferenceEquals(artista1, artista2));
+```
+
+**Compreendendo o string pool e o interning**  
+Já discutimos a comparação de strings, que sobrescreve os métodos equals e getHashCode. Portanto, ele comparará o conteúdo. Como o conteúdo dessas duas variáveis é igual, imaginamos que o resultado será true. Agora, temos duas variáveis, artista1 e artista2, nas quais estamos alocando objetos do tipo string. Como são objetos diferentes, esperamos que as referências também sejam diferentes, resultando em false para a comparação de referências.
+
+Ao executar a aplicação, observamos que a comparação por conteúdo retornou true, como esperado. No entanto, a comparação por referências, que esperávamos ser false, retornou true. Isso ocorre devido a um comportamento específico do runtime do .NET para tratar strings. Como strings são muito frequentes, o .NET reserva uma área de memória específica para gerenciá-las, chamada de string pool.
+
+O string pool otimiza o uso de memória verificando se o conteúdo já existe. Se o conteúdo for o mesmo, ele reutiliza a referência existente no pool de strings. No caso do artista2, como o conteúdo é o mesmo, ele utiliza a referência do pool de strings, economizando memória. Se tivéssemos várias strings literais, o .NET usaria o mesmo objeto para todas, pois o conteúdo é o mesmo.
+
+**Explorando o uso do método String.Intern**  
+É importante destacar que o string pool economiza áreas de memória. O processo de colocar uma string no pool é chamado de interning. Quando criamos uma string literal, como artista1, ela é internada no pool. Ao criar uma segunda variável com o mesmo conteúdo, o .NET verifica se já está no pool e reutiliza a referência, sem fazer interning novamente.
+
+Se criarmos uma nova string usando new String("Coldplay"), mesmo com o mesmo conteúdo, não será utilizada a mesma referência, pois o interning só ocorre com strings literais. Por isso, não é recomendado usar new String, pois impede o .NET de otimizar o uso do pool de strings.
+
+```csharp
+var artista3 = new string("Coldplay");
+Console.WriteLine(ReferenceEquals(artista1, artista3));
+```
+
+Se removermos o new String, o .NET usará a mesma referência. O interning só é feito com strings literais. Nenhum outro método fará interning. Por exemplo, se criarmos uma variável artista4 com codeplay, ela fará string interning, mas será uma referência diferente de artista1.
+
+```csharp
+var artista4 = "COLDPLAY";
+```
+
+Se tentarmos usar ReferenceEquals entre artista1 e artista4, o resultado será false, pois são referências diferentes. Se criarmos uma variável artista5 a partir de artista1 com ToUpper, não haverá interning, pois o interning só é utilizado com strings literais. Nesse caso, um novo objeto será gerado e armazenado na área de memória comum de objetos, chamada de heap.
+
+```csharp
+var artista5 = artista1.ToUpper();
+Console.WriteLine(ReferenceEquals(artista1, artista4));
+```
+
+Se quisermos usar o processo de interning, podemos utilizar o método estático String.Intern. Quando usamos String.Intern, ele verifica o string pool e, se o conteúdo já existir, retorna a referência existente. Assim, String.Intern retorna uma string a partir do pool.
+
+```csharp
+var artista5 = string.Intern(artista1.ToUpper());
+Console.WriteLine(ReferenceEquals(artista4, artista5));
+```
+
+**Concluindo o estudo sobre strings no .NET**  
+Ao executar novamente, a comparação entre artista5 e artista4 retorna true, pois estão usando a mesma referência, graças ao método Intern da classe string. É importante entender que string é uma classe especial no .NET, desenvolvida de forma especial devido à sua frequência de uso. Por isso, estamos dedicando tempo para estudar a manipulação de dados com strings.
+
+Essas duas características são fundamentais ao escrever código: a imutabilidade de uma string e o processo de interning em uma área de memória reservada chamada string pool. Vamos continuar nossa sequência de estudos sobre strings em seguida.
+
+### Aula 5: Otimizando o uso de strings no Bytebank
+
+A equipe de desenvolvimento do Bytebank, um banco digital que oferece serviços bancários online, está trabalhando em uma nova funcionalidade para o aplicativo que envolve a manipulação intensiva de strings, como nomes de clientes e descrições de transações. Durante uma revisão de código, foi observado que várias strings literais idênticas estão sendo criadas em diferentes partes do sistema. A equipe está preocupada com o impacto disso na performance e no uso de memória do aplicativo.
+
+Qual das alternativas abaixo melhor explica a importância do string pool do .NET nesse contexto e quais práticas são recomendadas para otimizar o uso de strings no Bytebank?
+
+Resposta:  
+O string pool do .NET armazena strings literais de forma eficiente, reutilizando referências existentes para economizar memória. Recomenda-se usar strings literais e métodos como String.Intern para evitar a criação desnecessária de novas instâncias.
+
+> Correta, pois o string pool do .NET ajuda a otimizar o uso de memória ao reutilizar strings literais já existentes, e o uso de String.Intern garante que strings repetidas sejam armazenadas eficientemente.
+
+### Aula 5:  Validando a obtenção do CSV - Vídeo 6
+
+Transcrição  
+Agradecemos pela licença poética concedida para abordar um assunto fora do contexto musical. Acabamos utilizando exemplos de músicas e artistas, mas nos afastamos um pouco do tema de playlists, músicas e enumeráveis. Após essa licença poética, vamos continuar nosso estudo e agora falaremos sobre validação, especificamente a validação de strings. Antes disso, precisamos organizar nosso ambiente, criando um método para separar o código. Vamos abrir e fechar chaves, copiar o código da linha 15 para a linha 4, onde estamos estudando interning. Feito isso, podemos prosseguir.
+
+Para começar, vamos criar o método Interning que será utilizado para demonstrar o conceito de interning de strings:
+
+```csharp
+void Interning()
+{
+}
+```
+
+**Demonstrando o conceito de interning de strings**  
+Agora, vamos adicionar alguns exemplos de interning de strings. Isso nos ajudará a entender como o .NET gerencia strings de forma eficiente:
+
+```csharp
+void Interning()
+{
+    var artista1 = "Coldplay"; // interning - string literal
+    var artista2 = "Coldplay";
+    var artista3 = new string("Coldplay"); // não faz interning
+    var artista4 = "COLDPLAY";
+    var artista5 = string.Intern(artista1.ToUpper()); // HEAP x
+
+    Console.WriteLine(artista1 == artista2); // True
+    Console.WriteLine(ReferenceEquals(artista1, artista3)); //True - pool de strings
+    Console.WriteLine(ReferenceEquals(artista1, artista4));
+    Console.WriteLine(ReferenceEquals(artista4, artista5));
+}
+```
+
+**Introduzindo a necessidade de validação de strings**  
+Como vamos validar? Mencionamos anteriormente que, no futuro, validaríamos os dados ao criar uma música. Atualmente, estamos obtendo o arquivo CSV e transferindo para uma coleção de músicas, mas essa obtenção está sendo feita de forma frágil e vulnerável. Se houver algum problema nas linhas do CSV, podemos enfrentar erros, pois não realizamos nenhum tipo de validação. É isso que queremos abordar agora.
+
+Antes disso, vamos inserir um código para realizar testes. Criaremos uma variável chamada músicas, obteremos as músicas a partir do nosso stream, selecionaremos as primeiras 20 e as exibiremos em formato de tabela:
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Take(20);
+
+ExibirMusicasEmTabela(musicas);
+```
+
+Após pressionar F5, verificamos se tudo está funcionando corretamente. Sim, está tudo em ordem, estamos imprimindo as 50 primeiras músicas em formato de tabela.
+
+**Navegando no código e analisando a leitura de dados**  
+A validação de uma string, no caso do objeto música, precisa ocorrer no método obter músicas. Às vezes, fazemos as coisas tão rapidamente que esquecemos de mencionar detalhes importantes, então vamos voltar ao início. No Visual Studio, há uma maneira de navegar rapidamente pelo código, independentemente de estarmos em vários arquivos. No nosso caso, estamos no mesmo arquivo, mas podemos ter vários abertos. Para navegar até a implementação ou declaração de um método ou classe, seguramos a tecla CTRL no teclado (no Windows; no Mac, não sabemos qual tecla usar), passamos o mouse sobre o local desejado, e ele se transforma em um link, como em um navegador. A mãozinha aparece, e ao clicar, navegamos diretamente para a declaração do método. Essa dica já foi utilizada algumas vezes, mas ainda não havia sido mencionada.
+
+Vamos começar analisando o código. Primeiramente, estamos utilizando o StreamReader para ler uma linha. Se a linha não for nula, transformamos essa linha em um array de strings e armazenamos na variável parts. Em seguida, atribuímos a primeira parte ao título, a segunda ao artista, e convertendo a terceira parte em uma duração. Caso haja algum erro, abrimos um arquivo de músicas e inserimos a primeira linha com duração 399, podendo ser qualquer valor, até mesmo vazio. Se tentarmos executar esse código agora, ocorrerá um erro, pois estamos tentando exibir a primeira linha com um erro já presente. O erro ocorre porque a string de entrada "B" não está no formato correto ao tentarmos convertê-la para inteiro.
+
+**Implementando a conversão segura de strings para inteiros**  
+Para evitar esse problema, precisamos converter uma string em um inteiro de forma segura. Vamos criar uma variável chamada duração. O tipo de destino, no caso int, possui um método chamado parse. Os métodos parse de todos os tipos disponíveis no .NET realizam a conversão de uma string para o tipo de destino. Por exemplo, int.parse converte uma string em um inteiro. O argumento de entrada do método parse é a string que desejamos converter. Esse processo de parseamento é o oposto da formatação, onde partimos de um dado de origem, como um inteiro ou dateTime, e o convertemos em uma string. No parse, começamos com uma string como origem e a entregamos em um tipo de destino, como int ou dateTime.
+
+No entanto, o método parse também pode gerar erros. Para contornar isso, utilizamos o método tryParse, que retorna um valor booleano indicando se a conversão foi bem-sucedida. Se a conversão for bem-sucedida, ele retorna true; caso contrário, retorna false. Além disso, se a conversão for bem-sucedida, ele também retorna o objeto convertido. Para isso, utilizamos a sintaxe out, criando uma variável do tipo inteiro chamada duração. Podemos inicializar essa variável com 0 e, em vez de especificar o tipo inteiro, utilizamos out para indicar a saída. Dessa forma, podemos usar o valor na variável duração que foi declarada:
+
+```csharp
+int duracao = 0;
+bool sucesso = int.TryParse(partes[2], out duracao);
+```
+
+Essas duas construções são úteis, e utilizaremos bastante o método tryParse ao validar valores textuais para conversão em um tipo de destino. Se a conversão falhar, a duração será 0, mas podemos definir uma duração padrão, como 350. Assim, a variável duração começará com 350, e se a conversão for bem-sucedida, o valor convertido será atribuído a ela. Dessa forma, conseguimos executar o programa sem erros. No entanto, a duração está sendo definida como 0, pois a variável foi inicializada com esse valor. Não utilizaremos essa construção, pois resulta em um código extenso.
+
+**Utilizando expressões condicionais para conversão**  
+Vamos fazer uma segunda alteração. Tentaremos converter diretamente no código, utilizando uma expressão condicional com um operador ternário. Se a expressão booleana for avaliada como true, o segmento correspondente será executado. Se o tryParse for bem-sucedido, utilizamos a variável duração; caso contrário, utilizamos o valor padrão 350:
+
+```csharp
+Duracao = int.TryParse(partes[2], out int duracao) ? duracao : 350,
+```
+
+Se houver um erro, removemos a declaração anterior da variável. Essa construção é semelhante a um if. Se int.tryParse for true, o código correspondente será executado; caso contrário, o outro segmento será executado. Dessa forma, ao executar o código, esperamos que ele utilize o valor 350.
+
+**Validando e parseando DateTime**  
+Realizamos a primeira validação e compreendemos o processo de parse. Agora, queremos fazer o parse do dateTime. Se o dateTime tiver uma formatação inadequada, podemos aplicar o mesmo procedimento. Utilizamos dateTime.tryParse na parte número 4, que é o quinto segmento, e armazenamos o resultado em uma variável data. Podemos usar var nesse caso. Se a conversão for bem-sucedida, utilizamos a data; caso contrário, criamos um dateTime com um valor qualquer, como a data atual (dateTime.now ou dateTime.today):
+
+```csharp
+Lancamento = DateTime.TryParse(partes[4], out var data) ? data : DateTime.Today
+```
+
+Executamos e validamos o dateTime. Não havia erros para dateTime, mas podemos introduzir um erro para verificar se ele utilizará a data atual.
+
+**Verificando o tamanho do array e validando strings**  
+Outra verificação que podemos fazer é se temos cinco segmentos no array obtido pelo método split. Utilizamos um if para verificar se parts.length é igual a 5. Se for, realizamos a conversão e retornamos a música. Caso contrário, pulamos para a próxima linha e continuamos a conversão do CSV:
+
+```csharp
+if (partes.Length == 5)
+{
+    var musica = new Musica
+    {
+        Titulo = partes[0],
+        Artista = partes[1],
+        Duracao = int.TryParse(partes[2], out int duracao) ? duracao : 350,
+        Generos = partes[3].Split(',', StringSplitOptions.TrimEntries),
+        Lancamento = DateTime.TryParse(partes[4], out var data) ? data : DateTime.Today
+    };
+    yield return musica;
+}
+```
+
+**Utilizando isNullOrWhitespace para validação de strings**  
+Para finalizar, introduzimos mais um método da classe String. Suponha que o título ou o artista estejam vazios. Podemos tratar isso utilizando o método estático isNullOrWhitespace. Esse método verifica três condições: se a string está nula, vazia ou composta apenas por espaços em branco. Se qualquer uma dessas condições for verdadeira, ele retorna true. O método isNullOrEmpty verifica apenas se a string está vazia ou nula, não considerando espaços em branco. Portanto, utilizamos isNullOrWhitespace, que é mais completo:
+
+```csharp
+Titulo = string.IsNullOrWhiteSpace(partes[0]) ? "Título não encontrado" : partes[0],
+Artista = string.IsNullOrWhiteSpace(partes[1]) ? "Artista não encontrado" : partes[1],
+```
+
+Se a parte zero atender a essas condições, utilizamos um valor padrão, como "Título não encontrado". Caso contrário, utilizamos o elemento zero do array. O mesmo se aplica ao artista. Se string.isNullOrWhitespace retornar true, utilizamos "Artista não encontrado". Caso contrário, utilizamos a parte um do array. Ao executar o código, percebemos que, quando o artista estava nulo, ele foi substituído por "Artista não encontrado", e quando o título estava cheio de espaços, foi substituído por "Título não encontrado". Poderíamos adicionar marcadores para tornar a visualização mais clara.
+
+Embora isNullOrWhitespace não faça parte do processo de parsing, ele é relevante para garantir que uma string não esteja completamente vazia. O processo de parsing é compreendido ao pegarmos uma string maior, uma linha, e a convertermos em um tipo específico, como música. Utilizamos todo esse código para fazer o parsing de uma string em música, a partir de uma estratégia de CSV. Os métodos tryParse e parse são usados para o padrão de parsing, onde uma string de entrada é convertida em um tipo de destino. Além disso, validamos todo o CSV, verificando o tamanho do array e utilizando o método estático isNullOrWhitespace para garantir que uma string não esteja vazia.
+
+### Aula 5: Para saber mais: string como coleção de caracteres
+
+**A Natureza Enumerável das Strings**  
+No .NET, uma string é mais do que apenas uma sequência de caracteres. Ela é uma instância de uma classe imutável que, internamente, armazena cada caractere em uma coleção. Essa característica permite que possamos iterar sobre seus elementos individualmente, exatamente como faríamos com qualquer outro tipo que implemente a interface IEnumerable. Essa propriedade abre caminho para a aplicação de métodos do LINQ diretamente na string, facilitando transformações e filtragens de forma concisa.
+
+**Iterando e Manipulando com LINQ**  
+Uma das vantagens de considerar a string como uma coleção de caracteres é a possibilidade de utilizar o poder do LINQ para processar os dados textuais. Por exemplo, imagine que precisamos contar quantas letras maiúsculas uma string possui. Podemos aplicar o método Count com uma expressão lambda para verificar cada caractere:
+
+```csharp
+string texto = "Hello World";
+int totalMaiusculas = texto.Count(c => char.IsUpper(c));
+Console.WriteLine($"Total de letras maiúsculas: {totalMaiusculas}");
+```
+
+Esse exemplo ilustra como a string, por ser enumerável, pode ser tratada como qualquer outra coleção. Além disso, iterar diretamente sobre a string utilizando um loop foreach torna o acesso a cada caractere intuitivo e eficiente:
+
+```csharp
+foreach (char letra in texto) {
+    Console.WriteLine(letra);
+}
+```
+
+**Considerações sobre Benefícios e Cuidados**  
+A abordagem de tratar a string como uma coleção de caracteres oferece flexibilidade, permitindo aplicar diversos métodos de consulta e transformação providos pelo LINQ. Essa característica é útil, por exemplo, na validação de padrões, contagem de tipos de caracteres e até na construção de novas strings com base em condições específicas.
+
+No entanto, é importante lembrar que, por ser uma estrutura imutável, qualquer modificação que pareça alterar uma string na verdade gera uma nova instância. Assim, operações pesadas de concatenação repetida podem impactar a performance. Nessas situações, alternativas como o StringBuilder podem ser mais adequadas para a manipulação eficiente de grandes volumes de dados textuais.
+
+A compreensão de que uma string se comporta como uma coleção de caracteres é crucial para explorar todo o potencial das operações com LINQ e, consequentemente, para escrever códigos mais limpos e expressivos em C#.
+
+### Aula 5: Faça como eu fiz: manipulação de strings
+
+Nesta aula, exploramos a manipulação e formatação de dados textuais com o .NET, utilizando operações com strings e validações no processamento de arquivos CSV.
+
+Agora é a sua vez de aplicar os conceitos estudados. Para isso:
+
+- Organize o ambiente fechando o projeto anterior e abrindo o projeto de strings no Visual Studio.
+- Abra e limpe o arquivo program.cs do novo projeto de strings.
+- Cole o código de manipulação de músicas extraído do CSV, incluindo data de lançamento.
+- Execute o programa para verificar a exibição correta das músicas.
+- Utilize string literal para alocar objetos do tipo string, evitando o uso de new string.
+- Empregue métodos como Split e Trim para separar e limpar dados do CSV.
+- Aplique operações de agregação (Count) para contar caracteres em strings.
+- Implemente validação de senha forte usando métodos como isUpper, isLower e isDigit.
+- Teste a validação alterando a senha para verificar regras de formatação e símbolos.
+- Extraia o código de alteração de título de música para um método dedicado.
+- Refaça a exibição das músicas em formato de tabela utilizando PadLeft e PadRight.
+- Use interpolação de strings para alinhar colunas e organizar dados na tabela.
+- Formate valores numéricos e datas (ex.: duração em minutos e data no formato dd/MM/yyyy).
+- Crie cabeçalho e linha separadora para a tabela de exibição das músicas.
+- Compare strings utilizando Equals com StringComparison para ignorar diferenças de case.
+- Separe o código de comparação de strings em um método específico.
+- Demonstre o conceito de imutabilidade e o funcionamento do string pool (interning).
+- Valide dados do CSV com TryParse para conversão segura de inteiros e DateTime.
+- Utilize isNullOrWhitespace para substituir valores vazios por conteúdos padrão.
+
+### Aula 5: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Que strings são imutáveis em C# e modificações geram novas instâncias.
+- A utilizar métodos como Replace, ToUpper, StartsWith e EndsWith para manipulação eficiente de strings.
+- A importância do string pool e interning para reutilização de referências de strings literais.
+- Como a imutabilidade de strings impacta a performance e garante segurança no processamento paralelo.
+- A formatar strings e valores usando interpolação, PadLeft, PadRight e string.Format.
+- A validar e converter strings com int.TryParse e string.IsNullOrWhiteSpace.
+- A comparar strings considerando maiúsculas e minúsculas com StringComparison.OrdinalIgnoreCase.
+- A encapsular funcionalidades em métodos dedicados para organização e clareza do código.
+
+## Aula 6: Expressões Regulares
+
+### Aula 6: Projeto da aula anterior
+
+Na aula anterior, voltamos o foco para dados textuais: exploramos as características das strings, sua imutabilidade, boas práticas de uso e recursos como Replace, Split, interpolação, StringBuilder e TryParse. Também entendemos como o .NET otimiza o uso de strings na memória. Para conferir o projeto e os exemplos implementados, acesse o [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/05-Strings)
+
+### Aula 6:  - Vídeo 1
+### Aula 6:  - Vídeo 2
+### Aula 6:  - Vídeo 3
+### Aula 6:  - Vídeo 4
+### Aula 6:  - Vídeo 5
+### Aula 6:  - Vídeo 6
+### Aula 6:  - Vídeo 7
+### Aula 6:  - Vídeo 8
+### Aula 6:  - Vídeo 9
