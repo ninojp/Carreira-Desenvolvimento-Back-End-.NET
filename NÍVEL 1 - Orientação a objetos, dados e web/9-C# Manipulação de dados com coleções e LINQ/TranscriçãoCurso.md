@@ -2476,93 +2476,814 @@ Na aula anterior, conectamos ideias de diferentes estruturas de coleção e suas
 
 ### Aula 4: 02 Operações de filtro e ordenação - Vídeo 1
 
-Transcrição
+Transcrição  
 Conhecemos a Biblioteca Link, que consiste em uma série de operações para manipular coleções. Nós obtemos os dados na primeira parte do fluxo de manipulação de dados e, a partir daí, aplicamos métodos do Link como estágios para manipular essa coleção.
 
 Vamos conhecer essas operações e tentar explorar o máximo possível delas. Para isso, vamos organizar um pouco o ambiente no Visual Studio. A primeira ação é selecionar o projeto correto na lista de projetos. Na barra inicial, onde temos a lista de projetos e a indicação de qual projeto será executado, clicamos na lista suspensa e marcamos o projeto número 4, que é o Link.
 
-Preparando o código no Visual Studio
+**Preparando o código no Visual Studio**  
 Agora, vamos começar a escrever código dentro da classe Program.cs do projeto 4. Antes disso, vamos aproveitar o código já desenvolvido, evitando reescrever tudo. Selecionamos todo o conteúdo do Program.cs atual com "CTRL-A", copiamos com "Ctrl+C" e colamos no Program.cs do projeto 4. No gerenciador de soluções, abrimos o projeto 4, clicamos duas vezes no Program.cs, selecionamos tudo, apagamos com "Delete" e colamos o conteúdo copiado com "Ctrl+V". Assim, transferimos tudo para o novo projeto.
 
 Podemos fechar o Program.cs do projeto 3 e fazer algumas alterações no projeto 4. Precisamos da classe Música, então, no final do arquivo, a partir da linha 79, onde temos o método Filtrar-Por, vamos removê-lo, pois faremos tudo através do Link. Também apagamos os métodos que representavam Delegates para condição. Selecionamos e deletamos, e a partir daí já temos tudo o que precisamos.
 
-Mantendo e ajustando métodos essenciais
+**Mantendo e ajustando métodos essenciais**  
 Mantemos o método Obter Músicas, que é o primeiro estágio do fluxo de manipulação de dados, e o método Exibir Músicas, que exibe as músicas para testar o código. Por fim, temos um cenário de execução onde pegamos músicas que começam com a letra C e têm duração menor que 350, e as exibimos. Vamos ajustar o nome da variável, que não é mais "Músicas do Codeplay".
 
 O Link possui uma série de operações, que são métodos de extensão e, na maioria, recebem expressões lambda como argumento de entrada. Vamos apresentar essas operações de forma abrangente, mas não exaustiva, pois são muitas. Vamos organizá-las como um catálogo, dividido em sessões ou categorias.
 
-Explorando operações de filtro
+**Explorando operações de filtro**
 A primeira categoria que conhecemos é a de filtro, onde a entrada é uma coleção de elementos e a saída é uma coleção de elementos com tamanho menor. Esse tamanho é determinado por um argumento de entrada do método. No caso do WHERE, a primeira operação de filtro que conhecemos, aplicamos uma condição: se o elemento atender a condição, ele será incluído na coleção de saída; caso contrário, não será incluído. Operações de filtro têm essa característica: a coleção de entrada pode ser igual ou maior que a coleção de saída.
 
 Vamos aplicar o WHERE para filtrar músicas do Coldplay, onde música.artista é igual a "Coldplay". Temos essa filtragem e uma segunda filtragem por durações menores que 350.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay"); // 2. filtragem por artista
-Copiar código
-Implementando ordenação com Link
+```
+
+**Implementando ordenação com Link**  
 Outra categoria que vamos explorar é a de ordenação. Para ordenar uma coleção por uma propriedade específica, anteriormente precisávamos implementar a interface IComparer ou IComparable. O Link simplifica esse processo, oferecendo ordenação de forma simples. Vamos usar o método ORDER BY para ordenar as músicas do Coldplay por título. Este método ordena de forma crescente, do menor para o maior.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderBy(musica => musica.Titulo);
-Copiar código
-Testando e exibindo resultados
+```
+
+**Testando e exibindo resultados**  
 Vamos exibir o resultado e testar a organização do Visual Studio que fizemos, executando o código com F5.
 
 Estamos executando o código e vamos mostrar no terminal. Fizemos um ajuste no zoom para melhor visualização. Temos aqui as músicas do Coldplay, as dez primeiras, lembrando que no método Exibir Músicas há um contador que seleciona apenas as dez primeiras. As músicas estão ordenadas por título. Com isso, não precisamos mais realizar o trabalho de implementar ICompatible, pois o link já oferece um método de ordenação, que utiliza uma expressão lambda como argumento de entrada. Existem outros métodos de ordenação, como o OrderByDescending. Este método realiza a ordenação de forma decrescente, organizando os títulos alfabeticamente de trás para frente. Ao executar novamente, com F5, as músicas são exibidas começando pelas que iniciam com T, seguidas por S, e assim por diante. Note que ele está pegando as dez primeiras, e a que começava com B não está sendo exibida.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderByDescending(musica => musica.Titulo);
-Copiar código
-Explorando ordenação composta
+```
+
+**Explorando ordenação composta**  
 Além do OrderBy, temos a possibilidade de realizar uma ordenação composta. Podemos ordenar por título e, em seguida, por duração de forma decrescente. Assim, as músicas são ordenadas alfabeticamente e, depois, as mais longas são priorizadas. Embora não haja um grande efeito aqui, pois dificilmente há músicas do Coldplay com o mesmo título, esse método permite essa funcionalidade. O ThenBy é um estágio que ordena novamente uma coleção já ordenada.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderBy(musica => musica.Titulo)
     .ThenByDescending(m => m.Duracao);
-Copiar código
-Utilizando métodos de filtro por quantidade
+```
+
+**Utilizando métodos de filtro por quantidade**  
 Conhecemos agora as categorias de filtro e ordenação. Temos OrderBy, OrderByDescending, ThenBy e ThenByDescending. Essas são as operações de ordenação disponíveis. Em relação às operações de filtro, temos o Where. Outras operações de filtro permitem selecionar elementos da coleção de entrada não por condição, mas por quantidade. No método Exibir Músicas, exibimos as 10 primeiras músicas utilizando um contador. O link também possui um método para isso, chamado Take, que recebe como argumento de entrada uma quantidade. Por exemplo, podemos usar Take para pegar as 5 primeiras músicas ordenadas por título. Assim, ao invés de exibir 10, ele exibirá 5.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderBy(musica => musica.Titulo)
     .Take(5);
-Copiar código
-Implementando paginação com Skip e Take
+```
+
+**Implementando paginação com Skip e Take**  
 O Take é uma maneira de filtrar elementos por quantidade. Além do Take, há outra operação que também filtra por quantidade, mas, ao invés de pegar os primeiros elementos, ela descarta os primeiros. Por exemplo, ao usar o argumento 5, ele descarta os primeiros 5 elementos e exibe os 10 seguintes, conforme a restrição no método Exibir Músicas. Ao pressionar F5, a exibição muda, não incluindo a música que começa com B, e mostrando as músicas de G a T.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderBy(musica => musica.Titulo)
     .Skip(5);
-Copiar código
+```
+
 Os métodos Skip e Take são frequentemente usados em sistemas que exibem listas de elementos de forma paginada. Imagine uma lista de elementos com páginas, exibindo, por exemplo, 10 elementos por página. Podemos navegar para a próxima ou última página através de setas na interface do usuário. Com Skip e Take, conseguimos implementar essa paginação. Por exemplo, se a página de músicas do Coldplay possui 5 elementos, podemos descartar a primeira página e pegar a segunda. Multiplicamos 5 pelo número da página anterior para pegar a terceira página. Ao pressionar F5, pulamos para a terceira página, pegando 5 elementos.
 
+```csharp
 var musicasDoColdplay =
     ObterMusicas(stream)         // 1. obtenção dos dados
     .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
     .OrderBy(musica => musica.Titulo)
     .Skip(5 * 2)
     .Take(5);
-Copiar código
-Conclusão sobre operações de filtragem e ordenação
+```
+
+**Conclusão sobre operações de filtragem e ordenação**  
 Na carreira de desenvolvimento, ao implementar paginação, manipulamos coleções usando Skip e Take para acessar uma página específica. Nesta primeira parte, conhecemos duas categorias de operações do link: filtragem, que leva a uma coleção de saída menor ou do mesmo tamanho a partir de uma condição ou quantidade, e ordenação, que aplica uma sequência diferente à coleção de entrada. Em seguida, continuaremos nosso estudo das operações do link por categoria.
 
-### Aula 4:  - Vídeo 1
-### Aula 4:  - Vídeo 2
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
-### Aula 4:  - Vídeo 7
-### Aula 4:  - Vídeo 8
-### Aula 4:  - Vídeo 9
+### Aula 4: Operações de projeção - Vídeo 2
+
+Transcrição  
+Estamos conhecendo as operações do LINQ de forma categorizada. Já exploramos a categoria de filtro e a de ordenação. Vamos agora analisar as funções que queremos implementar. Já conseguimos filtrar por duração, mas ainda não conseguimos filtrar por gênero, pois ainda não processamos o gênero no arquivo CSV. Faremos isso em breve. Já conseguimos ordenar por artista e, em seguida, por músicas. Conseguimos realizar o order by, seguido do then by e then by descending.
+
+Vamos agora criar uma coleção de artistas e suas músicas. Vamos começar mostrando os artistas que temos na nossa coleção de entrada, no arquivo. Para isso, vamos levar essa lógica para o método void OperacoesDeFiltroEOrdenacao, recebendo o StreamReader como argumento de entrada.
+
+```csharp
+void OperacoesDeFiltroEOrdenacao(StreamReader stream)
+```
+
+**Implementando filtro e ordenação**  
+Dentro deste método, vamos mover as linhas onde estamos fazendo filtro e ordenação nas músicas, sempre com o compromisso de deixar o código de referência disponível.
+
+```csharp
+void OperacoesDeFiltroEOrdenacao(StreamReader stream)
+{
+    var musicasDoColdplay =
+        ObterMusicas(stream)
+            .Where(musica => musica.Artista == "Coldplay") // 2. filtragem por artista
+            .OrderBy(musica => musica.Titulo)
+            .Skip(5 * 2)
+            .Take(5);
+    ExibirMusicas(musicasDoColdplay);
+}
+```
+
+Nosso próximo passo é criar uma variável do tipo artistas, que serão obtidos a partir do primeiro estágio, passando o argumento de entrada, o stream. Queremos obter os artistas desse arquivo, então não queremos mais uma coleção de músicas como saída, mas sim uma coleção de artistas. Não vamos criar uma classe para isso; vamos simplesmente exibir o nome do artista, que está representado pela propriedade artistas.
+
+```csharp
+var artistas = ObterMusicas(stream)
+    .Select(m => m.Artista);
+```
+
+**Exibindo artistas únicos**  
+Se tentarmos fazer isso diretamente, vamos pegar os primeiros 20 elementos da coleção de músicas completa. Vamos usar um foreach para iterar sobre os artistas e exibir apenas o nome do artista.
+
+```csharp
+foreach(var artista in artistas)
+{
+    Console.WriteLine(artista);
+}
+```
+
+No entanto, queremos todos os artistas que existam no arquivo de música de forma organizada, sem repetições. Para evitar elementos repetidos, podemos transformar a coleção em um hash set, mas o LINQ também possui um método para isso, chamado distinct.
+
+```csharp
+var artistas = ObterMusicas(stream)
+    .Select(m => m.Artista)
+    .Distinct()
+    .OrderBy(a => a);
+```
+
+Após aplicar o distinct, vamos ordenar a lista de forma crescente. Depois de projetar os elementos de música em uma string de artistas e pegar apenas os elementos não repetidos, vamos ordená-los com order by. Neste caso, não há uma propriedade para ordenar, pois estamos ordenando pelo próprio elemento, que é uma string. A ordenação será alfabética.
+
+**Explorando projeção e transformação**  
+Conhecemos agora mais algumas operações e categorias. O select é uma categoria de projeção ou transformação. Ele aplica uma função de transformação a uma coleção de elementos do tipo T e entrega uma coleção de elementos de um tipo diferente ou até igual. O distinct é um método de filtragem, que elimina elementos repetidos. O order by já conhecíamos.
+
+Além disso, temos outro método importante que precisamos conhecer. É um método que pode confundir um pouco, pois também é de projeção. Para isso, vamos criar um método void chamado OperacoesDeProjecaoDaniel, que recebe um StringReader. Estamos levando esse código de execução para um método.
+
+Agora, queremos obter a coleção não mais de artistas, mas a coleção de gêneros. Sabemos que a quarta parte de cada linha do arquivo CSV contém os gêneros, separados por vírgula. Como vamos transformar isso? Como vamos obter esses gêneros no arquivo de ObterMusicas? Atualmente, ainda não estamos pegando o gênero, então vamos fazer isso agora.
+
+```csharp
+public IEnumerable<string> Generos { get; set; }
+Generos = partes[3].Split(',').Select(g => g.Trim())
+```
+
+**Obtendo e exibindo gêneros**  
+Vamos criar uma propriedade que será uma coleção de strings, ou seja, um IEnumerable<string>, e ela se chamará generos. Agora, temos essa propriedade de gêneros que será populada a partir do índice 3. Vamos quebrar essa parte usando a vírgula como separador. Vamos voltar ao arquivo e quebrar em partes, sendo que cada parte está separada por vírgula.
+
+Agora, sabemos o que queremos fazer. Vamos obter os gêneros a partir do stream, selecionar a propriedade generos, e aplicar distinct e orderBy.
+
+```csharp
+var generos = ObterMusicas(stream)
+    .SelectMany(m => m.Generos)
+    .Distinct()
+    .OrderBy(g => g);
+```
+
+Será que isso vai funcionar? Vamos exibir os gêneros com um foreach, fazendo um Console.WriteLine para cada gênero.
+
+```csharp
+foreach(var genero in generos)
+{
+    Console.WriteLine(genero);
+}
+```
+
+**Resolvendo problemas de ordenação**  
+Ao executar, ocorreu um erro: "failed to compare two elements no array". Esse erro já ocorreu antes quando tentamos ordenar a lista de músicas. Precisamos implementar o IComparable.
+
+No entanto, não teríamos uma string para cada gênero? Vamos verificar o tipo da lista generos. Ao passar o mouse sobre generos, vemos que é um IOrderedEnumerable`<string>`. Faz sentido, mas há um detalhe: generos é um enumerável de strings, como se fosse uma lista de strings. Não é uma string única, mas um enumerável de enumeráveis. Nesse caso, não conseguimos ordenar um enumerável diretamente.
+
+Queremos todos os gêneros, e há um método que nos ajuda a fazer isso, projetando a coleção de saída e achatando os elementos, chamado SelectMany. Quando usamos SelectMany, projetamos muitos elementos e os achatamos na coleção de saída. Isso nos entrega um enumerável de strings, e a variável generos não é mais um IOrderedEnumerable`<IEnumerable>`, mas sim um enumerável ordenado de strings. Assim, conseguimos os gêneros da coleção de músicas sem erros.
+
+**Corrigindo espaços indesejados**  
+No entanto, notamos algo estranho. Por exemplo, temos "Blues Rock" com um espaço em branco. Isso ocorre porque, ao fazer o split, separamos por vírgula e o que vem depois pode ter espaços. Para resolver isso, podemos projetar a coleção aplicando uma transformação. Vamos usar o método Trim da classe string, que elimina espaços no início e no fim. Com isso, teremos uma lista de gêneros com nomes corretos, sem espaços indesejados.
+
+Ao aplicar distinct, teremos uma lista mais enxuta e ordenada alfabeticamente. A execução agora não repete gêneros com espaços em branco, pois aplicamos a transformação com Trim e reforçamos a função de projeção do LINQ.
+
+Imprimimos todos os gêneros distintos do arquivo e conhecemos mais um método de projeção. O SelectMany não só projeta e transforma os elementos de entrada para saída, mas também achata os elementos, entregando-os no primeiro nível da coleção de saída.
+
+Vamos continuar nosso estudo agora com outras categorias do LINQ.
+
+### Aula 4: Operações de agregação - Vídeo 3
+
+Transcrição  
+Vamos continuar nossos estudos e agora o desafio é informar a duração média das músicas e a duração total das músicas. No final das contas, o que queremos são algumas estatísticas em relação à coleção de entrada. Para organizar, vamos mover o código atual para o método OperacoesDeProjecao2. Vamos pegar da linha 29 até a linha 21 e levá-lo para dentro do método OperacoesDeProjecao2.
+
+Primeiro, vamos definir o método OperacoesDeProjecao2:
+
+```csharp
+void OperacoesDeProjecao2(StreamReader stream)
+```
+
+Agora, vamos adicionar o código que realiza a projeção dos gêneros musicais:
+
+```csharp
+void OperacoesDeProjecao2(StreamReader stream)
+{
+    var generos = ObterMusicas(stream)
+        .SelectMany(m => m.Generos) // projeção
+        .Distinct()
+        .OrderBy(g => g);
+
+    foreach (var genero in generos)
+    {
+        Console.WriteLine(genero);
+    }
+}
+```
+
+**Criando o método EstatisticasDeMusicas**  
+Vamos criar um método chamado EstatisticasDeMusicas, onde ele recebe um stream reader como entrada. Queremos exibir, além da duração média e duração total, mais algumas estatísticas. Isso será bastante relevante quando quisermos apresentar algum tipo de relatório a partir de uma coleção manipulada.
+
+Primeiro, definimos o método EstatisticasDeMusicas:
+
+```csharp
+void EstatisticasDeMusicas(StreamReader stream)
+{
+
+}
+```
+
+Agora, vamos adicionar as mensagens que queremos exibir:
+
+```csharp
+void EstatisticasDeMusicas(StreamReader stream)
+{
+    Console.WriteLine($"\nExistem X músicas na coleção.");
+    Console.WriteLine($"\nExistem X músicas com mais do que 10 minutos na coleção.");
+    Console.WriteLine($"\nA música com menor duração da coleção leva N segundos.");
+    Console.WriteLine($"\nA música com maior duração da coleção leva Y segundos.");
+    Console.WriteLine($"\nA duração média das músicas da coleção é D segundos.");
+    Console.WriteLine($"\nVocê vai levar T dias para ouvir toda a coleção!");
+}
+```
+
+**Utilizando operações de agregação para obter estatísticas**  
+Vamos conseguir obter essas estatísticas através do link, utilizando uma categoria de operações chamada agregação. A agregação pega uma coleção de entrada e entrega um valor único a partir de uma operação ou função de cálculo. Vamos começar respondendo quantas músicas existem na coleção. Primeiro, precisamos obter as músicas, então criaremos uma variável musicas a partir do método ObterMusicas, onde passamos o stream como argumento de entrada.
+
+```csharp
+var musicas = ObterMusicas(stream);
+```
+
+Tudo está pronto para trabalharmos. Vamos substituir o X por uma expressão de interpolação, onde, a partir da coleção de entrada musicas, chamaremos o método do link chamado Count. Esse método nos entrega quantos elementos existem na coleção de entrada.
+
+```csharp
+Console.WriteLine($"\nExistem {musicas.Count()} músicas na coleção.");
+```
+
+Agora, aplicaremos a expressão de interpolação e também obteremos um Count, mas esse método Count pode receber um argumento de entrada, que é uma condição. Contaremos apenas os elementos que atendem a essa condição, ou seja, as músicas cuja duração é maior ou igual a 600 segundos, 10 minutos.
+
+```csharp
+Console.WriteLine($"\nExistem {musicas.Count(m => m.Duracao >= 600)} músicas com mais do que 10 minutos na coleção.");
+```
+
+**Executando e verificando resultados**  
+Vamos executar para ver o que está acontecendo antes de trabalharmos com todos os outros. Precisamos chamar o método EstatisticasDeMusicas e passar o nosso stream como argumento de entrada.
+
+```csharp
+EstatisticasDeMusicas(stream);
+```
+
+Ao executar, verificamos que existem 1293 músicas na coleção e zero músicas com mais de 10 minutos na coleção. Isso é estranho, mas está executando. Vamos continuar. A música com menor duração da coleção leva tantos segundos. Vamos substituir o N e usar musicas.Min().
+
+```csharp
+Console.WriteLine($"\nA música com menor duração da coleção leva {musicas.Min(m => m.Duracao)} segundos.");
+```
+
+Agora, para a música com maior duração, temos também uma função Max, onde pegamos a duração máxima.
+
+```csharp
+Console.WriteLine($"\nA música com maior duração da coleção leva {musicas.Max(m => m.Duracao)} segundos.");
+```
+
+A duração média das músicas da coleção é obtida através de outra operação de agregação, aplicando o método Average na coleção de entrada.
+
+```csharp
+Console.WriteLine($"\nA duração média das músicas da coleção é {musicas.Average(m => m.Duracao)} segundos.");
+```
+
+Para saber quantos dias levaríamos para ouvir toda a coleção, usaremos como operação de agregação o método Sum, somando todas as durações da coleção de entrada. Inicialmente, temos a duração em segundos, e queremos transformar em dias.
+
+```csharp
+Console.WriteLine($"\nVocê vai levar {musicas.Sum(m => m.Duracao)/(3600*24)} dias para ouvir toda a coleção!");
+```
+
+**Corrigindo erros e materializando a coleção**  
+Acho que fizemos tudo. Apresentamos as operações de agregação para exibir estatísticas de músicas, como se fosse um relatório. Vamos executar para verificar, mas encontramos um erro. Recebemos uma exceção chamada "sequência não contém elementos", o que é estranho, pois temos elementos na coleção.
+
+O método que estamos utilizando está lançando uma exceção quando não deveria. Vamos interromper a execução da aplicação para analisar o que está acontecendo. As operações de agregação possuem uma característica importante: para realizar, por exemplo, uma totalização em uma coleção, é necessário percorrer todos os elementos.
+
+Vamos voltar ao código onde obtemos as músicas. No caso do yield return musica, ele está sendo processado para todos os elementos, executando o código até o fim. Se inserirmos um Console.WriteLine indicando que chegou ao fim do processamento do arquivo, veremos que, para executar a operação de agregação, é preciso percorrer todos os elementos da coleção.
+
+```csharp
+Console.WriteLine("Chegou ao fim do processamento");
+```
+
+Ao executar, ele continuará apresentando um erro, mas queremos mostrar a execução. No primeiro Count, para realizar essa primeira parte, foi necessário chegar ao fim do processamento. Ao exibir as músicas com mais de dez minutos, não havia mais o que processar, pois já tinha chegado ao fim. Tentou-se novamente, e no caso do método Min, ele apresenta um erro quando não há elementos na coleção, diferente do Count, que retorna zero.
+
+**Materializando a coleção em memória**  
+Precisamos de uma mudança no código. Em vez de obter as músicas e simplesmente contar com o processamento sob demanda, vamos solicitar ao .NET, ao Runtime, que processe todos os elementos e os coloque em uma lista. Assim, não precisamos mais contar com o yield return. Para isso, no final do método onde obtemos as músicas, chamaremos o método ToList.
+
+```csharp
+var musicas = ObterMusicas(stream).ToList();
+```
+
+Com isso, percorreremos todos os elementos, chegaremos ao fim do processamento e guardaremos em uma variável musicas. Agora, a variável musicas não é mais um IEnumerable, mas uma lista.
+
+Estamos materializando essa coleção em memória. Quando fizermos o Count, teremos essa lista totalmente na memória, permitindo realizar o Count sem precisar do yield return. Abdicamos do uso do yield return para esse tipo de processamento. Em geral, ao realizar agregações em coleções, especialmente várias em sequência, é importante materializar a coleção.
+
+Vamos executar novamente para ver o resultado. Agora, temos os valores sem problemas ou erros. Existem 1.293 músicas na coleção. Da lista materializada, há duas músicas com mais de 10 minutos (600 segundos). A música com menor duração leva 200 segundos, e a com maior duração leva 952 segundos. A duração média das músicas é 328, com várias casas decimais. Levaríamos 4 dias para ouvir toda a coleção.
+
+Conhecemos agora uma nova categoria de operações do link, chamada agregação, onde, a partir de uma coleção de entrada, obtemos um valor único na saída. Esse valor único depende da operação e de um argumento de entrada. Para isso, é necessário materializar a coleção, pois essa categoria de operações do link avalia todos os elementos imediatamente, percorrendo toda a coleção.
+
+Vamos continuar esse estudo na sequência.
+
+### Aula 4: Otimizando a gestão de tarefas em equipe - Exercício
+
+A Checklist é uma plataforma de gestão de tarefas e checklists para equipes. A equipe de desenvolvimento que você faz parte está trabalhando em um novo recurso que permitirá às pessoas usuárias visualizar estatísticas sobre suas listas de tarefas. Eles querem saber quantas tarefas estão em cada lista, qual é a tarefa mais longa e a mais curta em termos de tempo estimado de conclusão, a duração média das tarefas, e quantos dias, em média, uma equipe leva para concluir todas as tarefas de uma lista.
+
+Como você aplicaria os conceitos de agregação para implementar esse recurso na plataforma Checklist?
+
+Resposta:  
+Para implementar o recurso de estatísticas na plataforma Checklist, você pode usar operações de agregação. Para contar quantas tarefas estão em cada lista, utilize a função count para cada lista de tarefas. Para identificar a tarefa mais longa e a mais curta, aplique as funções max e min sobre o tempo estimado de conclusão das tarefas. A duração média das tarefas pode ser calculada usando a função average sobre o tempo estimado. Para calcular quantos dias, em média, uma equipe leva para concluir todas as tarefas de uma lista, some o tempo estimado de todas as tarefas usando sum e divida pelo número de horas em um dia, considerando a jornada de trabalho da equipe.
+
+> Correta, pois esta abordagem utiliza adequadamente as funções de agregação para fornecer as estatísticas desejadas, aplicando count, max, min, average e sum de maneira apropriada para cada tipo de dado necessário.
+
+### Aula 4: Operações de agrupamento - Vídeo 4
+
+Transcrição  
+Vamos seguir com nossos desafios relacionados à coleção de músicas. Já conseguimos informar a duração média e a duração total das músicas. Poderíamos também filtrar por gênero, mas ainda não implementamos essa funcionalidade. O próximo passo seria criar uma coleção de artistas e suas músicas. Como podemos obter isso? Através de uma projeção, pois transformaremos uma coleção de músicas em uma coleção de artistas. Além do artista, precisamos incluir as músicas desses artistas, o que se enquadra em outra categoria de operações do link, chamada agrupamento.
+
+Para começar, vamos criar uma variável artistas que irá armazenar essa coleção. Inicialmente, vamos obter as músicas a partir do stream do arquivo:
+
+```csharp
+var artistas = ObterMusicas(stream);
+```
+
+**Agrupando músicas por artista**  
+Agora, precisamos agrupar essas músicas por artista. Para isso, utilizaremos o método GroupBy, que é usado para agrupar a coleção de entrada através de alguma chave. Vamos indicar qual propriedade da coleção de entrada será usada para o agrupamento, utilizando uma expressão lambda para agrupar por artista:
+
+```csharp
+var artistas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista);
+```
+
+Vamos exibir essa coleção de artistas para podermos trabalhar um pouco. O resultado do nosso GroupBy é um enumerável. Estamos conseguindo colocá-lo no foreach, mas vamos verificar o tipo dele: é um enumerável do elemento IGrouping<String, Music>. Vamos ver o que conseguimos fazer aqui. Primeiro, vamos adicionar um Console.WriteLine para pular uma linha e exibir as músicas de cada artista. Vamos pegar apenas os cinco primeiros artistas.
+
+```csharp
+Console.WriteLine($"\nExibindo as músicas de cada artista:");
+foreach(var artista in artistas.Take(5))
+{
+    Console.WriteLine($"Artista: {artista.Key}");
+    foreach(var musica in artista)
+    {
+        Console.WriteLine($"\t - {musica.Titulo}");
+    }
+}
+```
+
+**Explorando o uso do IGrouping**  
+No foreach, após o in na coleção de artistas, pegamos os primeiros cinco grupos de artistas. Poderíamos ordenar, mas vamos pegar o que vem primeiro na nossa coleção. A primeira coisa é exibir o artista, então utilizamos Console.WriteLine com a expressão de interpolação. O artista é do tipo string. Agora, como exibimos as músicas desse artista? Precisamos fazer um foreach para cada música. Note que o artista não é apenas o nome; ele é um objeto que implementa IGrouping e possui uma propriedade chamada Key, que é a chave usada para o agrupamento. No caso, Key é o nome do artista, já que o agrupamento foi feito por artista. Assim, estamos exibindo o nome do artista.
+
+O IGrouping é enumerável, o que significa que o elemento música pode ser enumerado. Por isso, estamos utilizando var musica in artista para exibir cada música. Vamos fazer um "Tab", um hífen e, em seguida, o nome da música. Note que a variável musica possui título, duração e o próprio artista. Essa variável musica, que está no foreach, é um objeto do tipo música. Quando chamamos GroupBy, geramos uma coleção de saída que é um enumerável de IGrouping, onde esse IGrouping possui dois elementos: o tipo usado como chave, que é uma string (já que artista é do tipo string), e o segundo tipo é o tipo do elemento da lista que está agrupada, no caso, música. Por isso, conseguimos fazer um foreach diretamente em artista, pois IGrouping também implementa enumerável.
+
+**Executando e analisando resultados**  
+Vamos executar isso, lembrando que estamos pegando os cinco primeiros artistas para não exibir todas as músicas. Ao pressionar F5, veremos o primeiro artista do arquivo. É interessante notar que o GroupBy também precisa fazer uma avaliação imediata, pois ele precisa processar tudo para agrupar. Imagine que a última linha do arquivo é do artista Rolling Stones, que é o primeiro a aparecer. Ele precisa avaliar toda a coleção para poder fazer o agrupamento. Por isso, operações de agrupamento são avaliadas imediatamente.
+
+O artista Rolling Stones é exibido com suas músicas, seguido por Coldplay, Adele, The Weeknd e Metallica. Isso ocorre porque fizemos um take de cinco. Percebemos que começamos a ter funções bastante complexas. Podemos aplicar funções de agregação nos agrupamentos de artista, como calcular o total de músicas em cada agrupamento. Por exemplo, podemos usar artista.Count com músicas, que já é avaliado imediatamente. Assim, conseguimos realizar todo o trabalho sem precisar materializar uma lista.
+
+Na dúvida, devemos executar e fazer testes. Observamos que Rolling Stones possui nove músicas, Coldplay dezenove, Adele vinte e nove, e Metallica vinte. Começamos a ter um relatório complexo, onde podemos fazer agrupamento, filtro, ordenação e agregação usando todas essas categorias de operações para obter o que precisamos. Conseguimos criar uma coleção de artistas com suas músicas e até entregamos uma totalização de músicas que existem em cada artista. Operações de agrupamento são realizadas dessa maneira.
+
+### Aula 4: Obtenção de elementos específicos - Vídeo 5
+
+Transcrição  
+Nosso próximo desafio é informar qual artista possui mais músicas na coleção. Antes disso, vamos separar o código das operações de agrupamento em um método chamado OperacoesDeAgrupamento, onde receberemos um StreamReader como argumento de entrada. Vamos começar definindo o método vazio:
+
+```csharp
+void OperacoesDeAgrupamento(StreamReader stream)
+{
+
+}
+```
+
+Agora, vamos copiar da linha 32 até a linha 21, utilizando "Ctrl+X", e levar para dentro do método OperacoesDeAgrupamento, para que esse código esteja disponível como referência. Vamos adicionar o código de agrupamento dentro do método:
+
+```csharp
+void OperacoesDeAgrupamento(StreamReader stream)
+{
+    var artistas = ObterMusicas(stream)
+        .GroupBy(m => m.Artista);
+    
+    Console.WriteLine($"\nExibindo as músicas de cada artista:");
+    foreach (var artista in artistas.Take(5))
+    {
+        Console.WriteLine($"Artista: {artista.Key} com {artista.Count()} músicas");
+        foreach (var musica in artista)
+        {
+            Console.WriteLine($"\t - {musica.Titulo}");
+        }
+    }
+}
+```
+
+**Criando o método de obtenção de elementos**  
+Qual artista tem mais durações na coleção? Vamos trabalhar com uma categoria de operações do link, onde, a partir de uma coleção de elementos de entrada, obtemos um elemento na saída, do mesmo tipo. Isso difere das operações de agregação, nas quais temos um valor único, que pode ser numérico ou de outro tipo. Não se trata de uma operação de agregação, mas sim de uma operação da categoria de obtenção de elementos. De uma coleção de entrada, pegamos um desses elementos e o retornamos na saída. Como pegamos esses elementos? A partir de condições. Qual é o elemento que atende a essa condição? Podemos pegar a partir de ordem, primeiro elemento, último elemento. Esse é o tipo de operação que temos na categoria de obtenção de elementos.
+
+Vamos criar um método chamado OperacoesDeObtencaoDeElementos, passando novamente o StreamReader como argumento de entrada. Faremos isso: musicas recebe ObterMusicas a partir do Stream. Vamos começar com o método vazio:
+
+```csharp
+void OperacoesDeObtencaoDeElementos(StreamReader stream)
+{
+
+}
+```
+
+Agora, vamos materializar essa informação em uma lista, uma estrutura de dados em memória, pois, para pegar um elemento específico a partir de uma condição, precisamos percorrer toda a coleção. Algumas operações não precisariam, mas vamos materializar tudo diretamente em uma lista, chamando o método toList, para trabalhar com vários elementos:
+
+```csharp
+var musicas = ObterMusicas(stream).ToList();
+```
+
+**Utilizando métodos de obtenção de elementos**  
+Por exemplo, para a primeira música, utilizaremos o método first. O método first possui uma variação chamada firstOrDefault, que, se a coleção estiver vazia, não lançará uma exceção, mas retornará um valor nulo. Precisamos tratar esse valor nulo ao continuar. Usamos first quando sabemos que há elementos na coleção, e firstOrDefault quando não temos certeza, verificando se está nulo ou não. Vamos deixar o first normal aqui, pois sabemos que existem músicas na coleção, e podemos exibir a primeira música:
+
+```csharp
+var primeiraMusica = musicas.First();
+Console.WriteLine($"A primeira música é {primeiraMusica.Titulo}");
+```
+
+Da mesma maneira, podemos fazer com outros elementos para obtenção, como last ou lastOrDefault. Temos todas essas opções. Para a música de maior duração, lembramos que discutimos quantas músicas existem com maior duração. Fizemos uma estatística assim: qual é a música que tem maior duração? Vamos criar uma variável maiorDuracao, onde musicas utiliza um método chamado MaxBy. O MaxBy é uma agregação, retornando um valor único, que é um valor inteiro. Existe um método chamado MaxBy, que pega o elemento com maior informação, e precisamos passar o argumento, a expressão lambda do argumento de entrada. Vamos pegar a música com maior duração, o elemento música com maior duração:
+
+```csharp
+var maiorDuracao = musicas.MaxBy(m => m.Duracao);
+if (maiorDuracao is not null)
+{
+    Console.WriteLine($"A música com maior duração é {maiorDuracao.Titulo} com {maiorDuracao.Duracao} segundos.");
+}
+```
+
+**Identificando o artista com mais músicas**  
+Essa categoria do link é a categoria de operações de obtenção de elementos a partir de uma coleção de elementos do tipo T. Aplicamos uma operação com argumentos de entrada e obtemos um elemento do tipo T, sempre do mesmo tipo. Para resolver e informar qual artista tem mais músicas na coleção, vamos encadear uma série de operações de categorias diferentes para responder a essa pergunta.
+
+Vamos apagar a chamada do método de operações de elementos e obter novamente os artistas a partir do stream de músicas. Vamos agrupar essas músicas por artista e fazer uma projeção. Vamos gerar um objeto de tipo anônimo. Já discutimos sobre tipos anônimos, que são quando não temos o nome da classe e geramos diretamente um objeto a partir dessa construção. Fazemos um nil e abrimos e fechamos a chave, colocando dentro as propriedades desse objeto.
+
+Vamos gerar um tipo anônimo, que é bastante utilizado quando precisamos usar o link para projetar uma informação e utilizá-la logo depois. Vamos criar um objeto cujo nome do artista é o próprio G.Key. As músicas desse artista estão dentro do G. Lembramos que G é o iGrouping de Key e Música, sendo que a segunda parte é o enumerável. Estamos levando as músicas para cá e o total de músicas é uma agregação. Pegamos o G, a quantidade de músicas, e aplicamos uma função de agregação que conta essas músicas:
+
+```csharp
+var artistaComMaiorQtdeMusicas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista)
+    .Select(g => new { Artista = g.Key, Musicas = g, Total = g.Count() })
+    .MaxBy(a => a.Total);
+```
+
+Criamos a variável que representa esse nome e vamos imprimir com Console.WriteLine. Usamos o símbolo que representa a interpolação. O artista com maior quantidade de músicas é exibido:
+
+```csharp
+if (artistaComMaiorQtdeMusicas is not null)
+{
+    Console.WriteLine($"O artista com maior qtde de músicas é {artistaComMaiorQtdeMusicas.Artista} com {artistaComMaiorQtdeMusicas.Total} músicas!");
+}
+```
+
+Temos a resposta: o artista com maior quantidade de músicas é o Maroon 5, com 40 músicas. Naquela hora, quando vimos a operação de agrupamento, o group by, tínhamos um com 29, outro com 20, e não tínhamos chegado ao Maroon 5 porque fizemos um take dos 5 primeiros. Então, Maroon 5, com 40 músicas, é o artista que tem a maior quantidade de músicas. Para isso, usamos mais uma categoria de operações do link, que é a categoria de obtenção de elementos, onde, a partir de uma coleção de entrada de um elemento do tipo T, aplicamos alguma operação ou condição que nos entrega um elemento do tipo T na saída.
+
+### Aula 4: Para saber mais: métodos do LINQ
+
+O LINQ (Language Integrated Query) é uma das ferramentas mais poderosas do C#. Ele permite consultar, transformar e manipular coleções de dados de forma declarativa e concisa, como se estivéssemos escrevendo consultas em uma linguagem própria dentro do C#.
+
+Com o LINQ, não precisamos mais escrever laços for e estruturas complexas para filtrar, ordenar, agrupar ou combinar dados. Em vez disso, utilizamos métodos de extensão padronizados, aplicados a coleções que implementam IEnumerable<T> ou IQueryable<T>.
+
+Esses métodos podem ser agrupados em categorias de operação, como filtragem, projeção, ordenação, agregação, junções e agrupamentos. Cada categoria resolve um tipo de problema comum na manipulação de dados.
+
+A tabela a seguir resume os métodos mais importantes do LINQ, separados por categoria, com uma breve explicação e exemplos práticos para você ter como referência rápida no dia a dia.
+
+Show! Seguindo o formato “Para saber mais”, aqui vai um PSM de LINQ com os métodos mais usados, organizados por categoria. Incluí a função e um exemplo curtinho (C#) para cada um.
+
+Projeção
+Método	Função	Exemplo
+Select	Projeta cada item em uma nova forma.	nums.Select(n => n * 2)
+SelectMany	“Achata” sequências aninhadas.	pedidos.SelectMany(p => p.Itens)
+
+## Filtragem
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Where | Filtra por predicado. | `nums.Where(n => n % 2 == 0)` |
+| OfType&lt;T&gt; | Filtra por tipo. | `objs.OfType<string>()` |
+
+## Ordenação
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| OrderBy / OrderByDescending | Ordena crescente/decrescente por chave. | `pessoas.OrderBy(p => p.Nome)` |
+| ThenBy / ThenByDescending | Ordenação secundária. | `pessoas.OrderBy(p=>p.Cidade).ThenBy(p=>p.Nome)` |
+| Reverse | Inverte a ordem atual. | `nums.Reverse()` |
+
+## Agrupamento
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| GroupBy | Agrupa por chave (retorna grupos). | `alunos.GroupBy(a => a.Turma)` |
+| ToLookup | Índice imutável chave→itens (eager). | `alunos.ToLookup(a => a.Turma)` |
+
+## Junções
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Join | Inner join entre sequências. | `clientes.Join(pedidos, c=>c.Id, p=>p.ClienteId, (c,p)=>new{c,p})` |
+| GroupJoin | Left join (agrupa relacionados). | `clientes.GroupJoin(pedidos, c=>c.Id, p=>p.ClienteId, (c,ps)=>new{c,ps})` |
+| (Padrões) | Left/Right/Full via combinações | `Left: from c in clientes join p in pedidos on c.Id equals p.ClienteId into grp from p in grp.DefaultIfEmpty() select new{c,p}` |
+
+## Agregação
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Count / LongCount | Conta elementos (condição opcional). | `nums.Count(n=>n>0)` |
+| Sum / Min / Max / Average | Agregações numéricas. | `nums.Average()` |
+| Aggregate | Redução personalizada (fold). | `palavras.Aggregate((a,b)=> a + "," + b)` |
+
+## Elemento (busca pontual)
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| First / FirstOrDefault | Primeiro item (ou default). | `nums.FirstOrDefault(n=>n>10)` |
+| Single / SingleOrDefault | Exige exatamente 1 item (ou default). | `emails.Single(e=>e.Principal)` |
+| Last / LastOrDefault | Último item (ou default). | `logs.LastOrDefault()` |
+| ElementAt / ElementAtOrDefault | Acessa pelo índice. | `nums.ElementAtOrDefault(3)` |
+| DefaultIfEmpty | Fornece default se vazio. | `seq.DefaultIfEmpty(0)` |
+
+## Quantificadores
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Any | Existe algum que atenda? | `nums.Any(n=>n<0)` |
+| All | Todos atendem? | `nums.All(n=>n>=0)` |
+| Contains | Contém o valor? | `nums.Contains(42)` |
+| SequenceEqual | Mesma sequência/ordem? | `a.SequenceEqual(b)` |
+
+## Conjuntos (teoria de conjuntos)
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Distinct | Remove duplicatas. | `nums.Distinct()` |
+| Union | União (distintos). | `a.Union(b)` |
+| Intersect | Interseção. | `a.Intersect(b)` |
+| Except | Diferença (A–B). | `a.Except(b)` |
+
+## Particionamento
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Take / Skip | Pega/pula N itens. | `produtos.Skip(20).Take(10)` |
+| TakeWhile / SkipWhile | Enquanto predicado verdadeiro. | `nums.TakeWhile(n=>n<100)` |
+| Chunk (.NET 6+) | Divide em blocos do mesmo tamanho. | `nums.Chunk(100)` |
+
+## Geração
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Range | Gera intervalo de ints. | `Enumerable.Range(1, 10)` |
+| Repeat | Repete valor N vezes. | `Enumerable.Repeat("a", 3)` |
+| Empty&lt;T&gt; | Sequência vazia tipada. | `Enumerable.Empty<string>()` |
+
+## Conversão & Materialização
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| ToList / ToArray | Materializa coleção. | `query.ToList()` |
+| ToDictionary | Dicionário por chave (e valor opcional). | `pessoas.ToDictionary(p=>p.Id)` |
+| AsEnumerable | Força resolução como LINQ a objetos. | `query.AsEnumerable()` |
+| Cast&lt;T&gt; | Converte elementos (lança se falhar). | `objs.Cast<string>()` |
+
+## Combinação & utilidades
+
+| Método | Função | Exemplo |
+| --- | --- | --- |
+| Zip | Combina pares por posição. | `a.Zip(b, (x,y)=>x+y)` |
+| Append / Prepend | Adiciona item ao fim/começo. | `nums.Append(99)` |
+| Concat | Concatena sequências. | `a.Concat(b)` |
+| Select com índice | Projeção com índice. | `itens.Select((x,i)=> new { i, x })` |
+
+**Algumas dicas**  
+- Select vs SelectMany: se o seletor retorna coleção, use SelectMany para “achatar” (ex.: Pedidos → Itens).
+- First vs Single: First aceita 1+ itens; Single exige exatamente 1 (útil para chaves únicas).
+- Ordenação estável: OrderBy é estável; use ThenBy para chaves secundárias.
+- Eager vs Deferred: ToList/ToArray/ToDictionary executam agora; sem materializar, a query roda ao iterar.
+- Performance: filtre/seleciona antes de materializar; evite múltiplas enumerações não necessárias.
+
+### Aula 4: Sincronizando contatos profissionais por setor - Exercício
+
+A Indexa, uma plataforma que organiza e gerencia contatos pessoais e profissionais de forma inteligente, utilizando recursos de busca avançada e sincronização automática, está desenvolvendo uma nova funcionalidade para ajudar as pessoas usuárias a sincronizar seus contatos profissionais por setor de atuação. A ideia é que as pessoas usuárias possam visualizar e acessar rapidamente todos os contatos dentro de um determinado setor, como tecnologia, saúde ou finanças.
+
+Qual abordagem seria mais eficaz para garantir que os contatos sejam agrupados e sincronizados corretamente por setor?
+
+Resposta:  
+Utilizar um método de agrupamento que organize os contatos profissionais por setor de atuação, aplicando uma chave de agrupamento, como o setor de atuação de cada contato, e implementar sincronização automática para atualizações em tempo real.
+
+> Correta, pois ao utilizar um método de agrupamento, como o GroupBy, a plataforma pode criar coleções de contatos agrupados por setor, permitindo que as pessoas usuárias visualizem e acessem rapidamente todos os contatos dentro de um setor específico. A sincronização automática garante que qualquer atualização nos contatos seja refletida em tempo real, mantendo as informações sempre atualizadas e organizadas.
+
+### Aula 4: Operações para verificação de existência - Vídeo 6
+
+Transcrição  
+Concluímos nossos desafios de manipulação de dados e obtenção de informações a partir de uma coleção de músicas. Manipulamos os dados utilizando as operações do LINQ. Finalizamos mais uma função para implementar, mas decidimos apresentar mais uma categoria de operações do LINQ.
+
+Vamos verificar artistas que tenham pelo menos uma música com duração superior a 8 minutos e artistas com pelo menos uma música de rock. Já sabemos que temos músicas de rock na coleção.
+
+**Explorando a existência de gêneros musicais**  
+Será que há músicas de reggae na coleção? E outra pergunta, existem músicas de jazz na coleção? Vamos tentar ver operações do LINQ para poder fazer isso. A primeira coisa de sempre é dar uma limpada na execução. Vamos criar um método para trazer esse código.
+
+Vamos começar com o artista com maior quantidade, recebendo no StreamReader. Tudo de sempre: abre e fecha chaves. Vamos mover a linha 24 para a linha 30, para dentro desse método.
+
+**Criando o método de verificação de existência**  
+Muito bem. Então, aqui vamos fazer void OperacoesDeVerificacaoDeExistencia e o nome dessa categoria, onde vamos verificar uma determinada condição. Essa condição vai retornar um booleano. Essa operação, desculpe, vai retornar um booleano. É chamada de Operações de Verificação de Existência a partir de um StreamReader.
+
+```csharp
+void OperacoesDeVerificacaoDeExistencia(StreamReader stream)
+{
+}
+```
+
+Muito bem. Então, abrimos e fechamos chaves aqui. Vamos reforçar o que foi dito: é uma categoria de operações do LINQ, onde a partir de uma coleção de elementos de entrada, entregamos um booleano. Existe alguma informação nessa coleção? Ou tem pelo menos um elemento? Todos esses elementos têm essa mesma condição. Sempre vai retornar um booleano. É esse tipo de categoria que vamos ver agora.
+
+**Identificando artistas com músicas longas**  
+Vamos lá. Artistas com pelo menos uma música acima de 8 minutos. Precisamos obter os artistas. Primeiro, vamos pegar as músicas:
+
+```csharp
+var musicas = ObterMusicas(stream).ToList();
+```
+
+Vamos materializar também, porque nesse caso será necessário para fazer agrupamento e tudo mais. Então, das músicas, vamos agrupá-las por artista. Vamos usar um filtro aqui. Desse agrupamento, vamos pegar os artistas, os grupos que contêm pelo menos uma música acima de 8 minutos.
+
+```csharp
+var artistas = musicas
+    .GroupBy(m => m.Artista)
+    .Where(g => g.Any(m => m.Duracao >= 480));
+```
+
+**Imprimindo artistas com músicas longas**  
+Sabemos que o grupo é um enumerable com as músicas. Lembre-se disso. O grupo, esse G que estamos chamando, pode ser chamado de artista, mas é melhor chamar de grupo, porque ele é um IGrouping de String e Música. Ele tem uma propriedade chamada chave. Lembre-se, essa chave é o nome do artista. A segunda parte é o próprio G, que é um enumerable de músicas. Aqui, vamos aplicar uma função que vai retornar um booleano. Então, pelo menos uma música acima de 8 minutos. Vamos dizer assim: existe qualquer um desse grupo cuja música, cuja duração, seja maior ou igual a 480 segundos.
+
+Tranquilo? Então, pegamos aqui artistas, agrupamos por artistas que têm pelo menos um elemento cuja duração é maior do que 480 segundos, ou seja, 8 minutos. Vamos fazer um foreach para imprimir esses artistas.
+
+```csharp
+foreach(var artista in artistas)
+{
+    Console.WriteLine($"\t- {artista.Key}");
+}
+```
+
+**Ajustando critérios de duração**  
+Vamos executar esse código para ver artistas que possuem pelo menos uma música com duração de 480 segundos, ou seja, 8 minutos.
+
+Quando executamos isso, temos muitos artistas, e não estão ordenados porque não ordenamos. Vamos aumentar um pouco. Vamos dizer que queremos que seja, sei lá, 9 minutos, ou seja, 540 segundos.
+
+```csharp
+var artistas = musicas
+    .GroupBy(m => m.Artista)
+    .Where(g => g.Any(m => m.Duracao >= 540));
+```
+
+Agora a coisa ficou mais séria. Temos Roberto Carlos e Calvin Harris. São apenas os dois artistas que possuem músicas com mais de 9 minutos. Certo? Beleza, Calvin Harris, inclusive, é o artista que tem aquela música maior.
+
+**Verificando a existência de músicas de reggae**  
+Beleza, então, artista com pelo menos uma música acima de 9 minutos, ou 540 segundos. Artista com pelo menos uma música de reggae, será que existe? Vamos criar aqui Reggae e vamos lá nas músicas. Vamos fazer uma mudança. Pode ser o mesmo código, mas agora vai mudar um pouco.
+
+```csharp
+var reggae = musicas
+    .GroupBy(m => m.Artista)
+    .Where(g => g.Any(m => m.Generos.Contains("Reggae")));
+```
+
+E aí, os gêneros também são um enumerable. Vamos usar mais uma função aqui que nos permite verificar se existe um elemento desse enumerable. No caso, enumerable de gêneros é string, e queremos verificar qual elemento é reggae. Então, artistas que possuem essa característica, terem músicas de reggae, vamos exibir aqui.
+
+```csharp
+foreach(var artista in reggae)
+{
+    Console.WriteLine($"\t- {artista.Key}");
+}
+```
+
+**Separando e exibindo resultados**  
+Precisamos fazer uma separação aqui rapidamente. Executamos, mas não mostramos para vocês, pois ficamos com vergonha da exibição. Artistas com músicas, vamos pular uma linha aqui, \n, artistas com músicas acima de 9 minutos. Beleza. E agora vamos colocar aqui artistas com músicas de reggae.
+
+```csharp
+Console.WriteLine("\nArtistas com músicas acima de 9 minutos:");
+Console.WriteLine("\nArtistas com músicas de Reggae:");
+```
+
+Aí conseguimos separar bem. Muito bom. F5 para executar. Agora sim, artistas com músicas acima de 9 minutos: Roberto Carlos e Calvin Harris. Artistas com músicas de reggae: Skank e, claro, Bob Marley.
+
+**Resumindo categorias de operações do LINQ**  
+Muito bom. Então, vimos aqui que também existe um grupo de operações do LINQ, onde a partir de uma coleção de elementos de entrada, retornamos um booleano, que é justamente para verificar alguma condição de existência desses elementos de entrada. O método Any é um método que nos ajuda nisso. Além disso, temos o método Contains, também temos o método Exists e temos o método All. Também são operações que se enquadram na categoria de Operações de Verificação de Existência.
+
+Poderíamos continuar falando de mais algumas operações do LINQ, mas já demos a ideia de que as operações do LINQ se enquadram em categorias. Falamos um pouco sobre essas categorias e agora vamos fazer um resumo rápido de cada uma dessas categorias. Vamos copiar aqui um resumo que colocamos em forma de comentário. Vamos pular uma linha aqui antes de começar a execução de fato do código. Vamos colocar esse comentário aqui para entender um pouco as categorias de operações do LINQ.
+
+```csharp
+/*
+Fluxo Padrão: Estágio 1 (Origem Dados) > Estágio 2 > ... > Estágio N
+
+LINQ - Categorias de operações para manipulação de coleções
+============================================================
+
+Filtro (+)      | coleção c/ tam menor/igual atendendo condição | Where, Distinct
+Projeção (+)    | coleção transformada, do mesmo tipo ou não     | Select, SelectMany
+Ordenação (+)   | coleção ordenada pela expressão lambda        | OrderBy, ThenBy
+Agregação (*)   | valor único a partir de operação de acúmulo   | Sum, Min, Max
+Agrupamento (+) | coleção de grupos onde a chave é o argumento  | GroupBy
+Elementos (*)   | elemento único T a partir do argumento        | First, Last, MinBy
+Existência (*)  | booleano a partir da operação e argumento     | All, Any, Contains
+Conversão (*)   | coleção em outra estrutura                    | ToList, ToArray
+
++ operações avalidas sob demanda (yield)
+* operações avalidas imediatamente
+*/
+```
+
+**Recapitulando operações do LINQ**  
+Então, começando a lembrar, começando a recapitular, trabalhamos com manipulação de coleções através de um fluxo. O fluxo padrão é o primeiro estágio, onde obtemos os dados, e a partir do segundo estágio, aplicamos operações do LINQ para manipular esses dados de acordo com a necessidade. Podemos ter operações que se enquadram nessas categorias que estamos colocando aqui: filtro, projeção, ordenação, agregação, agrupamento, obtenção de elementos, verificação de existência e até conversão.
+
+Falamos de to-list, que converte uma coleção de elementos de um tipo em outra estrutura de coleção também. No caso, to-list, to-array, to-hash-set, to-dictionary. Temos uma série de métodos que fazem conversão e assim usamos algumas delas. Operação de filtro: a coleção de saída tem um tamanho menor ou igual a partir de uma condição. Falamos do where, falamos do distinct.
+
+**Detalhando categorias de operações**  
+Projeção: transforma a coleção de entrada em uma coleção de saída, sendo do mesmo tipo ou não. Falamos do select, falamos do selectMany, que é usado para quando a propriedade que estamos selecionando é um array, é um enumerable, uma coleção. Aí achatamos todos esses elementos no nível acima.
+
+Ordenação: entrega uma coleção ordenada através de uma expressão lambda. Falamos do order by, falamos do then by, falamos do order descending.
+
+Operações de agregação: obtém um valor único a partir da coleção de entrada. Vamos usar a operação que vai acumular esse valor: sum, min, max, count. Tudo isso são operações de agregação.
+
+Categoria agrupamento: pega a coleção de entrada e agrupa por alguma chave. Obtivemos artistas, por exemplo, a partir das músicas, e aí obtivemos informações bastante interessantes: artistas que são de reggae, artistas que têm pelo menos uma música com 400 minutos, o artista que tem o maior total de músicas, que era o Maroon 5. Então, fomos obtendo informações bastante relevantes para trabalhar justamente com o agrupamento. O método é o group by.
+
+**Explorando obtenção de elementos e existência**  
+Obtenção de elementos: a partir de uma coleção de entrada de um elemento T, obtém um elemento T. Vamos usar a função, o método que queremos: quero pegar o primeiro, quero pegar o último, quero pegar o elemento que se adequa a uma expressão de mínimo ou máximo, min by, max by. Falamos do first or default, last or default. Temos esse tipo de operação.
+
+Categoria de existência: foi essa última que falamos. A partir de uma coleção de entrada, temos uma verificação a partir de uma condição, onde vamos retornar um booleano. Falamos do all, falamos do any, falamos do contains.
+
+**Considerações sobre conversão e otimização**  
+E também operações de conversão, onde materializamos aquela coleção enumerable em uma estrutura de dados em memória. Fazemos toda a avaliação para poder converter isso em memória. Usamos muito o to-list para isso. Marcamos aqui também as categorias com mais e asterisco para indicar as categorias que são avaliadas sob demanda, ou seja, que usam yield return. Só vai entregar quando aquele yield return for processado. Então, filtro pode fazer isso, projeção pode fazer isso, agrupamento, algumas partes, mas a maioria das categorias precisa avaliar as operações antes de começar a trabalhar.
+
+Isso é importante quando começamos a trabalhar com a origem do dado. Se a origem do dado tiver um recurso importante que precisa ser manipulado, em geral, é interessante que já materializemos essa informação usando o to-list, usando o to-array, usando algum outro tipo de método de conversão, para que não precisemos nos preocupar com aqueles erros que tomamos, que estávamos esperando, erros e comportamentos indesejados. Por exemplo, estávamos tentando ver o total de músicas sob alguma determinada condição e veio zero. Isso porque já tinha chegado ao final da enumeração e não tinha mais nada para processar. Então, às vezes, é bom já fazer essa conversão com uma lista, mas precisamos tomar cuidado. Se essa lista for muito grande, vamos colocar a lista toda em memória. Então, precisamos pensar em qual estratégia vamos usar, considerando também essa parte de otimização.
+
+**Concluindo a exploração das operações do LINQ**  
+Vimos então as operações do LINQ que são usadas. Mostramos esse catálogo por categoria. O próximo passo na manipulação de dados virá em seguida.
+
+### Aula 4: Para saber mais: ordenando coleções com LINQ
+
+**Ordenação em múltiplos níveis**
+Ao trabalharmos com ordenação em coleções, muitas vezes é necessário aplicar critérios hierárquicos de ordenação. O método OrderBy é utilizado para definir o primeiro critério e, em seguida, o ThenBy ou ThenByDescending são empregados para refinar essa ordenação quando os elementos possuem chaves iguais no primeiro nível. Essa abordagem permite estruturar os dados de forma que, por exemplo, se os valores principais forem iguais, os itens serão ordenados por uma segunda propriedade.
+
+Como funciona o encadeamento de ordenação
+Inicialmente, o OrderBy organiza a coleção com base em uma função de seleção fornecida, criando uma primeira camada de ordenação. Caso dois ou mais elementos tenham o mesmo valor para essa chave, o ThenBy entra em ação para desempatar, utilizando uma nova função de seleção. Quando a necessidade exige uma ordenação decrescente em um nível posterior, o uso de ThenByDescending se torna a alternativa adequada.
+
+Exemplo prático:
+
+```csharp
+var playlistOrdenada = musicas
+    .OrderBy(m => m.Artista)        // Ordena pelo nome do artista
+    .ThenBy(m => m.Nome)             // Se os artistas forem iguais, ordena pelo nome da música
+    .ThenByDescending(m => m.Duracao); // Para músicas do mesmo artista e nome iguais, ordena pela duração de forma decrescente
+```
+
+Nesse exemplo, a coleção é ordenada primeiramente pelo artista, depois pelo nome da música e, por fim, pela duração em ordem decrescente. Dessa forma, se houver muitas músicas do mesmo artista, o critério adicional assegura que a ordem seja consistente e significativa.
+
+**Vantagens e cuidados**  
+Entre as vantagens dessa abordagem estão a clareza e a simplicidade do pipeline de ordenação, permitindo ao desenvolvedor definir de forma elegante múltiplos critérios sem a necessidade de escrever comparadores complexos. Contudo, é importante lembrar que cada critério adicional gera uma nova camada de avaliação, o que, em coleções extremamente grandes, pode impactar a performance. Por isso, escolha os níveis de ordenação com base na necessidade real e no contexto da aplicação.
+
+Essa técnica de ordenação múltipla é um exemplo poderoso de como o LINQ promove uma sintaxe declarativa e intuitiva para tratar coleções, facilitando a manutenção e a legibilidade do código.
+
+### Aula 4: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A utilizar o método Select para projetar elementos em novas formas.
+- A remover duplicatas em coleções usando o método Distinct.
+- A ordenar coleções com o método OrderBy.
+- A projetar e achatar coleções aninhadas com SelectMany.
+- Sobre o uso de GroupBy para agrupar coleções por chave.
+- A aplicar operações de agregação como Count, Sum, Min, Max, e Average.
+- As operações de verificação de existência com Any e Contains.
+- Como utilizar métodos como First, FirstOrDefault, e MaxBy para obtenção de elementos.
+
+## Aula 5: String
+
+### Aula 5: Projeto da aula anterior
+
+Na aula anterior conhecemos o LINQ, uma poderosa biblioteca que unifica operações de consulta e transformação em coleções. Aplicamos filtros, projeções, agregações, agrupamentos e verificações de existência de forma concisa e legível. Para revisar e testar os exemplos no projeto, acesse o [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/04-LINQ)
+
+### Aula 5:  - Vídeo 1
+### Aula 5:  - Vídeo 2
+### Aula 5:  - Vídeo 3
+### Aula 5:  - Vídeo 4
+### Aula 5:  - Vídeo 5
+### Aula 5:  - Vídeo 6
+
