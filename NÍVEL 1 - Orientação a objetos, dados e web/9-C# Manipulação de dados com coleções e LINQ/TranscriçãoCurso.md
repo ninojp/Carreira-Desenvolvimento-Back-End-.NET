@@ -4020,12 +4020,565 @@ Nesta aula, aprendemos:
 
 Na aula anterior, voltamos o foco para dados textuais: exploramos as características das strings, sua imutabilidade, boas práticas de uso e recursos como Replace, Split, interpolação, StringBuilder e TryParse. Também entendemos como o .NET otimiza o uso de strings na memória. Para conferir o projeto e os exemplos implementados, acesse o [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/05-Strings)
 
-### Aula 6:  - Vídeo 1
-### Aula 6:  - Vídeo 2
-### Aula 6:  - Vídeo 3
-### Aula 6:  - Vídeo 4
-### Aula 6:  - Vídeo 5
-### Aula 6:  - Vídeo 6
-### Aula 6:  - Vídeo 7
-### Aula 6:  - Vídeo 8
-### Aula 6:  - Vídeo 9
+### Aula 6: Duração com novo formato - Vídeo 1
+
+Transcrição  
+Vamos avançar para outro tópico no estudo de manipulação de dados. Para isso, realizaremos a tarefa rotineira de organizar o ambiente no Visual Studio. Como estamos mudando de tópico, também alteraremos o projeto. Vamos agora para o projeto número 6. Fecharemos a aba do Program.cs e, na lista suspensa de projetos que serão executados, escolheremos o número 6. Estamos quase finalizando.
+
+No gerenciador de soluções, abriremos o Program.cs relativo a este projeto. Já existe um código pronto, que inclui uma parte que já escrevemos desde a aula sobre string. Temos aqui a exibição das músicas em tabela. Vamos executar o código pressionando F5, e a execução aparecerá no terminal. Pegamos as 20 primeiras músicas em tabela. Algo que chama a atenção é que a duração está sempre igual, refletindo a duração padrão que definimos na validação, onde capturamos a duração.
+
+**Analisando o problema de parsing de duração**  
+Para começar, vamos abrir o arquivo de músicas do projeto 6. O formato da duração agora é minutos:segundos. A maneira que utilizávamos para capturar e fazer o parsing da duração não está mais funcionando. Se formos em obter músicas, usando o ctrl-clique, veremos que a duração está tentando fazer o parsing desse valor. O terceiro elemento do array, gerado a partir do método split, está retornando falso, então sempre pega 350, que é o valor padrão que consideramos para a duração de uma música. Precisamos fazer uma mudança.
+
+Para isso, vamos começar carregando o arquivo de músicas e exibindo as músicas em tabela:
+
+```csharp
+using var arquivo = new FileStream("musicas.csv", FileMode.Open, FileAccess.Read);
+using var stream = new StreamReader(arquivo);
+
+var musicas = ObterMusicas(stream)
+    .Take(20);
+
+ExibirMusicasEmTabela(musicas);
+```
+
+Se temos o formato 0:00, poderíamos fazer um split com dois pontos como separador, pegando a primeira parte como minutos e a segunda como segundos. No entanto, queremos mostrar outro recurso para esse tipo de cenário, onde encontramos um padrão em um texto. Embora possamos resolver via split, existem cenários mais complexos que exigiriam vários ifs e validações, tornando o código menos legível. Talvez não conseguíssemos uma solução usando split ou outro método da classe string.
+
+**Introduzindo expressões regulares**  
+O recurso que utilizaremos para encontrar padrões em um texto são as expressões regulares. A ideia é identificar expressões específicas que ocorrem regularmente em um texto. No arquivo musicas.cs, temos um padrão claro: número, dois pontos, outro número. Vamos tentar encontrar esse padrão, não no texto como um todo, mas em cada linha especificamente.
+
+Para não nos comprometermos ainda com a solução, copiaremos a primeira linha e a levaremos para o início da execução para realizar alguns testes. Após explicar tudo e entender o processo, aplicaremos a solução que realmente captura a duração das músicas. Criaremos uma variável chamada linha no início da execução do programa, com um string literal contendo a linha completa:
+
+```csharp
+var linha = "The Broken Road;Rolling Stones;6:39;Rock, Blues Rock;13/09/1974";
+```
+
+Comentaremos a parte que captura e exibe as músicas para realizar os testes:
+
+```csharp
+//var musicas = ObterMusicas(stream)
+//    .Take(20);
+
+//ExibirMusicasEmTabela(musicas);
+```
+
+**Utilizando a classe Regex para capturar padrões**  
+Para capturar um padrão específico em uma string, utilizaremos a classe Regex de expressões regulares. Esta classe possui um método que nos entrega um objeto para identificar se houve um match, ou seja, se o padrão foi encontrado no texto de entrada. O método Match retorna um objeto do tipo match, e o argumento de entrada é o texto que queremos analisar.
+
+Primeiro, precisamos importar o namespace necessário para trabalhar com expressões regulares:
+
+```csharp
+using System.Text.RegularExpressions;
+```
+
+Para iniciar, precisamos definir o texto que desejamos procurar, que neste caso está armazenado na variável linha. Em seguida, determinamos o padrão que queremos encontrar dentro desse texto. O padrão utiliza a sintaxe de expressões regulares, que é específica para representar essas expressões. Vamos criar a expressão regular para encontrar o padrão de duração:
+
+```csharp
+var match = Regex.Match(linha, @"\d:\d\d");
+```
+
+Temos aqui o primeiro padrão que escrevemos em expressões regulares. Vamos capturar o objeto gerado pelo método Match e realizar algumas verificações. O objeto na variável match possui uma propriedade chamada Success, que indica se o padrão foi encontrado. Se encontrado, indicaremos "Duração Encontrada" e, melhor ainda, já exibiremos o valor, pois o objeto match possui uma propriedade chamada Value. Caso contrário, escreveremos "Duração Não Encontrada":
+
+```csharp
+if (match.Success)
+{
+    Console.WriteLine($"Duração encontrada! {match.Value}");
+}
+else
+{
+    Console.WriteLine("Duração não encontrada!");
+}
+```
+
+**Testando e validando o uso de expressões regulares**  
+Vamos executar esse código, que serve para testar e aprender sobre expressões regulares. Ao pressionar F5 ou clicar no triângulo verde, veremos que ele encontrou o padrão no texto, na linha especificada. Se houver um dígito seguido por dois pontos e depois dois dígitos, ele captura esse padrão, como ocorreu.
+
+Expressões regulares nos conferem a capacidade de encontrar padrões específicos dentro de strings, que podem ser bastante complexos. Não conseguimos escrever código usando apenas if e outros métodos padrão de strings para isso. Este é um padrão relativamente simples, mas utilizaremos expressões regulares para encontrar padrões nos textos. A classe Regex é a classe de entrada para trabalhar com expressões regulares. O método Match é utilizado para buscar um padrão, que segue uma sintaxe específica. Neste caso, a sintaxe é para encontrar um dígito seguido por dois pontos e depois dois dígitos. Além disso, o método Match retorna um objeto com duas propriedades que estamos utilizando: um booleano indicando se o padrão foi encontrado e uma propriedade Value, que entrega uma string com o valor encontrado.
+
+Em seguida, continuaremos nosso estudo sobre expressões regulares.
+
+### Aula 6: Sincronização de contatos com padrões de data - Exercício
+
+Na Indexa, uma plataforma que organiza e gerencia contatos pessoais e profissionais de forma inteligente, a equipe de desenvolvimento está enfrentando um problema com a sincronização automática de contatos. Os dados de aniversário dos contatos foram alterados para um novo formato "ano/mês/dia". A empresa contratou você para garantir que o sistema de busca avançada consiga identificar e processar corretamente essas novas entradas de data.
+
+Qual abordagem utilizando expressões regulares você adotaria para resolver esse problema?
+
+Resposta:  
+Criar uma expressão regular @"\d{4}/\d{2}/\d{2}" para capturar o padrão "ano/mês/dia", utilizando a classe RegEx e o método match para verificar a presença do padrão nos dados de entrada. A propriedade success do objeto match indicará se a data foi identificada corretamente.
+
+> Correta, pois essa expressão regular é projetada especificamente para capturar o formato "ano/mês/dia", garantindo que o sistema de busca avançada possa identificar e processar as novas entradas de data de forma eficaz.
+
+### Aula 6: Capturando partes do valor encontrado - Vídeo 2
+
+Transcrição  
+Já adquirimos mais conhecimento sobre expressões regulares para encontrar padrões em nosso texto. No entanto, ainda não estamos utilizando esses valores. Precisamos capturar a parte que está antes dos pontos e a parte que está depois dos pontos. O objeto match possui uma propriedade chamada groups, que é uma coleção de grupos. Como é uma coleção, ela é enumerável, e podemos iterar sobre ela sem erros.
+
+Para começar, vamos iterar sobre os grupos encontrados na expressão regular. Podemos fazer isso com o seguinte código:
+
+```csharp
+foreach(var group in match.Groups)
+{
+    Console.WriteLine($"Grupo: {group}");
+}
+```
+
+**Enumerando e capturando grupos**  
+Ao enumerar esses grupos, podemos mostrar o que há dentro dessa propriedade. Se encontrarmos o padrão, ele irá primeiro enumerar o que está dentro de groups. Ao executar o código, percebemos que havia apenas um grupo, um elemento desse array, que era justamente o valor impresso em seguida.
+
+Para gerar mais grupos, podemos agrupar subpartes da expressão regular utilizando parênteses. No primeiro elemento que queremos capturar, colocamos parênteses, e no segundo elemento também. Vamos definir a expressão regular para capturar os minutos e segundos:
+
+```csharp
+var match = Regex.Match(linha, @"(\d):(\d\d)");
+```
+
+Após salvar e executar o código, notamos que agora temos mais dois elementos na coleção de grupos: o primeiro elemento representa os minutos e o segundo, os segundos.
+
+**Convertendo e calculando a duração**
+Com isso, conseguimos capturar os minutos e segundos a partir das propriedades dos elementos da coleção de grupos. Como sabemos que o padrão foi encontrado e que os grupos foram definidos na sintaxe, podemos converter diretamente para inteiro, utilizando int.Parse. Vamos capturar os minutos e segundos como inteiros:
+
+```csharp
+var minutos = int.Parse(match.Groups[1].Value);
+var segundos = int.Parse(match.Groups[2].Value);
+```
+
+Para representar a duração encontrada, multiplicamos os minutos por 60 e somamos com os segundos. Essa é a duração que queremos guardar no objeto músicas. Vamos imprimir a duração encontrada:
+
+```csharp
+Console.WriteLine($"Duração encontrada: {(minutos * 60) + segundos}");
+```
+
+Ao executar, verificamos que a duração encontrada era 399, que corresponde à duração da primeira música.
+
+**Ajustando a expressão regular para diferentes durações**  
+Aprendemos sobre grupos, uma maneira de agrupar partes do padrão, utilizando a coleção de grupos no objeto match. A partir daí, conseguimos capturar essas partes específicas. Vamos aplicar esse código à duração, mas há um detalhe a mais: se tivermos uma música muito longa, como 12 minutos, teremos dois dígitos. Para capturar corretamente, ajustamos a expressão regular:
+
+```csharp
+var match = Regex.Match(linha, @"(\d?\d):(\d\d)");
+```
+
+Podemos colocar os dois dígitos, mas, ao executar a duração, obteremos o valor correto. No entanto, se tivermos uma duração com apenas um dígito, a execução não funcionará, pois agora ele espera um padrão com dois dígitos. Se tivermos uma música com apenas um dígito, precisamos indicar que o primeiro dígito, antes dos dois pontos, é opcional. Para indicar essa ocorrência opcional, usamos a sintaxe da interrogação.
+
+**Implementando a lógica de captura de duração**  
+Anteriormente, nossa execução caía no else, indicando "duração não encontrada". Agora, ele encontrará a duração, como no caso de 2 minutos e 39 segundos, mas também encontrará durações com mais de um dígito, como 759. Assim, temos a possibilidade de ter dois dígitos ou apenas um na parte dos minutos. Na parte dos segundos, queremos que haja dois dígitos, pois, se houver apenas um, não saberemos se é 30 segundos ou 3 segundos. Portanto, validaremos que a parte dos segundos deve ter dois dígitos.
+
+Vamos levar esse código para a obtenção de música, no método que usamos para isso. Vamos recortar o código e levá-lo para a parte onde obtemos a música. A música já está aqui, com a indicação do padrão. Vamos manter o objeto match sendo criado, mas agora sabemos o que fazer com a duração. Vamos criar um objeto chamado duração, um inteiro de 350, onde a duração será minutos multiplicados por 60, somados com os segundos. Não haverá else, pois já começamos com 350, e usaremos essa duração diretamente ao criar a propriedade duração da classe música.
+
+```csharp
+int duracao = 350;
+var match = Regex.Match(linha, @"(\d?\d):(\d\d)");
+if (match.Success)
+{
+    var minutos = int.Parse(match.Groups[1].Value);
+    var segundos = int.Parse(match.Groups[2].Value);
+    duracao = (minutos * 60) + segundos;
+}
+```
+
+**Testando e validando a implementação**  
+Agora, podemos testar a tabela novamente. A linha 7 não está mais sendo utilizada, então vamos apagá-la e descomentar o código que obtém as músicas, já com a duração corrigida. Ao executar, a tabela mostrará a duração corrigida, como 6 minutos, 650, 3 segundos, e assim por diante. Todos esses valores estão sendo capturados conforme esperado, já no novo formato de duração.
+
+Conhecemos os grupos como uma maneira de agrupar padrões em subpartes, usando parênteses para isso, e utilizamos a coleção de grupos. Além disso, falamos sobre a ocorrência de algum elemento dentro desse padrão de expressões regulares, como a ocorrência opcional indicada pela interrogação. Existem também ocorrências para ter zero ou mais, ou pelo menos uma, e falaremos mais sobre essas ocorrências em seguida.
+
+### Aula 6: Analisando padrões de duração de voos - Exercício
+
+A plataforma Jornada Viagens, especializada na comparação e reserva de pacotes de viagens, hotéis e passagens aéreas, está desenvolvendo um novo recurso para calcular a duração total dos voos com base em dados de horários de partida e chegada. A equipe de desenvolvimento está utilizando expressões regulares para extrair e calcular a duração dos voos a partir de strings de texto que contêm informações de horários. No entanto, eles enfrentam um desafio ao lidar com voos que têm durações expressas em diferentes formatos, como "2h 30m" ou "1h 5m".
+
+Qual abordagem a equipe pode adotar para utilizar expressões regulares e capturar corretamente as horas e minutos, garantindo que o cálculo da duração seja preciso, independentemente do formato?
+
+Resposta:  
+A equipe pode definir grupos na expressão regular para capturar as horas e minutos separadamente, utilizando uma expressão como (\d+)h\s*(\d+)?m?, onde (\d+) captura um ou mais dígitos para as horas, e (\d+)? captura opcionalmente os minutos. A interrogação após o grupo de minutos indica que ele é opcional, permitindo que a expressão funcione tanto para "2h 30m" quanto para "1h". A equipe pode então converter os valores capturados em inteiros e calcular a duração total em minutos, multiplicando as horas por 60 e somando os minutos.
+
+> Correta, pois essa abordagem permite capturar de forma flexível as horas e minutos, independentemente do formato, garantindo que a duração total seja calculada com precisão.
+
+### Aula 6: Superpoderes nas operações de filtro - Vídeo 3
+
+Transcrição  
+Agora que já conhecemos expressões regulares e aplicamos esse conhecimento para fazer o parsing da duração, considerando que o dado de entrada, aquele arquivo, mudou o formato da duração, podemos utilizar expressões regulares em outros contextos. Um contexto interessante é capturar e manipular coleções através do método WHERE. Esse método nos permite filtrar coleções usando link, e sabemos que ele precisa de um argumento que retorna um valor booleano. Se a condição for atendida, o elemento será incluído na saída; caso contrário, não será incluído.
+
+Podemos combinar o WHERE com regex para usar padrões ainda mais complexos na captura de informações em nossa coleção de músicas. Vamos explorar isso. Trouxemos alguns exercícios para praticar, que serão copiados como comentários, seguindo o que fizemos anteriormente. Os exercícios incluem encontrar artistas com caracteres especiais, títulos de músicas com duas palavras, músicas que começam e terminam com a mesma palavra, músicas com letras repetidas e músicas com números romanos. Esses são alguns padrões que podemos tentar identificar nas músicas usando regex.
+
+```csharp
+/*
+    - encontrando artistas com caracteres especiais
+    - encontrando títulos com duas palavras
+    - encontrando títulos que começam e terminam com a mesma palavra
+    - encontrando títulos com letras repetidas
+    - encontrando títulos com números romanos
+*/
+```
+
+**Iniciando a filtragem de artistas com caracteres especiais**  
+Para começar, vamos comentar o trecho relacionado às músicas, pois vamos trabalhar com artistas neste momento. Vamos criar uma variável chamada artistas, que será obtida a partir do arquivo de músicas. Em seguida, utilizaremos o WHERE, onde começaremos a nossa tarefa. Vamos montar o modelo com m = true, projetar a música para pegar somente a propriedade artista, eliminar elementos repetidos e, por fim, ordená-los de forma alfabética.
+
+```csharp
+var artistas = ObterMusicas(stream)
+    .Where(m => true)
+    .Select(m => m.Artista)
+    .Distinct()
+    .OrderBy(a => a);
+```
+
+Aqui temos todos os artistas ordenados de forma alfabética, sem repetir nenhum deles. Agora, precisamos trabalhar em uma condição que será obtida através de expressões regulares. A classe regex possui um método chamado isMatch, que verifica um padrão e retorna um valor booleano, exatamente o que precisamos na cláusula where.
+
+**Definindo padrões de caracteres especiais**  
+A string de entrada é a propriedade artista da classe música. Estamos verificando se esse artista possui caracteres especiais. O entendimento necessário aqui é sobre o padrão que precisamos conhecer para aplicar como uma expressão regular. Isso se aplica a todos os casos semelhantes. Cabe ressaltar que não conhecemos todos os padrões, pois seria humanamente impossível. Conhecemos um pouco de sintaxe, mas hoje em dia, com inteligência artificial e documentação, existem ferramentas online para testar padrões de expressões regulares, o que nos ajuda a criá-los.
+
+O mais importante é saber que podemos usar expressões regulares e como aplicá-las. Utilizamos para fazer o parsing de duração e agora estamos usando para manipular coleções de músicas. Vou explicar o padrão específico que utilizaremos para encontrar caracteres especiais. Um caractere especial é tudo aquilo que não é um caractere normal, como letras minúsculas, maiúsculas, dígitos e espaços. O que não estiver nesse conjunto é considerado um caractere especial para este código.
+
+Para definir um conjunto de opções em uma expressão regular, usamos colchetes. Tudo dentro dos colchetes é uma opção que pode ou não ocorrer em uma posição específica. Representamos um intervalo de valores com hífen, como A-Z para letras minúsculas, A-Z para maiúsculas, 0-9 para dígitos e espaço para o caractere de espaço em branco. Também podemos usar \s para representar espaço em branco. Esse padrão encontrará caracteres na propriedade artística, mas queremos aqueles que não são desse tipo. Para negar algo em uma expressão regular, usamos o acento circunflexo (^). Assim, buscamos na propriedade artística tudo que não seja letras de A a Z, números de 0 a 9 ou espaços em branco. Esses são os caracteres especiais.
+
+```csharp
+.Where(m => Regex.IsMatch(m.Artista, "[^a-zA-Z0-9 ]"))
+```
+
+**Imprimindo artistas com caracteres especiais**  
+Após criar isso, faremos um for each para cada artista em artistas, imprimindo a variável artista. Ao executar, o resultado mostrará artistas com caracteres especiais, como ACDC com barra invertida, B1C com acento no E, Guns N' Roses com apóstrofo, K-Pop com hífen, Legião Urbana com til, Racionais com apóstrofo, Rosalia com acento e Tiesto com acento no E. Esses são os artistas com caracteres especiais na coleção de músicas.
+
+```csharp
+foreach(var artista in artistas) Console.WriteLine(artista);
+```
+
+**Otimizando o uso de expressões regulares**  
+Com apenas uma linha, conseguimos realizar um trabalho complexo para encontrar esse padrão. Precisamos discutir mais um ponto: ao usar YIELD e WHERE, executamos essa condição para cada elemento da coleção, gerando um novo objeto regex a cada iteração. Em coleções grandes, como 1200 músicas, isso não é ideal. O recomendado é criar um objeto do tipo regex com NEW REGEX e definir o padrão nele. Assim, reutilizamos o mesmo objeto em cada iteração, evitando recriações desnecessárias.
+
+```csharp
+var regex = new Regex(@"[^a-zA-Z0-9 ]");
+var artistas = ObterMusicas(stream)
+    .Where(m => regex.IsMatch(m.Artista))
+    .Select(m => m.Artista)
+    .Distinct()
+    .OrderBy(a => a);
+foreach (var artista in artistas) Console.WriteLine(artista);
+```
+
+**Encapsulando a lógica em um método**  
+Agora, vamos pegar esse código e levá-lo para um método, segundo nosso modelo. Selecionamos todo o código que filtra artistas com caracteres especiais e colocamos no método artistasComCaracteresEspeciais. O próximo passo será usar esse mesmo padrão WHERE com MATCH e expressão regular para outros exercícios.
+
+```csharp
+void ArtistasComCaracteresEspeciais()
+{
+    var regex = new Regex(@"[^a-zA-Z0-9 ]");
+    var artistas = ObterMusicas(stream)
+        .Where(m => regex.IsMatch(m.Artista))
+        .Select(m => m.Artista)
+        .Distinct()
+        .OrderBy(a => a);
+    foreach (var artista in artistas) Console.WriteLine(artista);
+}
+```
+
+Com isso, encapsulamos a lógica de encontrar artistas com caracteres especiais em um método, facilitando a reutilização e manutenção do código.
+
+### Aula 6: Resolvendo os outros exercícios - Vídeo 4
+
+Transcrição  
+Vamos continuar com nosso desafio de resolver os exercícios propostos. Já resolvemos o primeiro, que consiste em encontrar artistas com caracteres especiais. Vamos marcar essa atividade como concluída e deixar um espaço para as próximas.
+
+O próximo exercício é encontrar títulos com duas palavras. Vamos montar nosso template para trabalhar com isso. Primeiramente, criamos um objeto do tipo regex (expressão regular).
+
+```csharp
+var regex = 
+```
+
+Agora, vamos inicializar esse objeto com a classe Regex.
+
+```csharp
+var regex = new Regex();
+```
+
+**Definindo padrões de expressões regulares**  
+Precisamos definir a condição para que o título da música corresponda ao regex.
+
+```csharp
+var regex = new Regex(@"");
+```
+
+Em seguida, vamos exibir os 20 primeiros resultados em uma tabela.
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Where()
+    .Take(20);
+```
+
+A questão é: qual padrão devemos usar para encontrar títulos com duas palavras? Este é um estudo que nos permitirá aplicar o conhecimento posteriormente ou utilizar ferramentas que forneçam esses padrões. A inteligência artificial também pode nos ajudar bastante nesse processo.
+
+O objetivo é encontrar um título com exatamente duas palavras, sem mais ou menos. Precisamos avaliar a string original do início ao fim, garantindo que o padrão se aplique à string inteira. Para isso, utilizamos dois símbolos: o símbolo do chapéu (^) para indicar o início da string e o cifrão ($) para indicar o fim. Entre esses dois símbolos, colocamos o padrão desejado.
+
+**Criando expressões regulares para títulos de músicas**  
+Para encontrar uma palavra em uma string, usamos caracteres que a representem. Na expressão regular, o \w indica um caractere que pode aparecer em uma palavra, como letras minúsculas, maiúsculas, dígitos, entre outros. Queremos pelo menos um caractere, então usamos o símbolo de mais (+) para indicar essa ocorrência. O espaço separa duas palavras, então incluímos um espaço seguido do mesmo padrão \w+. Isso indica que a string começa e termina com uma palavra, totalizando duas palavras.
+
+```csharp
+var regex = new Regex(@"^\w+ \w+$");
+```
+
+Vamos testar nossa coleção de músicas com duas palavras. Agora, exibimos as vinte primeiras músicas que contêm exatamente duas palavras.
+
+```csharp
+var musicas = ObterMusicas(stream)
+    .Where(m => regex.IsMatch(m.Titulo))
+    .Take(20);
+```
+
+**Criando métodos para manipulação de músicas**  
+Prosseguindo, marcamos mais um exercício como concluído. O próximo passo é levar o código que resolve esse exercício para um método chamado "Músicas com duas palavras".
+
+```csharp
+void MusicasComDuasPalavras()
+{
+    var regex = new Regex(@"^\w+ \w+$");
+    var musicas = ObterMusicas(stream)
+        .Where(m => regex.IsMatch(m.Titulo))
+        .Take(20);
+
+    ExibirMusicasEmTabela(musicas);
+}
+```
+
+**Encontrando padrões complexos em títulos de músicas**  
+O próximo desafio é encontrar músicas que começam e terminam com a mesma palavra. Este é um pouco mais complexo. Vamos usar o padrão anterior, mas o regex será diferente. Precisamos garantir que o padrão ocorra do início ao fim da string original. A primeira palavra deve ser repetida no final. Para isso, capturamos a palavra em uma subparte da expressão regular.
+
+```csharp
+var regex = new Regex(@"^(\w+).*\1$");
+```
+
+Após capturar a primeira palavra, qualquer coisa pode aparecer em seguida. Usamos o ponto (.) para indicar qualquer caractere e o asterisco (*) para indicar que pode ocorrer zero ou mais vezes. Finalmente, a mesma palavra deve aparecer no final da expressão. Para referenciar o primeiro grupo capturado, usamos \1. O Visual Studio fornece indicações úteis para facilitar esse processo.
+
+**Implementando métodos para padrões repetidos**  
+Assim, capturamos a primeira palavra no início e garantimos que ela se repita no final da string.
+
+```csharp
+void MusicasQueComecamETerminamComAMesmaPalavra()
+{
+    var regex = new Regex(@"^(\w+).*\1$");
+    var musicas = ObterMusicas(stream)
+        .Where(m => regex.IsMatch(m.Titulo))
+        .Take(20);
+
+    ExibirMusicasEmTabela(musicas);
+}
+```
+
+Depois, aceitamos qualquer coisa que venha. Pode ser 30 palavras, pode ser 2 palavras. No final, deve ser o mesmo valor que foi capturado naquele primeiro grupo. Este é o nosso padrão para encontrar músicas que começam e terminam com a mesma palavra. Será que existe isso na coleção de músicas? Vamos apertar F5 e verificar. Apareceu uma música: "Yeah, yeah, yeah". A primeira palavra é "yeah" e a última palavra também é "yeah". O que vinha aparecendo no meio não era relevante. Utilizamos o ponto com asterisco, mas ele encontrou o padrão. Assim, começamos a usar expressões regulares bastante complexas, mantendo sempre o mesmo padrão. Encontramos músicas que começam e terminam com a mesma palavra.
+
+**Explorando padrões de letras repetidas**  
+Vamos seguir para mais um exemplo: músicas com letras repetidas. Seguindo o mesmo padrão, vamos copiar e colar aqui. Agora, precisamos entender qual é o padrão. Este padrão é bastante complexo, mas vamos tentar explicar. Primeiro, ele pode encontrar um padrão em qualquer local da string original, pois não há início e fim de string definidos. Esse padrão pode ocorrer em partes do título da música. O importante é que ele aceita qualquer palavra com qualquer ocorrência. Ele precisa encontrar um padrão específico: capturar uma letra específica dentro dos caracteres que representam a palavra. Depois, queremos que essa mesma letra capturada apareça novamente. Temos o \1 aqui, e ela pode aparecer mais duas vezes, ou seja, duas ou mais vezes. Assim, letras repetidas são capturadas, e depois pode aparecer qualquer coisa.
+
+```csharp
+var regex = new Regex(@"(\w)\1{2,}");
+```
+
+Vamos executar este exemplo de músicas com letras repetidas. Até estamos incrédulos se isso vai funcionar. F5. Surpreendentemente, encontramos uma música com três letras repetidas e uma música do Linkin Park com essas três letras. Dentro das 1.200 músicas, encontramos essas duas com letras repetidas. Se não me engano, isso poderia ocorrer pelo menos uma vez. Ele encontrou duas letras repetidas: "Sweet Sound, Sweet, Sweet, Sweet, Sweet". Quando há o 2, ele busca ainda mais repetições, a partir de três repetições. Quando colocamos o 1, não precisamos especificar, podemos usar o mais para indicar pelo menos uma vez. Para especificar uma ocorrência diferente, usamos chaves para indicar o número de ocorrências. No caso, é de 2 até infinito. Se quiséssemos de 2 até 4, colocaríamos o limite final. Para apenas duas vezes, como nas duas músicas que encontramos, sempre três vezes, podemos especificar assim também. É uma maneira de representar a ocorrência em uma expressão regular.
+
+```csharp
+void MusicasComLetrasRepetidas()
+{
+    var regex = new Regex(@"(\w)\1{2,}");
+    var musicas = ObterMusicas(stream)
+        .Where(m => regex.IsMatch(m.Titulo))
+        .Take(20);
+
+    ExibirMusicasEmTabela(musicas);
+}
+```
+
+**Identificando títulos com números romanos**  
+Para encontrar números romanos, é mais simples. Vamos criar títulos com números romanos. Em geral, músicas com números romanos são óperas ou músicas clássicas, como "Adagio, Número X" ou "Sonata, Número Y". Vamos copiar nosso modelo e substituir o padrão regex. Precisamos de um conjunto que represente números romanos.
+
+```csharp
+var regex = new Regex(@"\b[IVXLCDM]+\b");
+```
+
+Este é um conjunto, então qualquer ocorrência desses caracteres entra no padrão, pelo menos uma vez. A outra indicação é o \b, que indica o fim ou limite da palavra. O número romano não aparece em outra palavra, como o Y, que deve ser separado por espaço, fim ou início de padrão.
+
+Vamos executar o método para títulos com números romanos. Apertar F5. Encontramos um erro: falta um ponto e vírgula. Após corrigir, F5 novamente. Encontramos músicas clássicas, como "Sinfonia número 4" e "Adagio 3". Apesar de ser um dado fictício, é uma coleção de músicas fictícias.
+
+```csharp
+void TitulosComNumerosRomanos()
+{
+    var regex = new Regex(@"\b[IVXLCDM]+\b");
+    var musicas = ObterMusicas(stream)
+        .Where(m => regex.IsMatch(m.Titulo))
+        .Take(20);
+
+    ExibirMusicasEmTabela(musicas);
+}
+```
+
+**Concluindo o estudo de expressões regulares**  
+Para concluir este estudo, com expressões regulares, ganhamos superpoderes na manipulação de dados, tanto de texto quanto de coleções. Primeiro, usamos expressões regulares para fazer o parsing de uma duração e, depois, para encontrar padrões complexos em coleções, encadeando com a operação de filtro do link, que é o WHERE. Colocamos a expressão regular para se tornar a condição de match, incluindo ou não o elemento na saída. Em seguida, continuaremos nosso estudo sobre manipulação de dados.
+
+### Aula 6: Para saber mais: Regex com back-references
+
+**Compreendendo o conceito**  
+As back-references em expressões regulares permitem reutilizar uma parte do padrão capturado anteriormente, garantindo que a mesma sequência de caracteres ocorra novamente em outro ponto da string. Esse recurso é extremamente útil quando se deseja validar padrões onde um elemento deve ser repetido, como o caso de músicas que começam e terminam com a mesma palavra.
+
+Quando se define um grupo entre parênteses, o conteúdo capturado fica disponível para referência posterior. Por exemplo, em um padrão como ^(\w+).*(\1)$, o primeiro grupo \w+ captura uma sequência de caracteres que compõem uma palavra. O \1 é a back-reference a esse grupo, obrigando todo o restante da string a terminar exatamente com o mesmo conteúdo capturado.
+
+**Funcionamento e vantagens**  
+O principal motivo pelo qual as back-references funcionam é que elas operam em um nível de verificação de igualdade entre strings. Diferente de outras técnicas de validação, que criam condições independentes, as back-references garantem que a mesma cadeia de caracteres ocorra em duas (ou mais) posições distintas. Essa abordagem é poderosa para identificar simetrias, repetições ou padrões que se repetem de forma idêntica.
+
+Entre as vantagens, destacam-se:
+
+Consistência nos padrões: Ao capturar um grupo e referenciá-lo, a expressão regular assegura a consistência dos dados, por exemplo, em padrões que exigem que o início e o fim sejam iguais.
+Simplicidade na criação do padrão: Em vez de tentar definir manualmente quais variações poderiam aparecer, a back-reference lida automaticamente com a repetição exata do grupo.
+Flexibilidade: Pode ser aplicada em diversos cenários, desde validação de formatos simples até extração de dados complexos.
+
+**Exemplos práticos**  
+Imagine um cenário onde se deseja identificar títulos que começam e terminam com a mesma palavra. Um exemplo de expressão poderia ser:
+
+```csharp
+string pattern = @"^(\w+)\s.*\s(\1)$";
+```
+
+Neste padrão:
+
+- ^(\w+) captura a primeira palavra do título.
+- \s.*\s aceita qualquer conteúdo intermediário, contanto que seja delimitado por espaços.
+- (\1)$ garante que a última palavra seja igual à primeira.
+
+Assim, a expressão assegura que, se um título iniciar com uma determinada palavra, ele terminará com a mesma sequência de letras.
+
+**Considerações e cuidados**  
+Embora as back-references sejam ferramentas poderosas, é importante ter atenção aos seguintes pontos:
+
+- Performance: Em algumas circunstâncias, o uso excessivo de back-references pode impactar a performance da aplicação, especialmente em textos muito grandes ou padrões muito complexos.
+- Legibilidade e manutenção: Expressões regulares com várias back-references podem se tornar difíceis de ler e manter.  Nesse caso, uma documentação interna do padrão pode ajudar outros desenvolvedores a compreender a lógica aplicada.
+- Limitações: Nem todas as implementações de regex possuem suporte completo a back-references. Verifique a compatibilidade da ferramenta ou linguagem utilizada.
+
+Compreender profundamente o funcionamento das back-references permite criar padrões robustos e eficientes, aprimorando a validação e extração de dados em aplicações que manipulam coleções e textos de forma intensiva.
+
+### Aula 6: Faça como eu fiz: Regex em ação
+
+Nesta aula, aplicamos expressões regulares para adaptar o código diante das mudanças no formato de dados e para filtrar padrões específicos em coleções.
+
+Agora é a sua vez de praticar os conceitos abordados. Para isso:
+
+- Organize o Visual Studio, fechando e abrindo a abinha do program.cs conforme a troca para o projeto 6.
+- Abra o arquivo program.cs do projeto 6 e confira o código pré-existente.
+- Execute o código (F5) e observe a exibição das músicas em tabela, verificando o problema na duração.
+- Analise o novo formato da duração e identifique a necessidade de atualização no parsing.
+- Implemente o uso de expressões regulares para localizar o padrão de 'minutos:segundos' na duração.
+- Agrupe as partes (minuto e segundo) utilizando parênteses na expressão regular.
+- Converta os valores capturados de string para inteiro e calcule a duração total em segundos.
+- Substitua a lógica antiga de parsing pelo novo método baseado em Regex.
+- Utilize o método Where com Regex para filtrar artistas com caracteres especiais e outros exercícios propostos.
+- Modularize o código criando métodos separados para cada tipo de filtro (títulos com duas palavras, músicas que iniciam e terminam com a mesma palavra, etc.).
+
+### Aula 6: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A utilizar a propriedade Groups do objeto Match para capturar subpartes de uma expressão regular.
+- A definir grupos em expressões regulares utilizando parênteses para capturar diferentes partes de um padrão.
+- A converter diretamente grupos capturados para tipos numéricos usando int.Parse.
+- A usar a interrogação em expressões regulares para indicar que um elemento é opcional.
+- A identificar padrões específicos em strings utilizando a classe RegEx do C#.
+- A criar e utilizar expressões regulares para lidar com diferentes formatos de entrada.
+- A aplicar expressões regulares em filtros LINQ para manipular coleções com condições complexas.
+- A encapsular operações de filtragem em métodos distintos para organização e reutilização do código.
+
+## Aula 7: Serialização
+
+### Aula 7: Projeto da aula anterior
+
+Na aula anterior, ampliamos o conhecimento sobre manipulação de strings com expressões regulares, aprendendo a reconhecer padrões, capturar grupos, aplicar filtros complexos e entender implicações de desempenho. Essa técnica é essencial para validar e transformar informações textuais em cenários reais. Você pode conferir o código completo da aula no [repositório do curso no GitHub.](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/06-ExpressoesRegulares)
+
+### Aula 7: Gerando um arquivo a partir da coleção - Vídeo 1
+
+Transcrição
+Estamos chegando ao final do nosso estudo sobre manipulação de dados e agora temos um desafio final. Vamos organizar o ambiente e, em seguida, realizar o exercício proposto.
+
+Primeiramente, vamos fechar o Program.cs do projeto 6 e selecionar o projeto 7 na lista suspensa da barra inicial do Visual Studio. No projeto 7, vamos abrir o Program.cs, que já está preenchido com o código para leitura e exibição de arquivos de músicas.
+
+Descrevendo o exercício proposto
+O exercício consiste em criar uma coleção de artistas com as músicas ordenadas por data de lançamento. Além disso, devemos incluir o total de músicas em uma propriedade separada. Após montar essa coleção, que envolve processar a coleção de músicas, vamos gerar um arquivo no formato JSON com essa coleção.
+
+Esse estágio é geralmente o último na manipulação de dados. O primeiro estágio é obter os dados da origem, seja arquivo, banco de dados, API web ou outro sistema. Em seguida, manipulamos esses dados, que geralmente vêm como coleção, utilizando link, expressões regulares, entre outros. Depois de gerar a coleção final, persistimos esses dados, tornando-os permanentes. No nosso exemplo, vamos torná-los permanentes em um arquivo, mas também é possível armazená-los em um banco de dados ou enviá-los para outro sistema web ou de software. No nosso caso, criaremos um arquivo JSON para isso.
+
+Criando a coleção de artistas
+Vamos ao desafio. A primeira etapa é criar a coleção de artistas. Vamos criar uma variável chamada artistas, que será derivada da coleção de músicas a partir do arquivo de entrada.
+
+var artistas = 
+Copiar código
+Em seguida, utilizaremos o método ObterMusicas para obter a coleção de músicas a partir do stream.
+
+var artistas = ObterMusicas(stream)
+Copiar código
+Agora, utilizaremos o método groupby do link para agrupar as músicas pelo artista, que será a chave de agrupamento dessa coleção.
+
+var artistas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista)
+Copiar código
+Selecionando e ordenando músicas
+Após isso, faremos um select para cada grupo, criando um objeto anônimo onde o nome será o artista. Teremos uma propriedade chamada artista, que será o resultado da chave, e uma propriedade chamada músicas, que será o próprio agrupamento ordenado de forma crescente pela propriedade data de lançamento da música. Além disso, teremos uma propriedade chamada total, que é a agregação do total de músicas no agrupamento.
+
+var artistas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista)
+    .Select(g => new { Artista = g.Key, Musicas = g.OrderBy(m => m.Lancamento), Total = g.Count() })
+Copiar código
+Vamos transformar isso em uma lista para materializar a coleção.
+
+var artistas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista)
+    .Select(g => new { Artista = g.Key, Musicas = g.OrderBy(m => m.Lancamento), Total = g.Count() })
+    .ToList();
+Copiar código
+Preparando para a serialização em JSON
+Agora, para serializar essa coleção em um formato JSON, precisamos entender que o JSON é um formato padrão amplamente utilizado no mercado para arquivos de texto estruturados. Essa estrutura é bastante enxuta e baseada na linguagem JavaScript, por isso é chamada de JavaScript Object Notation. Quando temos objetos em JavaScript e queremos representá-los, utilizamos essa notação.
+
+Para gerar o arquivo JSON, primeiro precisamos criá-lo. O nome do arquivo será uma combinação de caminhos, utilizando uma classe estática chamada Environment, que contém informações sobre o ambiente de execução. Vamos pegar o caminho de uma pasta especial, que é o Desktop, utilizando SpecialFolder.Desktop.
+
+var nomeArquivo = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
+    "artistas.json");
+Copiar código
+Dessa forma, não precisamos escrever manualmente o caminho, como "C:", por exemplo, pois o Environment nos fornece essa informação de forma automática.
+
+Criando e escrevendo no arquivo JSON
+Vamos combinar a pasta com o nome artistas.json. O nome do arquivo é esse. Assim como anteriormente criamos um arquivo para leitura, que estava na própria pasta de execução, agora vamos criar um arquivo para saída. Podemos até copiar o código anterior, pois é muito parecido, mas o nome do arquivo será diferente. Será um FileStream, e o nome do arquivo é o que criamos, nome_arquivo. O modo de abertura será para criação e o acesso será de escrita.
+
+using var arquivoJson = new FileStream(nomeArquivo, FileMode.Create, FileAccess.Write);
+Copiar código
+Para escrever a coleção de artistas nesse arquivo.json, utilizaremos uma classe do Namespace chamada System.Text.Json.
+
+using System.Text.Json;
+Copiar código
+Serializando a coleção de artistas
+Essa classe é o JsonSerializer. O processo que estamos realizando, de manipular dados, pegar uma coleção em memória e transferir para um arquivo texto ou formato textual, é chamado de serialização. Não precisa ser apenas com coleções, pode ser com objetos também. Pegamos um objeto em memória, que pode ser uma coleção ou qualquer outra coisa, e o levamos para uma representação textual. Isso é diferente do formato, que é usado para visualização. Nesse caso, o formato é usado para transportar a informação, seja via arquivo, sistema de software ou web. Esse processo é chamado de serialização e, em geral, é o último estágio do nosso fluxo de manipulação de dados.
+
+A classe JsonSerializer será responsável por serializar a coleção de artistas. No método serialize, passamos o arquivo para onde queremos serializar e o objeto, que é a coleção de artistas.
+
+JsonSerializer.Serialize(arquivoJson, artistas);
+Copiar código
+Podemos até incluir um Console.WriteLine com a mensagem "Serialização Concluída".
+
+Console.WriteLine("Serialização concluída!");
+Copiar código
+Executando e verificando o arquivo gerado
+Vamos executar o código com F5 e, se tudo der certo, veremos a mensagem "Serialização concluída" no terminal, indicando que o arquivo foi gerado no desktop. Vamos fechar a execução e tentar abrir o arquivo. Clicamos em "Open" no Visual Studio, procuramos na área de trabalho e ele abre. O arquivo existe e contém o conteúdo, mas não conseguimos entender muito bem. É importante lembrar que esse entendimento é para humanos. Para máquinas e outros sistemas de software, essa estrutura é perfeita e permite dar continuidade ao processo necessário.
+
+Melhorando a legibilidade do arquivo JSON
+Agora, vamos adicionar uma opção para que pessoas consigam visualizar o conteúdo de forma mais clara. Vamos gerar novamente o arquivo, mas com outra opção. Para isso, precisamos criar um objeto do tipo JsonSerializerOptions.
+
+var options = new JsonSerializerOptions
+{
+    WriteIndented = true
+};
+Copiar código
+Nesse objeto, passaremos uma flag como true para escrever de forma indentada. Isso proporcionará uma visualização mais clara. Passaremos esse objeto como terceiro argumento no método JsonSerializer.Serialize.
+
+JsonSerializer.Serialize(arquivoJson, artistas, options);
+Copiar código
+Vamos executar novamente. Ele sobrescreverá o arquivo anterior e, ao abrir novamente o arquivo artistas.json no desktop, veremos que ficou muito mais fácil de ler. Podemos conferir cada estrutura: artistas como Rolling Stones, com um total de 9 músicas, Coldplay com 19 músicas, e assim por diante, incluindo Adele, The Weekend, Metallica, todas ordenadas por artistas.
+
+Concluindo o estudo de manipulação de dados
+Com isso, concluímos essa parte de manipulação de dados. Este estudo foi bastante aprofundado, começando desde a obtenção de dados através de um arquivo, passando por coleções, textos, expressões regulares e, por fim, serializando a manipulação que fizemos em um arquivo JSON.
+
+### Aula 7:  - Vídeo 2
+### Aula 7:  - Vídeo 3
+### Aula 7:  - Vídeo 4
+### Aula 7:  - Vídeo 5
+### Aula 7:  - Vídeo 6
+### Aula 7:  - Vídeo 7
+### Aula 7:  - Vídeo 8
+### Aula 7:  - Vídeo 9
