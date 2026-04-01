@@ -4486,99 +4486,209 @@ Na aula anterior, ampliamos o conhecimento sobre manipulação de strings com ex
 
 ### Aula 7: Gerando um arquivo a partir da coleção - Vídeo 1
 
-Transcrição
+Transcrição  
 Estamos chegando ao final do nosso estudo sobre manipulação de dados e agora temos um desafio final. Vamos organizar o ambiente e, em seguida, realizar o exercício proposto.
 
 Primeiramente, vamos fechar o Program.cs do projeto 6 e selecionar o projeto 7 na lista suspensa da barra inicial do Visual Studio. No projeto 7, vamos abrir o Program.cs, que já está preenchido com o código para leitura e exibição de arquivos de músicas.
 
-Descrevendo o exercício proposto
+**Descrevendo o exercício proposto**  
 O exercício consiste em criar uma coleção de artistas com as músicas ordenadas por data de lançamento. Além disso, devemos incluir o total de músicas em uma propriedade separada. Após montar essa coleção, que envolve processar a coleção de músicas, vamos gerar um arquivo no formato JSON com essa coleção.
 
 Esse estágio é geralmente o último na manipulação de dados. O primeiro estágio é obter os dados da origem, seja arquivo, banco de dados, API web ou outro sistema. Em seguida, manipulamos esses dados, que geralmente vêm como coleção, utilizando link, expressões regulares, entre outros. Depois de gerar a coleção final, persistimos esses dados, tornando-os permanentes. No nosso exemplo, vamos torná-los permanentes em um arquivo, mas também é possível armazená-los em um banco de dados ou enviá-los para outro sistema web ou de software. No nosso caso, criaremos um arquivo JSON para isso.
 
-Criando a coleção de artistas
+**Criando a coleção de artistas**  
 Vamos ao desafio. A primeira etapa é criar a coleção de artistas. Vamos criar uma variável chamada artistas, que será derivada da coleção de músicas a partir do arquivo de entrada.
 
+```csharp
 var artistas = 
-Copiar código
+```
+
 Em seguida, utilizaremos o método ObterMusicas para obter a coleção de músicas a partir do stream.
 
+```csharp
 var artistas = ObterMusicas(stream)
-Copiar código
+```
+
 Agora, utilizaremos o método groupby do link para agrupar as músicas pelo artista, que será a chave de agrupamento dessa coleção.
 
+```csharp
 var artistas = ObterMusicas(stream)
     .GroupBy(m => m.Artista)
-Copiar código
-Selecionando e ordenando músicas
+```
+
+**Selecionando e ordenando músicas**  
 Após isso, faremos um select para cada grupo, criando um objeto anônimo onde o nome será o artista. Teremos uma propriedade chamada artista, que será o resultado da chave, e uma propriedade chamada músicas, que será o próprio agrupamento ordenado de forma crescente pela propriedade data de lançamento da música. Além disso, teremos uma propriedade chamada total, que é a agregação do total de músicas no agrupamento.
 
+```csharp
 var artistas = ObterMusicas(stream)
     .GroupBy(m => m.Artista)
     .Select(g => new { Artista = g.Key, Musicas = g.OrderBy(m => m.Lancamento), Total = g.Count() })
-Copiar código
+```
+
 Vamos transformar isso em uma lista para materializar a coleção.
 
+```csharp
 var artistas = ObterMusicas(stream)
     .GroupBy(m => m.Artista)
     .Select(g => new { Artista = g.Key, Musicas = g.OrderBy(m => m.Lancamento), Total = g.Count() })
     .ToList();
-Copiar código
-Preparando para a serialização em JSON
+```
+
+**Preparando para a serialização em JSON**  
 Agora, para serializar essa coleção em um formato JSON, precisamos entender que o JSON é um formato padrão amplamente utilizado no mercado para arquivos de texto estruturados. Essa estrutura é bastante enxuta e baseada na linguagem JavaScript, por isso é chamada de JavaScript Object Notation. Quando temos objetos em JavaScript e queremos representá-los, utilizamos essa notação.
 
 Para gerar o arquivo JSON, primeiro precisamos criá-lo. O nome do arquivo será uma combinação de caminhos, utilizando uma classe estática chamada Environment, que contém informações sobre o ambiente de execução. Vamos pegar o caminho de uma pasta especial, que é o Desktop, utilizando SpecialFolder.Desktop.
 
+```csharp
 var nomeArquivo = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
     "artistas.json");
-Copiar código
+```
+
 Dessa forma, não precisamos escrever manualmente o caminho, como "C:", por exemplo, pois o Environment nos fornece essa informação de forma automática.
 
-Criando e escrevendo no arquivo JSON
+**Criando e escrevendo no arquivo JSON**  
 Vamos combinar a pasta com o nome artistas.json. O nome do arquivo é esse. Assim como anteriormente criamos um arquivo para leitura, que estava na própria pasta de execução, agora vamos criar um arquivo para saída. Podemos até copiar o código anterior, pois é muito parecido, mas o nome do arquivo será diferente. Será um FileStream, e o nome do arquivo é o que criamos, nome_arquivo. O modo de abertura será para criação e o acesso será de escrita.
 
+```csharp
 using var arquivoJson = new FileStream(nomeArquivo, FileMode.Create, FileAccess.Write);
-Copiar código
+```
+
 Para escrever a coleção de artistas nesse arquivo.json, utilizaremos uma classe do Namespace chamada System.Text.Json.
 
+```csharp
 using System.Text.Json;
-Copiar código
-Serializando a coleção de artistas
+```
+
+**Serializando a coleção de artistas**  
 Essa classe é o JsonSerializer. O processo que estamos realizando, de manipular dados, pegar uma coleção em memória e transferir para um arquivo texto ou formato textual, é chamado de serialização. Não precisa ser apenas com coleções, pode ser com objetos também. Pegamos um objeto em memória, que pode ser uma coleção ou qualquer outra coisa, e o levamos para uma representação textual. Isso é diferente do formato, que é usado para visualização. Nesse caso, o formato é usado para transportar a informação, seja via arquivo, sistema de software ou web. Esse processo é chamado de serialização e, em geral, é o último estágio do nosso fluxo de manipulação de dados.
 
 A classe JsonSerializer será responsável por serializar a coleção de artistas. No método serialize, passamos o arquivo para onde queremos serializar e o objeto, que é a coleção de artistas.
 
+```csharp
 JsonSerializer.Serialize(arquivoJson, artistas);
-Copiar código
+```
+
 Podemos até incluir um Console.WriteLine com a mensagem "Serialização Concluída".
 
+```csharp
 Console.WriteLine("Serialização concluída!");
-Copiar código
-Executando e verificando o arquivo gerado
+```
+
+**Executando e verificando o arquivo gerado**  
 Vamos executar o código com F5 e, se tudo der certo, veremos a mensagem "Serialização concluída" no terminal, indicando que o arquivo foi gerado no desktop. Vamos fechar a execução e tentar abrir o arquivo. Clicamos em "Open" no Visual Studio, procuramos na área de trabalho e ele abre. O arquivo existe e contém o conteúdo, mas não conseguimos entender muito bem. É importante lembrar que esse entendimento é para humanos. Para máquinas e outros sistemas de software, essa estrutura é perfeita e permite dar continuidade ao processo necessário.
 
-Melhorando a legibilidade do arquivo JSON
+**Melhorando a legibilidade do arquivo JSON**  
 Agora, vamos adicionar uma opção para que pessoas consigam visualizar o conteúdo de forma mais clara. Vamos gerar novamente o arquivo, mas com outra opção. Para isso, precisamos criar um objeto do tipo JsonSerializerOptions.
 
+```csharp
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
 };
-Copiar código
+```
+
 Nesse objeto, passaremos uma flag como true para escrever de forma indentada. Isso proporcionará uma visualização mais clara. Passaremos esse objeto como terceiro argumento no método JsonSerializer.Serialize.
 
+```csharp
 JsonSerializer.Serialize(arquivoJson, artistas, options);
-Copiar código
+```
+
 Vamos executar novamente. Ele sobrescreverá o arquivo anterior e, ao abrir novamente o arquivo artistas.json no desktop, veremos que ficou muito mais fácil de ler. Podemos conferir cada estrutura: artistas como Rolling Stones, com um total de 9 músicas, Coldplay com 19 músicas, e assim por diante, incluindo Adele, The Weekend, Metallica, todas ordenadas por artistas.
 
-Concluindo o estudo de manipulação de dados
+**Concluindo o estudo de manipulação de dados**  
 Com isso, concluímos essa parte de manipulação de dados. Este estudo foi bastante aprofundado, começando desde a obtenção de dados através de um arquivo, passando por coleções, textos, expressões regulares e, por fim, serializando a manipulação que fizemos em um arquivo JSON.
 
-### Aula 7:  - Vídeo 2
-### Aula 7:  - Vídeo 3
-### Aula 7:  - Vídeo 4
-### Aula 7:  - Vídeo 5
-### Aula 7:  - Vídeo 6
-### Aula 7:  - Vídeo 7
-### Aula 7:  - Vídeo 8
-### Aula 7:  - Vídeo 9
+### Aula 7: Para saber mais: persistência de dados, serialização e desserialização
+
+Na manipulação de dados, poder obter e transformar informações em memória é apenas uma parte do processo. O passo final envolve tornar esses dados permanentes, ou seja, armazená-los de forma que possam ser recuperados por outros sistemas ou em execuções futuras. Essa etapa, conhecida como persistência, garante que os resultados dos processos internos fiquem disponíveis mesmo após o término do ciclo de processamento.
+
+**Serialização como ponte para o armazenamento**  
+A serialização é a técnica que converte objetos ou coleções em uma representação textual ou binária. Essa representação, frequentemente em formatos como JSON, permite que os dados sejam salvos em arquivos ou enviados a serviços e bancos de dados. Um dos pontos fortes da serialização é o fato de ela possibilitar que dados estruturados em memória sejam compreendidos por outras aplicações, independentemente da linguagem de implementação.
+
+Ao utilizar, por exemplo, as opções de formatação disponíveis no JsonSerializer, podemos gerar um arquivo mais legível para humanos ou otimizado para processamento por máquinas. A possibilidade de definir formatações — como o uso de indentação — facilita a leitura e a depuração, enquanto a ausência dessas formatações pode reduzir o tamanho final do arquivo quando o foco é eficiência na transferência e armazenamento.
+
+```csharp
+var opcoes = new JsonSerializerOptions { WriteIndented = true };
+string json = JsonSerializer.Serialize(objeto, opcoes);
+```
+
+**Desserialização como porta de entrada dos dados**  
+Assim como a serialização prepara os dados para armazenamento ou transmissão, a desserialização faz o caminho inverso: converte uma representação textual ou binária de volta para objetos e coleções em memória. É o processo responsável por recuperar informações persistidas e reconstruir sua estrutura original, permitindo que a aplicação continue o processamento a partir de dados previamente salvos.
+
+No caso do JSON, o método JsonSerializer.Deserialize permite transformar o conteúdo de um arquivo ou de uma string em um objeto fortemente tipado:
+
+```csharp
+var dados = File.ReadAllText("dados.json");
+var objeto = JsonSerializer.Deserialize<MeuTipo>(dados);
+```
+
+Esse recurso é essencial para sistemas que precisam carregar configurações, retomar estados ou integrar dados recebidos de APIs e outros serviços.
+
+**Estratégias e melhores práticas**  
+A escolha do formato de serialização e as configurações relacionadas dependem do contexto de uso. Em cenários onde a comunicação entre diferentes sistemas é essencial, usar um padrão amplamente aceito como JSON garante interoperabilidade. Além disso, converter dados para um formato textual facilita a leitura dos arquivos quando necessário, mas é importante estar atento a questões de performance em aplicações que processam grandes volumes de dados.
+
+Outra consideração importante é a gestão dos caminhos de armazenamento. Utilizar recursos do sistema, como os diretórios padrão (por exemplo, a área de trabalho obtida via Environment.SpecialFolder), ajuda a tornar o código mais portátil e adaptável a diferentes ambientes operacionais.
+
+Persistir e recuperar dados após a manipulação não só completa o ciclo de processamento, mas também abre a porta para a integração com outros sistemas e o armazenamento de históricos, possibilitando auditoria e análise posterior dos dados processados.
+
+### Aula 7: Faça como eu fiz: serializar e ordenar dados
+
+Nesta aula, vimos como agrupar músicas por artista usando LINQ, ordenar os registros pela data de lançamento e calcular o total de músicas, além de serializar a coleção em um arquivo JSON com formatação indentada.
+
+Agora é a sua vez os conceitos ensinados neste módulo. Para isso:
+
+Agrupe as músicas por artista, ordenando-as pela data de lançamento e calculando o total de registros;
+Serialize a coleção de artistas em um arquivo JSON na área de trabalho, usando as opções para formatação indentada.
+
+### Aula 7: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Como implementar agrupamento de dados usando GroupBy do LINQ.
+- A projetar dados com objetos anônimos no LINQ.
+- A serializar coleções em JSON com JsonSerializer.
+- A configurar a formatação JSON com JsonSerializerOptions.
+- A combinar caminhos de arquivo usando Environment.SpecialFolder.
+
+### Aula 7: Conclusão - Vídeo
+
+Transcrição  
+Parabéns por termos concluído este curso. Foi um curso bastante longo e aprofundado, e sabemos como foi desafiador chegar até o final. Valorizamos essa conquista. Agora, podemos relaxar um pouco, recostar na cadeira e apreciar toda a jornada que fizemos ao longo do curso, recapitulando cada conteúdo.
+
+Na primeira aula, discutimos a importância das coleções para o processo maior de manipulação de dados. Mostramos como o .NET trabalha com isso, utilizando generics para abstrair o tipo dos elementos, com estruturas de dados específicas para cada coleção. Continuamos falando sobre a operação mais básica que se pode realizar com uma coleção: a enumeração de coleções. Destacamos o papel fundamental da interface IEnumerable, da interface IEnumerator e do operador Yield.
+
+**Explorando coleções e suas funcionalidades**  
+Na segunda aula, introduzimos um desafio: elaborar e implementar exercícios relacionados ao contexto de músicas, artistas e playlists. Apresentamos coleções com propósitos específicos. Começamos com o List, que possui acesso indexado e capacidade nativa de ordenação. Para ordenações complexas, por outras propriedades desconhecidas, apresentamos a interface IComparable e a interface IComparer.
+
+Discutimos que as playlists não podiam ter músicas repetidas, então introduzimos o HashSet, que impede a repetição de elementos. Para isso, tivemos que sobrescrever na classe Música os métodos equals e getHashCode. Uma música era considerada igual se tivesse o mesmo título e artista.
+
+Depois, trabalhamos com o entendimento de músicas, o total de músicas dentro das playlists, quais eram mais tocadas e mais incluídas. Para isso, utilizamos o Dictionary, que permite ter uma chave, um índice, como o primeiro elemento, com índice customizado. Definimos o tipo que queríamos colocar nesse índice e usamos a própria música, já que implementamos a igualdade de música.
+
+Para finalizar essa aula, introduzimos o conceito de um protótipo de player de música, com filas de reprodução e histórico de reprodução. O acesso a essas coleções é específico, então apresentamos a Queue e o Stack, filas e pilhas.
+
+**Introduzindo o Link e suas aplicações**  
+Na Aula 3 e Aula 4, falamos sobre o Link. Na Aula 3, fizemos uma introdução sobre a origem do Link, discutindo três recursos fundamentais: métodos de extensão, delegates e expressões lambda. Juntamente com o operador Yield, combinamos esses quatro processos e obtivemos o Link, uma biblioteca para manipulação de dados de maneira encadeada. Definimos um fluxo de manipulação de dados, onde o primeiro estágio é a obtenção de dados, específico do código, e depois encadeamos operações da biblioteca Link. Assim, abstraímos todo o processo de manipulação de dados da origem dos dados. O Link é amplamente utilizado em nossos programas.
+
+Para apresentar as operações do Link, mostramos um catálogo organizado por categorias: filtro, ordenação, agrupamento, agregação, verificação de existência, obtenção de elementos e conversão de uma coleção em outras estruturas.
+
+**Trabalhando com Strings e suas particularidades**  
+Mudamos o foco do nosso estudo para o tipo de dado mais comum que encontramos nos programas: a String, que representa texto. Mostramos alguns métodos da String, mas principalmente discutimos a imutabilidade de uma String, que é o processo de garantir que o conteúdo não seja alterado naquele objeto específico. A importância disso reside no fato de que, sendo um dado muito frequente e utilizado em várias partes do programa, é necessário assegurar que ele não mudará.
+
+As Strings são usadas em hashing, processos paralelos, threads e outros métodos, e é preciso garantir que não serão alteradas. Além disso, por serem muito frequentes, a máquina virtual do .NET reserva uma área específica de memória no programa, chamada Pool de Strings, onde guarda esses objetos do tipo String para economizar informações. Para internar, ou seja, colocar esses objetos do tipo String nesse Pool de Strings, utiliza-se a String literal, que é a locação onde colocamos as aspas duplas, internando a String ali.
+
+**Formatando e analisando dados textuais**  
+Continuamos nosso estudo sobre Strings falando sobre o processo de formatação. Pegamos a duração e a data de lançamento de uma música, formatamos e apresentamos no terminal de forma organizada. Além disso, alinhamos as colunas dos dados de música para apresentar uma tabela no terminal. Para finalizar, discutimos o processo de parsing através da validação do CSV, mostrando que os tipos primitivos do .NET possuem métodos para fazer o parsing, como o método parse e o método try parse. Finalizamos esse estudo da quinta aula com esse processo de parsing.
+
+**Utilizando expressões regulares e serialização**  
+Na sexta aula, lidamos com uma mudança no arquivo CSV. A duração, que antes era um inteiro representando a quantidade de segundos, passou a ter um padrão específico com minutos e segundos separados por dois pontos. Aproveitamos essa mudança para apresentar expressões regulares, que são usadas para encontrar padrões dentro de um texto maior. Conhecemos o namespace System.Text.RegularExpressions e as classes regex e mat, utilizadas para trabalhar com expressões regulares, principalmente os métodos match e isMatch. Usamos o método isMatch para aprimorar a operação where do link, permitindo realizar operações complexas, como encontrar músicas com letras repetidas.
+
+Para finalizar nosso estudo, na sétima e última aula, enfrentamos um desafio final. Manipulamos os dados do arquivo de músicas para projetá-los em artistas e suas discografias. Por fim, persistimos esses dados em um arquivo JSON, utilizando o processo de serialização. Conhecemos o namespace System.Text.JSON e a classe JSON Serializer.
+
+**Refletindo sobre a importância do conteúdo aprendido**  
+A importância desse conteúdo é evidente, pois utilizaremos esses conhecimentos diariamente em nossa carreira de pessoas desenvolvedoras. Trabalhar com coleções ou strings será uma constante, e o conhecimento de expressões regulares e serialização aumentará nossa produtividade, permitindo realizar operações complexas em menos tempo. Além disso, o conhecimento sobre imutabilidade e interning de strings resultará em programas mais otimizados.
+
+Não se esqueçam de fazer sua avaliação, deixando um comentário sobre o que acharam do conteúdo. Valorizamos esses feedbacks, pois estamos sempre buscando evoluir os cursos e conteúdos que produzimos. Espero encontrá-los em um próximo curso. Até mais!
+
+### Aula 7: Projeto final
+
+Nesta aula, finalizamos o curso aprendendo a serializar dados em JSON com a classe JsonSerializer, além de personalizar propriedades com atributos. Esse fechamento conecta todo o aprendizado, desde coleções até a persistência em formatos úteis no dia a dia. Para revisar o código final e acompanhar a conclusão do projeto, [acesse o repositório do curso](https://github.com/alura-cursos/data-manipulation-with-csharp/tree/main/07-Serializacao) no GitHub.

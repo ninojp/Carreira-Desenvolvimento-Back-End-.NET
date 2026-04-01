@@ -75,9 +75,7 @@ void ArtistasComCaracteresEspeciais()
 //=============================================================================
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
-    var titulo = "\nMúsicas do arquivo:"; // string literal
-                                          //var titulo = new string("\nMúsicas do arquivo:");
-
+    var titulo = "\nMúsicas do arquivo:";
     Console.WriteLine(titulo);
     foreach (var musica in musicas)
     {
@@ -85,12 +83,11 @@ void ExibirMusicas(IEnumerable<Musica> musicas)
         Console.WriteLine(linha);
     }
 }
-
+//==============================================================================
 void ExibirMusicasEmTabela(IEnumerable<Musica> musicas)
 {
-    var titulo = "\nMúsicas do arquivo:"; // string literal
+    var titulo = "\nMúsicas do arquivo:";
     Console.WriteLine(titulo);
-
     var colunaTitulo = "Título".PadRight(40);
     var colunaArtista = "Artista".PadRight(30);
     var colunaDuracao = "Duração".PadRight(10);
@@ -106,7 +103,6 @@ void ExibirMusicasEmTabela(IEnumerable<Musica> musicas)
         Console.WriteLine(linha);
     }
 }
-
 IEnumerable<Musica> ObterMusicas(StreamReader stream)
 {
     var linha = stream.ReadLine();

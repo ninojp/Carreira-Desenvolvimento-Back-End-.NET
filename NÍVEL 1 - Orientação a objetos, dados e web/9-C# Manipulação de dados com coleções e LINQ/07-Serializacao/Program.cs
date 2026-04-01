@@ -1,20 +1,53 @@
 ﻿using System.Text.RegularExpressions;
+using System.Text.Json;
 
 using var arquivo = new FileStream("musicas.csv", FileMode.Open, FileAccess.Read);
 using var stream = new StreamReader(arquivo);
 
 /*
-
-    1. Crie uma coleção de artistas com suas músicas ordenadas por data de lançamento. Inclua o total de músicas em uma propriedade separada. 
-    2. Gere um arquivo no formato JSON com essa coleção
- 
+    1. Crie uma coleção de artistas com suas músicas ordenadas por data de lançamento. 
+        Inclua o total de músicas em uma propriedade separada. 
+    2. Gere um arquivo no formato JSON com essa coleção 
 */
 
+var artistas = ObterMusicas(stream)
+    .GroupBy(m => m.Artista)
+    .Select(g => new
+        {
+            Artista = g.Key,
+            Musicas = g.OrderBy(m => m.Lancamento),
+            TotalMusicas = g.Count()
+        })
+    .ToList();
+
+var nomeArquivoJson = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "artistas.json");
+
+using var arquivoJson = new FileStream(nomeArquivoJson, FileMode.Create, FileAccess.Write);
+
+// Utf8JsonWriter é uma classe de baixo nível para escrever JSON de forma eficiente, mas requer mais código para estruturar o JSON corretamente IDENTADO.
+using var jsonWriter = new Utf8JsonWriter(arquivoJson, new JsonWriterOptions { Indented = true });
+// JsonSerializer é uma classe de alto nível que simplifica a serialização de objetos para JSON, mas pode não ser tão eficiente quanto o Utf8JsonWriter para grandes volumes de dados.
+JsonSerializer.Serialize(jsonWriter, artistas);
+//Poderia ser feito assim também:
+//var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
+//JsonSerializer.Serialize(jsonWriter, artistas, serializerOptions);
+
+Console.WriteLine($"Arquivo JSON gerado: {nomeArquivoJson}");
+
+//-----------------------------------------------------------------------------
+foreach (var artista in artistas)
+{
+    Console.WriteLine($"\nArtista: {artista.Artista} - Total de Músicas: {artista.TotalMusicas}");
+    for (int i = 0; i < artista.Musicas.Count(); i++)
+    {
+        var musica = artista.Musicas.ElementAt(i);
+        Console.WriteLine($"{i +1} - {musica.Titulo} ({musica.Lancamento:yyyy})");
+    }
+}
+//============================================================================
 void ExibirMusicas(IEnumerable<Musica> musicas)
 {
-    var titulo = "\nMúsicas do arquivo:"; // string literal
-                                          //var titulo = new string("\nMúsicas do arquivo:");
-
+    var titulo = "\nMúsicas do arquivo:";
     Console.WriteLine(titulo);
     foreach (var musica in musicas)
     {
@@ -27,7 +60,6 @@ void ExibirMusicasEmTabela(IEnumerable<Musica> musicas)
 {
     var titulo = "\nMúsicas do arquivo:"; // string literal
     Console.WriteLine(titulo);
-
     var colunaTitulo = "Título".PadRight(40);
     var colunaArtista = "Artista".PadRight(30);
     var colunaDuracao = "Duração".PadRight(10);
@@ -35,7 +67,6 @@ void ExibirMusicasEmTabela(IEnumerable<Musica> musicas)
     Console.WriteLine($"{colunaTitulo}{colunaArtista}{colunaDuracao}{colunaLancamento}");
     var borda = "".PadRight(100, '=');
     Console.WriteLine(borda);
-
     foreach (var musica in musicas)
     {
         var duracao = string.Format("{0,-10:F3}", musica.Duracao / 60.0);
@@ -50,9 +81,6 @@ IEnumerable<Musica> ObterMusicas(StreamReader stream)
     while (linha is not null)
     {
         var partes = linha.Split(';');
-
-
-        // 0:00
         int duracao = 350;
         var match = Regex.Match(linha, @"(\d?\d):(\d\d)");
         if (match.Success)
@@ -61,7 +89,6 @@ IEnumerable<Musica> ObterMusicas(StreamReader stream)
             var segundos = int.Parse(match.Groups[2].Value);
             duracao = (minutos * 60) + segundos;
         }
-
         if (partes.Length == 5)
         {
             var musica = new Musica
