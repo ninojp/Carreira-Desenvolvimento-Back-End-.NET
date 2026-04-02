@@ -458,52 +458,62 @@ Transcrição
 Aprendemos que, para representar vários dados, podemos utilizar coleções. Conhecemos os arrays e observamos que eles têm uma limitação: o tamanho fixo. Portanto, não conseguimos inserir ou remover registros de forma dinâmica. Agora, vamos conhecer outras coleções que auxiliam nas operações de inserção e remoção de maneira mais eficiente: as listas e os conjuntos.
 
 Trabalhando com listas e conjuntos
+
 Declarando e inicializando listas
+
 Iniciando pelas listas, elas são representadas na linguagem C# pelo tipo List.
 
 Como declarar uma lista? Observe o exemplo de código abaixo:
 
+```csharp
 List<string> listaFuncionarios = new List<string>
     {
         "João", "Maria", "Cláudia", "Oscar"
     };
-Copiar código
-Nesse caso, utilizamos uma List de string. O símbolo <> é chamado de generics. Entre eles, indicamos o tipo que queremos armazenar na lista. Uma vez declarado o tipo string, definimos o nome da variável e instanciamos a lista usando new. Após o new, passamos novamente List<string>, e depois inserimos entre chaves os dados que serão armazenados.
+```
 
-Há uma segunda forma de inicializar listas, utilizando o new separadamente, sem definir os registros, adicionando List<string>() ao final da declaração. Em seguida, podemos adicionar os elementos desejados ao longo do tempo na lista. No exemplo abaixo, criamos uma listaFuncionarios e adicionamos "João", depois "Maria", depois "Cláudia", e por último o "Oscar".
+Nesse caso, utilizamos uma List de string. O símbolo <> é chamado de generics. Entre eles, indicamos o tipo que queremos armazenar na lista. Uma vez declarado o tipo string, definimos o nome da variável e instanciamos a lista usando new. Após o new, passamos novamente List`<string>`, e depois inserimos entre chaves os dados que serão armazenados.
 
+Há uma segunda forma de inicializar listas, utilizando o new separadamente, sem definir os registros, adicionando List`<string>`() ao final da declaração. Em seguida, podemos adicionar os elementos desejados ao longo do tempo na lista. No exemplo abaixo, criamos uma listaFuncionarios e adicionamos "João", depois "Maria", depois "Cláudia", e por último o "Oscar".
+
+```csharp
 List<string> listaFuncionarios = new List<string>();
 
 listaFuncionarios.Add("João");
 listaFuncionarios.Add("Maria");
 listaFuncionarios.Add("Cláudia");
 listaFuncionarios.Add("Oscar");
-Copiar código
-Diferença entre listas e arrays
+```
+
+**Diferença entre listas e arrays**  
 Qual é a diferença prática entre uma lista e um array?
 
 A principal diferença é a inserção e remoção de dados de forma dinâmica. Isso está relacionado, principalmente, à implementação em baixo nível.
 
 Em uma lista, é mais fácil inserir e remover elementos, mas a busca por índice, ponto forte dos arrays, não é tão eficiente, sendo mais custosa. Portanto, é interessante trabalhar com listas quando lidamos com dados dinâmicos que exigem operações de inserção e remoção frequentes.
 
-Declarando e inicializando conjuntos
-Além das listas, também temos os conjuntos, que são representados por HashSet em C#. A estrutura é semelhante: declaramos um HashSet<string> usando generics. Declaramos conforme o exemplo abaixo, com new HashSet<string>, passando todos os registros que queremos armazenar, ou criando um conjunto de funcionários e adicionando elementos.
+**Declarando e inicializando conjuntos**  
+Além das listas, também temos os conjuntos, que são representados por HashSet em C#. A estrutura é semelhante: declaramos um HashSet`<string>` usando generics. Declaramos conforme o exemplo abaixo, com new HashSet`<string>`, passando todos os registros que queremos armazenar, ou criando um conjunto de funcionários e adicionando elementos.
 
+```csharp
 HashSet<string> setFuncionarios = new HashSet<string>
 {
     "João", "Maria", "Cláudia", "Oscar"
 };
-Copiar código
+```
+
 Também podemos declarar de forma dinâmica. Observe abaixo:
 
+```csharp
 HashSet<string> setFuncionarios = new HashSet<string>();
 
 setFuncionarios.Add("João");
 setFuncionarios.Add("Maria");
 setFuncionarios.Add("Cláudia");
 setFuncionarios.Add("Oscar");
-Copiar código
-Diferença entre conjuntos e listas
+```
+
+**Diferença entre conjuntos e listas**  
 Qual é a diferença entre um conjunto e uma lista?
 
 No conjunto, não há garantia de que as inserções serão mantidas na ordem em que foram feitas.
@@ -514,27 +524,30 @@ Além disso, não há dados repetidos no conjunto.
 
 Se tentarmos adicionar um novo elemento chamado "Maria", não conseguiremos, pois lidamos com uma estrutura de dados baseada no conceito de conjunto numérico, que não permite repetições de elementos. Assim, no conjunto, teremos elementos únicos.
 
-Praticando no Visual Studio
+**Praticando no Visual Studio**  
 Agora, chegou o momento de praticar no Visual Studio. Temos uma lista de strings declarada diretamente no arquivo Program.cs. Observe abaixo o código:
 
 Program.cs:
 
+```csharp
 List<string> listaFuncionarios = new List<string>
         {
             "João", "Maria", "Cláudia", "Oscar"
         };
-Copiar código
+```
+
 A primeira coisa que podemos fazer é uma busca pelo índice.
 
 Essa busca é feita de forma idêntica ao que fizemos com o array: usamos Console.WriteLine() para exibir a posição 2 da lista de funcionários (listaFuncionarios).
 
+```csharp
 List<string> listaFuncionarios = new List<string>
         {
             "João", "Maria", "Cláudia", "Oscar"
         };
-
 Console.WriteLine(listaFuncionarios[2]);
-Copiar código
+```
+
 Ao executar a aplicação, é retornado "Cláudia", assim como nos arrays.
 
 A diferença é que, por trás, essa busca é mais custosa. Portanto, sempre priorizamos o array para realizar a busca, mas, caso não seja possível, utilizamos a lista.
@@ -543,6 +556,7 @@ Além disso, podemos querer saber o índice específico de um funcionário. Pode
 
 Por fim, vamos imprimir a posição com Console.WriteLine().
 
+```csharp
 List<string> listaFuncionarios = new List<string>
         {
             "João", "Maria", "Cláudia", "Oscar"
@@ -551,21 +565,24 @@ List<string> listaFuncionarios = new List<string>
 Console.WriteLine(listaFuncionarios[2]);
 int indice = listaFuncionarios.IndexOf("Oscar");
 Console.WriteLine($"Posição do Oscar = {indice}");
-Copiar código
+```
+
 Ao executar a aplicação, conseguimos recuperar a posição, assim como nos arrays.
 
 Retorno no terminal:
 
+```csharp
 Cláudia
 Posição do Oscar = 3
-Copiar código
-Ordenando e manipulando listas
+```
+
+**Ordenando e manipulando listas**  
 Nosso próximo passo será ordenar a lista. Para ordenar, faremos de forma semelhante ao IndexOf(), mas trabalharemos com listaFuncionarios.Sort().
 
 Com isso, conseguimos ordenar a lista. Vamos imprimir usando um foreach. Para cada string nome in listaFuncionarios, imprimimos o nome no console.
 
+```csharp
 // código omitido
-
 Console.WriteLine(listaFuncionarios[2]);
 int indice = listaFuncionarios.IndexOf("Oscar");
 Console.WriteLine($"Posição do Oscar = {indice}");
@@ -575,24 +592,27 @@ foreach(string nome in listaFuncionarios)
 {
     Console.WriteLine(nome);
 }
-Copiar código
+```
+
 Ao executar, ele imprime os elementos ordenados, mantendo o mesmo comportamento.
 
 Retorno no terminal:
 
+```csharp
 Cláudia
 Posição do Oscar = 3
 Cláudia
 João
 Maria
 Oscar
-Copiar código
+```
+
 É importante destacar que conseguimos inserir e remover elementos facilmente. Vamos utilizar listaFuncionarios.Add() para adicionar as funcionárias Iasmin e Joana, por exemplo, mas podemos adicionar quantos funcionários quisermos.
 
 Ao final, vamos reaproveitar o foreach utilizado anteriormente, para visualizar se todos os elementos foram inseridos. Para separar, usaremos vários traços.
 
+```csharp
 // código omitido
-
 Console.WriteLine("---------------");
 listaFuncionarios.Add("Iasmin");
 listaFuncionarios.Add("Joana");
@@ -601,13 +621,14 @@ foreach (string nome in listaFuncionarios)
 {
     Console.WriteLine(nome);
 }
-Copiar código
+```
+
 Ao executar, temos a primeira lista com "Cláudia", "João", "Maria" e "Oscar". Abaixo, temos a mesma lista com os elementos inseridos: "Iasmin" e "Joana".
 
 Da mesma forma, se quisermos remover elementos, podemos usar listaFuncionarios.Remove("Oscar"). Ao executar, teremos apenas a "Iasmin" adicionada, sem o funcionário "Oscar", que foi removido da lista.
 
+```csharp
 // código omitido
-
 Console.WriteLine("---------------");
 listaFuncionarios.Add("Iasmin");
 listaFuncionarios.Remove("Oscar");
@@ -616,14 +637,15 @@ foreach (string nome in listaFuncionarios)
 {
     Console.WriteLine(nome);
 }
-Copiar código
-Inversão de listas
+```
+
+**Inversão de listas**  
 Uma última operação útil com listas é inverter a lista.
 
 Para isso, utilizamos o método Reverse(). Observe abaixo:
 
+```csharp
 // código omitido
-
 listaFuncionarios.Reverse();
 foreach(string nome in listaFuncionarios)
 {
@@ -631,20 +653,794 @@ foreach(string nome in listaFuncionarios)
 }
 
 // código omitido
-Copiar código
+```
+
 No console, a inserção foi invertida, mostrando "Oscar", "Cláudia", "Maria" e "João".
 
 Dessa forma, a lista foi invertida com base na inserção. Conseguimos preservar a ordem de inserção, o que não ocorreria trabalhando com arrays.
 
-Conclusão
+**Conclusão**  
 Com isso, concluímos a prática de manipulação de listas e conjuntos em C#!
 
-### Aula 2:  - Video 2
-### Aula 2:  - Video 3
-### Aula 2:  - Video 4
-### Aula 2:  - Video 5
-### Aula 2:  - Video 6
-### Aula 2:  - Video 7
-### Aula 2:  - Video 8
+### Aula 2: Conjuntos - Video 2
 
+Transcrição  
+Neste vídeo, falaremos sobre conjuntos.
 
+Trabalhando com conjuntos
+
+**Utilizando o HashSet em C#**  
+Começaremos explorando o uso de um HashSet em C#.
+
+Primeiramente, criamos e inicializamos o HashSet de funcionários. Diferente de uma lista, onde podemos declarar e inicializar de uma vez, adicionamos os elementos um a um.
+
+Program.cs:
+
+```csharp
+// código omitido
+HashSet<string> setFuncionarios = new HashSet<string>();
+
+setFuncionarios.Add("João");
+setFuncionarios.Add("Maria");
+setFuncionarios.Add("Cláudia");
+setFuncionarios.Add("Oscar");
+```
+
+**Entendendo as limitações do HashSet**  
+Com o HashSet inicializado, podemos testar algumas operações.
+
+Primeiro, vamos tentar buscar um elemento pelo índice. No entanto, como discutido, isso não é possível em um HashSet, porque ele não mantém a ordem de inserção.
+
+```csharp
+// código omitido
+
+HashSet<string> setFuncionarios = new HashSet<string>();
+
+setFuncionarios.Add("João");
+setFuncionarios.Add("Maria");
+setFuncionarios.Add("Cláudia");
+setFuncionarios.Add("Oscar");
+
+Console.WriteLine(setFuncionarios[2]);
+```
+
+Assim, o compilador informa que não é possível aplicar a indexação a uma expressão do tipo HashSet, confirmando que não podemos acessar elementos por índice.
+
+**Percorrendo o HashSet com foreach**  
+No entanto, podemos tentar percorrer o HashSet utilizando um loop foreach para imprimir seus elementos. Entre os parênteses do laço foreach, usaremos string nome in setFuncionarios, adicionando ao escopo do bloco um Console.WriteLine() recebendo a variável nome.
+
+```csharp
+// código omitido
+HashSet<string> setFuncionarios = new HashSet<string>();
+
+setFuncionarios.Add("João");
+setFuncionarios.Add("Maria");
+setFuncionarios.Add("Cláudia");
+setFuncionarios.Add("Oscar");
+
+foreach (string nome in setFuncionarios)
+{
+    Console.WriteLine(nome);
+}
+```
+
+Ao executar, visualizamos os elementos impressos na ordem que inserimos:
+
+Retorno no terminal:
+
+```csharp
+João
+Maria
+Cláudia
+Oscar
+```
+
+Observação: o cenário anterior é possível, mas a ordem pode não ser a mesma da inserção, devido à forma como o HashSet armazena os dados na memória.
+
+**Adicionando e removendo elementos**  
+Agora, vamos testar adicionar um novo elemento ao HashSet:
+
+```csharp
+// código omitido
+HashSet<string> setFuncionarios = new HashSet<string>();
+
+setFuncionarios.Add("João");
+setFuncionarios.Add("Maria");
+setFuncionarios.Add("Cláudia");
+setFuncionarios.Add("Oscar");
+
+setFuncionarios.Add("Joana");
+
+foreach (string nome in setFuncionarios)
+{
+    Console.WriteLine(nome);
+}
+```
+
+Ao executar, observamos que "Joana" foi adicionada ao conjunto.
+
+Retorno no terminal:
+
+```csharp
+João
+Maria
+Cláudia
+Oscar
+Joana
+```
+
+Da mesma forma, é possível remover elementos. Vamos remover "João":
+
+```csharp
+// código omitido
+setFuncionarios.Remove("João");
+
+foreach (string nome in setFuncionarios)
+{
+    Console.WriteLine(nome);
+}
+```
+
+Após a remoção, "João" não estará mais presente no conjunto.
+
+Retorno no terminal:
+
+```csharp
+Maria
+Cláudia
+Oscar
+```
+
+Se tentarmos adicionar "João" novamente, o HashSet não permitirá duplicatas, então ele simplesmente não fará nada se "João" já estiver presente.
+
+```csharp
+// código omitido
+setFuncionarios.Add("João");
+setFuncionarios.Add("Maria");
+setFuncionarios.Add("Cláudia");
+setFuncionarios.Add("Oscar");
+
+setFuncionarios.Add("João");
+
+foreach (string nome in setFuncionarios)
+{
+    Console.WriteLine(nome);
+}
+```
+
+Retorno no terminal:
+
+```csharp
+João
+Maria
+Cláudia
+Oscar
+```
+
+Isso demonstra a lógica dos conjuntos, onde duplicatas não são permitidas.
+
+**Conclusão**  
+Discutimos a importância de escolher a estrutura de dados correta para o problema que deve ser resolvido. O HashSet é útil para verificar a existência de um elemento rapidamente, sem se preocupar com a ordem ou duplicatas. Na sequência, abordaremos outra estrutura de dados que também é útil para buscas de dados. Aguardamos você no próximo vídeo!
+
+### Aula 2: Organizando elementos únicos - Desafio 1
+
+Imagine que você está desenvolvendo um placar online para um torneio de games, onde milhares de jogadores competem em tempo real. Para evitar poluição visual e garantir uma experiência limpa aos espectadores, o sistema deve exibir apenas as pontuações únicas, sem repetições, e em ordem crescente.
+
+Crie um programa que:
+
+- Escolha a melhor estrutura para armazenar os scores.
+- Garanta que os dados estejam ordenados.
+- Exiba os valores no console.
+
+Exemplo de entrada:
+
+```csharp
+scores.Add(150);
+scores.Add(90);
+scores.Add(200);
+scores.Add(120);
+scores.Add(150);
+scores.Add(80);
+scores.Add(180);
+scores.Add(200);
+```
+
+Saída esperada:
+
+Scores únicos em ordem crescente:
+
+```csharp
+80
+90
+120
+150
+180
+200
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos como o HashSet`<int>` assegura a unicidade dos scores ao descartar automaticamente valores repetidos durante a inserção com Add(). Como o HashSet não mantém ordem interna, foi necessário convertê-lo para uma List`<int>` usando new List`<int>`(scores), permitindo a aplicação do método Sort().
+
+```csharp
+HashSet<int> scores = new HashSet<int>();
+ 
+scores.Add(150);
+scores.Add(90);
+scores.Add(200);
+scores.Add(120);
+scores.Add(150);
+scores.Add(80);
+scores.Add(180);
+scores.Add(200);
+ 
+List<int> scoresOrdenados = new List<int>(scores);
+scoresOrdenados.Sort();
+ 
+Console.WriteLine("Scores únicos em ordem crescente:");
+foreach (int score in scoresOrdenados)
+{
+    Console.WriteLine(score);
+}
+```
+
+E aí, conseguiu resolver? Compartilhe seu código no fórum e conte como foi sua experiência!
+
+### Aula 2: Revelando mensagens - Desafio 2
+
+Você está desenvolvendo um sistema de recompensas para uma plataforma de ensino. Quando alunos completam desafios difíceis, eles recebem mensagens secretas que só podem ser lidas quando decifradas. Para decifrar uma mensagem, é preciso invertê-la.
+
+A mensagem atual é:
+
+'o', 'd', 'n', 'u', 'm', ' ', 'á', 'l', 'o'.
+
+Crie um programa que:
+
+- Inicialize uma lista com os caracteres descritos acima
+- Decifre a mensagem dada pelos caracteres descritos
+- Exiba o resultado
+
+Saída esperada:
+
+```csharp
+o
+l
+á
+ 
+m
+u
+n
+d
+o
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos a manipulação de listas com foco na inversão de elementos. O método Reverse() foi utilizado para reorganizar a ordem dos caracteres, transformando uma sequência aparentemente sem sentido em uma mensagem legível quando exibida de trás para frente.
+
+Observe que cada caractere (incluindo espaços e acentuações) foi tratado como um elemento independente na lista. Ao percorrermos a lista invertida com um loop simples, cada elemento é impresso em uma linha separada, revelando progressivamente a mensagem oculta.
+
+```csharp
+List<char> caracteres = new List<char>
+        {
+            'o', 'd', 'n', 'u', 'm', ' ', 'á', 'l', 'o'
+        };
+ 
+ 
+caracteres.Reverse();
+ 
+foreach (char caracter in caracteres)
+{
+    Console.WriteLine(caracter);
+}
+```
+
+E aí, curtiu o efeito de espelho? Compartilhe no fórum a frase que você criou e como ficou depois de invertida!
+
+### Aula 2: Manipulando listas - Desafio 3
+
+Imagine que você está desenvolvendo um sistema de sorteio para um evento beneficente. Cada participante cadastrou seu nome, e agora você precisa manipular a lista de forma aleatória para que os nomes fiquem embaralhados.
+
+Crie um programa que:
+
+- Declare uma lista de nomes.
+- Organize a lista em ordem alfabética.
+- Inverta a ordem da lista.
+- Remova o primeiro elemento e o adicione novamente na lista.
+- Agora verifique quem está no índice 3 da lista e exiba o nome no console.
+
+Exemplo de entrada:
+
+```csharp
+List<string> nomes = new List<string> { "Ana", "Carlos", "Mariana", "João", "Lúcia" };
+```
+
+Saída esperada:
+
+```csharp
+Lista original:
+Ana, Carlos, Mariana, João, Lúcia
+ 
+Após Sort (ordem alfabética):
+Ana, Carlos, João, Lúcia, Mariana
+ 
+Após Reverse (ordem invertida):
+Mariana, Lúcia, João, Carlos, Ana
+ 
+Após remover o primeiro e adicioná-lo no fim:
+Lúcia, João, Carlos, Ana, Mariana
+ 
+A pessoa sorteada foi: Ana
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos métodos para manipulação de listas em C#:
+
+Sort() reorganiza os elementos em ordem alfabética. Reverse() inverte a ordem da lista. Remove() para remover um dos elementos. Add() reinsere o nome removido ao final da lista.
+
+```csharp
+List<string> nomes = new List<string> { "Ana", "Carlos", "Mariana", "João", "Lúcia" };
+ 
+Console.WriteLine("Lista original:");
+Console.WriteLine(string.Join(", ", nomes));
+ 
+nomes.Sort();
+Console.WriteLine("\nApós Sort (ordem alfabética):");
+Console.WriteLine(string.Join(", ", nomes));
+ 
+nomes.Reverse();
+Console.WriteLine("\nApós Reverse (ordem invertida):");
+Console.WriteLine(string.Join(", ", nomes));
+ 
+string primeiroNome = nomes[0];
+nomes.Remove(primeiroNome);
+nomes.Add(primeiroNome);
+Console.WriteLine("\nApós remover o primeiro e adicioná-lo no fim:");
+Console.WriteLine(string.Join(", ", nomes));
+ 
+Console.WriteLine($"\nA pessoa sorteada foi: {nomes[3]}");
+```
+
+Descreva no fórum seu experimento e os resultados que encontrou!
+
+### Aula 2: Consolidando listas de produtos - Desafio 4
+
+Imagine que você é responsável por organizar o inventário de uma loja de eletrônicos. Durante uma atualização de estoque, surgiu a necessidade de unir duas listas de produtos em uma única lista para facilitar a gestão. Seu objetivo é criar um programa que adicione os itens de uma lista secundária à lista principal.
+
+Crie um programa que:
+
+- Declare duas listas distintas de produtos.
+- Adicione todos os elementos da lista secundária na lista principal.
+- Exiba a lista principal com todos os produtos.
+
+Exemplo de entrada:
+
+```csharp
+List<string> produtosPrincipal = new List<string> { "Mouse", "Teclado", "Monitor", “Joystick”};  
+List<string> produtosSecundaria = new List<string> { "Headset", "Webcam", "Smartphone", “Mousepad” };  
+```
+
+Saída esperada:
+
+```csharp
+Lista consolidada:
+Mouse
+Teclado
+Monitor
+Joystick
+Headset
+Webcam
+Smartphone
+Mousepad
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos a manipulação de listas utilizando o método Add em conjunto com um loop foreach. O objetivo foi transferir elementos de uma lista para outra, garantindo que todos os itens fossem incluídos.
+
+foreach permite percorrer cada elemento da lista secundária individualmente.
+Add insere o item atual da iteração na lista principal.
+
+```csharp
+List<string> produtosPrincipal = new List<string> { "Mouse", "Teclado", "Monitor", "Joystick" };
+ 
+List<string> produtosSecundaria = new List<string> { "Headset", "Webcam", "Smartphone", "Mousepad" };
+ 
+foreach (string produto in produtosSecundaria)
+{
+    produtosPrincipal.Add(produto);
+}
+ 
+Console.WriteLine("Lista consolidada:");
+foreach (string produto in produtosPrincipal)
+{
+    Console.WriteLine(produto);
+}
+```
+
+Conte no fórum como resolveu esse exercício, vamos adorar acompanhar sua jornada!
+
+## Aula 3: Dicionários
+
+### Aula 3: Dicionários - Video 1
+
+Transcrição  
+Neste vídeo, começaremos a conversar sobre dicionários.
+
+Trabalhando com dicionários
+
+Para começar a discussão, vamos pensar em um exemplo. Imagine que trabalhamos em uma loja de eletrônicos. Nessa loja, há vários produtos, e cada um deles possui um ID e um nome.
+
+Observe a tabela de produtos abaixo:
+
+|ID|Nome|
+|---|---|
+|0|Teclado|
+|1|Cadeira gamer|
+|2|Notebook|
+|3|Teclado|
+|4|Mouse|
+
+O ID é único. No exemplo acima, temos IDs que vão de 0 em diante.
+
+Já o nome pode se repetir a depender da situação. Por exemplo: temos o produto 0, que é um teclado, e o produto 3, que também é um teclado. As informações se repetem.
+
+**Representando dados com listas e dicionários**
+Para representar os dados e trabalhar com eles futuramente, podemos inseri-los em uma lista e usar os índices de forma paralela. Na lista, o índice começa em 0 e vai até o limite desejado. Da mesma forma, na loja de eletrônicos, o ID começa em 0 e vai até 4, permitindo traçar um paralelo.
+
+No entanto, se tivermos IDs aleatórios, não conseguiremos mais traçar o paralelo. Não faz sentido criar um array com tantas posições para buscar pela posição 4.587.000, por exemplo.
+
+|ID|Nome|
+|---|---|
+|4587963|Teclado|
+|3374561|Cadeira gamer|
+|2456987|Notebook|
+|6356984|Teclado|
+|8647921|Mouse|
+
+Para representar os dados de modo que seja possível buscar através do ID sem perder a informação do produto, podemos usar dicionários, onde teremos duas informações relevantes:
+
+A chave;  
+E o valor.
+
+A chave é única e, no nosso exemplo, será o ID. Já o valor pode se repetir e, neste caso, será o nome. Em um dicionário, geralmente, fazemos buscas através do ID, que é único, permitindo pegar exatamente o valor associado a uma chave.
+
+**Entendendo a estrutura de dicionários**  
+Para representar um dicionário em C♯, utilizamos a seguinte estrutura:
+
+```csharp
+Dictionary<int, string> produtos = new Dictionary<int, string>
+    {
+        { 4587963, "Teclado" },
+        { 3374561, "Cadeira gamer" },
+        { 2456987, "Notebook" },
+        { 6356984, "Teclado" },
+        { 8647921, "Mouse" },
+    };
+```
+
+Novamente, trabalhamos com generics (<>). O dicionário guarda tanto a chave quanto o valor, e precisamos especificar os tipos a serem guardados. No nosso caso, os IDs são inteiros e os valores são strings. Assim, declaramos um dicionário (Dictionary<>) de int e string.
+
+Em seguida, instanciamos o dicionário da mesma forma que fazemos com listas.
+
+Note que declaramos o Dictionary e passamos os pares de dados que queremos guardar. Esses pares são dados por chaves internas entre chaves externas.
+
+Abrimos as primeiras chaves para indicar que vamos guardar dados no dicionário e, para cada linha da tabela, abrimos e fechamos chaves para inserir os dados.
+
+Abaixo, podemos conferir como criar um dicionário e adicionar elementos de maneira dinâmica. Inicializamos o dicionário com new e adicionamos os pares com produtos.Add(). Assim, não precisamos das chaves para representá-los; apenas passamos o ID (chave) e o valor (nome).
+
+```csharp
+Dictionary<int, string> produtos = new Dictionary<int, string>();
+produtos.Add(4587963, "Teclado");
+produtos.Add(3374561, "Cadeira gamer");
+produtos.Add(2456987, "Notebook");
+produtos.Add(6356984, "Teclado");
+produtos.Add(8647921, "Mouse");
+```
+
+**Praticando com dicionários no Visual Studio**  
+Vamos praticar o uso de dicionários? No Visual Studio, já temos a declaração do Dictionary, conforme exibido acima. Criamos e inicializamos a variável, passando os valores desejados. A grande vantagem do Dictionary é a capacidade de realizar buscas através da chave.
+
+Program.cs:
+
+```csharp
+Dictionary<int, string> produtos = new Dictionary<int, string>
+    {
+        { 4587963, "Teclado" },
+        { 3374561, "Cadeira gamer" },
+        { 2456987, "Notebook" },
+        { 6356984, "Teclado" },
+        { 8647921, "Mouse" },
+    };
+```
+
+As chaves em um dicionário podem ser inteiros, diferenciados ou strings. Portanto, essas chaves podem ser elementos personalizados para realizar buscas.
+
+No exemplo dado, a personalização são números inteiros que não necessariamente estão em ordem. Não conseguimos indexar como em uma lista, por exemplo.
+
+Para realizar a busca pela chave, podemos usar Console.WriteLine(), onde iremos imprimir o nome correspondente à chave 3374561. Ao acessar produtos nessa posição específica, visualizamos o elemento cujo valor está associado a ela.
+
+```csharp
+Dictionary<int, string> produtos = new Dictionary<int, string>
+    {
+        { 4587963, "Teclado" },
+        { 3374561, "Cadeira gamer" },
+        { 2456987, "Notebook" },
+        { 6356984, "Teclado" },
+        { 8647921, "Mouse" },
+    }
+
+Console.WriteLine(produtos[3374561]);
+```
+
+No dicionário, conseguimos fazer uma busca indexada usando a chave, da mesma forma que fazíamos no array e na lista. Ao executar, é exibido "Cadeira gamer".
+
+Se quisermos mostrar o primeiro produto "Teclado", precisamos buscar pelo primeiro elemento do dicionário, ou seja, pelo primeiro índice. Para acessar o quarto elemento, buscamos pelo ID.
+
+**Construindo um dicionário de tradução**  
+Agora, vamos pensar em um dicionário de consulta.
+
+Em um dicionário de tradução, por exemplo, teríamos o nome em português e buscaríamos a tradução em inglês, ou vice-versa. Se houver um tradutor de português para inglês, buscamos pela chave, que é o nome em português, enquanto o valor será a tradução em inglês.
+
+Para representar esse dicionário no código, vamos reaproveitar o dicionário anterior. Criaremos um dicionário de string para string, chamado palavras, e inicializaremos esse dicionário também utilizando string e string. Em seguida, criaremos entre chaves os pares. Por exemplo: o nome "olá" terá a tradução "hello". Também teremos "mundo" como "world".
+
+Assim, criamos um breve dicionário de português para inglês.
+
+```csharp
+// código omitido
+Dictionary<string, string> palavras = new Dictionary<string, string>
+{
+    { "olá", "hello" },
+    { "mundo", "world" }
+};
+```
+
+Se quisermos saber a tradução de "olá", podemos usar Console.WriteLine() e uma interpolação para informar o seguinte: $"A tradução de olá é {palavras["olá"]}".
+
+```csharp
+// código omitido
+Dictionary<string, string> palavras = new Dictionary<string, string>
+{
+    { "olá", "hello" },
+    { "mundo", "world" }
+};
+
+Console.WriteLine($"A tradução de olá é {palavras["olá"]}");
+```
+
+Ao executar, recebemos que a tradução de "olá" é "hello". Dessa forma, conseguimos traçar um paralelo entre o dicionário do mundo real e o dicionário da linguagem de programação.
+
+Retorno no terminal:
+
+```csharp
+Cadeira gamer
+A tradução de olá é hello
+```
+
+**Conclusão**  
+Usamos a estrutura de dicionário para representar dados e realizar buscas de forma personalizada, diferente do padrão de listas. Podemos fazer buscas com inteiros não sequenciais, strings e outros tipos. Além disso, conhecemos coleções diferentes para objetivos distintos.
+
+Agora é o momento de praticar para entender qual delas servirá para o seu problema do dia a dia. Na sequência, teremos uma série de exercícios para evoluir seus conhecimentos!
+
+### Aula 3: Listando os alunos - Desafio 1
+
+Imagine que você é responsável por organizar as notas finais de uma turma em um sistema acadêmico. Cada aluno possui um nome único e uma nota que pode variar em precisão (como 8.5 ou 7.75). Seu desafio é criar uma estrutura que armazene essas informações de forma eficiente e as exiba de maneira clara para futuras consultas.
+
+Crie um programa que:
+
+- Declare um dicionário com as informações de nome e nota de cada aluno
+- Use um loop para iterar sobre essas notas
+- Exiba as notas na tela
+
+Como iterar um dicionário? Antes de exibir as notas, é importante entender como o dicionário armazena os dados. Um KeyValuePair<tipo 1, tipo 2> representa um par de elementos onde:
+
+- tipo 1 é a chave (no caso, o nome do aluno).
+- tipo 2 é o valor associado (a nota).
+
+Quando percorremos o dicionário com foreach, cada iteração retorna um KeyValuePair contendo um nome e sua respectiva nota, que podem ser acessados pelas propriedades Key e Value. Por exemplo, no caso da loja de eletrônicos, visto em vídeo:
+
+```csharp
+foreach (KeyValuePair<tipo 1, tipo 2> produto in produtos)  
+{  
+     Console.WriteLine($"ID: {produto.Key} - Nome: {produto.Value}");
+}  
+```
+
+Ou, podemos simplificar usando var:
+
+```csharp
+foreach (var produto in produtos)  
+{  
+    Console.WriteLine($"ID: {produto.Key} - Nome: {produto.Value}");
+}  
+```
+
+Exemplo de entrada:
+
+```csharp
+notas.Add("Ana", 8.75m);
+notas.Add("Bruno", 6.90m);
+notas.Add("Clara", 9.25m);
+```
+
+Saída esperada:
+
+```csharp
+Aluno: Ana - Nota: 8,75
+Aluno: Bruno - Nota: 6,90
+Aluno: Clara - Nota: 9,25
+```
+
+Opinião do instrutor
+
+Nesta atividade, o dicionário foi escolhido para mapear nomes a notas porque ele permite associar valores únicos (chaves) a dados específicos de forma direta. O tipo decimal garante que operações com as notas mantenham precisão. Durante a exibição, o foreach percorre cada KeyValuePair, extraindo a chave (aluno.Key) e o valor (aluno.Value) para formatar a saída.
+
+```csharp
+Dictionary<string, decimal> notas = new Dictionary<string, decimal>();
+ 
+notas.Add("Ana", 8.75m);
+notas.Add("Bruno", 6.90m);
+notas.Add("Clara", 9.25m);
+ 
+foreach (KeyValuePair<string, decimal> aluno in notas)
+{
+    Console.WriteLine($"Aluno: {aluno.Key} - Nota: {aluno.Value}");
+}
+```
+
+Conte no fórum como resolveu esse exercício, vamos adorar acompanhar sua jornada!
+
+### Aula 3: Gerenciando itens no inventário - Desafio 2
+
+Imagine que você está desenvolvendo um sistema de inventário para um jogo. Seu objetivo é gerenciar os itens que o jogador carrega, garantindo que o inventário seja atualizado corretamente quando itens forem removidos ou novos itens forem adquiridos.
+
+Crie um programa que:
+
+- Inicialize um dicionário com itens.
+- Remova um item específico do inventário.
+- Adicione um novo item ao inventário.
+- Exiba a lista atualizada de itens.
+
+Exemplo de entrada:
+
+```csharp
+Dictionary<int, string> inventario = new Dictionary<int, string>()
+        {
+            { 1, "Espada Longa" },
+            { 2, "Arco Curto" },
+            { 3, "Escudo de Ferro" }
+        };
+```
+
+Saída esperada:
+
+```csharp
+Itens no inventário inicial:
+ID: 1 - Espada Longa
+ID: 2 - Arco Curto
+ID: 3 - Escudo de Ferro
+---------------------
+Itens no inventário atualizado:
+ID: 1 - Espada Longa
+ID: 4 - Poção de Vida
+ID: 3 - Escudo de Ferro
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos o uso do Dictionary para gerenciar um conjunto de itens. Primeiro, inicializamos o dicionário com alguns itens, cada um associado a um ID único. Em seguida, removemos um item usando o método Remove, que exclui a entrada com base na chave fornecida. Depois, adicionamos um novo item ao dicionário usando o método Add, garantindo que a chave (ID) seja única para evitar conflitos. Por fim, percorremos o dicionário com um loop foreach para exibir os itens atualizados.
+
+```csharp
+Dictionary<int, string> inventario = new Dictionary<int, string>()
+        {
+            { 1, "Espada Longa" },
+            { 2, "Arco Curto" },
+            { 3, "Escudo de Ferro" }
+        };
+ 
+Console.WriteLine("Itens no inventário inicial:");
+foreach (var item in inventario)
+{
+    Console.WriteLine($"ID: {item.Key} - {item.Value}");
+}
+ 
+Console.WriteLine("---------------------");
+ 
+inventario.Remove(2);
+ 
+inventario.Add(4, "Poção de Vida");
+ 
+Console.WriteLine("Itens no inventário atualizado:");
+foreach (var item in inventario)
+{
+    Console.WriteLine($"ID: {item.Key} - {item.Value}");
+}
+```
+
+Conte no fórum o seu raciocínio. Ver seu caminho até a solução é sempre muito bacana!
+
+### Aula 3: Manipulando dicionários - Desafio 3
+
+Você está desenvolvendo um sistema de gerenciamento de tarefas para uma equipe de desenvolvimento. Os membros do time podem adicionar suas tarefas diárias, mas, ao final do sprint, todas as tarefas concluídas são removidas do quadro, dando espaço para novas atividades.
+
+Você é responsável por implementar essa lógica usando um dicionário para armazenar as tarefas e seus responsáveis. O programa deve limpar o dicionário simulando o fim do sprint, adicionar novas tarefas para o próximo ciclo e, por fim, listar todas as atividades atualizadas para a equipe.
+
+Crie um programa que:
+
+- Inicialize um dicionário com algumas tarefas
+- Remova todas as tarefas do dicionário
+- Adicione novas tarefas
+- Liste as novas tarefas
+
+Dica: O método Clear() esvazia completamente o dicionário, removendo todos os itens de uma só vez. Isso é útil quando precisamos reiniciar uma coleção sem criar uma nova instância.
+
+Exemplo de entrada:
+
+Tarefas antigas:
+
+```csharp
+Dictionary<string, string> tarefas = new Dictionary<string, string>()  
+{  
+{ "Refatorar módulo de login", "Ana" },  
+{ "Testar API de pagamentos", "Pedro" }  
+};  
+```
+
+Novas tarefas:
+
+```csharp
+tarefas.Add("Implementar autenticação OAuth", "João");  
+tarefas.Add("Otimizar consultas SQL", "Maria");  
+tarefas.Add("Atualizar documentação", "Carlos");
+```
+
+Saída esperada:
+
+```csharp
+Tarefas do próximo sprint:
+- Implementar autenticação OAuth: João
+- Otimizar consultas SQL: Maria
+- Atualizar documentação: Carlos
+```
+
+Opinião do instrutor
+
+Nesta atividade, exploramos a manipulação de dicionários, focando em duas operações principais:
+
+Clear() – Remove todos os pares chave-valor, útil para reinicializar estruturas de dados sem realocação.
+foreach – Percorre o dicionário de forma ordenada, garantindo que cada entrada seja processada.
+
+```csharp
+Dictionary<string, string> tarefas = new Dictionary<string, string>()
+        {
+            { "Refatorar módulo de login", "Ana" },
+            { "Testar API de pagamentos", "Pedro" }
+        };
+ 
+tarefas.Clear();
+ 
+tarefas.Add("Implementar autenticação OAuth", "João");
+tarefas.Add("Otimizar consultas SQL", "Maria");
+tarefas.Add("Atualizar documentação", "Carlos");
+ 
+Console.WriteLine("Tarefas do próximo sprint:");
+foreach (var tarefa in tarefas)
+{
+    Console.WriteLine($"- {tarefa.Key}: {tarefa.Value}");
+}
+```
+
+Estamos de olho no fórum. Compartilhe sua solução e vamos crescer juntos!
+
+### Aula 3: Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você adquiriu conhecimento prático e aplicou conceitos de programação em C#, com foco no uso de coleções. Agora, você pode:
+
+- Trabalhar com diferentes tipos de coleções (arrays, listas, dicionários e hashsets) em C#.
+- Manipular e transformar coleções usando métodos como Sort(), Reverse(), IndexOf() e Clear().
+- Iterar e manipular elementos em coleções usando loops e métodos de busca.
+
+Quer continuar explorando a programação em C#? Recomendamos a [Formação C# e Orientação a Objetos: coleções, arquivos e bibliotecas.](https://cursos.alura.com.br/formacao-avancando-c-sharp)
+
+Nos vemos nos próximos cursos práticos!
