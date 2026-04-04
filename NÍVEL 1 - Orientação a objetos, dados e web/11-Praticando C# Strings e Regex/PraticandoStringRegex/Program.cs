@@ -5,21 +5,14 @@ internal partial class Program
 {
     static void Main(string[] args)
     {
-        //Aula 2 - Regex em C#
-        TestarPartial();
-
-
-
-
-
-
+        //Aula 2: Praticando Regex
+        Aula2();
 
 
         //==============================================================================================
         /*
         //Aula 1 - Strings em C#
 
-        //==============================================================================================
         //Aula 1:  Formatando o relatório - Desafio 6
         Console.WriteLine("\nAula 1:  Formatando o relatório - Desafio 6");
 

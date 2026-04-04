@@ -842,8 +842,368 @@ Também temos o Replace() e o Split(). Esses métodos são semelhantes aos que j
 
 Agora que conhecemos esse métodos, podemos passar para o Visual Studio.
 
-### Aula 2:  - Vídeo 2
-### Aula 2:  - Vídeo 3
-### Aula 2:  - Vídeo 4
-### Aula 2:  - Vídeo 5
-### Aula 2:  - Vídeo 6
+### Aula 2: Praticando Regex - Vídeo 2
+
+Transcrição  
+No Visual Studio Code, já deixamos nosso trabalho adiantado. A ideia é solicitar para que a pessoa usuária digitar a chave PIX. Assim, verificaremos em qual padrão esses dados se encaixam. Utilizamos vários ifs para descobrir o tipo da chave. Caso ela não corresponda a nenhum padrão, informaremos que o formato é inválido.
+
+**Preparando o código para validar a chave PIX**  
+Para verificar o padrão, utilizamos o método IsMatch() da classe Regex. A classe Regex foi importada com using System.Text.RegularExpressions. Vamos executar o código para visualizar os resultados e verificar se ele está funcionando com os padrões definidos.
+
+```csharp
+using System.Text.RegularExpressions;
+using System;
+
+public class ChavePix
+{
+    public static void Main(string[] args)
+    {
+        Console.Write("Digite a chave PIX: ");
+        string chavePix = Console.ReadLine();
+
+        string padraoCPF = @"^\d{3}\.\d{3}\.\d{3}-\d{2}$";
+        string padraoCNPJ = @"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$";
+        string padraoTelefone = @"^\(\d{2}\)\d{5}-\d{4}$";
+        string padraoEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
+        string tipoChave;
+
+        if (Regex.IsMatch(chavePix, padraoCPF))
+            tipoChave = "CPF";
+        else if (Regex.IsMatch(chavePix, padraoCNPJ))
+            tipoChave = "CNPJ";
+        else if (Regex.IsMatch(chavePix, padraoTelefone))
+            tipoChave = "Telefone";
+        else if (Regex.IsMatch(chavePix, padraoEmail))
+            tipoChave = "E-mail";
+        else
+            tipoChave = "Formato inválido";
+
+        Console.WriteLine($"Tipo da chave PIX: {tipoChave}");
+    }
+}
+```
+
+**Testando o telefone**  
+Após, digitamos uma chave PIX, como um CPF no formato 123.456.789-10, ao enviar, verificamos que funcionou. Testamos também com um número de telefone com quatro dígitos (44)9999-9999. Assim, é informado que o formato é inválido. Identificamos que no padrão de telefone, esquecemos de incluir o 4. Ajustamos para aceitar tanto 4 quanto 5 dígitos.
+
+```csharp
+//Código omitido
+string padraoTelefone = @"^\(\d{2}\)\d{4,5}-\d{4}$";
+```
+
+Feito isso, ao digitar novamente (44)9999-9999, o sistema reconhece como telefone.
+
+**Testando o e-mail**  
+Vamos testar com um e-mail, que possui um padrão mais complexo. Ao inserir iasmin@email.com, o sistema reconheceu como tipo de chave PIX e-mail. O regex está funcionando corretamente. O código será disponibilizado para poderem testar outros padrões e verificar se está capturando tudo. É importante debugar o código para entender as expressões regulares.
+
+**Extração de domínio de e-mail**  
+Outra tarefa que podemos realizar é identificar o domínio de um e-mail. Anteriormente, fizemos isso ao trabalhar com métodos de strings, mas também é possível utilizando regex. Vamos declarar uma string email, que será iasmin@alura.com.br. Queremos extrair o domínio, para isso, precisamos dividir a string em duas partes: o que vem antes do arroba e o que vem depois.
+
+Para realizar essa tarefa, podemos agrupar nosso padrão. Vamos copiar o padrão de e-mail, colar e criar uma nova variável que será o padrão do e-mail agrupado. Colocaremos um abre parênteses no início da string e um fecha parênteses no final. Lembrando que os parênteses são utilizados para agrupar os dados, que é o que desejamos. Faremos isso também no final da string, após o arroba.
+
+```csharp
+string email = "iasmin@alura.com.br";
+string padraoEmailAgrupado = @"(^[a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)";
+```
+
+Feito isso, queremos tratar essa string de e-mail agrupando-a. Para realizar essa tarefa, podemos utilizar o método match. Vamos definir a string dominio = Regex.Match(). Nos parênteses passamos string de entrada, que é o email, e ele identificará a primeira ocorrência do e-mail, que é a string completa, nesse caso. Dentro desse e-mail, queremos reconhecer o padraoEmailAgrupado.
+
+O match retornará essa ocorrência. No entanto, não queremos a ocorrência completa, mas sim uma parte dela. Essa parte é dada pelo que chamamos de Groups[]. Temos dois grupos: o que vem antes e o que vem depois do arroba. Queremos especificamente o que vem depois, que é o grupo 2, o segundo grupo. Feito isso, esse grupo ainda não é uma string. Para obtermos exatamente a string, utilizamos o .Value. Assim, conseguimos transformar o resultado em uma string.
+
+Temos o que desejamos. Então, vamos imprimir o resultado para verificar se as regex estão funcionando, passando Console.WriteLine(dominio).
+
+```csharp
+//Código omitido
+string dominio = Regex.Match(email, padraoEmailAgrupado).Groups[2].Value;
+Console.WriteLine(dominio)
+```
+
+Para não precisarmos digitar novamente, comentaremos o início dos padrões adicionando /. Executamos o código e observamos que o e-mail mostrou alura.com.br. Portanto, temos duas formas de lidar com essa extração de domínios dos e-mails, utilizando strings e também os padrões de regex.
+
+Dessa forma, conseguimos aplicar diversos métodos de regex em C#. Exploramos alguns exemplos, portanto, é importante revisar todas essas tabelas e pensar em outros padrões que utilizamos no dia a dia para realmente fixar esse conhecimento.
+
+Para ajudar nesse processo, desenvolvemos exercícios que auxiliarão no aprofundamento dos conhecimentos. Bons exercícios e bons estudos! Até a próxima!
+
+### Aula 2: Verificando Strings numéricas - Desafio 1
+
+Imagine que você está desenvolvendo um sistema de validação para cupons de desconto em um e-commerce. Cada cupom deve conter apenas números para ser considerado válido. Seu programa precisa identificar quais códigos estão no formato correto antes de serem cadastrados no sistema.
+
+Crie um programa que:
+
+- Receba uma string representando um código.
+- Verifique se contém apenas dígitos numéricos (0-9) usando expressões regulares.
+- Retorne um booleano e o exiba na tela se o código é ou não válido.
+
+Exemplo de entrada:
+
+```csharp
+Digite o código do cupom:
+123456
+```
+
+Saída esperada:
+
+Se o código for válido:
+
+```csharp
+O código é válido
+```
+
+Caso não seja:
+
+```csharp
+O código não é válido.
+```
+
+Opinião do instrutor
+
+Nessa atividade, trabalhamos com a classe Regex para verificar se uma string contém apenas números. Utilizamos o padrão \d+, pois \d corresponde a qualquer dígito (0-9) e + indica que deve haver um ou mais dígitos consecutivos. Então, o método IsMatch irá avaliar se a string corresponde ao padrão de números.
+
+- ^ indica o início da string
+- \d corresponde a qualquer dígito numérico
+- `+` exige um ou mais dígitos consecutivos
+- $ marca o final da string
+
+```csharp
+using System.Text.RegularExpressions; 
+ 
+Console.WriteLine("Digite o código do cupom: "); 
+ 
+string codigo = Console.ReadLine(); 
+ 
+string regex = @"^\d+$"; 
+ 
+bool ehValido = Regex.IsMatch(codigo, regex); 
+ 
+if (ehValido)
+{
+    Console.WriteLine("O código é válido.");
+}
+else
+{
+    Console.WriteLine("O código não é válido.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2: Extraindo o valor de uma moeda - Desafio 2
+
+Imagine que você está desenvolvendo um sistema de processamento de recibos digitais, onde é necessário identificar o valor total de cada transação para registro no banco de dados. Seu programa deve ser capaz de localizar o primeiro valor monetário formatado em reais (R$) dentro do texto, garantindo que apenas valores válidos sejam capturados.
+
+Crie um programa que:
+
+- Receba um texto contendo valores monetários no formato "R$ XX,XX".
+- Extraia apenas o primeiro valor encontrado nesse formato.
+- Exiba o valor capturado na tela.
+
+Exemplo de entrada:
+
+```csharp
+Digite o texto do recibo:
+O valor total é R$ 99,90 e pode ser parcelado em 3x de R$ 33,30.
+```
+
+Saída esperada:
+
+```csharp
+Valor encontrado: R$ 99,90
+```
+
+Opinião do instrutor
+
+Nesta atividade, utilizamos uma expressão regular para identificar valores monetários no formato brasileiro. O padrão R\$ \d+,\d{2} funciona da seguinte forma:
+
+- R\$ corresponde ao símbolo "R`).
+- (espaço) separa o símbolo do valor numérico.
+- \d+ captura um ou mais dígitos antes da vírgula (parte inteira do valor).
+- ,\d{2} exige uma vírgula seguida de exatamente dois dígitos (casas decimais).
+
+O método Regex.Match retorna apenas a primeira ocorrência que corresponde ao padrão, ignorando valores subsequentes no texto.
+
+```csharp
+using System.Text.RegularExpressions;
+ 
+Console.WriteLine("Digite o texto do recibo: ");
+string texto = Console.ReadLine();
+ 
+string regex = @"R\$ \d+,\d{2}";
+ 
+string valor = Regex.Match(texto, regex).Value;
+ 
+Console.WriteLine("Valor encontrado: " + valor);
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2: Substituindo espaços em branco - Desafio 3
+
+Você está desenvolvendo um sistema de formatação automática para posts em um fórum online. Os usuários frequentemente digitam textos com múltiplos espaços entre palavras ou até mesmo espaços desnecessários no início e no final. Seu programa precisa garantir que o texto seja exibido de forma limpa e padronizada excluindo os espaços extras antes de ser publicado.
+
+Crie um programa que:
+
+- Receba uma string contendo um texto com espaços extras.
+- Substitua todos os espaços consecutivos por um único espaço.
+- Remova quaisquer espaços no início ou no final do texto.
+- Exiba o texto formatado corretamente.
+
+Exemplo de entrada:
+
+```csharp
+Digite sua frase:
+    Olá,    mundo!   Como   vocês    estão?
+```
+
+Saída esperada:
+
+```csharp
+Texto limpo: "Olá, mundo! Como vocês estão?"
+```
+
+Opinião do instrutor
+
+Nessa atividade, o objetivo é usar o método Replace() para manipular espaços consecutivos e limpar o texto. A expressão regular \s+ será utilizada para capturar qualquer quantidade de espaços em branco consecutivos. A expressão para capturar os espaços extras será substituída por um único espaço usando o método Replace().
+
+- \s+ é o padrão da expressão regular que corresponde a um ou mais caracteres de espaço em branco (incluindo espaços, tabulações ou quebras de linha).
+- Regex.Replace(texto, @"\s+", " ") substitui todas as ocorrências de múltiplos espaços por apenas um espaço único.
+- .Trim() remove todos os espaços no início e no final da string, garantindo que não haja espaços desnecessários antes ou depois do texto.
+
+```csharp
+using System.Text.RegularExpressions;
+ 
+string regex = @"\s+";
+ 
+Console.WriteLine("Digite sua frase: ");
+string frase = Console.ReadLine();
+ 
+string textoLimpo = Regex.Replace(frase, regex, " ").Trim();
+ 
+Console.WriteLine("Texto limpo: " + textoLimpo + "");
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2: Validando datas - Desafio 4
+
+Você está desenvolvendo um sistema de cadastro de eventos onde os usuários precisam inserir datas no formato exato "dd/mm/aaaa". Seu programa deve verificar se a data digitada está no padrão correto antes de permitir o cadastro.
+
+Crie um programa que:
+
+- Receba uma string representando uma data.
+- Verifique se ela está no formato "dd/mm/aaaa", onde:
+- "dd" são dois dígitos para o dia
+- "mm" são dois dígitos para o mês
+- "aaaa" são quatro dígitos para o ano
+- Retorne um booleano indicando se a data é válida e exiba o resultado na tela.
+
+Exemplo de entrada:
+
+```csharp
+Digite a data (dd/mm/aaaa):
+09/07/1992
+```
+
+Saída esperada:
+
+```csharp
+A data está no formato correto.
+```
+
+Ou então:
+
+```csharp
+Formato inválido! Use dd/mm/aaaa.
+```
+
+Opinião do instrutor
+
+A expressão regular que você pode usar para esse tipo de validação é a seguinte: ^\d{2}/\d{2}/\d{4}$. Vamos quebrar o padrão:
+
+- ^\d{2} garante que a string comece com dois dígitos (o dia).
+- / é o separador.
+- \d{2} novamente garante dois dígitos para o mês.
+- \d{4}$ garante quatro dígitos para o ano. Com esse padrão, podemos usar o método IsMatch para validar a string e usar a condicional para exibir o feedback ao usuário.
+
+```csharp
+using System.Text.RegularExpressions;
+ 
+string regex = @"^\d{2}/\d{2}/\d{4}$";
+ 
+Console.WriteLine("Digite a data (dd/mm/aaaa):");
+string data = Console.ReadLine();
+ 
+bool formatoCorreto = Regex.IsMatch(data, regex);
+ 
+if (formatoCorreto)
+{
+    Console.WriteLine("A data está no formato correto.");
+}
+else
+{
+    Console.WriteLine("Formato inválido! Use dd/mm/aaaa.");
+}
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2: Substituindo links para o formato ''[LINK]'' - Desafio 5
+
+Imagine que você está desenvolvendo um sistema de pré-moderação para um fórum online, onde todos os links compartilhados precisam ser ocultados temporariamente até que sejam aprovados por um moderador. Seu programa deve identificar qualquer URL no texto e substituí-la por um marcador genérico, garantindo que os usuários não acessem conteúdos potencialmente inseguros antes da revisão.
+
+Crie um programa que:
+
+- Receba um texto contendo links.
+- Identifique todas as URLs que começam com "http://" ou "https://".
+- Substitua cada URL encontrada por "[LINK]".
+- Exiba o texto modificado na tela.
+
+Exemplo de entrada:
+
+```csharp
+Digite o texto:
+Acesse https://meusite.com ou http://exemplo.org para mais informações.
+```
+
+Saída esperada:
+
+```csharp
+Acesse [LINK] ou [LINK] para mais informações.
+```
+
+Opinião do instrutor
+
+Nesta atividade, utilizamos uma expressão regular para detectar padrões de URLs no texto. O padrão https?://\S+ funciona da seguinte forma:
+
+- http corresponde à parte fixa da URL.
+- s? indica que o caractere "s" é opcional, cobrindo tanto "http://" quanto "https://".
+- :// é a sequência obrigatória após o protocolo.
+- \S+ captura qualquer sequência de caracteres que não sejam espaços, garantindo que toda a URL seja identificada.
+
+O método Regex.Replace é usado para realizar a substituição automática de todas as ocorrências que correspondam ao padrão.
+
+```csharp
+using System.Text.RegularExpressions;
+ 
+Console.WriteLine("Digite o texto: ");
+string texto = Console.ReadLine();
+ 
+string regex = @"https?://\S+";
+ 
+string resultado = Regex.Replace(texto, regex, "[LINK]");
+ 
+Console.WriteLine(resultado);
+```
+
+Agora é sua vez! Teste o programa, compartilhe no fórum e compare sua lógica com outras soluções.
+
+### Aula 2: Conclusão
+
+Parabéns por concluir este curso! Ao longo desta jornada, você adquiriu conhecimento prático e aplicou conceitos de programação em C#, com foco no uso de strings e expressões regulares. Agora, você pode:
+
+- Manipular textos utilizando métodos de strings como Replace(), ToUpper() e interpolação ($"").
+- Validar e extrair padrões em textos com expressões regulares (Regex), aplicando padrões como busca, substituição e validação de formatos.
+
+Quer continuar explorando a programação em C#? Recomendamos a Formação Aprenda a programar em C# com Orientação a Objetos.
+
+Nos vemos nos próximos cursos práticos!
