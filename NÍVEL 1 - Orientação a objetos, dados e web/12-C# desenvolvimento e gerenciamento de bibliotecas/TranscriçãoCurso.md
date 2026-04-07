@@ -832,14 +832,207 @@ Nesta aula, aprendemos:
 
 Na aula anterior, criamos um projeto Class Library para a nossa biblioteca de geração de relatórios, adicionamos suas primeiras funcionalidades e flexibilizamos para uma expansão futura, por nós ou por outros usuários. Para conferir o projeto desenvolvido e, se quiser, baixá-lo para começar daqui, [acesse o repositório do curso no GitHub.](https://github.com/alura-cursos/AluraReportGenerator/tree/video_2.5)
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 8
-### Aula 3:  - Vídeo 9
-### Aula 3:  - Vídeo 10
-### Aula 3:  -
+### Aula 3: Adicionando referência à biblioteca - Vídeo 1
+
+Transcrição  
+Bem-vindos de volta. Agora, já temos a nossa biblioteca Riposte de Direito criada e pronta para ser utilizada. Vamos utilizá-la no nosso projeto Screensound.
+
+Comentamos nas primeiras aulas que existem algumas formas de inserir a referência da biblioteca no projeto. A primeira é adicionar a própria referência de projeto que está dentro da mesma solução, como vimos enquanto estávamos desenvolvendo a biblioteca Riposte de Direito. A segunda é a partir do Nuget, o que não poderemos fazer agora, pois ainda não publicamos a nossa biblioteca no Nuget.
+
+**Adicionando a referência de DLL ao projeto Screensound**  
+A terceira forma é a partir da referência de DLL diretamente, que é o que faremos neste momento com o nosso projeto Screensound.
+
+Abrindo o projeto Screensound, vamos na parte de dependências, clicamos com o botão direito e adicionamos a referência de projeto. Na caixa de diálogo que se abriu, vamos em procurar, clicamos no botão procurar novamente e iremos na pasta da nossa biblioteca Riposte de Direito.
+
+Na pasta bin dela, há duas pastas: a pasta "debug" e a pasta "release". A pasta "release" é onde estará o nosso binário, a nossa DLL que está pronta para ser utilizada. Então, abrimos a pasta "release" e aqui está o nosso Riposte de Direito. Adicionamos ele ao projeto, e agora está pronto para ser utilizado no nosso projeto.
+
+Como faremos isso será abordado no próximo vídeo.
+
+### Aula 3: Gerenciamento de dependências em sistemas de agendamento médico - Exercício
+
+A Clínica Médica Voll, especializada em serviços médicos e exames, está desenvolvendo um sistema de agendamento online para seus pacientes. A equipe de TI, da qual você faz parte, decidiu utilizar uma biblioteca interna para gerenciar as dependências do sistema, mas essa biblioteca ainda não foi publicada em um repositório público.
+
+Quais são as implicações de utilizar uma referência de DLL direta para essa biblioteca no projeto da Clínica Médica Voll, e como isso pode impactar a manutenção e atualização do sistema de agendamento?
+
+Resposta:  
+Utilizar uma referência de DLL direta para a biblioteca interna implica que a equipe terá controle total sobre a versão da biblioteca utilizada, mas também precisará gerenciar manualmente as atualizações, substituindo o arquivo DLL no projeto sempre que houver uma nova versão. Isso pode impactar a manutenção, mas permite testes antes de adotar novas versões.
+
+> Correta, pois essa abordagem oferece controle sobre as versões e a possibilidade de testes, mas exige um processo manual para atualizações, impactando a manutenção.
+
+### Aula 3: Usando classes e métodos da biblioteca - Vídeo 2
+
+Transcrição  
+Bem, agora já adicionamos a referência da nossa biblioteca RepostGenerator no ScreenSound e já podemos utilizá-la para criar um relatório a partir dos dados do ScreenSound. Como faremos isso?
+
+O primeiro passo que devemos realizar, utilizando o Visual Studio, é adicionar a referência da nossa biblioteca na classe que vamos utilizar, no caso, na classe Programmer. Vamos fazer o using e chamar o RepostGenerator. A partir desse momento, já temos acesso às classes da biblioteca RepostGenerator e aos seus respectivos métodos.
+
+```csharp
+using ReportGenerator;
+```
+
+**Preparando os dados para o relatório**  
+No ScreenSound, já foi feita uma consulta para a API e recebemos como resposta uma lista de músicas cadastradas nessa API. O que faremos agora é o seguinte: a partir dessa lista de músicas, vamos gerar um relatório em CSV.
+
+A primeira coisa que faremos é transformar esses dados no formato que o RepostGenerator entende, que, no nosso caso, é uma lista com dicionários com chaves em screen. Começamos criando essa lista, escrevendo list. É uma lista de dicionários, e vamos povoar essa lista.
+
+```csharp
+List<Dictionary<string, string>> reportData = new List<Dictionary<string, string>>();
+```
+
+Iremos povoar essa lista a partir do que está na lista de músicas. Para cada música na lista de músicas, o Compilot já nos sugeriu criar esse dicionário com nome do artista, gênero e tonalidade da música e adicionar à nossa lista de dados. Parece uma boa sugestão, então vamos aceitá-la e seguir com nosso exemplo.
+
+```csharp
+foreach (var musica in musicas)
+{
+    var record = new Dictionary<string, string>
+    {
+        { "Nome", musica.Nome },
+        { "Artista", musica.Artista },
+        { "Genero", musica.Genero },
+        { "Tonalidade", musica.Tonalidade }
+    };
+    reportData.Add(record);
+}
+```
+
+**Gerando o relatório CSV**  
+Para tanto, agora vamos criar um objeto RepostGenerator. RepostGenerator é igual a new csvRepostGenerator, passando nossos dados, passando o RepostData. A partir desse momento, a única coisa que...
+
+```csharp
+IReportGenerator reportGenerator = new CSVReporterGenerator(reportData);
+```
+
+Precisamos agora solicitar que o nosso RepostGenerator gere o nosso arquivo. Quando ele gera o arquivo, devolve uma string com o local onde esse arquivo foi guardado. Então, criamos uma string local para receber essa informação do nosso método GenerateReport.
+
+```csharp
+string local = reportGenerator.GenerateReport();
+```
+
+**Verificando o resultado e considerações finais**  
+Uma vez feito isso, nosso projeto já está pronto para rodar e verificar qual será o resultado dessa execução. Clicamos em executar, o projeto é executado e fechado. Vamos agora à pasta do nosso projeto para ver como ficou o relatório. Verificando na pasta, já temos um arquivo report. Vamos abri-lo.
+
+Ao abrir, já temos um relatório com todas as músicas que vieram da nossa API, incluindo o nome da música, nome do artista, gênero e tonalidade. Precisamos salvar. Dessa forma, vemos que a biblioteca RepostGenerator já trouxe uma utilidade para o nosso projeto Screenshot, sem que precisássemos escrever o código ou a lógica para gerar o relatório em CSV.
+
+Uma coisa muito importante é que ainda podemos aprimorar o que essa biblioteca RepostGenerator nos gera, a partir de necessidades específicas do nosso projeto Screenshot. Observem que a biblioteca RepostGenerator, do jeito que a fizemos, salva todos os arquivos com o mesmo nome, report.csv. Já pensou, então, em ao invés de aceitar que ela salve sempre os arquivos com o mesmo nome, passarmos a informar como queremos que o nome do arquivo seja gravado? Essa é uma extensão que podemos criar, sem alterar a biblioteca RepostGenerator, mas no nosso próximo projeto do Screenshot. Isso é o que veremos na próxima aula.
+
+### Aula 3:  Escolha de métodos de integração para otimizar a experiência do usuário
+ Próxima Atividade
+
+A Calmaria Spas, uma plataforma que conecta usuários a experiências de bem-estar e serviços de spas, oferecendo agendamentos online e personalização de tratamentos de relaxamento, está implementando um novo recurso para permitir que usuários personalizem suas experiências de spa com base em preferências pessoais. A equipe de desenvolvimento, da qual você faz parte, precisa integrar uma biblioteca que processa dados de preferências dos usuários para gerar recomendações personalizadas.
+
+Considerando que a biblioteca ainda não está disponível no Nuget, quais são os fatores que a equipe deve considerar ao escolher entre adicionar uma referência de projeto ou uma referência de DLL direta, e como essa escolha pode afetar a experiência do usuário final?
+
+Resposta:  
+A equipe deve considerar a facilidade de atualização e controle de versão, optando por uma referência de projeto se a biblioteca estiver em desenvolvimento ativo, pois isso permite atualizações frequentes e trabalho direto com o código-fonte, embora possa aumentar o tempo de compilação.
+
+> Correta, pois escolher uma referência de projeto em um cenário de desenvolvimento ativo facilita a manutenção e atualização da biblioteca, garantindo que as recomendações personalizadas sejam precisas e rápidas, o que melhora a experiência do usuário final.
+
+### Aula 3: Para saber mais: template method pattern e extensão
+
+**O que é o Template Method Pattern**  
+O Template Method Pattern é um padrão de projeto comportamental que define a estrutura de um algoritmo em uma classe base, deixando que subclasses redefinam alguns passos específicos sem alterar a estrutura geral. Em outras palavras, a classe base contém o "esqueleto" do algoritmo e delega detalhes para seus derivados. Isso promove a flexibilidade e a reutilização, pois a lógica principal não é alterada, enquanto partes específicas podem ser customizadas conforme as necessidades.
+
+**Como o padrão auxilia na extensão de bibliotecas**  
+Ao desenvolver uma biblioteca, é comum definir comportamentos padrão que atendam a um conjunto de casos de uso. No entanto, aplicações podem demandar pequenas variações sem que seja necessário modificar o código original da biblioteca. Nesse ponto entra o Template Method Pattern: ao estruturar a biblioteca com métodos marcados como "virtual" ou abstratos para determinados passos, a classe base garante uma funcionalidade consistente e, ao mesmo tempo, permite que desenvolvedores criem subclasses que alterem apenas os comportamentos necessários.
+
+Esta abordagem reforça o princípio de que classes devem estar abertas para extensão, mas fechadas para modificação – um dos pilares dos conceitos de design de software. Assim, é possível manter a integridade do código original enquanto se cria soluções customizadas para necessidades específicas.
+
+**Exemplo prático em C#**  
+Imagine uma biblioteca que gera relatórios CSV. A classe base implementa a lógica completa para converter dados em arquivo, mas sempre gera um arquivo com o mesmo nome. Um desenvolvedor pode querer alterar esse comportamento sem modificar o código da biblioteca. Para isso, seria possível definir um método virtual que determina o nome do arquivo:
+
+```csharp
+public abstract class CsvReportGenerator
+{
+    protected List<Dictionary<string, object>> reportData;
+
+    public CsvReportGenerator(List<Dictionary<string, object>> data)
+    {
+        reportData = data;
+    }
+
+    // Método Template que define o algoritmo
+    public string GenerateReport()
+    {
+        // Passo 1: Gerar o arquivo CSV
+        string defaultFile = "report.csv";
+        // Lógica para gerar e salvar o arquivo
+        SaveReport(defaultFile);
+
+        // Passo 2: Permitir customização no nome final
+        string customFileName = GetOutputFileName(defaultFile);
+        // Exemplo: mover o arquivo para o nome customizado
+        System.IO.File.Move(defaultFile, customFileName);
+
+        return System.IO.Path.GetFullPath(customFileName);
+    }
+
+    // Método a ser redefinido pelas subclasses
+    protected virtual string GetOutputFileName(string defaultName)
+    {
+        return defaultName; // comportamento padrão
+    }
+
+    private void SaveReport(string fileName)
+    {
+        // Lógica que converte os dados e salva o CSV
+    }
+}
+
+// Implementação customizada que altera o nome do arquivo
+public class CustomCsvReportGenerator : CsvReportGenerator
+{
+    public CustomCsvReportGenerator(List<Dictionary<string, object>> data) : base(data) { }
+
+    protected override string GetOutputFileName(string defaultName)
+    {
+        return "musicas.csv";
+    }
+}
+```
+
+Nesse exemplo, a classe base define o fluxo completo de geração do relatório, enquanto a subclasse "CustomCsvReportGenerator" redefine apenas o método que determina o nome final do arquivo. Essa separação de responsabilidades torna a biblioteca mais flexível e facilita futuras manutenções.
+
+**Benefícios e desafios**  
+Utilizar o Template Method Pattern em bibliotecas oferece diversas vantagens, como a preservação da lógica central da aplicação e a possibilidade de extensões sem risco de afetar funcionalidades já testadas. Por outro lado, é importante documentar bem as partes que podem ser personalizadas, para evitar ambiguidades e garantir que novos desenvolvedores entendam quais pontos são seguros para a extensão.
+
+Este padrão é uma das abordagens que viabilizam a criação de bibliotecas robustas e adaptáveis, permitindo que o mesmo código-base atenda a diferentes cenários sem a necessidade de modificações diretas.
+
+### Aula 3: Faça como eu fiz: usar e ampliar biblioteca
+
+Nesta aula, vimos como integrar a biblioteca RepostGenerator ao projeto Screensound e como estender suas funcionalidades para gerar relatórios personalizados.
+
+Agora é sua vez de colocar em prática os conceitos dessa aula, se ainda não o fez. Para isso:
+
+- Adicione a referência de DLL da biblioteca ao projeto Screensound: abra o Visual Studio, vá até a pasta de dependências, adicione a referência e converta os dados da API em uma lista de dicionários para gerar o relatório CSV.
+- Crie uma nova classe que herde da biblioteca RepostGenerator, implemente um método para renomear o arquivo gerado com um nome personalizado (ex.: musicas.csv) e atualize a chamada no programa principal para utilizar essa nova funcionalidade.
+
+Se tiver alguma dúvida, contate-nos no fórum ou no Discord!
+
+### Aula 3: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Como adicionar uma biblioteca ao projeto no Visual Studio através de uma referência a um arquivo DLL.
+- A importância de escolher a versão release do binário para produção.
+- Como transformar dados em uma lista de dicionários para geração de relatórios CSV.
+- A criação de arquivos CSV a partir de dados estruturados.
+- A possibilidade de estender funcionalidades sem modificar diretamente a biblioteca existente.
+- A criar uma nova classe que herda de uma existente para estender funcionalidades.
+- O conceito de sobrecarga de métodos para adicionar funcionalidades adicionais.
+- O uso de File.Move e Path.GetFullPath para manipular e obter informações de arquivos.
+
+### Aula 4: Publicando bibliotecas no NuGet
+
+### Aula 4: Projeto da aula anterior
+
+Na aula anterior, adicionamos referência à nossa biblioteca geradora de relatórios no projeto ScreenSound, utilizamos e estendemos suas funcionalidades. Para conferir o projeto desenvolvido e, se quiser, baixá-lo para começar daqui, [acesse o repositório do curso no GitHub.](https://github.com/alura-cursos/AluraReportGenerator/tree/video_3.3)
+
+### Aula 4:  - Vídeo 1
+### Aula 4:  - Vídeo 2
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
+### Aula 4:  - Vídeo 7
+### Aula 4:  - Vídeo 8
+

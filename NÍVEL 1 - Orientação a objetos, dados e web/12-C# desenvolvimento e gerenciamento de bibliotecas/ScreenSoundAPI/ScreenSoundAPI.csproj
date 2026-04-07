@@ -1,23 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <Title>Alura Report Generator</Title>
-    <Authors>NinoJP</Authors>
-    <Version>1.1.0</Version>
-    <Description>Biblioteca de geração de relatórios</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="favicon.ico" />
+    <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="ReportGenerator">
-      <HintPath>bin\Release\net10.0\ReportGenerator.dll</HintPath>
+      <HintPath>..\ReportGenerator\bin\Release\net10.0\ReportGenerator.dll</HintPath>
     </Reference>
   </ItemGroup>
 
