@@ -915,8 +915,7 @@ Ao abrir, já temos um relatório com todas as músicas que vieram da nossa API,
 
 Uma coisa muito importante é que ainda podemos aprimorar o que essa biblioteca RepostGenerator nos gera, a partir de necessidades específicas do nosso projeto Screenshot. Observem que a biblioteca RepostGenerator, do jeito que a fizemos, salva todos os arquivos com o mesmo nome, report.csv. Já pensou, então, em ao invés de aceitar que ela salve sempre os arquivos com o mesmo nome, passarmos a informar como queremos que o nome do arquivo seja gravado? Essa é uma extensão que podemos criar, sem alterar a biblioteca RepostGenerator, mas no nosso próximo projeto do Screenshot. Isso é o que veremos na próxima aula.
 
-### Aula 3:  Escolha de métodos de integração para otimizar a experiência do usuário
- Próxima Atividade
+### Aula 3:  Escolha de métodos de integração para otimizar a experiência do usuário - Exercício
 
 A Calmaria Spas, uma plataforma que conecta usuários a experiências de bem-estar e serviços de spas, oferecendo agendamentos online e personalização de tratamentos de relaxamento, está implementando um novo recurso para permitir que usuários personalizem suas experiências de spa com base em preferências pessoais. A equipe de desenvolvimento, da qual você faz parte, precisa integrar uma biblioteca que processa dados de preferências dos usuários para gerar recomendações personalizadas.
 
@@ -1027,12 +1026,721 @@ Nesta aula, aprendemos:
 
 Na aula anterior, adicionamos referência à nossa biblioteca geradora de relatórios no projeto ScreenSound, utilizamos e estendemos suas funcionalidades. Para conferir o projeto desenvolvido e, se quiser, baixá-lo para começar daqui, [acesse o repositório do curso no GitHub.](https://github.com/alura-cursos/AluraReportGenerator/tree/video_3.3)
 
-### Aula 4:  - Vídeo 1
-### Aula 4:  - Vídeo 2
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
-### Aula 4:  - Vídeo 7
-### Aula 4:  - Vídeo 8
+### Aula 4: O que é o NuGet? Por que publicar? - Vídeo 1
 
+Transcrição  
+Olá, pessoas desenvolvedoras, sejam bem-vindas de volta. Nas aulas anteriores, vimos como o Nuget nos auxilia a consumir bibliotecas disponíveis em feeds públicos ou privados. Agora, vamos discutir como o Nuget pode nos ajudar a distribuir nossas próprias bibliotecas.
+
+Precisamos entender a importância de publicar nossas bibliotecas. A publicação permite a reutilização interna de funcionalidades desenvolvidas dentro de nossa empresa, possibilitando que outras equipes as utilizem sem a necessidade de refazer ou criar versões diferentes. Além disso, há o compartilhamento com a comunidade, onde podemos criar algo de valor e perceber seu potencial para que outras pessoas utilizem, alcançando um público mais amplo.
+
+**Destacando a padronização e centralização**  
+A padronização e centralização também são aspectos importantes. Ao desenvolvermos uma biblioteca padronizada e centralizada, saberemos como algo deve ser feito. Por exemplo, se criarmos uma biblioteca de geração de relatórios, saberemos que, dentro de nossa organização, os relatórios sempre serão gerados de uma maneira específica.
+
+Por fim, a facilidade de distribuição que o Nuget nos proporciona é um ponto crucial.
+
+**Explorando formas de publicação com o Nuget**  
+Em vez de compartilhar por e-mail ou colocar em alguma pasta, temos um sistema robusto que nos auxilia a compartilhar nossa biblioteca, inclusive mostrando mudanças de versão e extend logs (registros estendidos). Existem duas formas de publicar e utilizar o Nuget. Podemos utilizar o Nuget a partir de um feed público, que é o mais tradicional, sendo o gerenciador de pacotes oficial do ecossistema .NET. Também podemos fazer isso a partir de um feed privado, quando desenvolvemos algo que não é interessante distribuir para o público em geral, mas apenas dentro da nossa própria organização.
+
+**Utilizando o GitHub para publicação**  
+Existem alguns produtos que utilizam o protocolo do Nuget, como o Azure, o GitHub e o MyGet. No nosso caso, vamos utilizar o GitHub para descrever nosso pacote, nossa biblioteca geradora de relatórios. Utilizar o Nuget para publicar suas bibliotecas e pacotes é uma forma de transformar algo que desenvolvemos em algo reutilizável e útil para outras pessoas.
+
+**Preparando para a próxima etapa**  
+No próximo vídeo, veremos como começar a montar um pacote Nuget e deixá-lo pronto para ser distribuído, tanto em um feed público quanto em um feed privado. Nos vemos em breve!
+
+### Aula 4: Publicação de bibliotecas para otimizar a adoção de animais - Exercício
+
+Considerando o contexto da ADOPET, um site de adoção de animais de estimação, qual das alternativas abaixo descreve corretamente como a publicação de bibliotecas internas pode beneficiar a organização em termos de eficiência e padronização, e quais seriam os passos essenciais para garantir sua boa gestão e atualização?
+
+Resposta:  
+A publicação de bibliotecas internas permite a reutilização de código, economizando tempo e recursos, e padroniza funcionalidades, garantindo que todas as equipes sigam as mesmas diretrizes. Para garantir boa gestão, é necessário desenvolver com modularidade, documentar bem, publicar em um feed privado, implementar versionamento semântico e estabelecer um canal de feedback.
+
+> Correta, pois essa alternativa descreve de forma abrangente os benefícios da publicação de bibliotecas internas e os passos essenciais para sua gestão e atualização, conforme discutido no contexto da ADOPET.
+
+### Aula 4: Configurando e publicando pacote NuGet no feed público - Vídeo 2
+
+Transcrição  
+Novamente, estamos aqui para discutir a importância do Nuget, como ele nos auxilia tanto no consumo quanto na distribuição de nossas bibliotecas em formato de pacote. Agora, vamos entender como criar um pacote, gerar nosso pacote a partir da nossa biblioteca e também como publicar esse pacote no feed público do Nuget.
+
+Primeiramente, o que é um pacote? Um pacote é um arquivo gerado que pode ser criado a partir do Visual Studio por linha de comando, com a extensão .nupkg. Esse arquivo é, na verdade, um arquivo compactado no formato zip, contendo os binários da nossa biblioteca compilada, além de um arquivo de metadados com informações sobre a biblioteca. É esse arquivo zip que enviamos para o Nuget, permitindo que outras pessoas desenvolvedoras possam consumir nossa biblioteca.
+
+**Gerando o arquivo Nuget no Visual Studio**  
+Vamos agora ver os passos necessários para gerar esse arquivo Nuget, o pacote .nupkg. Ao abrir o Visual Studio, no Gerenciador de Soluções, clicamos com o botão direito no nome do projeto e escolhemos a opção de pacote. Quando escolhemos essa opção, o pacote gerado é exibido, mostrando o local onde foi gravado. Por exemplo, podemos ver report generator.1.0.0.nupkg.
+
+Existem alguns pontos importantes que devemos considerar. O primeiro é garantir que o modo de compilação do Visual Studio esteja na opção release, pois estamos gerando uma versão final da biblioteca, não uma versão para depuração. Outro ponto importante é abrir o projeto, clicando duas vezes nele, para acessar o arquivo do projeto em formato XML. Precisamos definir algumas informações essenciais para que o Nuget valide nosso pacote.
+
+**Configurando o arquivo de projeto**  
+Para isso, vamos configurar o arquivo de projeto com as informações necessárias. Aqui está um exemplo de como podemos definir essas propriedades:
+
+```xml
+<PropertyGroup>
+  <TargetFramework>net8.0</TargetFramework>
+  <ImplicitUsings>enable</ImplicitUsings>
+  <Nullable>enable</Nullable>
+  <Title>Alura Report Generator</Title>
+  <Authors>Professor Vinícius</Authors>
+  <Version>1.0.0</Version>
+  <Company>Alura</Company>
+  <Description>Biblioteca de geração de relatórios da Alura</Description>
+</PropertyGroup>
+```
+
+A primeira informação é o package id. Devemos escolher um package id único para nosso pacote. No exemplo, começamos com o projeto chamado report generator, mas esse nome é comum. Para evitar duplicidade, renomeamos para Alura_Underline_Report_Generator, indicando que é um pacote específico da Alura. Aqui está como podemos definir o PackageId:
+
+```xml
+<PackageId>Alura_ReportGenerator</PackageId>
+```
+
+**Definindo a licença e o arquivo README**  
+Outras informações importantes incluem definir a versão do pacote, o autor, uma descrição e a licença de uso. Escolhemos a licença padrão MIT, criando um arquivo de licença com o texto padrão do MIT, explicando como o pacote pode ser utilizado, copiado e modificado. Veja como podemos definir a licença:
+
+```xml
+<PackageLicenseExpression>MIT</PackageLicenseExpression>
+```
+
+E aqui está o texto da licença MIT que devemos incluir:
+
+```xml
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+Devemos também incluir um arquivo readme na pasta da solução, contendo informações sobre o pacote, como utilizá-lo, como baixá-lo, o site do repositório e o site do projeto. Essa é uma exigência do nugget.org. Aqui está um exemplo de como o arquivo README.md pode ser estruturado:
+
+```csharp
+# Alura Report Generator
+
+Alura Report Generator is a .NET 8 project designed to generate reports using a console application (`ConsoleReport`).
+
+## Projects
+
+### ConsoleReport
+A console application that utilizes the `ReportGenerator` library to create and display reports.
+
+### ReportGenerator
+A library that provides functionality for generating reports in various formats.
+
+## Features
+- Generate reports in multiple formats.
+- Easy-to-use console interface.
+- Modular design with a reusable library.
+
+## Requirements
+- .NET 8 SDK
+
+## Getting Started
+
+1. Clone the repository:
+
+   git clone https://github.com/your-repo/AluraReportGenerator.git
+
+## Publicando o pacote no Nuget
+
+Com tudo isso configurado, salvamos as alterações. Novamente, no Gerenciador de Soluções, clicamos com o botão direito e escolhemos a opção de pacote. Na saída, veremos que foi gerado um novo pacote com o novo nome e `package id` que escolhemos, `Alura_Underline_Report_Generator`.
+
+Agora, precisamos saber como enviar esse pacote para o Nuget, para que ele fique disponível no feed público. A primeira etapa é acessar o site nugget.org. Dentro do site, precisamos fazer login. No canto superior direito, clicamos em *sign in*. Para fazer o login no Nuget, é necessário ter uma conta Microsoft. Caso não possua, será necessário criar uma conta Microsoft.
+
+## Criando e utilizando a chave de API
+
+Escolhemos fazer *sign in* (entrar) no NuGet com nossa conta Microsoft, selecionamos a conta e acessamos o NuGet. Agora, surge a questão de como enviar nosso pacote a partir do Visual Studio ou da linha de comando. Para isso, o NuGet precisa confirmar a identidade de quem está enviando o pacote, o que requer autenticação. Essa autenticação é feita por meio de uma *API key* (chave de API) que geramos no próprio site do NuGet. Vamos mostrar como criar essa chave.
+
+No site do NuGet, no canto superior direito, clicamos no nome de usuário e selecionamos a opção *API keys*. Na tela de *API keys*, escolhemos a opção de criar uma nova chave. Definimos um nome para a chave, por exemplo, "Alura Repost Generator", e estabelecemos um período de expiração, como um dia. O proprietário será nós mesmos. Definimos o escopo da chave, que pode incluir o envio de novos pacotes e novas versões. Escolhemos essa opção e determinamos o tipo de permissão de acesso. A chave poderá trabalhar com todos os pacotes que já possuímos, então colocamos um asterisco no campo *globe pattern*. Em vez de escolher um pacote específico, clicamos em *create* (criar). Após um breve momento, a chave de API é criada.
+
+É importante ter cuidado com essa chave. Uma vez criada, devemos guardá-la e não compartilhá-la, pois qualquer pessoa com acesso a ela poderá publicar bibliotecas em nosso nome, o que representa um risco de segurança. Com a chave criada, vamos ao Visual Studio para publicar nosso pacote.
+
+## Enviando o pacote para o Nuget
+
+No Visual Studio, abrimos o console do PowerShell do desenvolvedor e digitamos o seguinte comando para enviar o pacote:
+
+dotnet nuget push ReportGenerator/bin/Release/Alura_ReportGenerator.1.0.0.nupkg --source "https://api.nuget.org/v3/index.json" --api-key oy2j7fwi546j4apclcnapcquaibfb7e3d30fnmou5yma
+```
+
+Após inserir o comando, pressionamos "Enter" e aguardamos a resposta, que foi de sucesso. Nosso pacote foi enviado para o NuGet.
+
+Após o envio, o NuGet leva cerca de cinco minutos para validar e listar o pacote. Precisamos aguardar esse tempo para verificar o status no site do NuGet, acessando novamente o NuGet.org. No site, clicamos no nosso nome no canto superior direito e escolhemos a opção Manage Packages. Entramos na pasta que lista todos os pacotes publicados. Após aguardar cerca de dois a três minutos, nosso pacote já está disponível. Ele ainda não possui certificado e está como não listado. Podemos editá-lo para que seja listado, selecionando a opção de listar nas buscas de resultado e salvando. Assim, ele passa a ser um pacote listado.
+
+**Verificando o pacote no Visual Studio**  
+Voltamos ao Visual Studio para verificar se conseguimos visualizar o pacote no NuGet do Visual Studio. No gerenciador de soluções, na opção dependências, selecionamos gerenciar pacotes do NuGet. Na parte de pesquisa, digitamos o nome do nosso pacote para verificar se ele aparece nos resultados. O pacote já está listado nos resultados.
+
+Neste vídeo, vimos como criar um pacote, o que é necessário para que ele seja publicado, como publicá-lo no feed público do NuGet e como recuperá-lo para uso em nossos projetos. No próximo vídeo, veremos como realizar esse processo em um feed privado, em vez de no feed público. É o que abordaremos em breve.
+
+### Aula 4: Publicando no feed privado - Vídeo 3
+
+Transcrição  
+No vídeo anterior, criamos um pacote Nuget, publicamos esse pacote no feed público do Nuget, e agora precisamos aprender como criar e publicar esse pacote em um feed privado. Vamos entender como criar um feed privado e como publicar um pacote nele, pois existem situações em que não é interessante que uma biblioteca criada por nós fique disponível para o público. Isso pode ser estratégico para a nossa organização. Como procederemos?
+
+Nesta aula, utilizaremos o feed privado do GitHub, que é bastante popular entre as pessoas desenvolvedoras. Vamos utilizá-lo como exemplo, mostrando o passo a passo para realizar uma publicação no feed do GitHub.
+
+**Criando uma API key no GitHub**  
+A primeira coisa que precisamos fazer é criar uma API key para o nosso usuário. Para isso, acessamos o site do GitHub, vamos ao nosso perfil no canto superior direito, clicamos no ícone do usuário e escolhemos a opção settings. Na página de configurações, rolamos até o final e escolhemos develop settings. Ao entrar na página de develop settings, selecionamos a opção no menu à esquerda, personal access tokens, e vamos para os tokens clássicos.
+
+Na página de tokens clássicos, escolhemos a opção de gerar um novo token. Aqui, é importante prestar atenção, pois ao clicar nessa opção, o site do GitHub pergunta novamente qual tipo de token queremos. Precisamos especificar que queremos gerar um novo token clássico. Se gerarmos o outro tipo de token, o fine grained, não funcionará. Portanto, geramos um token clássico, damos um nome para ele, como "Alura Report Generator", e escolhemos um escopo para ele. No caso deste token, o escopo é o de pacotes, tanto de escrita (write) quanto de leitura.
+
+**Gerando e armazenando o token**  
+Definimos também um período de validade para o token. Vamos colocar um período customizado, com validade de um dia. Após escolhermos, clicamos em gerar token. É importante lembrar que o token gerado pelo GitHub será exibido apenas uma vez. Portanto, precisamos copiá-lo e guardá-lo em um lugar seguro. Se perdermos esse token, será necessário gerá-lo novamente, e tudo o que já tiver sido feito com o token anterior deixará de funcionar. É crucial copiar e guardar o token em um local seguro.
+
+Agora, voltamos ao Visual Studio. Uma vez que criamos nossa API key no GitHub, vamos publicar o nosso pacote, mas desta vez no nosso feed privado, que está no GitHub.
+
+**Publicando o pacote no feed privado**
+Para publicar o pacote, utilizamos o seguinte comando no terminal:
+
+```csharp
+dotnet nuget push ReportGenerator/bin/Release/Alura_ReportGenerator.1.0.0.nupkg --source "https://nuget.pkg.github.com/profvinicius84/index.json" --api-key hp_N8TUnAGrced8NYXkLC02bYRS2dp1F60Kgun
+```
+
+Esse comando é muito parecido com o que utilizamos no vídeo anterior para fazer a publicação no feed público do Nuget. A diferença está no --source, onde especificamos o endereço do nosso feed privado no GitHub, e no --api-key, onde informamos a API key que acabamos de criar. Ao apertarmos "Enter", nosso pacote será enviado para o feed do GitHub e já poderemos utilizá-lo.
+
+**Configurando o feed privado no Visual Studio**  
+O próximo passo é configurar nosso feed privado no Visual Studio para que tenhamos acesso ao nosso pacote. Vamos abrir o gerenciador de solução, clicar com o botão direito em "Dependências", selecionar "Gerenciar Pacote Nuget" e clicar na engrenagem no canto superior direito para adicionar nosso feed. Clicamos no símbolo de adição, damos um nome para ele, como "Alura Report", e colocamos o endereço dele. O endereço que vamos colocar é o mesmo que utilizamos para subir nosso pacote:
+
+```csharp
+https://nuget.pkg.github.com/profvinicius84/index.json
+```
+
+Atualizamos e agora temos nosso feed "Alura Report" salvo. Vamos confirmar e fazer a pesquisa nele.
+
+**Autenticando e acessando o pacote**  
+Em "Origem do Pacote", mudamos para "Alura Report". Como é um feed público, ele nos pede autenticação. Podemos fazer a autenticação com aquele token que geramos. Colocamos o nome do usuário, por exemplo, profvinicius84, e pegamos novamente o token. Para pegar o token, deixamos aberta a tela do GitHub, copiamos, voltamos ao Visual Studio, colocamos o token para não precisar digitá-lo novamente, marcamos para lembrar a senha e confirmamos. Agora conseguimos ter acesso ao feed do Alura.
+
+**Concluindo a publicação e visualização do pacote**  
+Vamos pesquisar pelo nosso pacote no repositório privado. Procuramos por "Alura.ReportGenerator", saímos da aba "Instalado" e procuramos. Aqui está nosso pacote, já pronto para ser utilizado na versão 1.0. Ao clicarmos nele, conseguimos ver as informações de metadados, como a biblioteca para gerar relatórios de vários formatos, versão 1.0, o autor, a licença, a página do projeto e as informações que colocamos quando o pacote foi gerado.
+
+Concluímos que já vimos como gerar um pacote Nuget, como publicá-lo no feed público e também no feed privado. Encerramos nossa aula com todas essas informações prontas para a próxima aula, na qual vamos evoluir nossa biblioteca, aplicar boas práticas e deixá-la ainda mais profissional.
+
+### Aula 4:  Reutilização de funcionalidades no ADOPET - Exercício
+
+Considerando o contexto do ADOPET, um site de adoção de animais de estimação, qual das alternativas abaixo descreve corretamente os benefícios de reutilizar funcionalidades existentes no desenvolvimento de novos recursos e como a equipe pode garantir a flexibilidade dessas bibliotecas para atender a diferentes necessidades?
+
+Resposta:  
+Reutilizar funcionalidades existentes pode reduzir o tempo de desenvolvimento e custos, além de garantir consistência no site. Para garantir flexibilidade, a equipe deve projetar bibliotecas de forma modular, incluir opções de configuração, fornecer documentação clara e coletar feedback para melhorias.
+
+> Correta, pois essa alternativa abrange todos os benefícios e práticas necessárias para garantir a flexibilidade e eficácia das bibliotecas reutilizadas, conforme discutido.
+
+### Aula 4: Para saber mais: Package ID único no NuGet
+
+**Por que um Package ID único é fundamental**  
+Um dos pontos críticos na publicação de pacotes é definir um identificador (Package ID) que seja realmente único. Esse identificador serve como a identidade do seu pacote dentro do ecossistema do Nuget, evitando conflitos com outros pacotes que possam existir com nomes semelhantes. Em ambientes com milhares de pacotes, essa singularidade facilita a busca e garante que os desenvolvedores obtenham exatamente a biblioteca desejada.
+
+**Estratégias para assegurar a singularidade**  
+Uma prática comum é utilizar um prefixo que identifique a origem ou instituição responsável, como por exemplo, incluir o nome da empresa ou curso no início do Package ID. Dessa forma, mesmo que o nome do componente seja genérico, a combinação com o prefixo reduz significativamente as chances de duplicidade. Outra estratégia é revisar o repositório do Nuget antes de publicar para confirmar se o nome escolhido já não está em uso.
+
+**Impactos na manutenção e evolução**  
+Um Package ID único não apenas evita conflitos durante a busca e instalação, mas também contribui para uma comunicação mais clara quando há atualizações. Por exemplo, ao estabelecer uma convenção de nomes, os usuários conseguem identificar facilmente a origem e a sequência de versões da biblioteca. Essa padronização simplifica o gerenciamento de dependências e diminui os riscos de instalação acidental de pacotes incorretos.
+
+**Conclusão**  
+Dedicar atenção à escolha do Package ID é uma etapa estratégica que influencia diretamente a segurança, integridade e usabilidade do pacote no longo prazo. Com um identificador bem estruturado e único, o processo de publicação e manutenção se torna mais confiável e organizado para toda a comunidade de desenvolvedores.
+
+### Aula 4: Faça como eu fiz: publicar pacotes NuGet
+
+Nesta aula, aprendemos a criar e distribuir bibliotecas em pacotes NuGet, abordando a geração do pacote no Visual Studio, a configuração dos metadados e o uso de API keys para publicação em feeds públicos e privados.
+
+Agora é a sua vez de revisar e exercitar os conteúdos desta aula, se ainda não colocou em prática. Para isso:
+
+- Configure o projeto em modo Release e gere o pacote (.nupkg) a partir do Visual Studio.
+- Atualize os metadados no arquivo XML (package id, versão, autor, licença e inclusão do readme).
+- Publique o pacote no feed público do NuGet utilizando a API key e o comando .NET nuget push.
+- Publique o pacote em um feed privado no GitHub, criando um token de acesso e configurando o endereço do feed.
+
+Se tiver alguma dúvida, contate-nos no fórum ou no Discord!
+
+### Aula 4: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A importância de publicar bibliotecas para reutilização interna e padronização.
+- Como a publicação no Nuget simplifica a distribuição de bibliotecas.
+- O processo de gerar um pacote Nuget (.nupkg) no Visual Studio.
+- Os passos de configuração para publicação, incluindo metadados e package id.
+- Criar uma API key no nuget.org para autenticar a publicação no feed público.
+- Usar o comando PowerShell para publicar pacotes no Nuget.
+- Criar um personal access token no GitHub para publicação em feeds privados.
+- Configurar e utilizar feeds privados no Visual Studio com GitHub.
+
+## Aula 5: Organização, dependências e documentação
+
+### Aula 5: Projeto da aula anterior
+
+Na aula anterior, criamos um pacote NuGet (um arquivo compactado contendo os binários da nossa biblioteca compilada, além de um arquivo de metadados com informações sobre a biblioteca) para publicar nossa biblioteca em feeds públicos e privados. Para conferir o projeto desenvolvido e, se quiser, baixá-lo para começar daqui, [acesse o repositório do curso no GitHub.](https://github.com/alura-cursos/AluraReportGenerator/tree/video_4.3)
+
+### Aula 5: Organizando a biblioteca - Vídeo 1
+
+Transcrição  
+Olá, desenvolvedores. Chegamos à última aula do nosso curso. Nesta aula, vamos pensar em formas de evoluir nossa biblioteca e continuar aplicando boas práticas. Uma maneira de evoluir nossa biblioteca é permitir que ela gere formatos em PDF, além de CSV. Enquanto fazemos isso, aproveitamos para revisar e ajustar nossa biblioteca para que ela esteja em conformidade com as melhores práticas.
+
+Vamos começar abrindo o Visual Studio. Com o projeto aberto, vamos criar uma nova classe chamada PDFPostGenerator. No entanto, já podemos identificar uma questão no nosso projeto: ao começarmos a criar classes, se fizermos tudo na raiz, pode gerar confusão e não ficar claro para que serve cada classe. Portanto, é melhor, enquanto o projeto ainda está pequeno, organizá-lo e estruturá-lo seguindo boas práticas.
+
+**Organizando o projeto em pastas**  
+Temos geradores e utilitários de formatação. Vamos criar uma pasta para os geradores. Clique com o botão direito, adicione uma nova pasta e nomeie-a como "Generators". Aqui, colocaremos tudo relacionado a geradores. Vamos mover o CSV para essa pasta, ajustando o namespace. O Visual Studio já pergunta se queremos ajustar o namespace, e escolhemos sim. O namespace antes era apenas reportGenerator, e agora se tornou reportGenerator.generators, facilitando nosso trabalho.
+
+```csharp
+namespace ReportGenerator.Generators
+```
+
+A interface também é movida para cá, e o Visual Studio faz a mesma pergunta, realizando a alteração necessária.
+
+Para o DateFormatter, vamos criar uma nova pasta para utilitários, mas fora da pasta "Generators". Renomeamos essa pasta para "Util" e movemos tanto a interface quanto a classe de formatação para lá. Com isso, começamos a organizar e separar nossas classes por funções, deixando o que tem funções semelhantes em locais separados. Isso facilita a compreensão do código para quem o lê e para quem utiliza nossa biblioteca, permitindo entender onde está cada classe e funcionalidade dentro do namespace.
+
+```csharp
+namespace ReportGenerator.Util
+```
+
+**Criando a classe PDFReportGenerator**  
+Com a classe CSVReportGenerator pronta, vamos criar a classe PDFReportGenerator. Clique com o botão direito, adicione uma nova classe, e podemos copiar a CSV e renomeá-la para PDF, alterando seu conteúdo internamente. Assim, ela se tornará PDFReportGenerator.
+
+```csharp
+public class CSVReporterGenerator: IReportGenerator
+```
+
+```csharp
+public class PDFReporterGenerator: IReportGenerator
+```
+
+Observamos que, exceto pelo tipo do arquivo de saída, o que está na CSVReportGenerator também está na PDFReportGenerator. Portanto, faz sentido, além da interface, termos uma classe base que contenha a lógica comum entre as duas classes.
+
+**Criando a classe base ReportGeneratorBase**  
+Vamos criar uma nova classe base chamada ReportGeneratorBase. Adicione um novo item e nomeie-o como ReportGeneratorBase.
+
+```csharp
+internal class ReportGeneratorBase
+{
+}
+```
+
+Assim como o CSV ReportGenerator e o PDF ReportGenerator, a ReportGeneratorBase deve implementar a interface IRReportGenerator. Vamos mantê-la como uma classe interna, mas ela será uma classe abstrata. Portanto, será uma classe abstrata que implementa a IRReportGenerator.
+
+```csharp
+internal abstract class ReportGeneratorBase: IReportGenerator
+```
+
+Em seguida, vamos transferir o que está na interface IRReportGenerator para a nossa nova classe. Solicitamos ao Visual Studio que crie automaticamente os métodos e propriedades existentes, e vamos ajustá-los conforme necessário.
+
+```csharp
+public List<Dictionary<string, string>> Input { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+public string Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+public string Headline { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+public string FooterLine { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+public string GenerateReport()
+{
+    throw new NotImplementedException();
+}
+```
+
+**Implementando a lógica comum na classe base**  
+Não precisamos escrever tudo novamente; podemos copiar da CSV ReportGenerator, que já está pronta. Vamos copiar a propriedade input, title, headline, footer e até mesmo o construtor, e depois mudar o nome dele. Após copiar da CSV ReportGenerator, colamos na base.
+
+```csharp
+public List<Dictionary<string, string>> Input { get; set; }
+public string Title { get; set; }
+public string Headline { get; set; }
+public string FooterLine { get; set; }
+public CSVReporterGenerator(List<Dictionary<string, string>> input)
+{
+    Input = input;
+}
+```
+
+Assim, temos a propriedade input, title, headline, footer e um construtor que recebe o input.
+
+```csharp
+public ReportGeneratorBase(List<Dictionary<string, string>> input)
+{
+    Input = input;
+}
+```
+
+O que está faltando é o método GenerateReport. Como estamos em uma classe abstrata e esse método varia entre a classe CSV e a classe PDF, vamos mantê-lo como abstrato. Dessa forma, as classes CSV e PDF serão responsáveis por implementar esse método de acordo com suas necessidades.
+
+```csharp
+public abstract string GenerateReport();
+```
+
+**Ajustando a classe CSVReportGenerator**  
+Voltando para a classe CSV ReportGenerator, faremos com que ela herde da ReportGeneratorBase. As informações duplicadas já não são mais necessárias.
+
+```csharp
+public class CSVReporterGenerator: ReportGeneratorBase
+```
+
+Podemos também modificar o construtor dela, herdando do construtor base, sem lógica adicional.
+
+```csharp
+public CSVReporterGenerator(List<Dictionary<string, string>> input): base(input)
+{
+}
+```
+
+Vamos deixar apenas o método que realmente interessa para o CSV ReportGenerator, que é o GenerateReport.
+
+O Visual Studio está apresentando um erro. Esse erro ocorre porque mantivemos a ReportGeneratorBase como uma classe interna, e ele indica que a CSV ReportGenerator, que é pública, não pode herdar de uma classe interna, pois ela é menos acessível. Portanto, precisamos alterar a ReportGeneratorBase para pública.
+
+```csharp
+public abstract class ReportGeneratorBase : IReportGenerator
+```
+
+Após salvar, no CSV ReportGenerator, o erro agora indica que não implementa. Precisamos adicionar um public override ao método GenerateReport, indicando que estamos sobrescrevendo o método existente da classe abstrata.
+
+```csharp
+public override string GenerateReport()
+```
+
+Com isso, não há mais erros.
+
+**Implementando a classe PDFReportGenerator**  
+Vamos aplicar o mesmo procedimento à classe PDF. A classe CSV já está pronta, com a lógica implementada. Na classe PDF, faremos com que ela herde da classe ReportGeneratorBase.
+
+```csharp
+public class PDFReporterGenerator: ReportGeneratorBase
+```
+
+No entanto, precisamos implementar a lógica para que o arquivo de saída seja realmente um PDF. Vamos alterar a herança da classe PDF para que ela herde diretamente da ReportGeneratorBase, em vez de ser da interface. Podemos apagar o código desnecessário e modificar o construtor para invocar o construtor da classe base.
+
+```csharp
+public PDFReporterGenerator(List<Dictionary<string, string>> input) : base(input)
+```
+
+Em seguida, começaremos a alterar o método GenerateReport.
+
+```csharp
+public override string GenerateReport()
+```
+
+No .NET, não há uma forma nativa fácil de gerar arquivos PDF. Se utilizarmos apenas os recursos do .NET, o processo será demorado. No entanto, é possível utilizar uma biblioteca utilitária específica para gerar arquivos PDF. É isso que faremos na próxima aula. Vamos explorar como, ao criar uma biblioteca, podemos utilizar outra biblioteca que nos auxilie em nosso propósito.
+
+### Aula 5: Estruturando a plataforma Freelando para melhor organização
+ Próxima Atividade
+
+A plataforma Freelando, que conecta freelancers a contratantes, está em processo de expansão e precisa melhorar a organização de seu código para facilitar a manutenção e o desenvolvimento de novas funcionalidades. A equipe de desenvolvimento decidiu criar uma estrutura de pastas que separe claramente as funcionalidades principais, como gerenciamento de usuários, projetos e pagamentos. No entanto, há uma preocupação sobre como essa reorganização pode impactar a compreensão do código por novos membros da equipe e a integração de novas funcionalidades.
+
+Como a equipe pode estruturar o código da plataforma de forma a melhorar a organização e facilitar a compreensão e manutenção, considerando as boas práticas de desenvolvimento?
+
+Resposta:  
+A equipe pode criar uma estrutura de pastas que separe as funcionalidades principais em diretórios distintos, como "Users", "Projects" e "Payments". Cada diretório pode conter subdiretórios para classes, interfaces e utilitários específicos daquela funcionalidade. Além disso, é importante ajustar os namespaces para refletir essa estrutura, facilitando a navegação e a compreensão do código.
+
+> Correta, pois essa abordagem organiza o código de maneira lógica e clara, permitindo que novos membros da equipe entendam rapidamente onde cada funcionalidade está localizada e como elas se relacionam, além de facilitar a adição de novas funcionalidades sem causar confusão.
+
+### Aula 5: Dependências da biblioteca - Vídeo 2
+
+Transcrição  
+Bem-vindos de volta. Conforme mencionado no último vídeo, vamos criar nossos relatórios em PDF. Para isso, precisamos importar uma biblioteca que nos auxiliará nesse processo. Vamos procurar essa biblioteca clicando com o botão direito em dependências, gerenciar pacotes NuGet, e buscar no repositório público do NuGet. A biblioteca que vamos utilizar é a itext7, que nos ajuda a gerar arquivos PDF. Vamos selecionar essa biblioteca, verificar sua versão mais estável, escolher a versão 8.0 e instalá-la.
+
+Após a instalação, será necessário aceitar os termos e as modificações que serão feitas no projeto. Uma vez instalada, notamos que a itext7 não foi instalada sozinha; outra biblioteca, itext7.comos, foi instalada junto como um pacote transitivo. Este é um bom momento para discutirmos a diferença entre pacotes transitivos e pacotes de referência.
+
+**Explicando pacotes transitivos e de referência**  
+Uma referência dentro de um projeto .NET ocorre quando referenciamos um projeto que já está dentro da mesma solução, como fizemos nas primeiras aulas. Quando utilizamos o NuGet, indicamos que nosso projeto tem dependências de pacotes. No entanto, quando essa dependência de pacotes requer outra biblioteca que é trazida junto, chamamos isso de dependência transitiva. No nosso caso, nosso interesse era a biblioteca itext, mas ela também precisa da itext.comos para funcionar. O mesmo acontecerá quando publicarmos a nova versão da nossa biblioteca. A biblioteca Alura Report Generator trará consigo todas as bibliotecas necessárias para funcionar como dependências transitivas.
+
+**Modificando a classe PDF Report Generator**  
+Voltando ao Visual Studio, com nossa biblioteca criada, vamos para a classe PDF Report Generator e alterar seu código. O código atual gera um CSV, mas precisamos adaptá-lo para gerar um PDF. Vamos começar a partir da Spring Builder Report, apagando o que está lá e reescrevendo nosso método. A verificação do input permanece, e começamos a desenvolver nossa lógica.
+
+Primeiro, vamos criar o método GenerateReport que verificará se o input é válido. Se não for, lançaremos uma exceção. Em seguida, retornaremos o caminho do arquivo gerado. Inicialmente, o método está configurado para retornar um CSV:
+
+```csharp
+public override string GenerateReport()
+{
+    if (Input == null || Input.Count == 0)
+        throw new Exception("Input de dados invalido");
+
+    return Path.GetFullPath("report.csv");
+}
+```
+
+**Criando o documento PDF**  
+Agora, vamos modificar o método para gerar um PDF. Primeiro, criaremos um novo objeto para nossa biblioteca, ignorando as sugestões da licença. Vamos começar criando um PdfWriter que será responsável por escrever o documento PDF:
+
+```csharp
+using var writer = new PdfWriter("report.pdf");
+```
+
+Em seguida, precisamos criar o documento PDF, utilizando o PdfWriter que acabamos de criar:
+
+```csharp
+using var pdf = new PdfDocument(writer);
+```
+
+Agora, vamos criar o documento utilizando a classe Document da biblioteca iText:
+
+```csharp
+using var document = new iText.Layout.Document(pdf);
+```
+
+**Adicionando elementos ao documento PDF**  
+Com o documento criado, podemos começar a adicionar elementos a ele. No CSV, a primeira coisa que fazíamos era definir o título no cabeçalho. Vamos fazer o mesmo agora, verificando se o nosso título está presente:
+
+```csharp
+if(!string.IsNullOrWhiteSpace(Title))
+{
+    var title = new iText.Layout.Element.Paragraph(Title)
+        .SetFontSize(20)
+        .SetBold()
+        .SetMarginBottom(10);
+    document.Add(title);
+}
+```
+
+O próximo passo é verificar se há um headline (cabeçalho). Se houver, adicionamos ao documento:
+
+```csharp
+if(!string.IsNullOrWhiteSpace(HeadLine))
+{
+    var headLine = new iText.Layout.Element.Paragraph(HeadLine)
+        .SetFontSize(16)
+        .SetItalic()
+        .SetMarginBottom(10);
+    document.Add(headLine);
+}
+```
+
+**Criando e preenchendo a tabela de dados**  
+Agora, vamos criar nossa tabela com os dados. Primeiro, criamos a tabela com base no número de colunas que temos:
+
+```csharp
+Table table = new Table(Input.First().Keys.Count);
+```
+
+Para cada elemento, criamos um cabeçalho da tabela, adicionando uma célula de cabeçalho e colocando-a em negrito para destacar o cabeçalho:
+
+```csharp
+foreach (var header in Input.First().Keys)
+{
+    table.AddHeaderCell(new Cell().Add(new Paragraph(header).SetBold()));
+}
+```
+
+Agora, vamos adicionar os dados à tabela. Para cada registro no input, adicionamos os valores às células da tabela:
+
+```csharp
+foreach (var record in Input)
+{
+    foreach (var value in record.Values)
+    {
+        table.AddCell(new Cell().Add(new Paragraph(value)));
+    }
+}
+```
+
+Depois de preencher a tabela, adicionamos a tabela ao documento:
+
+```csharp
+document.Add(table);
+```
+
+**Finalizando o documento PDF**  
+Vamos verificar o footer (rodapé). Se houver um footer, adicionamos ao nosso documento também:
+
+```csharp
+if (!string.IsNullOrWhiteSpace(FooterLine))
+{
+    var footer = new iText.Layout.Element.Paragraph(FooterLine)
+        .SetFontSize(12)
+        .SetMarginTop(10);
+    document.Add(footer);
+}
+```
+
+Por último, precisamos apenas devolver o caminho onde nosso relatório está gravado. Em vez de repost.csv, será repost.pdf:
+
+```csharp
+return Path.GetFullPath("report.pdf");
+```
+
+Assim, já temos a nossa geração de relatórios em PDF e aumentamos as funcionalidades da nossa biblioteca. Agora, nossa biblioteca gera relatórios em CSV e em PDF.
+
+**Próximos passos**  
+No próximo vídeo, vamos verificar como adicionar essa biblioteca, melhorar a documentação para que seja mais clara e utilizada, e colocá-la no Nuget como uma atualização.
+
+### Aula 5: Integração de bibliotecas externas na Freelando- Exercício
+
+A plataforma Freelando, que conecta freelancers a contratantes, está considerando a integração de uma biblioteca externa para melhorar a geração de documentos PDF.
+
+Quais são os fatores que a equipe de desenvolvimento deve considerar ao escolher e integrar essa biblioteca de forma eficiente e segura?
+
+Resposta:  
+A equipe deve considerar a compatibilidade da biblioteca com a tecnologia utilizada na plataforma, a facilidade de uso, a documentação disponível, a comunidade e o suporte oferecido, além da frequência de atualizações e correções de segurança.
+
+> Correta, pois esses fatores garantem que a biblioteca se integre bem ao sistema existente, seja fácil de implementar e mantenha a segurança e a funcionalidade da plataforma.
+
+### Aula 5: Documentando a biblioteca - Vídeo 4
+
+Transcrição  
+Bem, neste vídeo, vamos discutir a importância de documentar o código da nossa biblioteca para disponibilizar essas informações para quem irá utilizá-la. Antes disso, precisamos comentar algo que percebemos durante os testes da nossa biblioteca: a necessidade de adicionar mais uma dependência. Ao tentar executar, surgiu um erro solicitando essa dependência, e tivemos que adicioná-la para que o nosso código funcionasse corretamente. Essa correção se refere ao vídeo anterior.
+
+Dito isso, vamos prosseguir com o tema deste vídeo, que é a documentação do nosso código. Em vídeos anteriores, mencionamos a importância de documentar bem o nosso código, pois quem utilizar a nossa biblioteca precisa saber para que serve cada componente. Com a documentação adequada, até o IntelliSense pode ajudar a gerar código automaticamente. Portanto, é sempre importante documentar bem a sua biblioteca.
+
+**Exemplificando a documentação com o IntelliSense**  
+Por exemplo, ao acessar nossa classe de teste e chamar o import-generator do PDF, podemos observar que o IntelliSense não exibe informações detalhadas. Ele apenas mostra o método de gerar o import, mas não explica sua finalidade, o que ele retorna ou como funciona. Por isso, precisamos documentar bem esse método.
+
+Para isso, vamos até a nossa classe PDF do import-generator, posicionar o cursor sobre ela e digitar a barra três vezes. O Visual Studio automaticamente cria o sumário, e o IntelliSense sugere uma documentação.
+
+**Estruturando a documentação do método**  
+Aqui está um exemplo de como a documentação pode ser estruturada:
+
+```csharp
+/// <summary>
+/// 
+/// </summary>
+/// <returns></returns>
+/// <exception cref="Exception"></exception>
+```
+
+Com essa estrutura básica, podemos começar a detalhar o que o método faz. Vamos adicionar mais informações para que o IntelliSense forneça detalhes úteis:
+
+```csharp
+/// <summary>
+/// Generates a PDF report based on the provided input data, title, headline, and footer.
+/// </summary>
+/// <remarks>
+/// This method creates a PDF file named "report.pdf" in the current working directory.
+/// The report includes: <list type="bullet"><item><description>An optional title displayed at the top of the document.</description></item><item><description>An optional headline displayed below the title.</description></item><item><description>A table containing the input data, with column headers derived from the keys of the first record.</description></item><item><description>An optional footer displayed at the bottom of the document.</description></item></list>The method throws an exception if the input data is null or empty. The generated PDF file's full path is returned as the result.
+/// </remarks>
+/// <returns>The full path to the generated PDF file.</returns>
+/// <exception cref="Exception">Thrown if the input data is null or contains no records.</exception>
+```
+
+**Publicando a nova versão da biblioteca no NuGet**  
+Com a documentação do nosso método pronta, podemos voltar à nossa tarefa. Ao tentar utilizar o Generate-Importes, o IntelliSense já fornece todas as informações sobre essa classe, facilitando para a pessoa desenvolvedora que estiver consumindo a biblioteca entender a finalidade de cada componente.
+
+Portanto, é essencial documentar cada classe e método. Vamos disponibilizar este arquivo já documentado, de modo que, ao utilizá-lo sem acesso ao código-fonte, seja possível entender a finalidade de cada classe. Com essa nova funcionalidade de gerar PDF, já temos uma nova versão da nossa biblioteca.
+
+O próximo passo é publicar novamente no NuGet e verificar como ficou por lá. A primeira coisa a fazer é abrir o gerenciador de soluções e ajustar o nome do projeto. Vamos agora alterar o número da versão. Lembrando que, em relação à numeração de versão, temos o major, o minor e os patches. O major é a versão principal, que deve ser alterada quando uma atualização gera incompatibilidade com versões anteriores. Não é o nosso caso, pois criamos a funcionalidade de gerador de relatório PDF, mas mantivemos a funcionalidade de relatório CSV funcionando como antes.
+
+**Ajustando a versão e realizando o push no NuGet**  
+Nós não alteramos a forma de funcionamento. Portanto, mantemos a versão como 1.0, mas, como adicionamos uma nova funcionalidade, incrementamos a versão minor. Agora estamos na versão 1.1. Como não foi necessário, no momento, fazer nenhuma correção de bug ou atualização de segurança, mantemos como 1.1.0. Aqui temos a nossa nova versão da biblioteca:
+
+```csharp
+<Version>1.1.0</Version>
+```
+
+Clicamos com o botão direito sobre o nome do projeto e escolhemos a opção de pacote, que gera um novo pacote. Agora, o pacote está na versão 1.1. O que falta fazer agora é rodar novamente o comando do Nuget para realizar a publicação. Vamos para o PowerShell e escrevemos normalmente aquele comando. Uma vez no PowerShell, digitamos o comando:
+
+```csharp
+dotnet nuget push ReportGenerator\bin\Debug\Alura_ReportGenerator.1.1.0.nupkg --source "https://api.nuget.org/v3/index.json" --api-key oy2lvirgvac...
+```
+
+**Aguardando a validação e discutindo versionamento semântico**  
+O caminho do nosso pacote, que agora está na versão 1.1.0, é o src, que é a fonte, o feed público do Nuget, api.nuget.org/v3/index.json, e a nossa API aqui. Com tudo isso digitado, pressionamos "Enter" e fazemos o push. Mensagem de sucesso: nosso pacote já foi enviado e atualizado.
+
+Agora, como mencionado anteriormente, aguardamos dois minutos, que é o tempo que o Nuget leva para lidar com o pacote, e verificamos como ele está disponível no feed do Nuget. No site do Nuget, ao acessar os detalhes do nosso pacote, vemos que o pacote 1.1.0 já foi enviado, mas está em validação. Aguardamos ele sair do status de validação para o status de listado. Isso levará mais alguns minutos, que é o tempo necessário para o nosso pacote ficar disponível.
+
+Enquanto esperamos a nova versão do nosso pacote ficar disponível, é importante relembrar o conceito de versionamento semântico, já comentado anteriormente. O que significa cada parte: a parte major, que é o primeiro número, indica mudanças evolutivas, ou seja, uma nova versão do produto que não é mais compatível com a versão anterior, como passar de 1.0 para 2.0 e assim por diante:
+
+```csharp
+MAJOR - mudanças incompatíveis.
+```
+
+O versionamento minor, que é o número no meio, entre os pontos, é usado quando fazemos atualizações, adicionamos novas funcionalidades, mas mantemos a compatibilidade com a versão imediatamente anterior:
+
+```csharp
+MINOR - novas funcionalidades compatíveis.
+```
+
+O último número da versão é utilizado para publicar um patch de atualização, quando algum bug é descoberto ou uma falha de segurança é resolvida, enumerando esses patches:
+
+```csharp
+PATCH - correções de bugs.
+```
+
+Esses são conceitos que devemos ter em mente ao publicar nosso pacote, para que o usuário perceba quando é necessário realmente fazer a atualização ou não. Se disponibilizamos um patch, o usuário saberá que é preciso atualizar, pois algo foi resolvido. Se mudamos apenas o minor, ele poderá avaliar se vale a pena atualizar agora ou não. Quando mudamos para algo totalmente incompatível, é necessário ter ainda mais cuidado ao atualizar a biblioteca, pois os impactos podem ser maiores e causar erros não previstos. Nesse caso, é preciso realizar testes antes de colocar em produção.
+
+É isso, pessoal. Estamos terminando nosso curso. Nos vemos em breve.
+
+### Aula 5: Para saber mais: template method para relatórios
+
+**Introdução ao Template Method**  
+O padrão Template Method é uma abordagem de design orientado a objetos que define o esqueleto de um algoritmo em uma classe abstrata. Esse padrão permite que as classes derivadas implementem comportamentos específicos em determinados pontos, sem modificar a estrutura geral do algoritmo. Essa técnica é muito útil em cenários onde há partes do processamento que se repetem, como na geração de relatórios, mas onde diferentes formatos exigem implementações particulares em alguns passos.
+
+**Funcionamento e Exemplo Prático**  
+Na prática, uma classe base abstrata estabelece um método que orquestra todas as etapas necessárias para a geração de um relatório. Esse método – o template – chama, em uma sequência definida, métodos que podem ser concretizados pelas classes especializadas. Por exemplo, a classe abstrata pode definir um método GenerateReport que executa etapas como preparar os dados, formatar cabeçalho e rodapé, e montar o conteúdo principal do relatório. Em seguida, as classes derivadas implementam os detalhes de cada uma dessas partes, seja para gerar um arquivo CSV, um PDF ou outro formato.
+
+Veja um exemplo simplificado em C#:
+
+```csharp
+public abstract class ReportGenerator
+{
+    // Método template que define o fluxo do algoritmo
+    public void GenerateReport()
+    {
+        LoadData();
+        FormatHeader();
+        GenerateContent();
+        FormatFooter();
+    }
+
+    // Métodos que serão implementados pelas classes derivadas
+    protected abstract void LoadData();
+    protected abstract void FormatHeader();
+    protected abstract void GenerateContent();
+    protected abstract void FormatFooter();
+}
+```
+
+Nesse exemplo, a classe base centraliza a lógica de fluxo do relatório, enquanto permite que cada subtarefa seja personalizada de acordo com as necessidades do formato específico.
+
+**Benefícios e Considerações da Abordagem**  
+Entre as principais vantagens desse padrão, destacam-se:
+
+Reutilização e Organização: Ao encapsular o fluxo comum em uma classe base, o código se torna mais organizado e facilita a manutenção, pois alterações no fluxo padrão precisam ser realizadas em apenas um local.
+
+Flexibilidade Controlada: As classes derivadas têm a liberdade de definir comportamentos específicos para cada etapa, mantendo a consistência do processo global. Isso ajuda a evitar duplicações e promove a padronização do algoritmo de geração de relatórios.
+
+Por outro lado, é importante ter cuidado com:
+
+Rigidez na Estrutura: Caso o algoritmo exija muitas variações ou etapas dinâmicas, o padrão pode se tornar muito rígido, obligando as classes derivadas a seguir uma estrutura que nem sempre se adapta a todos os cenários.
+
+Acoplamento com a Estrutura Base: Alterações significativas na classe base podem impactar diversas implementações derivadas, o que exige uma boa análise de design antes de adotar essa abordagem.
+
+Em resumo, o Template Method é uma ferramenta poderosa para definir estruturas comuns e promover a reutilização de código, especialmente em contextos de geração de relatórios com múltiplos formatos. A escolha desse padrão deve levar em conta o equilíbrio entre a padronização do fluxo e a necessidade de flexibilidade em cada etapa específica.
+
+### Aula 5: Faça como eu fiz: atualizar biblioteca
+
+Nesta aula, vimos como estruturar e aprimorar uma biblioteca, integrando a geração de PDF e aplicando boas práticas de organização e documentação.
+
+Agora é a sua vez de reproduzir esses passos. Para isso:
+
+- Organize o projeto criando pastas para geradores e utilitários e ajuste os namespaces das classes.
+- Crie uma classe base abstrata e faça com que as classes CSV e PDF herdem dela, centralizando a lógica comum.
+- Integre a biblioteca iText7 via NuGet e implemente a lógica de geração do relatório em PDF.
+- Documente os métodos e atualize a versão do pacote, realizando o push da nova versão no NuGet.
+
+Se tiver alguma dúvida, contate-nos no fórum ou no Discord!
+
+### Aula 5: Projeto final
+
+Nesta aula, nós organizamos nossa biblioteca conforme boas práticas de projeto, evoluímos as funcionalidades da biblioteca ao adicionar o gerador de relatórios em PDF e documentamos tudo para publicar a nova versão. Para conferir o projeto completo, [acesse o repositório do curso no GitHub.](https://github.com/alura-cursos/AluraReportGenerator/tree/video_5.3)
+
+### Aula 5: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A importância de organizar projetos de software em pastas e utilizar namespaces para melhorar a clareza e manutenção do código.
+- A implementar a herança e classes abstratas em C#, criando uma estrutura comum para diferentes geradores de relatórios com métodos abstratos.
+- A integrar bibliotecas de terceiros, como o iText7 para geração de PDFs, utilizando o gerenciador de pacotes Nuget.
+- A gerar relatórios em PDF, incluindo títulos, cabeçalhos, tabelas e rodapés, assegurando que o arquivo final está correto.
+- A documentar o código utilizando comentários de barra tripla para gerar documentação XML e enriquecer a API.
+- A atualizar versões de bibliotecas seguindo o versionamento semântico e o impacto na comunicação de mudanças aos usuários.
+O processo de publicação de pacotes no Nuget, utilizando o comando .NET nuget push e entendendo o tempo de validação necessário.
+- A adicionar e resolver dependências transitivas necessárias para o correto funcionamento das bibliotecas, usando exemplos práticos.
+
+### Aula 5: Conclusão - Vídeo 8
+
+Transcrição  
+Parabéns! Chegamos ao final do nosso curso. Ao longo desta jornada, aprendemos o que são bibliotecas, como utilizá-las e consumi-las a partir de vídeos, como criar nossa própria biblioteca, como mencioná-la e lidar com ela, além de abordar a divulgação de versões e boas práticas para a divulgação de nossa biblioteca.
+
+Agora, esperamos que realizem um bom exercício e verifiquem qual é a nossa biblioteca.
+
+Caso surjam dúvidas, por favor, escolha a opção desejada. Agradecemos e até a próxima!

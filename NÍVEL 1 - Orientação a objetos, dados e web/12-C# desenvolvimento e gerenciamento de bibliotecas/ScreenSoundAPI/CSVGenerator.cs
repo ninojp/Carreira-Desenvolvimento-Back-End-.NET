@@ -1,5 +1,6 @@
 ﻿namespace ScreenSoundAPI;
-using ReportGenerator;
+
+using ReportGenerator.Generators;
 
 internal class CSVGenerator : CSVReporterGenerator
 {

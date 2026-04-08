@@ -1,4 +1,4 @@
-﻿using ReportGenerator;
+﻿using ReportGenerator.Generators;
 
 List<Dictionary<string, string>> data = new()
 {
@@ -22,10 +22,18 @@ List<Dictionary<string, string>> data = new()
     }
 };
 
-CSVReporterGenerator reportGenerator = new(data);
-reportGenerator.Title = "Relatório de Pessoas";
-reportGenerator.HeadLine = "Lista de pessoas cadastrados no sistema";
-reportGenerator.FooterLine = $"Total de pessoas: {data.Count}";
+//CSVReporterGenerator reportGenerator = new(data);
+//reportGenerator.Title = "Relatório de Pessoas";
+//reportGenerator.HeadLine = "Lista de pessoas cadastrados no sistema";
+//reportGenerator.FooterLine = $"Total de pessoas: {data.Count}";
 
-string caminhoRelatorio = reportGenerator.GerarRelatorio();
-Console.WriteLine($"Relatório gerado em: {caminhoRelatorio}");
+//string caminhoRelatorio = reportGenerator.GerarRelatorio();
+//Console.WriteLine($"Relatório em CSV gerado em: {caminhoRelatorio}");
+
+PDFReportGenerator pdfReportGenerator = new(data);
+pdfReportGenerator.Title = "Relatório de Pessoas";
+pdfReportGenerator.HeadLine = "Lista de pessoas cadastrados no sistema";
+pdfReportGenerator.FooterLine = $"Total de pessoas: {data.Count}";
+
+string caminhoRelatorioPDF = pdfReportGenerator.GerarRelatorio();
+Console.WriteLine($"Relatório em PDF gerado em: {caminhoRelatorioPDF}");

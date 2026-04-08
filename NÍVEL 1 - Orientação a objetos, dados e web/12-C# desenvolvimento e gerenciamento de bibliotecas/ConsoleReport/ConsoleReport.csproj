@@ -11,4 +11,10 @@
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="itext" Version="9.6.0" />
+    <PackageReference Include="itext.commons" Version="9.6.0" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.6.0" />
+  </ItemGroup>
+
 </Project>

@@ -1,19 +1,12 @@
-﻿using System.Text;
+﻿using ReportGenerator.Utils;
+using System.Text;
 
-namespace ReportGenerator;
+namespace ReportGenerator.Generators;
 
-public class CSVReporterGenerator : IReportGenerator
+public class CSVReporterGenerator : ReportGeneratorBase
 {
-    public List<Dictionary<string, string>> InputDados { get; set; }
-    public string Title { get; set; }
-    public string HeadLine { get; set; }
-    public string FooterLine { get; set; }
-
-    public CSVReporterGenerator(List<Dictionary<string, string>> input)
-    {
-        InputDados = input;
-    }
-    public string GerarRelatorio()
+    public CSVReporterGenerator(List<Dictionary<string, string>> input) : base(input){ }
+    public override string GerarRelatorio()
     {
         if (InputDados == null || InputDados.Count == 0) throw new Exception("Input de Dados Inválido!");
         StringBuilder relatorio = new();

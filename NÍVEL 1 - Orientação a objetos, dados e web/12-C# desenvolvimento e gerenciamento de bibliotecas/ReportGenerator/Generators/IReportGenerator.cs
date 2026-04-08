@@ -1,4 +1,4 @@
-﻿namespace ReportGenerator;
+﻿namespace ReportGenerator.Generators;
 /// <summary>
 /// Interface para geração de relatórios.
 /// </summary>

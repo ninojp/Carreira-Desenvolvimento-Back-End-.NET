@@ -1,4 +1,4 @@
-﻿namespace ReportGenerator;
+﻿namespace ReportGenerator.Utils;
 
 internal class DataFormatter : IDataFormatter
 {
