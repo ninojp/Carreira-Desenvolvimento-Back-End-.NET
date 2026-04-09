@@ -1,0 +1,42 @@
+GUIA BÁSICO NO LINK... 
+https://guilhermeonrails.github.io/manual-do-git-e-github/
+
+0 - Para clonar, trazer todos os arquivo da origem, gitHub.com (vou vir no botão "Code" e copiar a URL que ele mostra nesse campo que apareceu.) para nosso PC. No terminal entre no diretório a ser colocado os arquivos e execute o comando
+GIT CLONE URLDOREPOSITÓRIO
+
+0.1 - Para atualizar nosso repositório LOCAL, usamos o git pull, para puxar todas as atualizações do repositório ORIGEM (site github.com)
+GIT PULL 
+
+1 - Para verificar as modificações realizadas:
+Utilize o comando git status, ele serve para listar todos os arquivos que foram modificados.
+GIT STATUS
+GIT LOG
+GIT LOG ONELINE
+
+2 - Para adicionar as mudanças ao seu repositório local:
+Para adicionar todas as modificações realizadas de uma só vez, é necessário usar git add . (git add e um ponto) e, para adicionar as mudanças em algum arquivo específico, usa-se git add nome-do-arquivo-alterado.
+GIT ADD .
+
+3 - Para salvar as alterações:
+Utilize o comando git commit, ele é usado quando queremos capturar e salvar o estado atual do repositório.
+GIT COMMIT -M "MENSAGEN DESCRITIVA"
+
+4 - Para enviar as modificações ao repositório remoto:
+Utilize o comando git push, ele é utilizado para envio das alterações gravadas no diretório local para o repositório remoto.
+GIT PUSH ORIGIN NOMEDOBRANCH
+
+4.5 - O git restore vai fazer a gente voltar para um determinado momento da aplicação. Mas preciso indicar para ele qual hash vamos utilizar. Para indicar qual hash vamos utilizar vou colocar --source e vou passar o hash com aqueles caracteres que copiei do commit que o Paulo fez:
+GIT RESTORE --SOURCE a0c893b (hash do commit)
+
+5 - Vamos lá, como criar uma branch diferente? No terminal, vamos colocar o comando git checkout, -bpara criar a branch e chamarei essa branch de "desenvolvimento":
+GIT CHECKOUT -B NOME DO BRANCH
+
+6 - Se você quiser voltar para a branch principal pode usar o comando git switch main. E para voltar para a branch de desenvolvimento: git switch desenvolvimento.
+GIT SWITCH NOMEDOBRANCH
+
+7 - No terminal, para visualizar todas as branches que tenho, posso rodar o comando git branch. O git branch vai mostrar as branches que estão disponíveis nesse projeto e em qual branch eu estou. A branch que estou é a que está marcada com um asterisco (*).
+GIT BRANCH
+
+8 -  Entrar  na branch principal (main, ou a q eu quero mesclar com a Outra), vou rodar o comando git merge com o nome da branch que quero juntar, que é a desenvolvimento:
+GIT MERGE NOMEDOBRANCH (Nome da brach a ser MESCLADA com a atual, q estou)
+GIT PUSH ORIGIN NOMEDOBRANCH (main, branch q foi mesclada)
