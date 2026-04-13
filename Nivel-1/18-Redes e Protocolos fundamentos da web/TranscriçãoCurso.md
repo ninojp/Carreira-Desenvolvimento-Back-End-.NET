@@ -379,29 +379,30 @@ Nesta aula, aprendemos:
 
 ### Aula 2: Modelo cliente-servidor - Vídeo 1
 
-Transcrição
+Transcrição  
 Já compreendemos como funciona toda a infraestrutura da web, desde o processo em que uma solicitação do navegador chega ao servidor e retorna como uma resposta. Exploramos diversos aspectos desse processo, incluindo o funcionamento dos modelos de rede, o protocolo TCP/IP, a resolução de DNS, entre outros. Para que tudo isso funcione adequadamente, as aplicações que desenvolvemos para a internet precisam estar alinhadas com essas funcionalidades.
 
 O modelo de aplicação web possui particularidades distintas de uma aplicação console ou desktop, pois precisa operar em conjunto com a internet. Vamos explorar a construção dessas aplicações. Em geral, as aplicações seguem um modelo chamado cliente-servidor. Este modelo é composto por um cliente, que solicita os recursos, e um servidor, que disponibiliza esses recursos para a aplicação.
 
-Exemplificando o modelo cliente-servidor
+Exemplificando o modelo cliente-servidor  
 Um exemplo comum de projeto que utiliza o modelo cliente-servidor são os jogos online. Quando baixamos e jogamos um jogo como Fortnite, por exemplo, o cliente é a parte que está instalada em nossos dispositivos, enquanto o servidor gerencia o jogo para todos os jogadores simultaneamente. Essa distinção entre uma aplicação local que se comunica pela internet e um repositório central que gerencia tudo é o que chamamos de aplicação cliente-servidor.
 
 É comum ouvirmos que um jogo "caiu" quando a empresa responsável desativa os servidores, fazendo com que o jogo online deixe de funcionar, pois os recursos online não estão mais disponíveis. No modelo cliente-servidor, o servidor, geralmente controlado pela empresa desenvolvedora do jogo, é responsável por manter o funcionamento dos recursos online.
 
-Funcionamento do modelo cliente-servidor
+Funcionamento do modelo cliente-servidor  
 Resumidamente, o modelo cliente-servidor é uma forma de criar aplicações onde existem dois atores principais: o cliente, que consome os serviços e solicita sua disponibilização, e o servidor, que fornece esses serviços. Isso pode ocorrer em um navegador, em uma aplicação móvel ou desktop que utiliza recursos da internet.
 
 Vamos entender melhor como o modelo cliente-servidor funciona. Basicamente, ele não difere muito do processo de uma aplicação web ou do funcionamento geral da internet.
 
-Hospedando uma aplicação web
+Hospedando uma aplicação web  
 Temos a possibilidade de o usuário digitar uma URL ou acessar uma página da aplicação móvel, o que desencadeará o efeito de o recurso ser solicitado a um servidor. Esse servidor processará a solicitação e enviará uma resposta de volta, seja no navegador ou no aplicativo.
 
 Agora, vamos hospedar uma aplicação para entender como funciona a questão de uma aplicação cliente-servidor. Estamos utilizando um HTML padrão, index.html, com uma aplicação simples, apenas um HTML com um CSS mínimo, contendo a mensagem "Hello World". Nada muito diferente do que já vimos em front-end. A única preocupação aqui é o uso de uma extensão que permitirá hospedar esta aplicação.
 
-Visualizando o código HTML
+Visualizando o código HTML  
 Para ilustrar isso, vamos ver o código HTML que estamos utilizando:
 
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -429,31 +430,327 @@ Para ilustrar isso, vamos ver o código HTML que estamos utilizando:
     <h1>Olá, Mundo!</h1>
 </body>
 </html>
-Copiar código
-Explicando o conceito de hospedagem
+```
+
+Explicando o conceito de hospedagem  
 O que significa hospedar esta aplicação? Diferentemente de uma aplicação desktop, que é instalada, uma aplicação web é hospedada. Isso significa que ela será colocada dentro de um servidor, que gerenciará os recursos necessários para disponibilizar o serviço da aplicação.
 
 Vamos entender isso melhor. Temos um HTML que é o conteúdo que queremos disponibilizar para que os clientes vejam. Se clicarmos no Visual Studio, no canto superior direito, em "Show Preview", que vem da extensão Live Preview, comumente utilizada para testar aplicações web no Visual Studio Code, ele apresentará um navegador mais simples. Poderíamos pegar esse endereço e colocá-lo no Chrome, sem problemas. Aqui, ele indica que a aplicação está hospedada em um endereço específico e em uma porta.
 
-Detalhando o uso de portas e protocolos
+Detalhando o uso de portas e protocolos  
 O protocolo utilizado é o HTTP, e ele mostra o endereço local, localhost 127.0.0.1, nosso IP. Utiliza a porta 3000, e é importante saber que há uma diferença entre uma porta local e a porta externa, que é a porta 80 do HTTP. Não devemos confundir isso. Quando falamos de porta local, não há problema em não ser a porta 80. Na internet, devemos usar a porta 80 para HTTP ou a porta 443 para HTTPS.
 
 O navegador está sendo o cliente que acessa o servidor hospedado neste endereço, que devolverá um conteúdo. A resposta desse conteúdo, além da mensagem definida pelo protocolo HTTP, inclui o HTML e o conteúdo processado por este HTML renderizado pelo navegador.
 
-Concluindo sobre o modelo cliente-servidor
+Concluindo sobre o modelo cliente-servidor  
 Devemos entender que, nesse modelo, não há instalação de aplicações. Não há o modelo de baixar um aplicativo. Temos um modelo de cliente e servidor, onde o cliente solicita um serviço através da URL, e um serviço hospedado devolve o recurso solicitado.
 
 Para que essa comunicação entre cliente e servidor funcione com todos os tipos de aplicações, precisamos de um meio comum que permita solicitar um recurso e recebê-lo no formato correto para processamento nos navegadores. Isso é possível graças ao protocolo HTTP, que veremos com mais detalhes agora.
 
-### Aula 2:  - Vídeo 2
-### Aula 2:  - Vídeo 3
-### Aula 2:  - Vídeo 4
-### Aula 2:  - Vídeo 5
-### Aula 2:  - Vídeo 6
-### Aula 2:  - Vídeo 7
-### Aula 2:  - Vídeo 8
-### Aula 2:  - Vídeo 9
-### Aula 2:  - Vídeo 10
-### Aula 2:  - Vídeo 11
-### Aula 2:  - Vídeo 12
-### Aula 2:  -
+### Aula 2: Protocolo HTTP - Vídeo 2
+
+Transcrição  
+Agora que já entendemos o modelo de aplicações web e a necessidade de construir uma aplicação que siga o padrão cliente-servidor, vamos abordar o meio de comunicação que precisa existir entre as duas partes para que a aplicação seja funcional: o protocolo HTTP. Precisamos seguir esse protocolo para que nossa aplicação funcione corretamente.
+
+Podemos pensar nisso como a construção de uma casa. Ao construir uma casa, precisamos seguir alguns protocolos ao iniciar a estrutura. Seguimos algumas plantas para garantir que tenhamos o mesmo modelo. Por convenção, temos uma planta elétrica, uma planta hidráulica, e elas geralmente têm o mesmo formato. Por exemplo, uma planta hidráulica para uma cozinha sempre considera os mesmos elementos: uma casa sempre terá um chuveiro, uma pia e um tanque. Assim, existe uma estrutura comum, convencionada entre as casas. Mesmo que existam mil modelos de casas diferentes, umas mais luxuosas, outras mais simples, elas geralmente seguem o mesmo padrão, o mesmo modo de comunicação entre as partes para garantir que o plano da aplicação esteja funcionando corretamente.
+
+Explorando a evolução do HTTP  
+Essa mesma estrutura é aplicada quando seguimos o padrão do protocolo HTTP. É uma convenção iniciada para que a internet funcione de maneira eficaz, e ela evoluiu ao longo do tempo. Temos novas maneiras de comunicação dentro do protocolo HTTP, mas o mais importante é que todos na internet sigam esse protocolo.
+
+Para entender um pouco do cenário histórico, é importante saber que o HTTP foi inventado na década de 1990, no projeto da World Wide Web, que visava permitir que universidades compartilhassem dados de seus laboratórios e centros de pesquisa. O HTTP passou por várias alterações ao longo do tempo. Temos o HTTP 1.0, a primeira versão, e em 1999 foi lançado o HTTP 1.1, um dos modelos mais utilizados até hoje. Em 2015, houve a adoção do HTTP 2.0, e em 2020, o lançamento do HTTP 3.0.
+
+Verificando versões do HTTP com curl  
+Como podemos verificar essas versões do HTTP? No terminal, podemos verificar o uso do HTTP. Vamos fazer um teste. No terminal, no prompt de comando, utilizamos o comando curl para iniciar o processo de requisição.
+
+> curl
+
+Para obter mais informações sobre a requisição que estamos fazendo, utilizamos o comando curl -v.
+
+> curl -v
+
+Agora, vamos fazer uma requisição específica para o site da Alura usando curl -v alura.com.br. Isso nos permitirá ver todas as informações da requisição, como cliente acessando o servidor da Alura.
+
+> curl -v alura.com.br
+
+Ele mostra todas as informações da requisição, como cliente acessando o servidor da Alura. Apresenta informações relacionadas ao TCP e IP, indicando que não há IPv6, mas mostra os IPs do IPv4, a conexão TCP com a Alura na porta 80, e a versão do HTTP utilizada para acessar o recurso do DNS alura.com.br.
+
+Entendendo a estrutura das requisições HTTP  
+Ali, a partir do método GET, utilizamos o HTTP como protocolo para nos comunicarmos com um determinado endereço. Precisamos seguir esse padrão, semelhante a um envelope que deve seguir um formato específico para ser enviado pelo correio. O processo começa com o GET, seguido por HTTP 1.1, o host, que funciona como um endereço.
+
+> GET / HTTP/1.1
+
+Enviamos uma requisição para o Alura.com.br, e o agente que está solicitando essa requisição é o curl na versão 8.14. Aqui, temos o mínimo necessário do protocolo: quem está enviando a requisição, para onde está sendo enviada, o tipo de requisição e a versão do HTTP.
+
+```cmd
+GET / HTTP/1.1
+Host: alura.com.br
+User-Agent: curl/8.14.1
+Accept: */*
+```
+
+Utilizando DevTools para inspecionar requisições  
+No terminal, podemos ver o básico de como o protocolo HTTP funciona. No navegador, também conseguimos visualizar informações sobre o funcionamento da web e dos protocolos HTTP através do DevTools. Ao inspecionar o site, o DevTools mostra uma série de informações. Na barra de opções do DevTools, clicamos em "rede" e atualizamos a página da Alura para obter a primeira informação desejada, que é o acesso ao Alura.com.br. Na seção de rede, há opções de protocolo. Se não estiver visível no DevTools, basta clicar com o botão direito para acessar todas as opções disponíveis. Selecionamos "protocolo" para visualizar como todos os pacotes foram requisitados no navegador.
+
+Podemos observar que todos os pacotes, sejam CSS, o site em si, imagens SVG ou PNG, foram requisitados pelo protocolo HTTP na versão 3. Descendo a lista, podemos encontrar outras versões, como HTTP 2 ou até mesmo HTTP 1.1, como fizemos anteriormente com o curl. Mesmo com protocolos em versões diferentes em operação, as versões mais antigas ainda são utilizadas e mantidas na internet. Embora existam versões mais novas e atualizadas, elas não são necessariamente utilizadas o tempo todo para fazer requisições. Sempre é possível verificar qual versão do HTTP está sendo utilizada, pois a requisição indicará o protocolo em uso. Podemos verificar isso pelo DevTools ou pelo terminal usando o curl.
+
+Concluindo a importância do protocolo HTTP  
+Entendemos que precisamos utilizar um protocolo para nos comunicarmos com os servidores na internet. Além disso, é necessário seguir esse protocolo, não apenas conhecendo o endereço, mas também enviando a mensagem correta no protocolo adequado e recebendo uma resposta correta da informação passada para nós como clientes. Com o curl, já temos uma noção de como funciona a requisição e a resposta. No entanto, há muitos detalhes sobre a estrutura dessas requisições e respostas, que é o que vamos explorar agora.
+
+### Aula 2: Para saber mais: o projeto World Wide Web (WWW)
+
+A história do projeto World Wide Web (WWW) começa no final da década de 1980, dentro do CERN (Organização Europeia para a Pesquisa Nuclear), em Genebra. O físico britânico Tim Berners-Lee identificou um problema recorrente entre os pesquisadores: a dificuldade de compartilhar e acessar informações de maneira eficiente, já que os documentos estavam dispersos em diferentes computadores, sistemas e formatos. Sua ideia foi criar um ambiente universal de informações interligadas por meio de hipertexto, capaz de conectar documentos e facilitar a navegação entre eles.
+
+Em 1989, Berners-Lee elaborou a proposta inicial do projeto, que não apenas visava organizar documentos científicos, mas também permitir que diferentes pessoas pudessem acessar, editar e interconectar conteúdos de forma colaborativa. O conceito de hipertexto não era novo, mas sua aplicação em redes distribuídas foi inovadora. Em 1990, ele desenvolveu os três componentes fundamentais: o HTML (linguagem de marcação para estruturar documentos), o HTTP (protocolo de transferência de hipertexto) e o primeiro navegador/editor, chamado WorldWideWeb (depois renomeado Nexus). Ao mesmo tempo, criou o primeiro servidor web, o CERN httpd, e publicou a primeira página da web, que explicava o próprio projeto.
+
+A web começou como uma ferramenta interna do CERN, mas em 1991 foi aberta ao público externo, inicialmente voltada para a comunidade acadêmica. A simplicidade de seu modelo — documentos conectados por links acessíveis a partir de qualquer computador conectado à rede — fez com que rapidamente ultrapassasse as fronteiras científicas. Em 1993, com o lançamento do navegador gráfico Mosaic, desenvolvido no NCSA (National Center for Supercomputing Applications), a web ganhou popularidade, tornando-se acessível a um público mais amplo e fomentando o surgimento de sites fora do meio acadêmico.
+
+O impacto da World Wide Web foi tão profundo que transformou radicalmente a forma de comunicação, pesquisa, comércio e entretenimento. Tim Berners-Lee sempre defendeu que a web deveria ser uma plataforma aberta, gratuita e de acesso universal, o que garantiu sua expansão exponencial. Desde então, a web evoluiu de simples páginas estáticas para ambientes dinâmicos e interativos, passando pela Web 2.0 (redes sociais, colaboração em massa) e chegando hoje a aplicações de inteligência artificial, realidade virtual e descentralização com a Web3.
+
+Referências  
+
+- “Information Management: A Proposal” – documento original de Tim Berners-Lee (1989), disponível no site do CERN.
+
+- World Wide Web Consortium (W3C) – organização fundada por Berners-Lee em 1994 para estabelecer [padrões abertos para a web](https://www.w3.org/)
+
+- Livro “Weaving the Web”, escrito por Tim Berners-Lee, no qual ele narra a concepção e os primeiros anos do projeto.
+Documentos históricos sobre o navegador Mosaic e seu papel na popularização da internet.
+
+### Aula 2: Requisições e respostas - Vídeo 3
+
+Transcrição  
+A necessidade de utilizar o protocolo HTTP é fundamental para que possamos criar aplicações funcionais na internet. Quando falamos sobre a utilização do protocolo HTTP, precisamos entender que é necessário sempre comunicar uma requisição e obter uma resposta. Para isso, as requisições possuem um formato que precisa ser enviado adequadamente. Vamos entender um exemplo de requisição HTTP. Já vimos anteriormente como trabalhar com uma requisição utilizando uma URL, mas aqui temos outro exemplo de como funciona estruturalmente uma requisição HTTP.
+
+Basicamente, a requisição HTTP funciona através de um cliente HTTP que envia a mensagem. Temos aqui o método GET e a URI que está sendo enviada para aquele recurso. É importante saber a diferença entre URI e URL. Aqui temos o nosso host, que é a composição do host com o endereço que vem em seguida. Essa é a URL de fato, mas temos a composição do host e da URI, além do protocolo utilizado, que é o HTTP 1.1, e o user agent, que é basicamente o que estamos utilizando para fazer a requisição. Anteriormente, estávamos usando a URL e ela mostrou que era um agente diferente. Aqui, utilizamos uma extensão do Visual Studio chamada Thunder Client, que permite simular um cliente HTTP dentro da nossa aplicação.
+
+Demonstrando requisições HTTP com Thunder Client  
+Para ilustrar, veja o exemplo de uma requisição GET utilizando o Thunder Client:
+
+```cmd
+GET /sets/2ec77b94-6d47-4891-a480-5d0b4e5c9372 HTTP/1.1
+Host: api.scryfall.com
+User-Agent: Thunder Client (https://www.thunderclient.com)
+```
+
+Vamos entender como funciona essa parte da requisição HTTP dentro do navegador e quais outras ferramentas podemos utilizar para entender melhor o funcionamento de uma requisição. No navegador, podemos inspecionar o site da Alura. Ao acessar a rede, podemos limpar e atualizar a requisição, carregando todos os pacotes necessários para a página. Ao clicar em Alura, podemos ver no DevTools algumas informações, principalmente os cabeçalhos de requisição, que permitem enviar a mensagem e obter uma resposta. Conseguimos ver informações como a URL requisitada, o método e o código de status. Isso será melhor explicado quando falarmos sobre respostas HTTP, mas já conseguimos obter algumas informações da requisição.
+
+Explorando ferramentas para requisições HTTP  
+Se quisermos entender melhor, o DevTools apresenta uma visão ampla de tudo que foi requisitado e respondido, mas não fica tão claro como enviar de fato aquele cabeçalho HTTP com as informações necessárias. Vamos usar uma ferramenta diferente que ajuda a ver o mínimo necessário para fazer uma requisição HTTP: o Postman. O Postman é uma das ferramentas mais utilizadas como cliente HTTP, permitindo testar sites, APIs ou outros tipos de aplicações que trabalham com a internet, testando nos mínimos detalhes o comportamento do protocolo HTTP.
+
+No Postman, ao criar uma nova requisição, podemos escrever a URL desejada, como http://www.alura.com.br, e clicar em enviar. Ele fará a requisição e devolverá o HTML daquela requisição. No botão de preview, podemos ver o HTML, mas ele não é renderizado completamente, pois no momento da requisição, o preview não carrega todos os pacotes de CSS, JavaScript e imagens, apenas o HTML puro. Os outros pacotes vêm em sequência. Por isso, comentamos que a transferência de dados precisa ser ordenada, recebendo primeiro o HTML e depois as outras informações.
+
+Utilizando o Postman para requisições HTTP  
+No canto superior direito, há um símbolo de código, semelhante a uma tag HTML. Ao clicar nele, podemos ver como executar essa requisição através de outros mecanismos. O principal mostrado é o curl, que usamos no terminal. Podemos copiar esse comando e executá-lo no terminal para obter o mesmo resultado. No entanto, o curl não é o ponto mais importante. Acima da linha que apresenta o curl, há um drop-down com várias linguagens de programação, como C#, Java, JavaScript, Kotlin, Node.js, entre outras. O mais importante no momento é o HTTP, pois ao clicar nele, conseguimos ver a requisição HTTP mais pura possível. Com isso, vemos exatamente o exemplo de mensagem solicitado anteriormente:
+
+```cmd
+GET / HTTP/1.1
+Host: www.alura.com.br
+```
+
+Já entendemos como funciona o mínimo para fazer uma requisição HTTP. A partir dessa requisição, podemos obter os recursos necessários a partir de um endereço específico. Precisamos entender algumas coisas sobre o cabeçalho da requisição HTTP. Primeiro, indicamos o método. Existem outros tipos de métodos HTTP, como GET, POST, PUT e DELETE. Mais adiante, explicaremos o que cada um faz. Fazemos uma solicitação através de uma URI, que é o detalhamento do recurso da URL completa que estamos requisitando. Estávamos pegando algumas páginas que já são o índice de uma página HTML, como www.alura.com.br, que nos leva à página principal. Claro que existem outras páginas que compõem o site inteiro da Alura, e essas outras páginas fazem parte da URI, entrando em subpáginas dentro da aplicação da Alura.
+
+Diferenciando URL e URI  
+Vou mostrar um exemplo sobre a diferença entre URL e URI. No navegador, verificamos o site inicial da Alura, ou seja, o índice do HTML da Alura. Ao clicar em qualquer link, como "programação", aparece outra seção da aplicação da Alura, com o caminho /escola/programacao. Essa é uma URI que vem da URL www.alura.com.br. No DevTools, ao verificar a requisição dessa página, vemos que o request URL foi www.alura.com.br/escola/programacao. Vou copiar essa URI e colá-la no Postman, substituindo a URL anterior. Ao enviar e ver como isso funciona no HTTP, o GET busca agora a URI /escola/programacao com o host www.alura.com.br. Para o HTTP, há uma distinção entre o que é o host e o que é a URI, que vem após o .com.br.
+
+```cmd
+GET /escola-programacao HTTP/1.1
+Host: www.alura.com.br
+```
+
+Explorando requisições POST  
+Além das requisições onde solicitamos informações, existem requisições onde enviamos informações. Aqui, vemos outro tipo de requisição HTTP, com duas propriedades para trabalhar com o protocolo HTTP. Temos outro método, o POST, com os mesmos parâmetros.
+
+```cmd
+POST /api/v1/usuarios HTTP/1.1
+Host: exemplo.com
+Content-Type: application/json
+Authorization: Bearer token-exemplo
+Content-Length: 49
+
+{
+    "nome": "João",
+    "idade": 30,
+    "cidade": "São Paulo"
+}
+```
+
+Temos a URI, o host e a versão. Além disso, há informações adicionais que fazem parte do cabeçalho. Não é necessário saber todas elas de imediato, pois com o tempo entenderemos o significado de cada uma dentro dos headers HTTP. O mais importante é compreender que agora estamos enviando um corpo na requisição. Este corpo é o que permite atualizar ou enviar informações ao servidor, solicitando alguma alteração.
+
+Exemplificando o uso do método POST  
+Vamos exemplificar como o método POST funciona. No site da Amazon, ao selecionar um produto qualquer, podemos inspecionar o DevTools para observar o comportamento de um POST. Ao adicionar um produto ao carrinho, enviamos um POST na requisição. Isso ocorre porque estamos solicitando ao servidor da Amazon que registre a adição do produto ao carrinho. Nesse momento, deixamos de ser apenas consumidores de informação e também enviamos dados para o servidor processar. O corpo da requisição, que utilizamos, está no payload, onde podemos ver todas as informações enviadas ao servidor da Amazon, compondo a requisição junto com o cabeçalho.
+
+É importante destacar que o corpo da mensagem é opcional. Dependendo da solicitação HTTP, não é necessário enviar o corpo da mensagem. Ele é geralmente reservado para métodos que atualizam ou enviam algo ao servidor, como POST ou PUT, que veremos posteriormente.
+
+Analisando respostas de requisições HTTP  
+Podemos verificar como funciona a resposta de uma requisição HTTP. Basicamente, ela indica algumas informações, como o status, que retorna o número 200 quando a requisição é bem-sucedida, o tipo de conteúdo devolvido, que pode ser um JSON, e a formatação desse JSON, que utiliza UTF-8. É importante entender o que é o content-type e o conteúdo devolvido em uma resposta.
+
+```cmd
+HTTP 200 success
+Content-Type: application/json; charset=utf-8
+{
+    "object": "set",
+    "id": "2ec77b94-6d47-4891-a480-5d0b4e5c9372",
+    "code": "uma",
+    "mtgo_code": "uma",
+    "arena_code": "uma",
+    "tcgplayer_id": 2360,
+    "name": "Ultimate Masters",
+    "uri": "https://api.scryfall.com/sets/2ec77b94-6d47-4891-a480-5d0b4e5c9372",
+    "scryfall_uri": "https://scryfall.com/sets/uma",
+    "search_uri": "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Auma&unique=prints",
+    "released_at": "2018-12-07",
+    "set_type": "masters",
+    "card_count": 254,
+    "printed_size": 254,
+    "digital": false,
+    "nonfoil_only": false,
+    "foil_only": false,
+    "icon_svg_uri": "https://svgs.scryfall.io/sets/uma.svg?1754280000"
+}
+```
+
+No Postman, ao fazer uma solicitação no site da Alura, podemos ver cabeçalhos de requisição e resposta. A resposta geralmente inclui a data, o tipo de conteúdo, que pode ser um HTML, e o charset, que é a formatação do HTML. Assim, várias informações compõem a resposta de um cabeçalho HTTP. O mais importante é que no final temos o corpo da requisição, que pode ser HTML ou outro tipo de informação.
+
+Explorando diferentes tipos de conteúdo em respostas HTTP  
+No navegador, ao buscar imagens do Google e abrir uma imagem em uma nova guia, podemos inspecionar os cabeçalhos e ver que o content-type é diferente do solicitado no Postman. No caso, é uma imagem JPEG, diferente do texto HTML devolvido anteriormente. Diversos tipos de dados podem ser trafegados, como imagem, áudio, vídeo ou texto.
+
+```cmd
+Content-Type: image/jpeg
+```
+
+Vamos mostrar um tipo diferente de resposta que o HTTP pode fornecer. Além de imagem e HTML, existem outros formatos importantes. No site Scryfall, que apresenta cartas de Magic, ao clicar em uma coleção, podemos ver as cartas e suas descrições. Ao clicar no link CopyPaste.json, vemos uma formatação de dados textual em JSON, muito utilizada por JavaScript e APIs. Ao inspecionar a página, podemos verificar os headers das requisições, onde o content-type é application-json, um tipo específico de formatação de dados.
+
+```cmd
+application/json; charset=utf-8
+```
+
+Concluindo sobre o protocolo HTTP e suas funcionalidades  
+Todos esses formatos têm um propósito específico. Se a aplicação não indicar na resposta que se trata de um JSON, HTML, texto ou imagem, o navegador pode não renderizar corretamente o dado. No Scryfall, ao devolver um JSON, podemos formatá-lo no navegador, pois ele segue uma estrutura comum. Se não indicarmos que é um JSON, mesmo recebendo a informação, não poderíamos formatá-la. Isso vale para áudio, imagem e vídeo. O navegador precisa saber o padrão devolvido na resposta do serviço consumido.
+
+Entendemos como funciona o protocolo HTTP a partir da requisição e da resposta. Precisamos compreender melhor os tipos de requisição que podemos fazer. Mencionamos anteriormente os métodos GET, POST, PUT, DELETE, PATCH, OPTIONS, entre outros. Esses métodos HTTP são essenciais para o funcionamento correto da aplicação. Na próxima aula, exploraremos como esses métodos funcionam e como interagem com o HTTP.
+
+### Aula 2: Compreendendo requisições HTTP no aplicativo Fokus
+ Próxima Atividade
+
+A equipe de desenvolvimento do aplicativo Fokus, que ajuda pessoas usuárias a aumentar a produtividade utilizando a técnica Pomodoro, está trabalhando em uma nova funcionalidade que permite sincronizar sessões de foco com um calendário online. Para isso, é necessário enviar e receber dados de um servidor externo utilizando requisições HTTP.
+
+Durante uma reunião, a equipe discutiu a importância de entender a diferença entre URI e URL ao configurar as requisições.
+
+Qual das alternativas abaixo explica corretamente a diferença entre URI e URL e sua importância ao configurar requisições HTTP no aplicativo Fokus?
+
+Resposta correta  
+A URI é um identificador genérico que pode ser usado para nomear qualquer recurso na internet, enquanto a URL é um tipo específico de URI que fornece o endereço completo para acessar um recurso na web. No contexto do aplicativo Fokus, entender essa diferença é crucial porque a URL inclui o protocolo, o domínio e o caminho específico para o recurso, garantindo que o aplicativo possa se comunicar efetivamente com o servidor externo e sincronizar as sessões de foco.
+
+> Correta, pois esta alternativa descreve com precisão a diferença entre URI e URL e destaca a importância de configurar corretamente a URL para a comunicação eficaz com o servidor externo.
+
+### Aula 2: Métodos HTTP - Vídeo 4
+
+Transcrição  
+Agora que entendemos que precisamos ter uma informação base que será o nosso cabeçalho da requisição, podemos fazer uma analogia com os correios. Assim como precisamos deixar em cima de um pacote a informação de para quem será enviado e de onde veio, também precisamos declarar o que estamos enviando. Dessa forma, temos o corpo da requisição, que é de fato o pacote que está sendo enviado.
+
+Precisamos entender que existem métodos que devem ser enviados em cada requisição. Assim como nos correios, é necessário definir qual é o tipo de método de envio que será utilizado quando compramos ou enviamos algo. Ao enviar algo pelo correio, é preciso declarar o tipo de envio, o que ajuda a definir se o pacote que estamos utilizando pode ou não seguir as regras de envio selecionadas. Da mesma forma, trabalhamos com o HTTP ao pensar no envio de uma requisição.
+
+Introduzindo os métodos HTTP  
+Existem alguns métodos que definem o tipo de requisição que estamos fazendo. Vimos anteriormente os métodos GET e POST, que são os mais comuns, mas é interessante conhecermos os outros métodos e como funcionam.
+
+Entre os métodos HTTP, começamos pelo GET, localizado no canto superior esquerdo. O método GET é o padrão. Quando digitamos uma informação na URL do navegador, toda requisição é um GET. Toda solicitação de informação pela URL é um método GET. Ele é o método padrão utilizado para buscar qualquer outra informação. Ao abrir um navegador e buscar uma requisição, independentemente da página web que estamos acessando, estamos utilizando um método GET.
+
+Explorando os métodos POST, PUT e PATCH  
+No canto superior direito, temos o método POST, que é amplamente utilizado para formulários ou para criar um recurso. Por exemplo, ao adicionar um produto ao carrinho em um site como a Amazon, ocorre um POST. Quando removemos algo do carrinho, também pode ocorrer um POST. Ao preencher um formulário para assinar uma newsletter ou clicar em "play" em um curso, qualquer solicitação que modifique algo no servidor é feita através de um POST.
+
+No canto inferior direito, temos o método PUT, que, junto com o PATCH, realiza modificações em um recurso. Por exemplo, se quisermos atualizar um carrinho na Amazon, podemos usar o PUT para substituir todo o carrinho. Se desejarmos apenas alterar a quantidade de um produto específico, utilizamos o PATCH, que atualiza apenas a quantidade desse produto. Essa é a diferença entre PUT e PATCH.
+
+Descrevendo os métodos DELETE, OPTIONS e HEAD  
+No canto inferior esquerdo, temos o método DELETE, que serve para remover um recurso. Caso queiramos eliminar um recurso do servidor, utilizamos o DELETE. Os métodos mais utilizados são GET, POST, PUT, DELETE e PATCH.
+
+Além desses, temos o OPTIONS e o HEAD, que são menos utilizados. O método HEAD retorna apenas o cabeçalho de qualquer requisição, sem o recurso solicitado. Por exemplo, ao usar o HEAD em uma página web, recebemos apenas o cabeçalho. O método OPTIONS apresenta as opções disponíveis para solicitar um recurso, indicando quais métodos podem ser utilizados, como GET, POST, PUT, PATCH, DELETE ou HEAD. Ele define o que é permitido ou não em uma página.
+
+Ressaltando a importância dos métodos HTTP  
+É importante entender que os métodos HTTP devem ser seguidos corretamente para garantir o funcionamento adequado de uma aplicação web. Existem recursos que facilitam a adesão às convenções do protocolo HTTP, como acompanhar os métodos HTTP. Posteriormente, abordaremos os STATUS CODE, que são parte da resposta de uma requisição e nos fornecem um status que podemos usar para monitorar a requisição.
+
+### Aula 2: Otimizando a entrega de conteúdo na VideoFlowNow - Exercício
+
+A VideoFlowNow, uma plataforma de streaming especializada em vídeos curtos e transmissões ao vivo, está buscando otimizar a entrega de conteúdo para seus usuários. A equipe de desenvolvimento que você faz parte está implementando um sistema de requisições HTTP para gerenciar o fluxo de dados entre o servidor e os dispositivos dos usuários. Durante o processo, surgiu a necessidade de decidir quais métodos HTTP utilizar para diferentes tipos de interações, como carregar vídeos, enviar feedbacks dos usuários e atualizar perfis.
+
+Considerando o contexto da VideoFlowNow, como você aplicaria os métodos GET, POST, PUT e DELETE para otimizar essas interações na plataforma?
+
+Resposta correta  
+Utilizar o método GET para carregar vídeos e informações de perfil, POST para enviar feedbacks dos usuários, PUT para atualizar informações de perfil e DELETE para remover vídeos ou feedbacks.
+
+> Correta, pois essa aplicação dos métodos HTTP é ideal para otimizar as interações na VideoFlowNow. O método GET é usado para solicitações de dados sem alterar o estado do servidor, POST para criar novos recursos, PUT para substituir recursos existentes e DELETE para excluir recursos.
+
+### Aula 2: Para saber mais: user-agent nas requisições HTTP
+
+Origem e Propósito  
+O cabeçalho User-Agent é responsável por informar ao servidor qual cliente (navegador, ferramenta ou outro agente) está efetuando a requisição. Essa informação permite que o servidor adapte suas respostas de acordo com o agente que está solicitando os dados. Por exemplo, é comum que servidores enviem recursos otimizados para diferentes navegadores ou mesmo ofereçam versões mobile quando o user-agent indica um dispositivo móvel.
+
+Funcionamento na Prática  
+Ao realizar uma requisição HTTP, o cliente inclui o cabeçalho User-Agent junto com outros dados da requisição. Esse cabeçalho contém uma cadeia de caracteres que normalmente especifica o nome, a versão e, em alguns casos, o sistema operacional do cliente. Um exemplo comum em uma requisição pode ser:
+
+```cmd
+GET /exemplo HTTP/1.1
+Host: www.exemplo.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36
+```
+
+Com esses dados, o servidor pode identificar que o pedido vem de um navegador específico em um sistema Windows e enviar respostas compatíveis com esse ambiente.
+
+Aplicações e Considerações Técnicas  
+A utilização do User-Agent vai além da simples identificação do cliente:
+
+Adaptação de Conteúdo: Servidores podem oferecer conteúdos customizados, selecionando estilos, scripts ou até mesmo versões diferentes de uma página de acordo com o agente identificado.
+
+Análise e Métricas: Dados sobre os user-agents podem ajudar desenvolvedores e equipes de operação a entender a diversidade de clientes acessando um serviço, permitindo otimizações direcionadas.
+
+Segurança: Em alguns cenários, a informação do User-Agent é utilizada para filtrar requisições suspeitas ou automatizadas. No entanto, é importante ter em mente que esse cabeçalho pode ser facilmente manipulado ou falsificado, o que limita seu uso como única camada de segurança.
+
+Variações e Impacto na Experiência do Usuário  
+Embora o User-Agent seja amplamente utilizado, há algumas variações a serem consideradas:
+
+Atualizações Constantes: Com a rápida evolução dos navegadores e dispositivos, as cadeias de caracteres dos user-agents mudam com frequência. Isso pode exigir atualizações nos sistemas que dependem dessa informação para oferecer conteúdo adaptado.
+
+Falsificação de Dados: O User-Agent pode ser alterado programaticamente, o que permite que clientes enviem dados incorretos. Essa característica deve ser levada em conta em aplicações que tentam aplicar restrições ou personalizações rigorosas baseadas nesse cabeçalho.
+
+Em resumo, o User-Agent é uma ferramenta valiosa para personalizar a experiência de uso e coletar informações sobre os clientes que acessam um serviço. Contudo, seu uso deve ser complementado por outras práticas de detecção e segurança, considerando que a informação repassada pode não ser plenamente confiável.
+
+### Aula 2: Faça como eu fiz: requisições HTTP
+ Próxima Atividade
+
+Nesta aula, foram explorados os fundamentos da infraestrutura web, do modelo cliente-servidor e do protocolo HTTP, desde a hospedagem da aplicação até a análise de requisições e respostas. Agora é sua chance de revisar e exercitar os conteúdos vistos nesta aula, se ainda não colocou em prática. Para isso:
+
+- Configure o VS Code com a extensão Live Preview para hospedar um arquivo HTML simples.
+- Realize uma requisição GET usando cURL no terminal e identifique os cabeçalhos retornados.
+- Utilize o DevTools do navegador para inspecionar requisições e verificar o uso do protocolo HTTP.
+- Diferencie porta local (ex.: 3000) e portas padrão (80 para HTTP, 443 para HTTPS) nas requisições.
+- Abra o Postman, insira uma URL (por exemplo, www.alura.com.br) e envie uma requisição GET para visualizar o HTML retornado.
+- Analise os cabeçalhos de requisição e resposta tanto no Postman quanto no DevTools.
+- Crie e envie uma requisição POST no Postman simulando o envio de dados (ex.: dados de formulário).
+- Verifique o content-type nas respostas e compare formatos como HTML, JSON e imagens.
+- Execute novamente uma requisição via cURL e identifique a versão HTTP empregada.
+- Liste e documente os principais métodos HTTP (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS) utilizados na aula.
+
+Para acessar o guia detalhado, consulte as transcrições da aula.
+
+### Aula 2: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A importância do modelo cliente-servidor na estruturação de aplicações web.
+- Como hospedar uma aplicação web para facilitar o acesso por meio de um servidor.
+- O uso do Visual Studio Code e Live Preview para visualizar aplicações locais.
+- A diferença entre portas HTTP (80) e HTTPS (443) na comunicação.
+- A evolução do protocolo HTTP e suas versões até o HTTP 3.
+- Como utilizar o CURL e DevTools para inspecionar requisições HTTP.
+- A estrutura e métodos das requisições HTTP, como GET, POST, PUT e DELETE.
+- A função dos cabeçalhos HTTP e do content-type na comunicação web.
+
+## Aula 3: Detalhes do HTTP, segurança e evolução
+
+### Aula 3:  - Vídeo 1
+### Aula 3:  - Vídeo 2
+### Aula 3:  - Vídeo 3
+### Aula 3:  - Vídeo 4
+### Aula 3:  - Vídeo 5
+### Aula 3:  - Vídeo 6
+### Aula 3:  - Vídeo 7
+### Aula 3:  - Vídeo 8
+### Aula 3:  -
