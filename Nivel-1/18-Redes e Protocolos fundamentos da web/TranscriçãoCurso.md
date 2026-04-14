@@ -745,12 +745,725 @@ Nesta aula, aprendemos:
 
 ## Aula 3: Detalhes do HTTP, segurança e evolução
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 8
-### Aula 3:  -
+### Aula 3: Corpo da requisição - Vídeo 1
+
+Transcrição  
+Já discutimos um pouco sobre como funcionam os cabeçalhos e este momento pode ser interessante para analisarmos o Postman, a fim de entendermos onde cada elemento de uma requisição HTTP está localizado. No Postman, conseguimos visualizar exatamente onde está cada parte de uma requisição HTTP.
+
+Para começar, vamos realizar uma requisição GET para o site da Alura. No Postman, isso é feito da seguinte forma:
+
+> GET https://www.alura.com.br
+
+Podemos ver o site da Alura, onde realizaremos um GET para obter algumas informações. Ao solicitar o site da Alura, receberemos uma resposta contendo o HTML da página. Se clicarmos em Preview, o HTML será exibido em sua forma mais pura, sem processamento de CSS ou JavaScript, como feito no site da Alura. Assim, conseguimos visualizar o HTML da Alura e algumas informações pertinentes.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0">
+    <title>Alura | Cursos online de Tecnologia</title>
+    <meta name="description"
+        content="Aprenda Programação, Front-end, Back-end, Data Science, UX, DevOps, Inovação e Gestão na maior plataforma de tecnologia do Brasil">
+    <link rel="canonical" href="https://www.alura.com.br">
+    <link rel="icon" href="/assets/favicon.1790606030.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+```
+
+Explorando os cabeçalhos padrão do Postman  
+A primeira delas são os headers (cabeçalhos) da requisição. Mesmo que não vejamos nenhum cabeçalho explícito, o Postman possui cabeçalhos padrão que são enviados em todas as requisições. É importante saber que, mesmo que não percebamos, o Postman pode estar enviando cabeçalhos. Esses são os cabeçalhos padrão que ele envia, como Cache-Control e Postman-Token, que são utilizados para o gerenciamento das requisições feitas pelo Postman.
+
+```cmd
+Cache-Control: no-cache
+Postman-Token: <calculated when request is sent>
+Host: <calculated when request is sent>
+User-Agent: PostmanRuntime/7.45.0
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+```
+
+O cabeçalho Host é calculado quando a requisição é enviada, pois a URL pode ser alterada a qualquer momento. O User-Agent, por exemplo, não utiliza o Chrome ou Firefox, mas sim o próprio cliente HTTP do Postman em tempo real. Além disso, temos o Accept, Accept-Encoding e Connection.
+
+Analisando a resposta HTTP e seus cabeçalhos  
+Aqui estão algumas informações de requisição padrão que o Postman sempre faz. O mais importante é analisarmos os headers e o corpo da requisição que ele devolve. Temos o HTML e os headers associados a ele. Por exemplo, podemos ver o Content-Type, que é text/html, e o Charset ou Encoding, que é crucial, pois pode haver conflitos de codificação. Neste caso, está usando UTF-8. O servidor é o Cloudflare.
+
+```cmd
+Date                Thu, 21 Aug 2025 18:30:39 GMT
+Content-Type        text/html; charset=UTF-8
+Transfer-Encoding   chunked
+Connection          keep-alive
+Server              cloudflare
+Nel                 {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Vary                Accept-Encoding
+Expires             Thu, 21 Aug 2025 18:00:39 GMT
+Cache-Control       public, max-age=1800
+Report-To           {"group":"cf-nel","max_age":604800,"endpoints":[{...}]}
+CT-Cache-Status     DYNAMIC
+Content-Encoding    br
+```
+
+Para identificar o corpo de uma resposta e de uma requisição, podemos observar dessa forma. No Postman, é possível ver toda a requisição na parte superior, que cuida da requisição, enquanto a parte inferior apresenta a resposta. O status code no Postman, por exemplo, apresenta 200 OK, indicando que a requisição foi bem-sucedida. Também podemos ver o tamanho da página web e o tempo que levou para processar o corpo da requisição.
+
+Compreendendo o processo HTTP e introduzindo novos tópicos  
+É importante compreender o processo HTTP como um todo. Podemos observar todas as partes de uma requisição. Neste caso, não houve corpo de requisição, pois não é necessário enviar nada; geralmente, o método GET não requer informações para envio. A resposta já contém um corpo, que é o próprio HTML recebido.
+
+Para introduzir os próximos tópicos, se clicarmos no canto superior direito, onde há um símbolo semelhante ao HTML, que é o code, conseguimos ver o HTTP, que é o modelo padrão. Geralmente, o Postman abre por padrão o URL. Temos o HTTP, onde ele utiliza o método GET e a versão do HTTP, que é 1.1. Existem outras versões do HTTP, e será interessante discutirmos sobre elas posteriormente.
+
+```cmd
+GET / HTTP/1.1
+Host: www.alura.com.br
+```
+
+### Aula 3: Cabeçalhos da requisição - Vídeo 2
+
+Transcrição  
+Agora que já entendemos como funciona a parte de status code, outra parte importante que nos ajuda a definir o que esperar de resposta, o que precisamos solicitar e como solicitar, para receber os status codes adequados, é compreender como funcionam os cabeçalhos HTTP. Vamos entender melhor a estrutura dos cabeçalhos no HTTP.
+
+Podemos ver um exemplo de uma requisição HTTP, especificamente uma requisição POST. Temos a URI, o protocolo HTTP 1.1. Abaixo, começam os cabeçalhos, que vão até onde começa a abertura de chaves, que é o corpo da requisição, representado por um JSON utilizado como exemplo.
+
+Exemplificando uma requisição POST  
+Para ilustrar, veja o seguinte exemplo de requisição POST:
+
+```cmd
+POST /api/v1/usuarios HTTP/1.1
+Host: exemplo.com
+Content-Type: application/json
+Authorization: Bearer token-exemplo
+Content-Length: 49
+
+{
+    "nome": "João",
+    "idade": 30,
+    "cidade": "São Paulo"
+}
+```
+
+Quais cabeçalhos temos? São quatro: o host, que é a URL ou domínio que queremos acessar; o content-type, que indica o tipo de conteúdo que estamos encaminhando, como application/json, mas poderia ser XML, HTML ou uma imagem; o authorization, muito utilizado para verificações de autorização e logins, que aqui é um bearer token, geralmente um código extenso; e o content-length, que é o tamanho do corpo da requisição. Geralmente, ele conta os caracteres do corpo, e o navegador já converte isso em um número, indicando o tamanho da requisição. Isso é importante, pois o servidor pode devolver a solicitação informando que a requisição está muito longa, como no caso do payload too large, um dos status codes possíveis.
+
+Estrutura dos cabeçalhos HTTP  
+Essa é a estrutura de um cabeçalho HTTP. Geralmente, ao ver uma requisição web, observamos a parte de cabeçalhos. Esses quatro itens formam uma estrutura de cabeçalhos, dividida pela estrutura de chave e valor. A chave pode ser host, content-type, authorization, seguida de dois pontos e o valor associado. O que divide cada um dos cabeçalhos é uma estrutura chamada CRLF. Não há ponto e vírgula no final, nem indentação. O que separa cada cabeçalho na requisição é a quebra de linha.
+
+Vamos ver alguns dos cabeçalhos mais comuns em uma requisição HTTP. Temos o accept, que indica o tipo de resposta que aceitamos. Existem recursos que são apenas JSON, mas podemos querer uma versão em texto plano ou XML. Embora o JSON seja a linguagem predominante na web, muitos sistemas antigos utilizam formatos de dados mais antigos. Por isso, podemos solicitar ao servidor uma informação diferente, como aceitar XML em vez de JSON.
+
+Especificando tipos de conteúdo e autorização  
+Por exemplo, podemos especificar os tipos de conteúdo que aceitamos na resposta com o cabeçalho Accept:
+
+```cmd
+Accept: text/html, application/json
+```
+
+O authorization pode conter credenciais. No exemplo da requisição, foi usado um bearer token, um tipo de token moderno para aplicações. No cabeçalho da requisição, essa informação ainda fica aberta, por isso não é ideal enviar usuário e senha. Geralmente, enviamos um token ou chave de API, um código extenso e alfanumérico que identifica o usuário que está acessando o sistema.
+
+Utilizando o User-Agent e Accept-Language  
+O User-Agent é bastante utilizado por navegadores ou outros clientes HTTP, que enviam essa informação por padrão. Ele identifica o navegador que está sendo utilizado. Algumas aplicações podem não funcionar em determinados navegadores, solicitando o uso de uma versão mais atualizada do Chrome ou Firefox. Antigamente, muitas aplicações rodavam apenas no Internet Explorer, e havia avisos informando que o uso de outros navegadores poderia causar problemas. O User-Agent ajuda o servidor a saber se a requisição vem de um navegador que suportará a resposta.
+
+Às vezes, utilizamos uma versão muito antiga de um navegador, e o HTML já possui um recurso novo que o navegador ainda não renderiza. Nesse caso, o User Agent pode ajudar a obter como resposta a sugestão de atualizar o navegador para utilizar o site corretamente. Temos também o Accept Language, que geralmente é usado quando precisamos lidar com questões de idioma. Por exemplo, ao acessar o site da Amazon Espanha para comprar um produto, mesmo estando em outro país, podemos querer que o site seja exibido em português. Se o site permitir, podemos enviar o Accept Language como português do Brasil, inglês americano ou qualquer outro idioma, e ele será traduzido para nós, adaptando o site ao idioma desejado.
+
+Preferências de idioma e tamanho de conteúdo  
+Podemos especificar as preferências de idioma com o cabeçalho Accept-Language:
+
+```cmd
+Accept-Language: pt-BR, en-US
+```
+
+Outro exemplo ocorre quando queremos comprar um produto para ser entregue a um amigo em uma região diferente. Se não dominarmos o idioma do site, podemos alterar o Accept Language para que ele traduza para o idioma especificado, caso o servidor aceite esse tipo de requisição.
+
+Temos o Content Length, que os navegadores geralmente processam previamente para determinar o tamanho da requisição, pois às vezes o servidor pode informar que o payload está muito grande. O Content Type funciona de maneira semelhante ao Accept, permitindo que informemos ao servidor o tipo de conteúdo que estamos enviando.
+
+Importância do campo Date e identificação do servidor  
+O campo Date indica a data e hora da requisição, o que é importante para evitar conflitos. Em situações de concorrência, como em sistemas de venda de passagens aéreas ou ingressos, o Date ajuda a determinar quem estava na fila primeiro e tem prioridade no uso do recurso.
+
+O Server indica de onde veio a requisição. Nossas aplicações podem estar hospedadas na nuvem, em um serviço externo ou próprio, e o Server nos informa a origem da requisição.
+
+Analisando cabeçalhos de resposta e cache  
+No exemplo do site da Alura, ao abrir o DevTools e atualizar a página, podemos ver a requisição para alura.com.br e algumas informações, como a URL da requisição e o status code 200. O site pode estar em cache, mas ainda assim retorna 200, indicando que não houve atualização.
+
+Podemos ver informações de cabeçalho da resposta, como a data e o campo expires, que indica quando uma nova requisição precisará ser feita fora do cache. Isso é usado para atualização de cache, especialmente em navegadores. O servidor, neste caso, é a Cloudflare, que hospeda a Alura e é uma das empresas mais importantes na internet atualmente.
+
+Identificando a plataforma e versão do navegador  
+Entre os cabeçalhos de requisição enviados, temos o User Agent e a plataforma. A plataforma pode ser, por exemplo, Windows, e o navegador pode enviar essa informação para que o servidor identifique o sistema operacional. O User Agent mostra o navegador, como Mozilla, WebKit (para Safari) e Chrome, indicando que a requisição vem de um navegador comum. A versão do navegador, como 537.36 ou 139.0, é importante para o servidor saber qual versão está sendo utilizada e, se necessário, sugerir uma atualização.
+
+Esses exemplos mostram como a web trabalha com cabeçalhos para identificar o tipo de informação enviada e esperada, auxiliando o servidor a responder com base em filtros específicos.
+
+### Aula 3: Garantindo segurança em agendamentos de spa - Exercício
+
+A Calmaria Spas, uma plataforma que conecta usuários a experiências de bem-estar e serviços de spas, oferecendo agendamentos online e personalização de tratamentos de relaxamento, está preocupada com a segurança das informações dos usuários durante o processo de agendamento online. A equipe de desenvolvimento que você faz parte está implementando um sistema de autenticação que utiliza tokens para verificar a identidade dos usuários antes de permitir o acesso aos serviços de agendamento.
+
+Como o cabeçalho HTTP "Authorization" pode ser utilizado para garantir que apenas usuários autenticados possam acessar e agendar serviços na plataforma?
+
+Alternativa correta  
+O cabeçalho HTTP Authorization envia um token de autenticação junto com a requisição. Esse token, geralmente do tipo Bearer, é gerado após o login e comprova a identidade do usuário. O servidor valida o token e, se for válido, libera o acesso; caso contrário, nega a requisição, garantindo que apenas usuários autenticados acessem a plataforma.
+
+> Correta, pois o uso do cabeçalho "Authorization" com um Bearer Token é uma prática padrão para autenticação, permitindo que o servidor valide a identidade do usuário antes de conceder acesso aos serviços.
+
+### Aula 3: Status codes - Vídeo 3
+
+Transcrição  
+Agora que já entendemos mais sobre como funciona a base do protocolo HTTP com os métodos e a parte de requisição e resposta, precisamos compreender alguns detalhes que são apresentados no momento em que fazemos uma requisição e obtemos uma resposta. Podemos começar com um dos pontos mais importantes, principalmente no desenvolvimento de aplicações: os status codes do HTTP.
+
+Quando seguimos um protocolo, especialmente os protocolos web, é importante entender que toda requisição obterá, antes do corpo da resposta, um status daquela resposta. Existe uma série de status codes que o HTTP possui, os quais podem nos ajudar a entender determinadas informações. Um dos status codes mais comuns que já devemos ter visto é o 404, "não encontrado". Isso ocorre, por exemplo, quando estamos acessando uma página na web e a conexão com a internet cai. O navegador não consegue retornar o site procurado e, por isso, devolve um status code indicando que o recurso não foi encontrado, devido a uma falha na infraestrutura. Isso ajuda o navegador a entender que, naquele momento, estamos sem conexão com a internet.
+
+Explorando as categorias dos status codes HTTP  
+Da mesma forma, alguns aplicativos conseguem avisar quando estamos sem conexão, seja por ativar o modo avião ou por estar em um local sem internet. Quem garante isso são certos status codes do HTTP, que permitem enviar um status indicando que o recurso não foi encontrado.
+
+Vamos explorar as categorias dos status codes HTTP para entender os tipos de respostas que podemos ter a partir de cada tipo de status code. Quando fazemos uma solicitação, podemos obter uma série de categorias ordenadas por números. A categoria de número 100, que vai de 100 até 199, é a categoria informativa. Ou seja, a solicitação enviada devolverá uma resposta cujo objetivo é fornecer alguma informação sobre o recurso solicitado. Pode ser algo relacionado ao servidor ou a alguma configuração interna que desejamos obter. Não se trata necessariamente de obter um HTML, um JSON ou um recurso específico, mas sim de obter alguma informação sobre o recurso.
+
+Detalhando os status codes informativos  
+Alguns códigos dessa faixa, de 100 a 199, incluem o status code "continue", que indica que podemos continuar a operação a partir daquele ponto, sendo muito usado para microserviços. Outro exemplo é o código 103, "processing", utilizado para mostrar que a solicitação ainda está em processamento, como em casos de pagamento, onde é necessário informar que a requisição ainda está em processamento.
+
+Agora, passando para os status codes que vão de 200 a 299, essa faixa é voltada para resultados corretos ou de sucesso. Geralmente, quando acessamos uma página da web e ela é carregada corretamente, obtemos o status code 200, que é o "OK". Esse código é utilizado para a maioria das requisições bem-sucedidas, quando o serviço consegue devolver a informação solicitada. Outros códigos dessa faixa incluem o 201, "created", muito utilizado quando enviamos informações ou fazemos um post na web. Há também o status code "accepted", que significa que a requisição foi aceita e podemos continuar. Existem detalhes específicos para cada status code, mas o importante é entender que a faixa de 200 a 299 representa tipos de sucesso.
+
+Compreendendo os status codes de redirecionamento  
+Em seguida, temos os status codes de 300 a 399, que são de redirecionamento. Quando acessamos um recurso HTTP, é comum que algumas páginas sejam redirecionadas. Um exemplo simples é quando acessamos o site da Amazon digitando amazon.com e somos redirecionados para o site da Amazon Brasil. Isso ocorre em e-commerces ou páginas web com versões em vários países, onde, a partir do nosso IP, somos redirecionados para o país onde o serviço é mais otimizado. Por exemplo, podemos fazer uma compra no site da Amazon nos Estados Unidos, mas há restrições. O ideal é comprar no site da Amazon Brasil. Para esses cenários, existem códigos que indicam redirecionamento, apontando para a página correta.
+
+Depois, temos os status codes de 400, que são erros voltados à parte do cliente. Esses erros podem ocorrer por vários fatores, como digitar uma URL errada, resultando em um 404, "not found". Isso acontece quando digitamos incorretamente o endereço do site no navegador. Outros status codes dessa faixa incluem "não autorizado", "proibido", "requisição muito grande" ou "URL muito longa". São erros que ocorrem devido a problemas na solicitação do cliente.
+
+Analisando os status codes de erro do servidor  
+Por último, temos os erros 500, que são erros de servidor. Nesse caso, a culpa não é do cliente, mas sim de um erro interno na aplicação que impede a obtenção da solicitação. Isso pode ocorrer por diversos fatores, como um bug interno ou um método ainda não construído. Esses problemas resultam em um erro 500. É comum encontrar sites mais antigos que não escondem esses status codes dos clientes e apresentam "internal server error", erro 500. Isso indica um erro interno no servidor, e é necessário aguardar uma correção para acessar o recurso adequadamente.
+
+Agora, vamos explorar em mais detalhes como funcionam alguns dos códigos mais utilizados pelo HTTP. Como mencionado anteriormente, temos o status code "continue", código 100, que indica que o servidor recebeu a solicitação e podemos continuar a partir dali. Esse código é utilizado para indicar que podemos prosseguir após uma etapa.
+
+Detalhando os status codes de sucesso  
+Temos o 101, que é a troca de protocolos. Por exemplo, a troca de HTTP para HTTPS, geralmente feita por redirecionamento. Se não houver redirecionamento, o código 101 pode indicar a troca de protocolos.
+
+Em seguida, temos o 103. Peço desculpas pela confusão anterior: o 102 é "processing" e o 103 é "early hints". O "early hints" apresenta os cabeçalhos que algumas requisições podem informar. Por exemplo, ao usar o método HEAD para obter informações sobre cabeçalhos de uma requisição, podemos receber o código de status 200, indicando "OK", ou o 103, que apresenta cabeçalhos de respostas antes do HTTP final.
+
+Agora, vamos para os status codes de sucesso. O principal deles é o 200, "OK", que é o mais comum. Qualquer solicitação bem-sucedida resulta em um status 200, além da resposta da requisição, que pode ser um HTML, uma imagem ou um JSON. O 201, "created", é utilizado para quando criamos um novo recurso, como adicionar um produto ao carrinho ou um novo endereço. O 204, "no content", indica que a solicitação foi bem-sucedida, mas não houve devolutiva de conteúdo. Isso é comum em atualizações put ou delete, onde não há retorno de informação. O 206, "partial content", ocorre quando apenas parte do recurso é devolvida, como em downloads ou serviços de streaming.
+
+Explicando os status codes de redirecionamento  
+Agora, vamos para os status codes da faixa de 300. O 301, "moved permanently", indica que um recurso foi movido permanentemente para outra página. O 302, "found", é utilizado para indicar que um recurso foi encontrado, mas geralmente não é o status code final. O 304, "not modified", é utilizado para verificar o status de um recurso que não foi modificado.
+
+Pode ser necessário, em alguns casos, ter dois campos para gerenciar o tempo de processamento. Um campo indicaria o status, para saber se o valor já foi alterado ou não, e outro mostraria em que estágio de processamento o recurso se encontra. Sabemos que existem vários status codes diferentes, mas eles representam coisas distintas. O processo indica que algo está em andamento, enquanto o not modified representa um resultado final, indicando que nada foi alterado.
+
+Abordando os status codes de erro do cliente  
+Agora, vamos abordar os status codes de erros, 400 e 500. Começando pelo 400, o Bad Request ocorre quando uma solicitação é feita de forma incorreta, o que pode acontecer por diversos motivos. Geralmente, o Bad Request é utilizado quando enviamos um POST e o corpo da requisição não corresponde ao que deveria ser enviado. Isso pode ocorrer se o navegador alterar algum recurso inadvertidamente, se uma aplicação no front-end fizer uma alteração no back-end, ou se o corpo da requisição JSON estiver incorreto. Nesses casos, o sistema retornará um Bad Request, com o status code 400.
+
+O status code 401 indica que a solicitação não é autorizada. Isso ocorre quando é necessário fazer login. Por exemplo, ao tentar acessar um repositório privado no GitHub sem estar logado, o sistema retornará um 401, indicando que a autorização é necessária. Em alguns casos, o sistema pode redirecionar para a página de login, retornando um 302. Algumas aplicações informam que o usuário não está autorizado a ver o projeto, enquanto outras redirecionam para a página de login.
+
+Explorando os status codes de erro do servidor  
+O status code Forbidden ocorre quando o login foi realizado, mas o acesso a uma página específica não é permitido. Nesse cenário, o usuário pode ter autorização para acessar a aplicação, mas está proibido de acessar aquele recurso específico. Isso é comum em sistemas com diferentes papéis, como administrador, gerente, coordenador e usuário comum, onde diferentes usuários têm diferentes níveis de acesso.
+
+O Not Found, ou 404, é um clássico. Ele indica que o recurso desejado não foi encontrado. Isso pode ocorrer ao digitar um endereço incorreto na barra de endereços e tentar acessar um site inexistente.
+
+O status code 405 pode parecer que estamos apresentando mais códigos de erro do que outros, mas, de fato, ao desenvolver uma aplicação, é mais comum nos atentarmos a esses tipos de erros. Em projetos de software, há muitas discussões entre sistemas de back-end e front-end para garantir que a comunicação entre as equipes esteja correta. Os status codes do HTTP são fundamentais para assegurar que a comunicação está correta, seja no front-end ou no back-end da aplicação.
+
+Discutindo os status codes de timeout e segurança  
+O Request Timeout, ou 408, ocorre quando a internet está fraca, dificultando o acesso a um recurso. Isso pode acontecer se a requisição for muito longa e não houver tempo suficiente para obter a resposta completa. Em tais casos, o sistema entra em Request Timeout. Isso é comum no desenvolvimento de aplicações web, onde há valores padrão no servidor para evitar travamentos em requisições muito grandes. Se necessário, o sistema pode devolver um Timeout e sugerir que a requisição seja dividida em partes menores.
+
+O Payload Too Large, ou 413, ocorre quando uma requisição é enviada com um JSON muito grande ou com muita informação. Um exemplo comum é o envio de imagens de perfil, onde alguns sistemas não conseguem comprimir a imagem e limitam o tamanho permitido. Isso também acontece com e-mails, que não podem ter anexos maiores que 25MB. O Payload Too Large indica que a requisição excede o tamanho máximo permitido.
+
+O Too Many Requests, ou 429, é utilizado por questões de segurança, envolvendo rate limit. Isso ocorre quando uma página é acessada muitas vezes em um curto período. Em vez de travar ou cortar o acesso, o sistema entra em Too Many Requests, indicando que o número de requisições foi excedido. Isso é mais comum em aplicações que fazem muitas requisições, como web scraping, ou em casos de bugs que causam múltiplas chamadas a uma API.
+
+Concluindo com os status codes de erro do servidor  
+Os erros 500 são erros do servidor, não da aplicação ou do cliente. O erro 500 é o mais tradicional e pode ocorrer por diversos motivos, como bugs na aplicação, excesso de uso de memória, problemas de conexão com o banco de dados, entre outros. Quando uma exceção é lançada, o sistema retorna um erro 500 ao cliente. Se os erros estiverem na faixa dos 400, podemos corrigir a aplicação e enviar a alteração. No entanto, erros 500 dependem do servidor onde a aplicação está hospedada, tornando a correção mais complexa.
+
+O Not Implemented, ou 501, ocorre quando alguns recursos estão habilitados, mas ainda não foram implementados. Isso é comum em testes beta, onde o usuário pode testar até certo ponto, mas algumas funcionalidades ainda estão em desenvolvimento.
+
+O Bad Gateway, ou 502, ocorre quando uma requisição é considerada inválida, seja por uso interno ou externo da rede. Isso pode acontecer devido a configurações incorretas de rede, como endereços IP errados, resultando em um Bad Gateway.
+
+O Service Unavailable, ou 503, é utilizado quando um serviço está em manutenção. Serviços web críticos precisam estar disponíveis 99,99% do tempo, o que significa que podem ficar indisponíveis por, no máximo, seis minutos por ano. Durante manutenções programadas, o sistema pode retornar um 503, indicando que o serviço está temporariamente indisponível.
+
+Resumindo a importância dos status codes  
+Em resumo, os status codes são essenciais para orientar quem está consumindo a aplicação, seja um front-end ou alguém acessando a URL diretamente. Eles ajudam a seguir o protocolo HTTP e a garantir que o cliente entenda como a aplicação funciona. Existem guias e boas práticas sobre como cada endpoint deve lidar com os status codes. A documentação do MDN, mantida pela Mozilla, é uma excelente referência para entender os status codes e o protocolo HTTP.
+
+### Aula 3: Para saber mais: redirecionamento HTTP
+
+Entendimento do Redirecionamento  
+O redirecionamento HTTP é um mecanismo que, quando acionado, instrui o navegador ou cliente a buscar o recurso em uma nova URL. Ao receber um código de status na faixa dos 300, o cliente interpreta que precisa direcionar sua requisição para outro local indicado no cabeçalho da resposta. Esse processo assegura que o usuário seja encaminhado para a página correta, mesmo que o endereço original tenha sido alterado ou reestruturado.
+
+Distinção Entre 301 e 302  
+Entre os códigos de redirecionamento, os mais comuns são o 301 e o 302. O código 301 (Moved Permanently) indica que o recurso foi movido de forma permanente para uma nova URL. Esse redirecionamento normalmente é cacheado pelo navegador e pelos mecanismos de busca, o que pode influenciar positivamente o ranqueamento e a indexação, desde que a mudança seja definitiva.
+
+Por outro lado, o código 302 (Found) sinaliza um redirecionamento temporário. Embora o cliente seja encaminhado para outro endereço, ele entende que o recurso pode voltar ao local original em requisições futuras. Por ser temporário, esse tipo de redirecionamento pode não ser cacheado da mesma maneira, impactando como as atualizações na URL são percebidas pelos mecanismos de busca.
+
+Boas Práticas e Considerações Técnicas  
+Ao optar por um tipo de redirecionamento, é importante considerar o contexto da aplicação. Redirecionamentos permanentes (301) são ideais para migrações de site, pois comunicam aos motores de busca que a mudança é definitiva. Já os redirecionamentos temporários (302) são mais apropriados para testes ou atualizações momentâneas, onde se espera retornar ao endereço original posteriormente.
+
+Exemplo de como pode ser definido um redirecionamento em uma resposta HTTP:
+
+```cmd
+HTTP/1.1 301 Moved Permanently
+Location: http://novosite.com
+```
+
+Entender essas nuances não só melhora o gerenciamento dos recursos web, mas também contribui significativamente para a experiência do usuário e a otimização do SEO. Ao aplicar corretamente esses conceitos, as aplicações podem lidar de forma mais robusta com mudanças de URL e migrações, garantindo que os acessos dos usuários sejam sempre direcionados para o conteúdo correto.
+
+### Aula 3: Otimizando feedback de treinos na Runner Circle - Exercício
+
+A Runner Circle, uma plataforma social dedicada a corredores, onde os usuários podem compartilhar treinos, metas e desafios, está desenvolvendo um novo recurso que permite aos usuários compartilhar seus treinos e receber feedback em tempo real. Durante os testes, a equipe percebeu que, em algumas situações, os usuários não estão recebendo atualizações sobre o status de seus uploads de treinos. A equipe de desenvolvimento que você faz parte precisa garantir que os usuários sejam informados sobre o progresso de seus uploads de forma eficaz.
+
+Como você utilizaria os status codes HTTP para informar os usuários sobre o progresso de seus uploads de treinos na Runner Circle?
+
+Resposta correta  
+Utilizar o status code 100 (Continue) para indicar que o upload está em andamento, o status code 201 (Created) para confirmar o sucesso do upload, o status code 413 (Payload Too Large) para erros de cliente, e o status code 500 (Internal Server Error) para erros de servidor, sempre com mensagens claras no corpo da resposta.
+
+> Correta, pois essa abordagem utiliza adequadamente os status codes HTTP para comunicar o progresso e o resultado dos uploads, fornecendo informações claras e específicas sobre o estado da operação e orientações para o usuário.
+
+### Aula 3: Versões do HTTP - Vídeo 4
+
+Transcrição  
+Quando a web foi idealizada, ela não foi concebida para suportar o que vemos hoje. Atualmente, temos uma vasta gama de serviços rodando na internet, como streamings, jogos online e muitos processos que operam de forma assíncrona. Esses serviços escalam para milhões ou bilhões de usuários, e todas as alterações necessárias para suportar esse tipo de aplicação precisaram ser implementadas na internet e nos protocolos HTTP, permitindo que a internet crescesse até a magnitude que possui atualmente.
+
+Assim como várias aplicações passam por atualizações, o HTTP também passou por certas atualizações, assim como a infraestrutura da web inteira. Podemos pensar na evolução das redes móveis, como o 3G, 4G e agora o 5G, com discussões contínuas sobre formas de tornar a internet mais rápida. Tanto a infraestrutura física quanto a lógica da internet passam por mudanças.
+
+Explorando as versões do HTTP  
+Podemos dividir as principais versões do HTTP em três categorias: HTTP, que engloba as versões 1 e 2, usadas por padrão hoje em dia; HTTPS, que é o HTTP com uma camada de segurança através de criptografia e certificados digitais; e HTTP 3, que está sendo introduzido em vários servidores para permitir o uso de tecnologias mais modernas, visando um ganho de performance em aplicações críticas ao desenvolvimento de software atual.
+
+Vamos entender as diferenças principais entre essas três versões de HTTP. A questão da segurança é a mais importante. O HTTP, por padrão, não é seguro, pois possui vulnerabilidades que tornam os dados públicos, permitindo que qualquer pessoa os rastreie. Alterações foram feitas no protocolo para garantir segurança no envio de dados. Por muito tempo, não era possível realizar pagamentos de maneira segura na web até a introdução do HTTPS, que trouxe certificados digitais e criptografia. O HTTP 3 já é seguro por padrão, com mecanismos nativos para impedir vulnerabilidades, ao contrário do HTTPS, que foi uma adaptação do HTTP.
+
+Comparando protocolos de transporte e multiplexação    
+Quanto ao protocolo de transporte, o HTTP e o HTTPS ainda utilizam o protocolo TCP, enquanto o HTTP 3 opera através de uma versão diferente, não utilizando o TCP. Isso permite uma transferência de informações mais rápida, embora ainda exista a questão dos problemas de pacotes entre TCP e UDP.
+
+A multiplexação, que permite várias requisições simultâneas em uma mesma conexão, é suportada pelo HTTP e HTTPS, mas com certos limites. O HTTP 3, pensado para acessos simultâneos, é bem suportado pelo UDP, permitindo múltiplos acessos ao mesmo tempo.
+
+Avaliando o desempenho e a adoção do HTTP/3  
+Em termos de desempenho, o HTTP e o HTTPS possuem limitações, especialmente em acessos extensos de dados. O HTTP 3, por outro lado, foi projetado para ter uma alta margem de transferência de dados, aprimorando o desempenho. É interessante notar que, em versões antigas do HTTP, não se transferia mais do que quilobytes de informação, o que era o máximo necessário na época.
+
+Atualmente, observamos que uma série ou um vídeo no YouTube pode ter mais de 30 gigabytes, e um jogo inteiro para download pode ultrapassar 100 gigabytes. Os protocolos antigos do HTTP não são mais adequados para esse volume de dados e transferência de informações. O HTTP/3 surge para resolver esse tipo de problema. A adoção do HTTP/3 é um ponto importante. Quando utilizamos URLs ou mesmo requisições no Postman, ainda se usa muito o HTTP, que é o padrão da web 1.1. Ele já realiza todas as requisições necessárias. As versões do HTTPS e do HTTP são amplamente adotadas na internet e continuarão a ser até que não suportem mais o volume de dados ou o modelo de protocolo atual.
+
+Testando diferentes versões do HTTP com curl  
+O HTTP/3 está em processo de adoção. Algumas empresas já utilizam o HTTP/3 por padrão, mas nem todos os servidores de hospedagem trabalham com ele por padrão. Em algum momento, ele será amplamente adotado. Vamos agora explorar como testar essas diferentes versões do HTTP utilizando, por exemplo, o curl.
+
+Para começar, podemos testar como fazer uma requisição na web de um site utilizando o HTTP/3. No terminal, utilizamos o seguinte comando:
+
+> curl --http3 -I http://www.cloudflare.com
+
+Ao digitar esse comando, a requisição é feita no HTTP/3, mas a resposta é devolvida no HTTP/1.1. Isso ocorre porque, ao usar a versão HTTP, é normal que a resposta seja redirecionada para o HTTPS, como indicado pelo status code 301 (movido permanentemente).
+
+Comparando tempos de resposta entre versões do HTTP  
+Com essa versão do curl, podemos testar tanto o HTTP/3 quanto outras versões do HTTP. Por exemplo, para testar o HTTP/2, podemos usar:
+
+> curl --http2 -I http://www.cloudflare.com
+
+Ao repetir o comando, podemos substituir o HTTP/3 pelo HTTP/2, obtendo a mesma resposta e status code. É importante notar que o protocolo utilizado em cada consulta é diferente, mesmo que a resposta mantenha o HTTP/1.1.
+
+Podemos verificar o tempo de cada requisição para diferentes versões do HTTP. Por exemplo, ao executar uma consulta no site usando HTTP/1.1, utilizamos o seguinte comando:
+
+> curl --http1.1 -w "Time: %{time_total}s\n" -o /dev/null -s https://api.scryfall.com/cards/random
+
+O tempo foi de 0,61 segundos. Ao trocar para HTTP/2, o comando é:
+
+> curl --http2 -w "Time: %{time_total}s\n" -o /dev/null -s https://api.scryfall.com/cards/random
+
+E o tempo foi de 0,78 segundos. Com o HTTP/3, observamos algumas diferenças ao usar:
+
+> curl --http3 -w "Time: %{time_total}s\n" -o /dev/null -s https://api.scryfall.com/cards/random
+
+O HTTP/1.1 é o mais rápido porque não realiza verificações de segurança antes da requisição, não havendo processo de criptografia. Já o HTTP/2, com 0,78 segundos, envolve mais segurança, especialmente com o HTTPS, realizando verificações que o HTTP/1.1 não faz. O HTTP/3, por ser seguro por padrão, é mais demorado. Embora o HTTP/3 seja mais rápido em desempenho, ele ainda não é amplamente utilizado. As requisições padrão são feitas no HTTP/2, e a necessidade de trocar a versão do protocolo torna a requisição mais demorada. A vantagem do HTTP/3 é que ele é seguro por definição, diferentemente do HTTP/2 e do HTTP/1.1.
+
+### Aula 3: Para saber mais: evolução do HTTP
+
+O protocolo HTTP (Hypertext Transfer Protocol) é a base da comunicação na web, permitindo a transferência de documentos e dados entre navegadores e servidores. Desde sua criação, ele passou por diversas evoluções para lidar com as crescentes demandas de desempenho, segurança e escalabilidade da internet.
+
+HTTP/1.0 e HTTP/1.1  
+O HTTP/1.0 surgiu em 1996 como a primeira padronização formal, porém cada requisição exigia uma nova conexão TCP, tornando-o ineficiente para páginas mais complexas. Em 1999, o HTTP/1.1 introduziu conexões persistentes e melhorias como o pipeline de requisições, que reduziram a latência, mas ainda apresentavam limitações com múltiplos recursos carregados simultaneamente.
+
+HTTP/2  
+Lançado em 2015, trouxe mudanças significativas, como multiplexação de streams, compressão de cabeçalhos (HPACK) e priorização de requisições. Essas melhorias diminuíram a sobrecarga das conexões e tornaram a navegação muito mais rápida, especialmente em sites com muitos elementos (imagens, scripts, folhas de estilo).
+
+HTTP/3  
+Baseado no protocolo QUIC (desenvolvido inicialmente pelo Google), o HTTP/3 substitui o TCP pelo UDP, reduzindo a latência e aumentando a resiliência em redes instáveis. Além disso, incorpora de forma nativa TLS 1.3, trazendo maior segurança. Hoje, grandes provedores de conteúdo e navegadores já oferecem suporte a esse padrão, que está se tornando a nova base para a web moderna.
+
+Referências
+
+- RFC 1945 e RFC 2616 – documentos oficiais sobre HTTP/1.0 e HTTP/1.1.
+- RFC 7540 – especificação do HTTP/2.
+- RFC 9114 – especificação do HTTP/3.
+- Site oficial do IETF [Internet Engineering Task Force](https://www.ietf.org).
+- [Cloudflare Learning Center](https://www.cloudflare.com/learning) – guias introdutórios sobre protocolos da web.
+
+### Aula 3: Armazenamento de informações - Vídeo 5
+
+Transcrição  
+Além da segurança, uma das questões mais importantes em uma aplicação web é o armazenamento de informações. Isso se aplica tanto ao lado do cliente quanto ao banco de dados, pois algumas informações precisam ser persistidas no cliente, não apenas no servidor.
+
+Vamos considerar um exemplo simples. Ao acessar o site MermaidJS, que é utilizado para criar diagramas, podemos observar que ele está no modo escuro. Se alterarmos para o modo claro e atualizarmos a página, teoricamente, o site deveria retornar ao modo escuro, pois o valor padrão pode ser o do sistema da máquina ou a versão escura. No entanto, o site mantém a configuração no modo claro, indicando que ele persiste essa informação no navegador. Assim, ao mudar para o modo escuro e atualizar a página novamente, o estado permanece. Isso demonstra que o site possui um mecanismo para persistir informações no navegador, permitindo que ele saiba quais configurações foram guardadas, mesmo após uma atualização.
+
+Explorando o uso de cookies para persistência de dados  
+Um dos sistemas mais comuns para realizar essa persistência é através de cookies. Por exemplo, ao utilizar o Postman para consultar o site da Amazon, ao enviar uma requisição, recebemos o HTML da Amazon. Ao verificar os cookies, observamos que muitos são utilizados, como o i18n, que é importante para internacionalização e definição de idioma. O cookie BLR pode estar relacionado a questões monetárias, enquanto IPTBR refere-se ao idioma. Assim, ao acessar a Amazon novamente, o site já possui informações sobre o idioma e a moeda, garantindo que o conteúdo esteja adequado às preferências regionais da pessoa usuária.
+
+Quando diversos sites perguntam se desejamos guardar cookies, eles estão se referindo a esse tipo de informação: idioma, moeda, entre outros. Em cerca de 90% dos e-commerces, essas informações são armazenadas por padrão, pois os sites desejam carregar o conteúdo de acordo com as preferências regionais da pessoa usuária.
+
+Analisando o papel de sessões e cookies no contexto de login  
+Um dos usos mais comuns de sessões e cookies é no contexto de login.
+
+Fizemos o login no GitHub para demonstrar que, caso fechemos a aba e retornemos ao Postman, ao abrir o GitHub novamente, ele nos direciona para a tela de login, em vez de abrir diretamente a página do GitHub. Isso ocorre porque todos aqueles formulários de login, que às vezes apresentam o campo "Remember Me" para lembrar a pessoa usuária que está acessando o sistema, são geridos por cookies e sessões. Todo esse processo de reconhecimento do login feito na máquina envolve informações armazenadas no cliente, neste caso, no navegador.
+
+Por exemplo, se tentarmos acessar o GitHub pelo Postman, o login do nosso usuário não seria realizado, pois são contextos diferentes. No GitHub, o login já efetuado é armazenado em uma sessão, e outras informações podem ser guardadas por cookies. Este é um exemplo claro de como algumas informações são armazenadas, incluindo preferências como o idioma utilizado no GitHub. Se houver um cookie que armazene essa informação para traduções, ele também pode ser utilizado. Essas pequenas alterações geralmente são guardadas por cookies, para que, caso a informação seja recarregada no navegador, ela já esteja configurada, evitando a necessidade de buscar essa informação no banco de dados ou mantê-la em um servidor. Isso pode ser vantajoso ou desvantajoso, dependendo de como a aplicação é configurada.
+
+Examinando o impacto do armazenamento de sessões em e-commerces  
+Um exemplo interessante é o e-commerce. Quando criamos um carrinho, como na Amazon, algumas aplicações armazenam o carrinho como um cookie ou como parte da sessão. Se criarmos um pedido em um computador e tentarmos finalizá-lo em outro, alguns e-commerces possuem mecanismos internos para guardar o carrinho, enquanto outros não. Assim, ao abrir um carrinho novo em outro computador, ele pode estar zerado. Este é um exemplo comum de sessão, onde a informação armazenada apenas no lado do cliente, e não no servidor, pode resultar em uma quebra na experiência do usuário.
+
+Refletindo sobre a evolução da web e a importância do armazenamento e segurança  
+Com isso, percebemos que a web evoluiu de um simples envio e recebimento de mensagens, como era na década de 90, para um ambiente com diversas preocupações, especialmente em armazenamento e segurança. É crucial que qualquer pessoa desenvolvedora compreenda os mecanismos da web para implementar corretamente esses sistemas e criar produtos adequados à experiência desejada para a aplicação.
+
+### Aula 3: Criptografia - Vídeo 6
+
+Transcrição  
+Uma questão que podemos ter percebido nas explicações sobre as versões do HTTP é que a segurança se tornou primordial para o funcionamento da web como a conhecemos atualmente. Hoje em dia, realizamos muitas operações consideradas vulneráveis no ambiente da internet. Pagamos produtos por e-commerce, fazemos transferências em aplicações bancárias e enviamos informações pessoais que não queremos que sejam vazadas. Todos esses tipos de informações precisam de uma camada de segurança para impedir que sejam roubadas ou adulteradas.
+
+Quando a web foi inicialmente concebida, especialmente na versão HTTP, ela era vulnerável a diversos tipos de ataques. Vamos discutir alguns dos ataques mais comuns que ocorriam na web e mostrar casos de como esses problemas aconteciam.
+
+Explorando tipos comuns de ataques na web  
+Primeiramente, temos a interceptação. Quando tentamos acessar um recurso, clicamos em um link e, em vez de obtermos o resultado esperado, somos redirecionados para outro link. Isso é chamado de interceptação. O recurso solicitado é capturado por um interceptador, que nos envia uma resposta com base nessa interceptação. Esse tipo de problema é sério, pois podemos estar enviando dados sensíveis que são utilizados pelo interceptador.
+
+Outro ataque é o man-in-the-middle, que é semelhante à interceptação, mas com um cenário diferente. Nesse caso, o atacante não intercepta a requisição para redirecioná-la, mas atua como um agente no meio, capturando as informações entre a requisição enviada e a resposta recebida. Embora inicialmente pareça inofensivo, o man-in-the-middle pode utilizar essas informações para fins maliciosos, especialmente em transações financeiras.
+
+Temos também o phishing, uma prática ainda bastante utilizada na internet. Nesse caso, um site é criado para parecer exatamente como outro site legítimo, mas não é o site verdadeiro. Isso ocorre frequentemente com sites do governo, onde um site falso é utilizado para roubar informações de pessoas distraídas que acreditam estar acessando o site oficial.
+
+Por fim, temos o problema de injection, comumente exemplificado pelo SQL Injection. Esse tipo de invasão ocorre quando informações maliciosas são enviadas para o servidor através de formulários. Não é uma questão do lado do cliente, mas sim do lado do servidor. Pessoas mal-intencionadas podem preencher campos de formulários com comandos SQL para realizar consultas ou até mesmo deletar o banco de dados inteiro do servidor.
+
+Explicando o papel do TLS e HTTPS na segurança  
+O que ajudou a proteger a web contra esses tipos de ataques foi, principalmente, o protocolo de criptografia que utilizamos atualmente na web, o TLS (Transport Layer Security).
+
+O HTTPS, que é a versão segura do HTTP, funciona a partir do protocolo TLS, que é uma camada responsável pelo transporte seguro das informações. Ele possui mecanismos de segurança que garantem que, ao enviar uma informação, ela já esteja criptografada. Mesmo que alguém intercepte a comunicação, não conseguirá descriptografar ou traduzir a informação, pois não possui o mecanismo necessário para quebrar a criptografia e verificar a mensagem corretamente.
+
+Compreendendo os tipos de criptografia utilizados  
+O HTTPS utiliza uma combinação de dois tipos de criptografia: simétrica e assimétrica. Na prática, para nós, como usuárias e usuários, a diferença é mínima. A URL passa a incluir um "S", indicando segurança, como em https://www.alura.com.br, em vez de http://alura.com.br.
+
+Vamos entender a diferença entre as criptografias. A criptografia simétrica é mais simples e requer que ambas as extremidades conheçam a chave para descriptografar a mensagem. Isso ocorre no navegador, sem que precisemos nos preocupar. Já a criptografia assimétrica não exige o compartilhamento de chaves entre as extremidades. Ela utiliza um sistema de chave pública e chave privada, oferecendo maior segurança na transferência de informações, mesmo que alguém conheça a chave compartilhada.
+
+Destacando a importância dos certificados digitais  
+Para que a web utilize esses mecanismos de criptografia, são necessários certificados digitais. Todo site possui um certificado, emitido por uma autoridade certificadora, que garante o uso do HTTPS. No site da Alura, por exemplo, podemos verificar essas informações no navegador. Ao clicar no ícone de informações do site, ao lado da barra de endereços, vemos que a conexão é segura, pois o site utiliza HTTPS. As informações transmitidas são criptografadas e permanecem privadas, graças ao certificado válido.
+
+Cada site possui um certificado digital específico, vinculado à aplicação, que permite a criptografia das informações enviadas. Para nós, como pessoas desenvolvedoras, é importante gerar um certificado digital para aplicações que exigem segurança. Esse certificado deve estar vinculado ao domínio da aplicação, como alura.com.br. Quando geramos um certificado digital, ele é associado ao nosso domínio específico.
+
+### Aula 3: Para saber mais: como o HTTPS funciona?
+
+O HTTPS (Hypertext Transfer Protocol Secure) é a versão segura do protocolo HTTP, amplamente utilizado na web para garantir que a comunicação entre navegador e servidor seja confidencial e protegida contra ataques. Ele adiciona uma camada de segurança baseada em SSL/TLS (Secure Sockets Layer / Transport Layer Security).
+
+Como funciona o HTTPS
+
+Conexão inicial (handshake TLS)  
+Quando um cliente (como o navegador) acessa um servidor via HTTPS, ocorre o chamado handshake. Nesse processo, as partes negociam algoritmos de criptografia e o servidor envia um certificado digital para comprovar sua identidade.
+
+Verificação do certificado  
+O navegador verifica se o certificado foi emitido por uma Autoridade Certificadora (CA) confiável. Isso assegura que o site realmente é quem diz ser, evitando ataques de falsificação (como phishing ou man-in-the-middle).
+
+Troca de chaves  
+Durante o handshake, o cliente e o servidor trocam informações para gerar uma chave de sessão. Essa chave será usada para criptografar toda a comunicação de forma simétrica, garantindo velocidade e segurança.
+
+Transmissão segura de dados  
+Com a chave de sessão estabelecida, todas as informações trocadas (como logins, senhas e dados pessoais) são criptografadas. Assim, mesmo que alguém intercepte o tráfego, não conseguirá ler os dados.
+
+Benefícios do HTTPS
+
+- Confidencialidade: dados transmitidos não podem ser lidos por terceiros.
+- Integridade: evita que informações sejam alteradas durante a transmissão.
+- Autenticidade: confirma que o servidor acessado é realmente o correto.
+- SEO e confiança: navegadores modernos marcam sites sem HTTPS como inseguros, e buscadores dão preferência a sites seguros nos resultados.
+
+Referências
+
+- [Guia da Mozilla sobre HTTPS](https://developer.mozilla.org/docs/Web/HTTP/HTTPS)
+- [Documentação do TLS 1.3 no IETF](https://datatracker.ietf.org/doc/html/rfc8446)
+- [Let’s Encrypt](https://letsencrypt.org) (CA gratuita e automatizada)
+- [Google Security Blog](https://security.googleblog.com) sobre o impacto do HTTPS
+
+### Aula 3: Faça como eu fiz: HTTP e Cabeçalhos
+ Próxima Atividade
+
+Nesta aula, revisamos conceitos de status codes, cabeçalhos HTTP, versões do protocolo e segurança na web. Agora é a oportunidade de aplicar estes conceitos na prática. Para isso:
+
+- Identifique as categorias de status codes (100, 200, 300, 400, 500) e seus significados.
+- Enumere exemplos comuns, como 200 (OK), 404 (Not Found) e 500 (Erro Interno).
+- Diferencie os elementos da requisição: linha de método, URI e protocolo.
+- Separe claramente os cabeçalhos do corpo da requisição.
+- Configure uma requisição POST com cabeçalhos como Host, Content-Type, Authorization e Content-Length.
+- Analise os cabeçalhos exibidos em uma requisição e identifique o papel de cada um.
+- Utilize o DevTools ou Postman para visualizar os detalhes dos headers enviados e recebidos.
+- Verifique como o Accept, User-Agent e Accept-Language definem o tipo de resposta e a localidade.
+- Realize uma requisição GET e confirme o retorno de status code 200 e o conteúdo HTML.
+- Compare os casos de resposta utilizando diferentes versões do HTTP (1.1, 2 e 3).
+- Teste requisições com ferramentas de linha de comando para forçar o uso do HTTP/3.
+- Registre os tempos de resposta de cada versão para avaliar desempenho.
+- Explique a diferença entre HTTP e HTTPS, enfatizando a segurança oferecida pelos certificados digitais.
+- Descreva as vantagens do HTTP/3, como a multiplexação e desempenho aprimorado.
+- Liste os tipos de dados armazenados via cookies e sessões no navegador.
+- Reconheça os riscos de vulnerabilidades, como man-in-the-middle, interceptação, phishing e injection.
+- Analise como o TLS e os certificados digitais garantem a criptografia e segurança das requisições.
+
+Para consultar o guia detalhado, verifique as transcrições da aula.
+
+### Aula 3: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Os status codes do protocolo HTTP e suas cinco categorias principais.
+- A estrutura e uso de cabeçalhos em requisições HTTP, como Content-Type e Authorization.
+- O uso do Postman para inspecionar componentes de requisições HTTP.
+- As diferenças entre HTTP, HTTPS e HTTP/3, e suas implicações de segurança e desempenho.
+- A importância do armazenamento de informações no cliente através de cookies e sessões para experiência do usuário.
+- A necessidade de segurança nas operações web modernas e proteção contra ataques cibernéticos.
+- Como o protocolo TLS no HTTPS protege a web através de criptografia.
+- A importância de certificados digitais para assegurar conexões HTTPS.
+
+## Aula 4: Desenvolvimento Web
+
+### Aula 4: Ferramentas e depuração - Vídeo 1
+
+Transcrição  
+Existem diversas ferramentas para entender e trabalhar com a infraestrutura da web. Vamos explorar como essas ferramentas são utilizadas, começando com o DevTools e passando por clientes HTTP e ferramentas de linha de comando como o curl.
+
+Enquanto tentávamos entender como a web funciona, percebemos que uma série de ferramentas se tornou necessária para verificar vários aspectos da infraestrutura da web. Utilizamos desde o terminal até aplicações que operam no navegador, e é importante compreender como cada uma delas funciona e como são úteis no nosso dia a dia.
+
+Utilizando o DevTools para depuração  
+A principal dessas ferramentas é o DevTools, que é a ferramenta de depuração que usamos para verificar qualquer coisa na internet. Ao acessar o navegador e pressionar F12, podemos inspecionar o HTML e visualizar diversos recursos que permitem a inspeção de como a web está funcionando, como uma determinada aplicação está operando e quais informações estamos recebendo. Para aplicações web, o navegador é a fonte final de verdade, mostrando como a informação está sendo transmitida para cada cliente.
+
+Devemos entender que o DevTools não é apenas uma ferramenta, mas um conjunto de ferramentas que trabalha em conjunto com o navegador para compreender o comportamento das nossas aplicações. Ele permite verificar a rede para acessar todas as informações disponíveis, inspecionar cookies no navegador, analisar requisições para entender o protocolo HTTP e verificar as respostas recebidas. A inspeção de HTML também é uma função importante. Todas essas ferramentas estão agrupadas no DevTools.
+
+Inspecionando HTML e realizando debug  
+Geralmente, usamos o DevTools principalmente para inspecionar HTML e realizar debug para verificar se o JavaScript está funcionando corretamente, se o CSS foi carregado adequadamente ou se as imagens estão no formato correto. Toda a visão detalhada do código do front-end está relacionada às versões HTML, CSS, JavaScript e qualquer outra função que possa ser inspecionada pelo navegador.
+
+Compreendendo clientes HTTP e suas aplicações  
+Além disso, temos os clientes HTTP, que são essenciais para entender o funcionamento da web, especialmente no que diz respeito às APIs. Ao longo dos vídeos, discutimos sobre APIs, e em breve abordaremos o que de fato é uma API. Os clientes HTTP são fundamentais para testar modelos de aplicações que trabalham com a diferença entre back-end e front-end, que são as APIs.
+
+Existem vários clientes HTTP, sendo o mais famoso o Postman, mas também temos o Insomnia e o Thunderclient, que é uma extensão do Visual Studio Code que simula um cliente HTTP. O próprio cURL pode ser considerado um cliente HTTP, mas aqui nos referimos a clientes com interface, um ambiente mais completo para testar nossas aplicações. A vantagem de usar esse tipo de ferramenta é que podemos criar uma plataforma colaborativa. Assim, podemos estruturar requisições que uma organização pode acompanhar, controlar, testar e alterar, tudo isso graças a essas plataformas.
+
+Facilitando testes colaborativos com Postman  
+Imagine que temos uma empresa com várias aplicações, e essas aplicações possuem diversas rotas que precisam ser testadas continuamente. Seria complicado se cada pessoa criasse seu próprio projeto para fazer requisições web utilizando clientes HTTP, ou se cada uma configurasse seu Postman da maneira que achasse melhor. Para isso, o Postman oferece ferramentas para que todo o time, com acesso a um workspace (espaço de trabalho), possa configurar de forma aceitável esses testes, tornando-se o melhor cliente HTTP para as aplicações.
+
+Os principais clientes HTTP utilizados são o Postman, Insomnia, Thunderclient, entre outros. Sempre surgem novos modelos, open source ou não, cada um com suas diferenças e particularidades que podem ser mais proveitosas, dependendo da aplicação que está sendo testada.
+
+Utilizando curl e ferramentas de linha de comando  
+No lado do terminal, em um nível mais baixo, trabalhamos com recursos do sistema operacional, como o curl, um programa utilizado em aplicações de console (CLI). Utilizamos o curl para tarefas intensivas, como rodar scripts em Bash ou Python, ou agentes de IA na linha de comando. Atualmente, temos o Codex CLI, Dantropic, Cloud Code, e outras ferramentas de IA que operam com agentes no computador. Essas ferramentas precisam executar comandos no sistema operacional, e o curl é um dos comandos mais utilizados para testar APIs ou acessos a aplicações web, verificando o comportamento esperado, se o status code está correto, e se a informação está sendo enviada corretamente em HTML.
+
+Exemplificando o uso do curl  
+Para ilustrar como o curl pode ser utilizado, vejamos um exemplo de requisição HTTP para obter um card aleatório da API Scryfall:
+
+```cmd
+curl -X GET \
+  'https://api.scryfall.com/cards/random' \
+  --header 'Accept: */*' \
+  --header 'User-Agent: Thunder Client'
+```
+
+Esse comando curl faz uma requisição GET para a API Scryfall, especificando cabeçalhos para aceitar qualquer tipo de resposta e identificando o cliente como Thunder Client. Isso demonstra como podemos usar o curl para interagir com APIs diretamente do terminal.
+
+Incorporando ferramentas CLI em scripts  
+Essas ferramentas CLI estão sendo cada vez mais incorporadas e utilizadas por agentes de IA, e são úteis para nós ao criar scripts ou testar no terminal, pois o curl permite realizar testes de forma pura, garantindo que o cliente HTTP está sendo executado corretamente. Com o curl, podemos transferir informações de maneira simples pelas URLs, suportando diversos protocolos, não apenas o HTTP. A web funciona com outros protocolos, como SMTP para e-mails e FTP para arquivos. Embora o HTTP seja o protocolo mais comum em aplicações web, outros protocolos também precisam ser verificados, dependendo da aplicação.
+
+Concluindo sobre ferramentas para desenvolvedores  
+A web oferece uma série de ferramentas que facilitam nosso trabalho, cada uma com sua responsabilidade. Existem várias ferramentas que podem ser utilizadas para auxiliar nosso trabalho como pessoas desenvolvedoras. Aqui estão as principais que utilizamos no dia a dia. Cada empresa tem suas particularidades, mas geralmente seguem esse padrão ao lidar com aplicações web.
+
+### Aula 4: Utilizando DevTools para otimizar a experiência do usuário na Clickbonus - Exercício
+
+A Clickbonus, uma plataforma digital que oferece um clube de vantagens e recompensas personalizadas por meio de parcerias com diversas empresas, está enfrentando desafios para garantir que a experiência do usuário seja fluida e sem interrupções. A equipe de desenvolvimento que você faz parte foi encarregada de investigar por que algumas pessoas usuárias estão relatando lentidão ao acessar a página de recompensas.
+
+Qual abordagem utilizando o DevTools seria mais eficaz para identificar e resolver os problemas de desempenho na página?
+
+Resposta correta  
+Utilizar a aba "Network" para monitorar o carregamento de recursos, identificar arquivos que demoram para carregar e verificar erros de requisição, seguido pela aba "Performance" para analisar o tempo de execução de scripts, renderização e layout, e a aba "Lighthouse" para gerar relatórios de desempenho e sugestões de melhorias.
+
+> Correta, pois essa abordagem permite uma análise abrangente dos aspectos de desempenho da página, identificando gargalos como imagens não otimizadas ou scripts pesados, e fornece sugestões práticas para melhorias.
+
+### Aula 4: O conceito de API - Vídeo 2
+
+Transcrição  
+Quando falamos de aplicações web, é importante nos atentarmos ao fato de que, ao acessarmos e consultarmos uma informação na internet, como em páginas da Amazon, Alura ou Netflix, recebemos apenas a informação completa do HTML. No entanto, uma aplicação web, especialmente nos modelos atuais, é geralmente dividida em dois componentes: o front-end, que inclui HTML, CSS, JavaScript ou uma aplicação móvel, e o back-end, onde ocorre todo o processamento das informações que serão armazenadas. O back-end é a parte do servidor, conforme discutido anteriormente no modelo cliente-servidor.
+
+Existem aplicações integradas, geralmente desenvolvidas por pessoas desenvolvedoras full-stack, que trabalham em ambas as partes simultaneamente. Contudo, na maioria dos casos, as aplicações são separadas devido à complexidade. O back-end, por não exigir uma interface gráfica, precisa se comunicar adequadamente com uma aplicação front-end ou móvel. Além disso, os serviços do back-end podem ser públicos e consumidos por outros clientes.
+
+Definindo o conceito de API  
+Esse modelo de aplicação é conhecido como API (Application Program Interface), que é uma interface voltada para a comunicação entre diferentes aplicações. Uma API permite que um ou mais softwares se comuniquem e compartilhem dados entre si. Por exemplo, em uma aplicação móvel, muitos serviços são compartilhados entre si. A aplicação móvel não possui todo o back-end; muitos serviços são de terceiros e gerenciados por outras entidades.
+
+Esses serviços de terceiros podem incluir comunicação por e-mail ou SMS, onde um servidor fornece a interface para que o dispositivo móvel se comunique com o back-end. O mesmo se aplica a conteúdo multimídia, como imagens e vídeos, que geralmente são armazenados em servidores na Amazon, Microsoft Azure ou Google Cloud. Para armazenamento na nuvem, quando precisamos guardar dados específicos, utilizamos bancos de dados com interfaces próprias.
+
+Explorando o uso de APIs em diferentes serviços  
+Na análise de dados, a ciência de dados e a geração de relatórios podem ser geridos por serviços separados. Redes sociais como Twitter, Facebook e Instagram possuem APIs específicas para comunicação e operações relacionadas. Isso também é comum em aplicações de pagamento, onde serviços de terceiros, como Mercado Pago e PagBank, fornecem meios de pagamento para as aplicações.
+
+A geolocalização é outro exemplo, com a API do Google Maps sendo amplamente utilizada por aplicativos de GPS, como Waze e Uber, e por aplicações de logística. Notificações, como as recebidas no celular, são geridas por APIs externas. O gerenciamento de dados, segurança e autenticação também são vinculados a APIs ou serviços externos.
+
+Exemplificando o uso de APIs em aplicações web  
+Cada um desses serviços pode ser uma API separada, compondo a aplicação final. Por exemplo, uma aplicação web como o Scryfall, que exibe informações de cartas de Magic, é voltada para o usuário final. Ao clicar em uma coleção, a aplicação carrega informações e imagens em HTML. No entanto, outra aplicação, como o Moxfield, que cria decks, pode utilizar os serviços do Scryfall para obter informações de cartas e imagens.
+
+O Scryfall possui uma documentação de API que permite a consulta de informações sem carregar o HTML completo. Em vez disso, ele gera um JSON que pode ser consumido por outras aplicações para carregar um HTML diferente. Essa diferença entre uma API e uma aplicação web tradicional permite que informações sejam compartilhadas entre aplicações.
+
+Introduzindo os tipos de APIs  
+Agora, vamos discutir os tipos de APIs.
+
+Desde que o conceito de API foi desenvolvido, ele foi inicialmente pensado em um modelo chamado SOA, que por sua vez sucedeu outro modelo. O raciocínio de ter serviços compartilhados existe há muito tempo. No entanto, o conceito de API se popularizou principalmente com a definição das APIs REST ou APIs RESTful. Isso ocorre porque elas seguem o padrão REST, que é o principal protocolo utilizado atualmente para comunicação entre serviços web completamente distribuídos ou separados.
+
+Comparando diferentes modelos de APIs  
+Quando mencionamos gateways de pagamento, notificações push e até mesmo alguns protocolos que envolvem aplicações de IA, percebemos que eles utilizam bastante a API REST. Isso se deve ao fato de ser o modelo mais simples e comum, amplamente difundido pela comunidade. Portanto, a API REST é o modelo padrão utilizado. A própria API do SquareFolk, mencionada anteriormente, segue o padrão RESTful.
+
+Há também um modelo mais antigo, as APIs SOAP, que operavam com um modelo mais rígido de transferência de informações. O SOAP não utilizava JSON, mas sim XML, o que resultava em uma transferência de dados mais volumosa e, consequentemente, em problemas. Um JSON requer apenas chaves, parênteses e dois pontos para estruturar chave-valor, formando uma estrutura de árvore mais condensada. Já o SOAP, com suas tags XML, podia apresentar problemas se uma tag fosse enviada incorretamente. Embora ainda utilizado por sistemas legados, o SOAP foi substituído pelo padrão API REST, que é mais eficiente e possui um padrão de comunicação definido pela OpenAPI, uma organização que promove APIs abertas.
+
+Explorando novos modelos de APIs  
+Outro modelo é o GraphQL, uma ferramenta criada pelo Facebook que permite um modelo de API mais flexível, baseado em consultas personalizadas para cada usuário. Embora comparado a uma consulta SQL na web, o GraphQL permite que se faça uma consulta dentro da requisição, solicitando dados de forma dinâmica conforme as definições feitas. Isso proporciona uma flexibilidade que outras APIs não possuem, pois as APIs REST são voltadas a contratos, exigindo um corpo de requisição específico para obter uma resposta específica. O GraphQL, por outro lado, permite especificar exatamente os campos desejados na resposta.
+
+Temos também o modelo de APIs WebSocket, voltado para aplicações em tempo real, como jogos online, gráficos e bolsas de valores. Diferente dos outros modelos, onde é necessário enviar requisições constantemente, o WebSocket estabelece um canal de comunicação contínuo entre as extremidades, permitindo uma transferência constante de informações.
+
+O gRPC é um modelo mais recente de comunicação adotado por APIs, que, ao contrário dos outros modelos, não utiliza JSON, mas sim informações binárias convertidas e enviadas. Isso torna o gRPC mais rápido na entrega de informações em comparação com a API REST, que ainda utiliza JSON. Devido à sua velocidade, o gRPC é preferido em aplicações que exigem alta performance.
+
+Discutindo APIs abertas e seus usos  
+Existem APIs abertas, como a do SquareFolk, que qualquer pessoa pode acessar, desde que siga as regras estipuladas na documentação. APIs abertas não significam necessariamente uso gratuito, mas sim que não é necessário se cadastrar como uma entidade para acessá-las. Existem várias APIs abertas no mundo, oferecendo funcionalidades em diversas categorias, como a NASA API, que fornece dados de pesquisas, ou a Open Weather Map, que disponibiliza informações de previsão do tempo.
+
+Um projeto interessante no GitHub é o "Public APIs", que apresenta uma série de APIs públicas e abertas para teste e uso. Ele abrange diversas categorias, como APIs de animais, animes, livros, calendário, e-mail, finanças, comidas, jogos, geolocalização, governo, saúde, trabalhos, música e notícias. Essas APIs abertas podem estar disponíveis ou não, mas oferecem várias opções e até mesmo APIs de reserva para garantir o funcionamento contínuo das aplicações. Quando falamos de uma aplicação web que consome APIs, se não for um serviço pago, geralmente há APIs de backup para garantir a continuidade do serviço.
+
+### Aula 4: Testando APIs de dispositivos na HomeHub - Exercício
+
+A HomeHub, uma plataforma de monitoramento e controle de dispositivos para casas inteligentes, está desenvolvendo uma nova funcionalidade que integra dispositivos de segurança com o sistema de iluminação. A equipe de desenvolvimento precisa garantir que as APIs que conectam esses dispositivos estejam funcionando corretamente.
+
+Qual é a melhor maneira de utilizar um cliente HTTP, como o Postman, para testar e validar as rotas das APIs envolvidas nessa integração?
+
+Resposta correta  
+Utilizar o Postman para criar requisições HTTP que simulem as interações esperadas entre os dispositivos, configurando requisições GET, POST, PUT ou DELETE conforme necessário para cada rota da API. Enviar as requisições, verificar as respostas, observando o status code, o tempo de resposta e o formato dos dados retornados. Criar coleções de requisições que podem ser compartilhadas e executadas por toda a equipe.
+
+> Correta, pois essa abordagem permite testar de forma abrangente e colaborativa as interações entre dispositivos, garantindo que as APIs funcionem conforme o esperado e que todos os membros da equipe possam acompanhar e validar o funcionamento das APIs.
+
+### Aula 4: Para saber mais: tipos de protocolos de API
+
+As APIs (Application Programming Interfaces) são fundamentais para a comunicação entre sistemas, permitindo a integração de serviços, dados e funcionalidades. Existem diferentes protocolos de API, cada um com características próprias, que influenciam no desempenho, segurança e facilidade de implementação.
+
+REST (Representational State Transfer)  
+Baseado no protocolo HTTP, é o padrão mais popular atualmente. Utiliza recursos identificados por URLs e operações baseadas em métodos HTTP (GET, POST, PUT, DELETE). É simples, escalável e amplamente suportado.
+
+SOAP (Simple Object Access Protocol)  
+Mais antigo e formal, utiliza XML para troca de mensagens. É orientado a contratos (WSDL) e conhecido pela robustez em ambientes corporativos, mas também pela maior complexidade em comparação ao REST.
+
+GraphQL  
+Criado pelo Facebook em 2015, permite ao cliente definir exatamente quais dados deseja receber, evitando overfetching (trazer dados em excesso) ou underfetching (trazer dados insuficientes). É altamente flexível para aplicações modernas.
+
+gRPC (Google Remote Procedure Call)  
+Desenvolvido pelo Google, utiliza Protocol Buffers (Protobuf) para serialização de dados binários, o que garante alta performance e baixo consumo de rede. É muito usado em microsserviços e comunicação em tempo real.
+
+WebSockets  
+Não é um protocolo de API no sentido clássico, mas um padrão para comunicação bidirecional em tempo real entre cliente e servidor. Ideal para chats, jogos online e sistemas de monitoramento.
+
+Referências
+
+- [Documentação oficial do REST](https://restfulapi.net)
+- [Guia da W3C sobre SOAP](https://www.w3.org/TR/soap)
+- [GraphQL oficial](https://graphql.org)
+- [gRPC oficial](https://grpc.io)
+- [WebSockets MDN](https://developer.mozilla.org/docs/Web/API/WebSockets_API)
+
+### Aula 4: Nuvem - Vídeo 3
+
+Transcrição  
+No final de tudo, uma preocupação importante é garantir que nossa aplicação esteja funcionando corretamente. Quando falamos em "funcionar corretamente", não nos referimos apenas a executar o código, mas sim a hospedar nosso código em um local que permita que a aplicação esteja disponível para o mundo inteiro. No contexto de aplicações web, isso significa estar "de pé". Isso difere de um aplicativo móvel, que instalamos no celular, ou de um aplicativo de desktop, que baixamos e instalamos no computador.
+
+Para hospedar nossas aplicações, precisamos colocá-las na nuvem. Existem dois tipos de hospedagem que discutimos: a hospedagem tradicional e a hospedagem na nuvem. A hospedagem tradicional envolve a compra e configuração de um servidor próprio, onde colocamos nossa aplicação. Nesse caso, é necessário contratar um serviço de internet, adquirir um IP e um domínio, além de todos os mecanismos de rede necessários para hospedar a aplicação e permitir que ela se comunique com o mundo.
+
+Comparando hospedagem tradicional e na nuvem  
+No entanto, o modelo mais utilizado atualmente, por diversos fatores como facilidade de distribuição, manutenção, garantias de redundância, entre outros, é a hospedagem na nuvem. Embora a hospedagem tradicional seja importante para o aprendizado e testes, a nuvem oferece um ambiente muito mais seguro para disponibilizar aplicações de maneira adequada.
+
+Entre os principais serviços de hospedagem na nuvem, destacamos a AWS, gerenciada pela Amazon. A AWS é um dos principais serviços que disponibilizam aplicações na web. Já foi mencionado que um terço ou mais da internet mundial atualmente opera sobre a AWS.
+
+Explorando fornecedores de nuvem  
+Existem empresas de grande porte que utilizam a AWS, como a Netflix e a Pokémon Company, além de várias outras grandes empresas que também têm suas aplicações hospedadas na AWS. Temos também a Azure, que é o serviço da Microsoft e é um dos principais concorrentes da AWS em termos de participação de mercado e capacidade de competição. A Azure oferece boa parte dos serviços que a AWS possui. Cada fornecedor de nuvem pode ter suas particularidades, mas, em geral, eles oferecem serviços semelhantes. Algumas pequenas particularidades podem levar uma empresa a escolher um fornecedor em detrimento de outro.
+
+A Oracle também é uma parceira de serviços de nuvem em nível mundial, sendo uma empresa antiga e consolidada, com um trabalho significativo na área de serviços de nuvem. Além disso, existem serviços que utilizam a nuvem e fornecem outros serviços para aplicações mais consolidadas, facilitando certos tipos de hospedagem. Um exemplo notável é a Vercel, que dita as regras através do framework que criaram, o Next.js, talvez o framework mais utilizado com o React. Muitas aplicações web são mantidas pela Vercel, que atualmente agrupa uma série de aplicações populares mundialmente.
+
+Considerando opções de segurança e hospedagem  
+Temos também a Cloudflare, que é uma das principais empresas em segurança para aplicações web no mundo. Muitos desenvolvedores afirmam que, se a Cloudflare cair, a internet também cai, pois ela é responsável por muitos dos principais serviços de segurança em plataformas de serviços web.
+
+Existem várias maneiras de hospedar uma aplicação web, cada uma com suas particularidades. A escolha depende do que se considera melhor e da complexidade da aplicação. Por exemplo, para uma página estática em HTML, o GitHub Pages é um serviço comum para testar o básico de uma aplicação web. Para uma aplicação em React, pode ser necessário utilizar a Vercel. Se a aplicação incluir front-end, back-end, serviços de IA e outros componentes, pode ser necessário um serviço de nuvem mais robusto para atender às necessidades. A escolha do serviço dependerá da complexidade da aplicação.
+
+### Aula 4: Mercado de trabalho web - Vídeo 4
+
+Transcrição  
+A web tornou-se tão complexa que foi necessária a criação de uma série de funções, cada uma dividida para lidar com toda essa complexidade atual da internet. No passado, o mercado de trabalho contava com o webmaster ou apenas um serviço de desenvolvedor web, que era uma pessoa responsável por tudo. Desde a concepção de uma página web até a hospedagem, essa pessoa dominava todas as etapas. Atualmente, é impossível dominar todas as fases de uma aplicação web. Com isso, houve uma divisão em vários pequenos papéis que, juntos, compõem o mercado de trabalho em aplicações web.
+
+Definindo os papéis dos desenvolvedores  
+Temos o desenvolvedor front-end, que cuida da parte visual, a qual será utilizada pelos usuários finais. O desenvolvedor back-end atua nos bastidores, criando serviços que serão utilizados pelos clientes em forma de APIs, ou desenvolvendo as APIs que serão utilizadas pelo front-end. O desenvolvedor full-stack é mais generalista, pois consegue trabalhar tanto no front-end quanto no back-end, atuando em ambas as frentes. Esse papel é muito importante em várias empresas que necessitam desse tipo de profissional.
+
+Explorando o papel do engenheiro de DevOps  
+Temos o engenheiro de DevOps, que é responsável principalmente pela implantação e observabilidade das aplicações. Ele verifica se as aplicações estão funcionando corretamente, identifica possíveis problemas, programa manutenções e auxilia na implementação de novas versões. O profissional de DevOps desempenha o papel crucial de manter o software em operação, garantindo que ele funcione de maneira eficaz.
+
+Garantindo a qualidade com o engenheiro de QA  
+Além disso, temos o engenheiro de QA, que também precisa ter conhecimento em web. Sua função é testar a aplicação de todas as formas possíveis para identificar falhas e apresentar os insights necessários para que as pessoas desenvolvedoras possam corrigir e melhorar as aplicações. É importante ressaltar que todas as aplicações geralmente apresentam bugs, e cabe ao QA identificar esses problemas e colaborar na sua resolução.
+
+Assegurando a segurança das aplicações  
+Outro papel importante é o do engenheiro de segurança. A segurança é fundamental para garantir que as informações não sejam comprometidas, e essa responsabilidade recai sobre o engenheiro de segurança.
+
+Colaborando para o sucesso das aplicações web  
+Observamos que o desenvolvimento web envolve diversos setores, cada um colaborando para garantir aplicações web funcionais. Em aplicações de grande porte, todos esses papéis são necessários, e equipes são formadas para gerenciar essas funções. Isso ocorre porque as aplicações web atuais são bastante complexas, abrangendo muitas áreas que precisam interagir de maneira eficaz para que tudo funcione corretamente.
+
+### Aula 4: Para saber mais: comunicação com gRPC
+
+Visão Geral do gRPC  
+O gRPC é um framework de chamada remota de procedimento (RPC) desenvolvido pelo Google, que se destaca por utilizar o protocolo HTTP/2 para comunicação e o Protocol Buffers para serialização dos dados. Essa combinação torna a transferência de informações mais rápida e eficiente, principalmente em aplicações que exigem alta performance e baixa latência.
+
+Funcionamento Interno  
+No gRPC, o contrato entre serviços é definido por arquivos de especificação chamados de .proto. Esses arquivos descrevem as mensagens (estruturas de dados) e os métodos disponíveis no serviço. Durante a compilação, são geradas as classes necessárias para a comunicação tanto no lado do servidor quanto no do cliente.
+
+Um dos diferenciais do gRPC é a capacidade de suportar diferentes padrões de comunicação: além da chamada simples (unária), ele possibilita comunicações com streaming do cliente, do servidor ou bidirecional, o que é fundamental em cenários como atualizações em tempo real e transmissão contínua de dados.
+
+Exemplo de definição em um arquivo .proto:
+
+```Script
+syntax = "proto3";
+
+service ExemploService {
+  rpc ObterDados (Requisicao) returns (Resposta);
+}
+
+message Requisicao {
+  string parametro = 1;
+}
+
+message Resposta {
+  string resultado = 1;
+}
+```
+
+Comparativo com Outras Abordagens  
+Diferente do tradicional modelo REST, que normalmente utiliza JSON para intercâmbio de informações, o gRPC adota uma abordagem binária. Isso implica em mensagens menores e maior rapidez na comunicação. Contudo, essa eficiência vem acompanhada de uma complexidade maior na configuração e na depuração, especialmente para equipes que ainda não estão familiarizadas com o ecossistema do Protocol Buffers.
+
+Entre as vantagens, destaca-se a performance aprimorada e o suporte nativo a streaming, que permite a implementação de sistemas em tempo real de maneira simples e estruturada. Por outro lado, como desvantagens, a curva de aprendizado é um pouco mais acentuada e a interoperabilidade com tecnologias legadas pode requerer passos adicionais para integração.
+
+Considerações Finais  
+O gRPC se mostra uma excelente alternativa quando o desempenho é uma prioridade e a comunicação entre serviços precisa ser feita de forma eficiente e com baixa latência. Ao optar por essa abordagem, é importante pesar os benefícios da velocidade e escalabilidade contra a complexidade adicional no desenvolvimento e na manutenção dos contratos de comunicação.
+
+### Aula 4: Faça como eu fiz: testar serviços web
+
+Nesta aula, foram explorados conceitos e ferramentas essenciais para entender e testar aplicações web, desde a inspeção via DevTools até a hospedagem na nuvem.
+
+Agora é sua chance de colocar em prática os conteúdos, se ainda não experimentou. Para isso:
+
+- Use o DevTools para inspecionar HTML, CSS, JavaScript e monitorar a rede.
+- Execute requisições HTTP com clientes como Postman, Insomnia ou cURL.
+- Verifique respostas de APIs analisando status code e formato dos dados.
+- Compare diferentes tipos de APIs: REST, SOAP, GraphQL, WebSocket e gRPC.
+- Documente os endpoints e os contratos de comunicação conforme a documentação da API.
+- Configure a hospedagem da aplicação em um serviço de nuvem, como AWS, Azure ou Oracle.
+- Estruture a separação entre front-end, back-end e integrações de serviços externos.
+
+Para acessar o guia detalhado, consulte as transcrições da aula.
+
+### Aula 4: O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- A utilizar DevTools para depurar aplicações web.
+- A função de clientes HTTP como Postman e cURL para testar APIs.
+- A separação entre front-end e back-end em aplicações web.
+- O conceito e uso de APIs, incluindo diferentes tipos como REST e GraphQL.
+- A importância de hospedar aplicações na nuvem e os principais serviços disponíveis.
+- As funções no desenvolvimento web moderno, incluindo front-end, back-end e DevOps.
+- A importância do engenheiro de QA na melhoria da qualidade das aplicações.
+- O papel do engenheiro de segurança na proteção de informações em aplicações web.
+
+### Aula 4: Conclusão - Vídeo 6
+
+Transcrição  
+Se chegamos até aqui, parabéns! Agora já compreendemos todas as preocupações necessárias para o desenvolvimento de aplicações web. Iniciamos entendendo como a internet funciona, abrangendo todos os mecanismos, sejam físicos ou digitais, que compõem a web.
+
+Em seguida, passamos a entender o protocolo mais importante no qual a web opera atualmente: o HTTP. É por meio dele que todas as páginas web são trafegadas pela internet, sendo solicitadas e respondidas. Analisamos os detalhes desse protocolo, incluindo os status que uma página web pode retornar, os cabeçalhos, as requisições e as respostas que podemos obter.
+
+Explorando armazenamento e segurança na web  
+Compreendemos também os mecanismos de armazenamento interno que os navegadores possuem, assim como os mecanismos de segurança da web. Esses mecanismos são fundamentais para que possamos trafegar informações sem nos preocupar com possíveis invasões ou ataques maliciosos que possam roubar nossas informações.
+
+Por último, exploramos as ferramentas e produtos que nos auxiliam a finalizar, hospedar e depurar aplicações web.
+
+Acompanhando o ciclo de desenvolvimento de aplicações web  
+Podemos observar que todo o ciclo de desenvolvimento de uma aplicação web começa com a compreensão de como a aplicação que estamos construindo funciona. É essencial acompanhar, depurar e realizar o debug dessa aplicação, além de estabelecer uma infraestrutura para hospedá-la. Assim, percorremos desde o início, que é a concepção, até o final, que é a implantação do software.
+
+Com isso, já conseguimos entender que sabemos, pelo menos, como a aplicação se comporta quando está sendo hospedada e requisitada. Compreendemos como a internet lida com essas solicitações e como envia as informações de volta. Entendemos todo o mecanismo. Ainda não vimos como construir uma aplicação web, mas, ao menos, sabemos quais serão os pontos de atenção necessários para que a aplicação funcione normalmente dentro das regras da internet quando estiver no ar.
+
+Incentivando o estudo contínuo de desenvolvimento web  
+Convidamos você a continuar estudando e a entender como construir aplicações que sigam as regras da internet. Ou seja, que consigam acompanhar os protocolos, seguir as regras do HTTP e trabalhar com todos os outros mecanismos que a internet possui, para criar uma aplicação que funcione adequadamente para as pessoas que irão utilizá-la, estando disponível no mundo inteiro.
