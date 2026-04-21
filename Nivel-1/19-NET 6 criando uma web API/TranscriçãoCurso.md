@@ -195,5 +195,946 @@ Nessa aula aprendemos:
 - APIs abstraem detalhes de implementação.
 - Como preparar o ambiente no Windows e Linux.
 
-### Aula 1:  - Vídeo 6
-### Aula 1:  - Vídeo 7
+## Aula 2: Iniciando o porjeto .NET 6
+
+### Aula 2: Criando um projeto .NET 6 - Vídeo 1
+
+Caso você esteja usando Linux e Visual Studio Code, mais adiante o instrutor explicará como criar um projeto com esse editor de texto também.
+
+Criando um projeto com Visual Studio 2022  
+Vamos abrir o Visual Studio 2022 para criar nosso projeto. À direita da tela inicial, na seção "Introdução", clicaremos na opção "Criar um projeto".
+
+Na barra de pesquisa (cujo atalho é "Alt + S"), vamos buscar por "api" e selecionar o modelo "API Web do ASP.NET Core" com C#. Depois, pressionaremos o botão "Próximo" no canto direito inferior.
+
+Na próxima tela, definiremos o nome do projeto e o nome da solução. Ambos se chamarão "FilmesApi". Além disso, você pode escolher o diretório de criação do projeto, conforme sua preferência. Em seguida, clicaremos no botão "Próximo".
+
+O passo seguinte é escolher o framework. Vamos utilizar o .NET 6.0 (Suporte de longo prazo) — ou seja, o LTS. Em seguida, clicaremos em "Criar" no canto inferior direito da tela.
+
+O .NET 7 ainda não está na versão LTS. Não é recomendado ter projetos (seja em produção ou prontos para produção) com frameworks sem a versão LTS, pois perdemos o suporte tanto da comunidade quanto da própria empresa que desenvolveu a ferramenta.
+
+Arquivos iniciais  
+O Visual Studio criará uma base para o nosso projeto, com alguns arquivos iniciais que exploraremos a seguir. Nós vamos acessá-los usando o gerenciador de soluções, à direita da IDE.
+
+Caso o gerenciador não esteja aparecendo na sua tela, basta usar o atalho "Ctrl + Alt + L" ou clicar em "Exibir > Gerenciador de Solução" no menu superior do Visual Studio.
+
+No gerenciador de soluções, temos:
+
+- a pasta "Properties"
+- a pasta "Controllers"
+- o arquivo appsettings.json
+- o arquivo appsettings.Development.json
+- o arquivo Program.cs
+- o arquivo WeatherForecast.cs
+
+O arquivo WeatherForecast.cs é um modelo para exemplificar uma API base do .NET. Por enquanto, vamos mantê-lo no projeto, pois executaremos a aplicação para entender como interagimos com a API.
+
+O Program.cs é onde nossa aplicação é iniciada e onde temos as definições dos serviços que utilizaremos nela, bem como as dependências necessárias, entre outras informações.
+
+Caso você já tenha usado versões anteriores do .NET, provavelmente reparou que esse arquivo é bem minimalista — não há definição de classe nem do escopo do namespace. A partir do .NET 6, não precisamos mais fazer essas definições. Basta criar o builder, gerar a aplicação e executá-la, em linhas enfileiras. Ao longo do curso, modificaremos bastante o arquivo Program.cs e não precisaremos nos preocupar com questões de indentação. Entre outras vantagens, o código ficará mais legível.
+
+Caso o .NET 6 seja sua primeira experiência com a criação de APIs, saiba que não é necessário ter conhecimentos de versões anteriores.
+
+Nos arquivos appsettings.json e appsettings.Development.json, definimos informações que serão carregadas durante a execução da nossa aplicação, como o endereço do banco de dados ou as credenciais usadas em determinado serviço.
+
+Na pasta "Controllers", temos os controladores. Como o nome sugere, trata-se de classes responsáveis pelo controle. Elas recebem e respondem às requisições dos usuários que interagem com a API. Por ora, temos apenas o arquivo WeatherForecastController.cs. O uso do sufixo "Controller" no nome é uma convenção para indicar o papel da classe. Perceba que o próprio .NET adotou essa convenção ao gerar o arquivo WeatherForecastController.cs.
+
+Da linha 5 a 7 desse arquivo, vale notar o uso da extensão : ControllerBase e das anotações [ApiController] e [Route], importantes para o funcionamento do controlador .NET. Vamos aprender sobre elas mais adiante:
+
+```csharp
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
+```
+
+Ainda nesse arquivo, temos definições de atributos estáticos, como o Summaries (linha 9), _logger (linha 14) e o construtor (linha 16). Ao final, temos um método chamado Get() que não recebe parâmetro nenhum e cujo retorno é um enumerável de WeatherForecast.
+
+Apesar deste curso ser voltado para quem está começando a aprender sobre APIs com .NET, é importante que você já tenha uma base de conhecimento sobre C#. Por exemplo, não vamos explicar o que é uma lista, um enumerável ou como implementar uma interface. O foco do treinamento é entender a criação de APIs e conhecer os padrões a serem seguidos.
+
+Sabemos que o controller é responsável por receber e responder requisições dos usuários, porém como ele sabe que deve chamar esse método Get()? Em breve, vamos executar nossa aplicação para entender como esse processo funciona.
+
+Antes disso, vamos explorar o arquivo launchSettings.json, na pasta "Properties". A partir da linha 11, temos alguns profiles, perfis para a nossa aplicação. O que nos interessa é o trecho referente a "FilmesApi". Inclusive, vamos apagar o trecho do "IIS Express". O arquivo ficará assim:
+
+```csharp
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:23847",
+      "sslPort": 44335
+    }
+  },
+  "profiles": {
+    "FilmesApi": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7106;http://localhost:5106",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
+
+Para salvar as alterações, pressionaremos "Ctrl + S".
+
+Na linha 17 desse arquivo, temos a applicationUrl. Com protocolo HTTPS, usamos o localhost, na porta 7106. Com protocolo HTTP, a porta 5106. Na linha 15, temos a configuração lauchBrowser: true, de modo que o navegador será aberto automaticamente, quando a aplicação for iniciada.
+
+Executando a aplicação  
+A seguir, vamos executar a aplicação. No menu superior da IDE, temos o símbolo de uma seta para a direita com preenchimento verde claro. À sua direita, há uma pequena seta branca para baixo. Clicaremos nela e selecionaremos "FilmesApi". Não queremos WSL.
+
+Em seguida, vamos iniciar sem depurar, clicando no símbolo de seta para a direita com o contorno verde claro, sem preenchimento. Alternativamente, podemos pressionar "Ctrl + F5". A aplicação será aberta no navegador.
+
+Estamos trabalhando com uma API e o foco não é front-end, contudo note que nossa aplicação tem uma tela bonita, bem estruturada e interativa, com links clicáveis. Esse resultado é obtido com o Swagger. Estudaremos mais sobre ele no final deste curso.
+
+Abaixo do título "WeatherForecast", temos a seção "GET /WeatherForecast", indicando que podemos acessar este caminho. Vamos clicar nela para expandi-la. Em seguida, clicaremos no botão "Try it out" (Testar), no canto superior direito da área expandida e, depois, em "Execute".
+
+Mais abaixo, no tópico "Server Response", recebemos um response body com status code 200 e informações de data e temperatura. Examinando esse retorno, reparamos que ele nada mais é que um enumerável convertido em array, como conferimos no método Get() do nosso controlador.
+
+Analisando o tópico "Curl", sabemos que a rota utilizada foi `https://localhost:7106/WeatherForecast`. No arquivo lauchSettings.json, verificamos há pouco que o caminho em que nossa aplicação está sendo executada é `https://localhost:7106`. Mas como o controlador sabe que, com /WeatherForecast, ele deve executar o método Get()?
+
+Anteriormente, reparamos que o nome da classe WeatherForecastController segue a convenção de usar o sufixo "Controller". Na anotação [Route("[controller]")] na linha 6, os colchetes indicam que devemos selecionar o prefixo do nome da classe e colocá-lo no lugar de [controller]. Ou seja, o controlador interpretará a rota como [Route("WeatherForecast")].
+
+A vantagem de usar a anotação [Route("[controller]")] em vez de [Route("WeatherForecast")] é que, se eventualmente alterarmos o nome da classe, não será necessário adaptar a anotação também. Assim, tudo fica mais prático e fácil.
+
+Além disso, imediatamente acima do método Get(), temos a seguinte anotação:
+
+```csharp
+[HttpGet(Name = "GetWeatherForecast")]
+```
+
+O HttpGet é uma das operações que podem ser executadas em uma API. Na nossa aplicação, foi exatamente essa ação que executamos ao expandir a seção "GET /WeatherForecast" e pressionar o botão "Execute".
+
+Dessa forma, o controlador sabe que, ao acessar a rota /WeatherForecast com o verbo GET, ele deve executar toda a lógica do método Get()!
+
+Não se preocupe se esse processo não ficou muito claro ainda. Ao longo do curso, vamos recriar essa lógica com nossas próprias rotas e aprender mais a fundo como tudo funciona. Por enquanto, a ideia era apenas visualizar esse escopo inicial.
+
+Namespace com escopo de arquivo  
+No arquivo WeatherForecastController.cs, note que todo o código está indentado para que a classe e as anotações fiquem dentro de um namespace, em um bloco de chaves. O .NET 6 oferece um recurso para aprimorar essa estrutura. Posicionando o cursor sobre o nome do namespace (linha 3), pressionaremos "Alt + Enter" e selecionaremos "Converter em namespace com escopo de arquivo". Assim, o código ficará indentado mais à esquerda e o bloco de chaves do namespace é removido. O projeto torna-se mais centralizado e legível dessa forma.
+
+Criando um projeto com Visual Studio Code  
+Até agora, usamos apenas o Visual Studio 2022. Caso você tenha optado pelo Visual Studio Code, há duas extensões que recomendamos instalar para desenvolver projetos .NET. No painel à esquerda do VS Code, basta acessar a aba "Extensions" e pesquisar as seguintes extensões:
+
+- C# (da Microsoft)
+- C# Snippets (de Jorge Serrano)
+
+Em seguida, vamos criar um projeto via linha de comando. No menu superior do VS Code, selecionaremos "Terminal > New Terminal". Alternativamente, podemos usar o atalho "Ctrl + Shift + '".
+
+Um novo terminal será aberto na parte inferior da tela. Vamos criar uma pasta chamada "projetolinux", com o seguinte comando:
+
+```cmd
+mkdir projetolinux
+```
+
+Em seguida, vamos acessar a pasta:
+
+```cmd
+cd projetolinux
+```
+
+E abrir uma nova instância do Visual Studio Code nela:
+
+```cmd
+code .
+```
+
+Na nova instância, abriremos o terminal novamente, com "Ctrl + Shift + '". Para criar um projeto .NET, rodaremos o seguinte comando:
+
+```cmd
+dotnet new webapi --name FilmesApi
+```
+
+Assim, criaremos um modelo de Web API com o nome "FilmesApi". No painel à esquerda, temos a mesma estrutura de pastas que teríamos no Visual Studio 2022!
+
+Para executar o projeto, basta rodar o seguinte comando no terminal:
+
+```cmd
+dotnet run --project FilmesApi/FilmesApi.csproj
+```
+
+Após a compilação, serão mostradas várias informações no terminal, como o endereço de execução da aplicação. No caso, no localhost, na porta 7174 com protocolo HTTPS, ou na porta 5177 com HTTP. Basta dar um "Ctrl + Clique" sobre o endereço para acessá-lo no navegador.
+
+Inicialmente, teremos um erro, pois é preciso acessar o endereço com /swagger ao final. Portanto, usaremos o seguinte endereço:
+
+```cmd
+https://localhost:7174/swagger/index.html
+```
+
+O foco dessa aula foi apenas criar o projeto, conferir algumas particularidade do .NET 6 e entender como interagir com uma API. Caso tenha ficado alguma dúvida, não se preocupe! Na próxima aula, vamos recriar toda essa lógica do início ao fim com nossos próprios controladores e modelos. Pensaremos como apagar os elementos de weather forecast e começar a migrar para o nosso conceito de filmes.
+
+### Aula 2: O papel do controlador - Exercício
+
+Um dos principais papéis da API é lidar com o controle de acesso aos recursos de nosso domínio.
+
+Selecione a afirmação que melhor retrata o papel do controlador dentro do escopo de uma API.
+
+Resposta:  
+Controladores servem para lidar com as requisições recebidas e devolver uma resposta.
+
+> Controladores são a porta de entrada da nossa API.
+
+### Aula 2: Recebendo os dados de um filme - Vídeo 2
+
+Transcrição  
+Agora, vamos criar efetivamente as partes de cadastro, leitura, alteração e remoção de filmes, começando pelo cadastro.
+
+Primeiramente, vamos apagar os arquivos WeatherForecastController.cs e WeatherForecast.cs.
+
+Nosso objetivo será que, ao enviar uma requisição para /filme, nossa API faça uma operação de escrita. Ou seja, vamos salvar as informações de um filme na nossa aplicação.
+
+Criando um controlador  
+Para expor um caminho ou endpoint para que alguém possa acessar, precisamos criar um controlador. Portanto, no gerenciador de soluções, clicaremos com o botão direito do mouse sobre a pasta "Controllers" e selecionaremos "Adicionar > Classe...".
+
+Uma nova janela será aberta. Na parte inferior dela, nomearemos a nova classe de "FilmeController". Vale ressaltar que a palavra "Controller" possui duas letras L — usar a grafia incorreta pode causar problemas no projeto.
+
+O resultado será a classe FilmeController, inicialmente vazia:
+
+```csharp
+namespace FilmesApi.Controllers
+{
+    public class FilmeController
+    {
+    }
+}
+```
+
+Vamos posicionar o cursor sobre o namespace, pressionar "Ctrl + Enter" e selecionar "Converter em namespace com escopo de arquivo". Assim, ganhamos mais espaço e centralizamos nosso conteúdo.
+
+Para que essa classe seja um controlador e esteja hábil a lidar com requisições de usuários, precisamos adicionar alguns elementos. A primeira delas são as anotações [ApiController] e [Route], antes da definição da classe:
+
+```csharp
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route]
+public class FilmeController
+{
+
+}
+```
+
+Quando o usuário enviar uma requisição para /filme, queremos atingir este controlador. Portanto, indicaremos que rota é para o nome do controlador. Como aprendemos anteriormente, podemos fazer essa indicação com colchetes:
+
+```csharp
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController
+{
+
+}
+```
+
+Atualmente, as anotações estão sublinhadas em vermelho como uma indicação de erro, pois faltam algumas importações. Basta posicionar o cursor sobre [ApiController], pressionar "Alt + Enter" e selecionar "using Microsoft.ApsNetCore.Mvc":
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController
+{
+
+}
+```
+
+Além disso, é necessário que a classe FilmeController seja uma extensão do ControllerBase:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController : ControllerBase
+{
+
+}
+```
+
+A seguir, vamos desenvolver um método chamado AdicionaFilme() para cadastrar um filme no sistema. A princípio, não vamos nos preocupar com o tipo de retorno, apenas usaremos o void:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController : ControllerBase
+{
+    public void AdicionaFilme()
+    {
+
+    }
+}
+```
+
+Ao receber uma requisição para /filme, receberemos por parâmetro as informações do filme que será cadastrado. Esse parâmetro será um objeto do tipo Filme, que chamaremos de filme:
+
+```csharp
+// código anterior omitido
+
+public class FilmeController : ControllerBase
+{
+    public void AdicionaFilme(Filme filme)
+    {
+
+    }
+}
+```
+
+Em seguida, adicionaremos esse filme a uma lista chamada filmes:
+
+```csharp
+// ...
+public class FilmeController : ControllerBase
+{
+    public void AdicionaFilme(Filme filme)
+    {
+        filmes.Add(filme);
+    }
+}
+```
+
+No entanto, há dois pontos importantes. Nós precisamos:
+
+- criar essa lista de filmes.
+- criar a classe Filme, que representa um filme.
+
+Vamos começar pelo primeiro item, que é mais simples. Antes do método AdicionaFilme(), criaremos uma lista estática e privada, chamada filmes:
+
+```csharp
+// ...
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+
+    public void AdicionaFilme(Filme filme)
+    {
+        filmes.Add(filme);
+    }
+}
+```
+
+Na sequência, criaremos nossa classe.
+
+Criando um modelo  
+A fim de manter a organização do nosso projeto, vamos inserir uma pasta que conterá nossos modelos, que mapearemos do mundo real para o mundo .NET. No gerenciador de soluções, clicaremos com o botão direito sobre "FilmesApi", selecionaremos "Adicionar > Nova Pasta" e a chamaremos de "Models".
+
+Depois, clicaremos com o botão direito sobre a pasta "Models", selecionaremos "Adicionar > Classe...". Na parte inferior da nova janela, nomearemos a nova classe de "Filme". O resultado será a classe Filme, inicialmente vazia:
+
+```csharp
+namespace FilmesApi.Models
+{
+    public class Filme
+    {
+    }
+}
+```
+
+Vamos posicionar o cursor sobre o namespace, pressionar "Alt + Enter" e selecionar "Converter em namespace com escopo de arquivo".
+
+Agora, pensaremos nas propriedades de um filme. Existem inúmeras informações relevantes de um filme — neste curso, trabalharemos com:
+
+- título
+- gênero
+- tempo de duração
+
+Para adicionar uma propriedade, podemos digitar "prop" e pressionar a tecla "Tab" duas vezes para gerar um modelo e adaptá-lo. Nosso modelo Filme, com as três propriedades, ficará assim:
+
+namespace FilmesApi.Models;
+
+```csharp
+public class Filme
+{
+    public string Titulo { get; set; }
+    public string Genero { get; set; }
+    public int Duracao { get; set; }
+}
+```
+
+Após salvar o arquivo, vamos voltar ao FilmeController.cs e fazer a importação do namespace em questão. Posicionando o cursor sobre Filme (sublinhado em vermelho), pressionaremos "Alt + Enter" e selecionaremos "using FilmeApi.Models":
+
+```csharp
+using FilmesApi.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+
+    public void AdicionaFilme(Filme filme)
+    {
+        filmes.Add(filme);
+    }
+}
+```
+
+A princípio, tudo está funcionando! O Visual Studio não está mostrando mais nenhuma indicação de erro.
+
+Anteriormente, quando fizemos uma requisição GET para WeatherForecast, estávamos recuperando e lendo uma informação do nosso sistema. Agora, nosso objetivo é escrever dados, criando algo dentro do sistema. Portanto, em lugar do verbo GET, usaremos o verbo POST.
+
+Se em WeatherController usamos a anotação [HttpGet], dessa vez utilizaremos o [HttpPost]:
+
+```csharp
+// ...
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+
+    [HttpPost]
+    public void AdicionaFilme(Filme filme)
+    {
+        filmes.Add(filme);
+    }
+}
+```
+
+Dessa maneira, sempre que fizermos uma operação do tipo POST para o controlador de prefixo "Filme", cadastraremos o filme recebido por parâmetro. Apesar de recebê-lo por parâmetro, as informações são enviadas através do corpo da requisição e, para explicitar esse fato, usaremos a anotação [FromBody]:
+
+```csharp
+// ...
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+
+    [HttpPost]
+    public void AdicionaFilme([FromBody] Filme filme)
+    {
+        filmes.Add(filme);
+    }
+}
+```
+
+Sendo assim, definimos que o filme virá pelo corpo da requisição e conterá informações de título, gênero e tempo de duração. Com o método AdicionaFilmes(), adicionaremos esse elemento à lista filmes. Por ora, não estamos nos preocupando em como esse dado será armazenado, vamos simplesmente colocá-lo em uma lista. Mais adiante, podemos melhorar elaborar esses processos.
+
+Como validação, vamos inserir alguns Console.WriteLine() para exibir o título e a duração do filme:
+
+```csharp
+// ...
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+
+    [HttpPost]
+    public void AdicionaFilme([FromBody] Filme filme)
+    {
+        filmes.Add(filme);
+        Console.WriteLine(filme.Titulo);
+        Console.WriteLine(filme.Duracao);
+    } 
+}
+```
+
+Em seguida, vamos executar nossa aplicação. No menu superior do Visual Studio, basta pressionar o ícone de play com borda verde, ou usar o atalho "Ctrl + F5". Como usamos a configuração launchBrowser: true no arquivo launchSettings.json, a aplicação será executada no navegador, novamente com o Swagger.
+
+Por enquanto, não nos interessa abrir o browser, então vamos alterar essa configuração e alterar seu valor para false:
+
+```csharp
+// código anterior omitido
+"profiles": {
+    "FilmesApi": {
+        "commandName": "Project",
+        "dotnetRunMessages": true,
+        "launchBrowser": false,
+        "launchUrl": "swagger",
+        "applicationUrl": "https://localhost:7106;http://localhost:5106",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+    }
+}
+```
+
+A partir de agora, quando executarmos a aplicação, apenas um console será aberto e utilizaremos o Postman para interagir com a nossa API.
+
+Postman  
+Na interface do Postman, temos um menu superior, um painel na lateral esquerda e uma grande área central denominada workbench. No canto superior esquerdo dessa área, clicaremos no símbolo de "+" para criar uma nova requisição.
+
+Uma nova aba será criada, chamada "Untitled Request". À esquerda do método GET, vamos digitar a seguinte URL:
+
+```csharp
+https://localhost:7106/filme
+```
+
+No menu seguinte, selecionaremos a aba "Body". Depois, vamos marcar "raw" e trocar a opção "Text" para "JSON". Dessa forma, enviaremos um texto no corpo da requisição no formato JSON.
+
+Como estamos usando o padrão arquitetural REST, é comum trafegar dados através de JSON — JavaScript Object Notation. Assim, facilitamos a maneira como trafegamos a informação e sabemos como ela será recebida ou enviada entre os diferentes consumidores e servidores do nosso sistema.
+
+Na sequência, temos a área onde criaremos o nosso JSON. Colocaremos o título, o gênero e o tempo de duração:
+
+```csharp
+{
+    "Titulo" : "Alura Filmes",
+    "Genero" : "Aventura",
+    "Duracao" : 180
+}
+```
+
+Em seguida, vamos clicar no botão azul "Send", à direita da URL que definimos. No painel inferior do Postman, o resultado será o seguinte:
+
+Status: 405 Method Not Allowed
+
+Ou seja, "método não permitido". Enviamos um GET para <https://localhost:7106/filme>, mas nosso controlador está preparado para lidar com um POST. Então, à esquerda da URL que acabamos de digitar, vamos substituir o verbo GET por POST e clicar no botão "Send" novamente.
+
+Agora, no painel inferior do Postman, temos o seguinte resultado:
+
+Status: 200 OK
+
+Acessando o console que foi aberto quando iniciamos a aplicação, notaremos que foram impressas as seguintes linhas:
+
+Alura Filmes
+
+180
+
+Essas mensagens comprovam que passamos pelo método AdicionaFilme() e inserimos um filme na nossa lista! Mais adiante, descobriremos como ler a nossa lista de filmes.
+
+Validação de dados  
+Há pouco, enviamos os seguintes dados de um filme, via Postman:
+
+```csharp
+{
+    "Titulo" : "Alura Filmes",
+    "Genero" : "Aventura",
+    "Duracao" : 180
+}
+```
+
+No entanto, o usuário poderia escrever informações erradas, com caracteres inválidos, por exemplo:
+
+```csharp
+{
+    "Titulo" : "Alura Filmes----------!@#!@#!@#",
+    "Genero" : "Televisão",
+    "Duracao" : 180000
+}
+```
+
+É necessário validar a entrada do usuário, verificando o que pode ou não ser enviado ao sistema. Na próxima aula, estudaremos como validar informações, por exemplo, quais são os tamanhos mínimo e máximo permitidos de um campo.
+
+### Aula 2: Enviando requisições para a API - Exercício
+
+APIs também podem lidar com diferentes verbos HTTP, por exemplo, a fim de criar um novo recurso mantendo o padrão arquitetural REST. Neste caso, precisaríamos utilizar um verbo HTTP específico.
+
+Selecione a alternativa que corresponde a este verbo.
+
+Resposta:  
+POST
+
+> Sempre devemos seguir as convenções e boas práticas.
+
+### Aula 2: Validando parâmetros recebidos - Vídeo 3
+
+Transcrição  
+A seguir, vamos aprender como validar os dados enviados pelo usuário. No Postman, vamos inserir o seguinte JSON no corpo da requisição:
+
+```csharp
+{
+    "Titulo" : "Avatar",
+    "Genero" : "Ação",
+    "Duracao" : 162
+}
+```
+
+Aparentemente, esses dados são válidos. Ao clicar no botão "Send", conseguimos inserir o filme no nosso sistema e obtemos o seguinte resultado no painel inferior do Postman:
+
+Status: 200 OK
+
+O que aconteceria se enviássemos dados inválidos? Vamos testar, informando um caractere de espaço como título do filme e gênero, e uma duração de -120 minutos:
+
+```csharp
+{
+    "Titulo" : " ",
+    "Genero" : " ",
+    "Duracao" : -120
+}
+```
+
+Ao clicar no botão "Send", recebemos o mesmo resultado:
+
+Status: 200 OK
+
+Conseguimos inserir esses dados, sem problemas, porém essa ação não deveria ser permitida. A seguir, vamos explorar como validar essas informações para garantir algumas condições, como duração mínima ou máxima, bem como um título ou gênero que não sejam vazios.
+
+Validação de dados: condicionais  
+Uma solução seria incluir algumas validações no nosso código, no método AdicionaFilme(). Por exemplo, antes de adicionar o filme, podemos inserir uma estrutura if para verificar se o título é vazio ou nulo:
+
+```csharp
+// ... 
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        if (!string.IsNullOrEmpty(filme.Titulo))
+        {
+                filmes.Add(filme);
+                Console.WriteLine(filme.Titulo);
+                Console.WriteLine(filme.Duracao);
+        }
+}
+```
+
+Também é preciso checar se o gênero não é vazio e se a duração é de, ao menos, 70 minutos (tempo mínimo para um longa-metragem):
+
+```csharp
+// ... 
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        if (!string.IsNullOrEmpty(filme.Titulo) &&
+                !string.IsNullOrEmpty(filme.Genero) &&
+                filme.Duracao >= 70)
+        {
+                filmes.Add(filme);
+                Console.WriteLine(filme.Titulo);
+                Console.WriteLine(filme.Duracao);
+        }
+} 
+```
+
+Ainda é possível acrescentar outras validações. Por exemplo, que o título tenha o máximo de 500 caracteres:
+
+```csharp
+// ...
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        if (!string.IsNullOrEmpty(filme.Titulo) &&
+                filme.Titulo.Length <= 500 &&
+                !string.IsNullOrEmpty(filme.Genero) &&
+                filme.Duracao >= 70)
+        {
+                filmes.Add(filme);
+                Console.WriteLine(filme.Titulo);
+                Console.WriteLine(filme.Duracao);
+        }
+}
+```
+
+Essa estratégia funciona, mas não é muito prática, pois são inúmeras condições que poderíamos adicionar manualmente ao código para verificar se os dados enviados são válidos ou não. Além disso, seria bastante problemático exibir uma mensagem de erro customizada, baseada no parâmetro inválido (título, gênero ou duração). Teríamos que adicionar mais condicionais para evidenciar qual parâmetro é inválido, para então gerar um texto específico e conciso.
+
+Concluímos que colocar validações diretamente no código não é a melhor solução, então vamos retornar o método AdicionaFilme() ao estado original:
+
+```csharp
+// ...
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        filmes.Add(filme);
+        Console.WriteLine(filme.Titulo);
+        Console.WriteLine(filme.Duracao);
+}
+```
+
+Validação de dados: data annotations  
+A seguir, vamos empregar uma solução mais elegante e funcional, usando as Data Annotations para fazer validações em tempo de execução. No arquivo Filme.cs, vamos adicionar as data annotations acima de cada campo que queremos validar.
+
+Pra tornar o título obrigatório, incluiremos [Required] na linha imediatamente acima dessa propriedade:
+
+namespace FilmesApi.Models;
+
+```csharp
+public class Filme
+{
+    [Required]
+    public string Titulo { get; set; }
+    public string Genero { get; set; }
+    public int Duracao { get; set; }
+}
+```
+
+Vamos posicionar o cursor sobre essa anotação, pressionar "Alt + Enter" e selecionar "using System.ComponentModelo.DataAnnotations" para fazer a importação do namespace necessário.
+
+Tornaremos as demais propriedades obrigatórias também, adicionando a mesma anotação acima de cada uma delas:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Required]
+    public string Titulo { get; set; }
+    [Required]
+    public string Genero { get; set; }
+    [Required]
+    public int Duracao { get; set; }
+}
+```
+
+A seguir, vamos executar nossa aplicação novamente e realizar alguns testes para conferir o que acontece agora quando deixamos de inserir um campo obrigatório.
+
+No Postman, enviaremos uma requisição POST para <https://localhost:7106/filme> com o seguinte JSON:
+
+```csharp
+{
+    "Titulo" : " ",
+    "Genero" : " ",
+    "Duracao" : -120
+}
+```
+
+Ao pressionar o botão "Send", o resultado será:
+
+```csharp
+Status: 400 Bad Request
+
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-4709d45b80b52de3e5d90ec002ff3f37-f5ac6af4f861ef6f-00",
+    "errors": {
+        "Genero": [
+            "The Genero field is required."
+        ],
+        "Titulo": [
+            "The Titulo field is required."
+        ]
+    }
+}
+```
+
+Ou seja, fizemos uma requisição inválida (bad request) e recebemos uma resposta em inglês, pouco precisa para o usuário, indicando que os campos "Genero" e "Titulo" são obrigatórios. Seria mais interessante elaborar uma resposta clara e concisa, como:
+
+O título do filme é obrigatório.
+
+Para exibir esse texto explicativo mais específico, podemos customizar a anotação [Required] e adicionar uma mensagem de erro:
+
+```csharp
+// Filme.cs
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    public string Genero { get; set; }
+    [Required]
+    public int Duracao { get; set; }
+}
+```
+
+Com a data annotation [MaxLength], também adicionaremos uma validação referente à quantidade máxima de caracteres para o gênero. No caso, o valor máximo será 50:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    public int Duracao { get; set; }
+}
+```
+
+Com [Range], é possível incluir uma validação do intervalo para a duração do filme. O intervalo válido será de 70 a 600 minutos:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+}
+```
+
+Testando  
+Vamos executar nossa aplicação novamente e realizar mais testes. No Postman, enviaremos mais uma vez um JSON com dados inválidos:
+
+```csharp
+{
+    "Titulo" : " ",
+    "Genero" : " ",
+    "Duracao" : -120
+}
+```
+
+Ao pressionar "Send", o resultado obtido será:
+
+```csharp
+Status: 400 Bad Request
+
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-788b79563353a3b66442d0eb9f3dd7bd-c20022333467007b-00",
+    "errors": {
+        "Genero": [
+            "O gênero do filme é obrigatório"
+        ],
+        "Titulo": [
+            "O título do filme é obrigatório"
+        ],
+        "Duracao": [
+            "A duração deve ter entre 70 e 600 minutos"
+        ]
+    }
+}
+```
+
+As validações estão funcionando e as mensagens de erros ficaram um pouco mais claras para o usuário. Por fim, vamos testar se o nosso sistema continua funcionando normalmente, adicionando informações válidas:
+
+```csharp
+{
+    "Titulo" : "Avatar",
+    "Genero" : "Ação",
+    "Duracao" : 162
+}
+```
+
+Ao enviar, a inserção será bem-sucedida:
+
+Status: 200 OK
+
+Sendo assim, validamos os dados enviados pelo usuário de maneira descomplicada, sem adicionar diversos blocos if na lógica do controlador. Em vez disso, usamos as data annotations no modelo, que será recebido via parâmetro.
+
+Agora, já conseguimos cadastrar filmes no sistema de forma parcialmente robusta. Na sequência, estudaremos as outras operações para consultar, atualizar e remover filmes da API.
+
+### Aula 2: Faça como eu fiz: adicionando restrições
+
+Nesta atividade, a proposta será você utilizar as anotações para adicionar restrições à requisição enviada pelo usuário.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, abra a sua classe Filme:
+
+```csharp
+public class Filme
+{
+    public string Titulo { get; set; }
+    public string Duracao { get; set; }
+    public string Diretor { get; set; }
+    public string Genero { get; set; }
+}
+```
+
+Agora, adicione a restrição de que o parâmetro Titulo deve ser obrigatório. O resultado deve ser algo como:
+
+```csharp
+public class Filme
+{
+    [Required]
+    public string Titulo { get; set; }
+    public string Duracao { get; set; }
+    public string Diretor { get; set; }
+    public string Genero { get; set; }
+}
+```
+
+Para sermos mais expressivos com quem for consumir a API, podemos deixar mensagens mais claras de erro através do parâmetro ErrorMessage.
+
+```csharp
+public class Filme
+{
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    public string Duracao { get; set; }
+    public string Diretor { get; set; }
+    public string Genero { get; set; }
+}
+```
+
+Como desafio, tente sozinha/o utilizar as anotações StringLength e Range para definir o limite do tamanho do texto e valor numérico dos parâmetros.
+
+Um possível resultado (que inclusive utilizaremos no decorrer do curso) está exibido abaixo. Nele tornamos os parâmetros Titulo e Duracao obrigatórios. Além disso, o parâmetro de Duracao deve estar entre 1 e 360.
+
+```csharp
+public class Filme
+{
+  [Required(ErrorMessage = "O título do filme é obrigatório")]
+  [MaxLength(50, ErrorMessage = "O título do filme não pode exceder 50 caracteres")]
+  public string Titulo { get; set; }
+  [Required(ErrorMessage = "O campo de duração é obrigatório")]
+  [Range(1, 360, ErrorMessage = "A duração deve ter no mínimo 1 minuto e no máximo 360")]
+  public int Duracao { get; set; }
+  public string Diretor { get; set; }
+  public string Genero { get; set; }
+}
+```
+
+### Aula 2: Praticando o uso de annotations - Exercício
+
+A fim de criar o nosso modelo para representar um filme no banco de dados, o seguinte código foi escrito:
+
+```csharp
+public class Filme
+{
+    [Required]
+    [StringLength(30)]
+    public string Titulo { get; set; }
+    [Required]
+    [Range(1, 120)]
+    public int Duracao { get; set; }
+    public string Diretor { get; set; }
+}
+```
+
+Escolha a alternativa abaixo que apresenta uma entrada válida para as anotações utilizadas.
+
+Resposta:  
+Titulo = "Alura Filmes"  
+Duracao = 90  
+Diretor = "Luis"
+
+> Todos os parâmetros respeitam as anotações utilizadas.
+
+### Aula 2: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- Como enviar requisições para a API através de rotas padronizadas.
+- Como criar controladores, preparando a API para receber requisições.
+- A finalidade do verbo POST, que é criar recursos em nosso sistema.
+- Como criar um recurso em memória no sistema por meio da utilização de listas.
+- A anotação [Required] torna obrigatório passar um parâmetro determinado.
+- A anotação [StringLength] limita o tamanho de caracteres de uma string.
+- A anotação [Range] limita o intervalo inferior e superior para valores numéricos.
+
+### Aula 3: Cosultando e Paginando
+
+### Aula 3:  - Vídeo 1
+### Aula 3:  - Vídeo 1
+### Aula 3:  - Vídeo 2
+### Aula 3:  - Vídeo 3
+### Aula 3:  - Vídeo 4
+
