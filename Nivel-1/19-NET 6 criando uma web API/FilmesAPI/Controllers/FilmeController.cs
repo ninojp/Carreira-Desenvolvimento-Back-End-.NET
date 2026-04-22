@@ -9,6 +9,8 @@ public class FilmeController : ControllerBase
 {
     private static List<Filme> filmes = new();
 
+    private static int id = 0;
+    //=================================================================
     [HttpPost]
     public IActionResult AdicionaFilme([FromBody]Filme filme)
     {
@@ -16,10 +18,26 @@ public class FilmeController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
+        filme.Id = id++;
         filmes.Add(filme);
-        Console.WriteLine($"Filme, {filme.Titulo} adicionado.");
-        Console.WriteLine($"Duração do filme: {filme.Duracao} minutos");
-        return CreatedAtAction(nameof(AdicionaFilme), new { titulo = filme.Titulo }, filme);
+        Console.WriteLine($"O filme {filme.Id}: {filme.Titulo}, {filme.Duracao} minutos, foi adicionado.");
+        return CreatedAtAction(nameof(RecuperaFilmePorId), new { id = filme.Id }, filme);
+    }
+    //=================================================================
+    [HttpGet]
+    public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, [FromQuery] int take = 10)
+    {
+        return filmes.Skip(skip).Take(take);
+    }
+    //=================================================================
+    [HttpGet("{id}")]
+    public IActionResult RecuperaFilmePorId(int id)
+    {
+        //if (id < 0 || id >= filmes.Count)
+        //{
+        //    return NotFound();
+        //}
+        //return Ok(filmes[id]);
+        return filmes.FirstOrDefault(filme => filme.Id == id) is Filme filme ? Ok(filme) : NotFound();
     }
 }

@@ -1132,9 +1132,1403 @@ Nessa aula aprendemos:
 
 ### Aula 3: Cosultando e Paginando
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
+### Aula 3: Projeto da aula anterior
 
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api/tree/Aula-2) no ponto em que paramos na aula anterior.
+
+### Aula 3: Retornando filmes da API - Vídeo 1
+
+Transcrição  
+Já conseguimos inserir dados no nosso sistema, realizando a validação. Agora, vamos partir para as operações de busca para conferir os filmes cadastrados!
+
+Como não estamos usando um banco de dados, vamos reiniciar a nossa aplicação para limpar os dados em memória. Uma vez reiniciada, nossa lista de filmes estará vazia novamente.
+
+No Postman, enviaremos duas requisições POST para `https://localhost:7106/filme` com os dados de filmes, para popular nossa lista. Primeiro, o "Avatar":
+
+```csharp
+{
+    "Titulo" : "Avatar",
+    "Genero" : "Ação",
+    "Duracao" : 162
+}
+```
+
+Depois, "Star Wars":
+
+```csharp
+{
+    "Titulo" : "Star Wars",
+    "Genero" : "Aventura",
+    "Duracao" : 100
+}
+```
+
+Abrindo o console da aplicação, saberemos que as inserções foram feitas, pois temos as seguintes mensagens impressas:
+
+Avatar
+
+162
+
+Star Wars
+
+100
+
+Recuperando filmes  
+Nós já criamos o método AdicionaFilme() que, com o verbo HTTP POST executa a operação de inserção de recurso no sistema. Agora, para realizar uma operação de leitura, vamos desenvolver outro método e usar o verbo HTTP GET. No controlador, abaixo de AdicionaFilme(), vamos incluir o método RecuperaFilmes(). Inicialmente, deixaremos o tipo de retorno como void:
+
+```csharp
+// ...
+public void RecuperaFilmes()
+{
+
+}
+```
+
+Vamos retornar a lista filmes:
+
+```csharp
+// ...
+public void RecuperaFilmes()
+{
+        return filmes;
+}
+```
+
+Em seguida, posicionaremos o cursor sobre a palavra return, pressionaremos "Alt + Enter" e selecionar "Corrigir tipo de retorno". Dessa forma, o void na assinatura do método será substituído por List<Filme>:
+
+```csharp
+// ...
+public List<Filme> RecuperaFilmes()
+{
+        return filmes;
+}
+```
+
+Na sequência, precisamos definir o verbo HTTP utilizado. Para uma operação de leitura, o verbo mais semântico é o GET:
+
+```csharp
+// ...
+[HttpGet]
+public List<Filme> RecuperaFilmes()
+{
+        return filmes;
+}
+```
+
+Vale lembrar que os verbos HTTP são convenções. Como estamos seguindo o padrão arquitetural REST, é comum usar esse padrão para facilitar a interpretação do código. Ao se deparar com o [HttpPost], uma pessoa rapidamente identifica que o método AdicionaFilme() é responsável pela inserção de recursos no sistema, por exemplo.
+
+Testando  
+Vamos salvar essas alterações e reiniciar nossa aplicação. No Postman, enviaremos duas requisições POST novamente, para popular nossa lista de filmes, com os seguintes dados:
+
+```csharp
+{
+    "Titulo" : "Avatar",
+    "Genero" : "Ação",
+    "Duracao" : 162
+}
+
+{
+    "Titulo" : "Star Wars",
+    "Genero" : "Aventura",
+    "Duracao" : 100
+}
+```
+
+À direita da aba atual do Postman, clicaremos no ícone de "+" para criar outra aba. Nela, selecionaremos o verbo GET e digitaremos a seguinte URL:
+
+`https://localhost:7106/filme`
+
+Ao pressionar o botão "Send", obtemos o seguinte resultado:
+
+```csharp
+Status: 200 OK
+[
+    {
+        "titulo": "Avatar",
+        "genero": "Ação",
+        "duracao": 162
+    },
+    {
+        "titulo": "Star Wars",
+        "genero": "Aventura",
+        "duracao": 100
+    }
+]
+```
+
+Conseguimos recuperar os filmes cadastrados! A seguir, vamos voltar à aba da requisição POST e tentar inserir um recurso com informações inválidas. Por exemplo, com o tempo de duração igual a -1:
+
+```csharp
+{
+    "Titulo" : "Star Wars",
+    "Genero" : "Aventura",
+    "Duracao" : -1
+}
+```
+
+Ao enviar, receberemos um erro no painel inferior:
+
+```csharp
+Status: 400 Bad Request
+
+{
+    "type": "<https://tools.ietf.org/html/rfc7231#section-6.5.1>",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-9b23f53c18b421f70c3aa9ac33f390e0-aca586ca9aecf4b0-00",
+    "errors": {
+        "Duracao": [
+            "A duração deve ter entre 70 e 600 minutos"
+        ]
+    }
+}
+```
+
+Uma vez que houve falha na validação, esperamos que esse último filme não tenha sido inserido na nossa lista. Vamos voltar à aba da requisição GET e pressionar o botão "Send" novamente para conferir a nossa listagem. O resultado será o seguinte:
+
+```csharp
+Status: 200 OK
+[
+    {
+        "titulo": "Avatar",
+        "genero": "Ação",
+        "duracao": 162
+    },
+    {
+        "titulo": "Star Wars",
+        "genero": "Aventura",
+        "duracao": 100
+    }
+]
+```
+
+Continuamos apenas com o filme "Avatar" e "Star Wars", não consta o filme cujos dados não passaram pela validação. Nosso sistema está funcionando perfeitamente!
+
+Considerações sobre a classe `List<T>`  
+Por fim, comentaremos alguns pontos que envolvem conceitos de polimorfismo. No método RecuperaFilmes(), estamos retornando uma lista de filmes. Vamos fazer um "Ctrl + Clique" sobre List<> para explorar como a classe `List<T>` funciona.
+
+A classe `List<T>` faz a extensão e implementação de algumas classes e interfaces, como `ICollection<T>`, `IEnumerable<T>` e IEnumerable.
+
+Voltando ao método RecuperaFilmes(), em vez de definir o retorno como uma lista de filmes (`List<Filme>`), vamos usar um enumerável de filmes (`IEnumerable<Filme>`). Posteriormente, se a implementação da nossa lista for alterada e deixar de utilizar a classe List<> por outra classe que implemente IEnumerable, não precisaremos trocar a assinatura do nosso método:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes()
+{
+        return filmes;
+}
+```
+
+Ou seja, estamos deixando nosso código mais abstrato possível. Quanto menos dependermos de classes concretas, melhor para o nosso código.
+
+Assim, desenvolvemos mais uma operação no nosso sistema. Agora, os usuários conseguem verificar a lista de filmes cadastrados. A seguir, exploraremos como retornar filmes com critérios mais específicos.
+
+### Aula 3: Validando o retorno - Exercício
+
+Segundo o REST e as boas práticas de criação de uma API, devemos utilizar verbos específicos para determinadas operações, a fim de garantir a padronização ao acesso das pessoas que consumirem a API.
+
+Selecione o trecho de código que melhor representa o retorno de um recurso do sistema.
+
+Resposta:
+
+```csharp
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes()
+{
+    //lógica de retorno
+}
+```
+
+> Seguir a convenção de utilizar o verbo mais semântico é essencial.
+
+### Aula 3: Recuperando filmes por ID - Vídeo 2
+
+Transcrição  
+Nesta aula, vamos aprimorar a busca por filmes no nosso sistema. De início, pensaremos em alguns casos peculiares que poderiam ser problemáticos na nossa API.
+
+Digamos que um dos itens cadastrados é "Planeta dos Macacos", filme de 1968, do diretor Franklin J. Schaffner:
+
+```csharp
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 112
+}
+```
+
+Além disso, também consta no nosso sistema o remake desse filme — "Planeta dos Macacos", de 2011, do diretor Tim Burton:
+
+```csharp
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 119
+}
+```
+
+Ao buscar a listagem de filmes, teremos dois filmes com o mesmo nome, ainda que os tempos de durações sejam diferentes:
+
+```json
+[
+    {
+        "titulo": "Avatar",
+        "genero": "Ação",
+        "duracao": 162
+    },
+    {
+        "titulo": "Star Wars",
+        "genero": "Aventura",
+        "duracao": 100
+    },
+    {
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 112
+    },
+    {
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 119
+    }
+]
+```
+
+Como podemos diferenciar esses filmes? Para esse caso em específico, uma opção seria adicionar um campo para data de lançamento ou nome dos diretores, mas eventualmente poderíamos nos deparar com outros cenários de conflitos semelhantes. O ideal, então, é ter um identificador para cada filme, um critério que garanta que todo filme seja único no sistema.
+
+Uma maneira bem simples e tradicional é inserir o atributo de identificador, o famoso ID.
+
+Adicionando o ID  
+No controlador, criaremos um campo do tipo inteiro, chamado id, cujo valor inicial é 0:
+
+```csharp
+using FilmesApi.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FilmesApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class FilmeController : ControllerBase
+{
+
+    private static List<Filme> filmes = new List<Filme>();
+    private static int id = 0;
+
+    [HttpPost]
+    public void AdicionaFilme([FromBody] Filme filme)
+    {
+        filmes.Add(filme);
+        Console.WriteLine(filme.Titulo);
+        Console.WriteLine(filme.Duracao);
+    }
+
+    [HttpGet]
+    public IEnumerable<Filme> RecuperaFilmes()
+    {
+        return filmes;
+    }
+}
+```
+
+Ao inserir um filme no sistema, vamos definir o ID do filme como id++. Assim, a cada novo filme, o ID será incrementado:
+
+```csharp
+// ...
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        filme.Id = id++;
+        filmes.Add(filme);
+        Console.WriteLine(filme.Titulo);
+        Console.WriteLine(filme.Duracao);
+}
+// ...
+```
+
+Além disso, é preciso inserir a propriedade Id no nosso modelo. No método AdicionaFilme(), basta posicionar o cursor sobre Id (em filme.Id), pressionar "Alt + Enter" e selecionar "Gerar propriedade 'Id'".
+
+Acessando o arquivo Filme.cs, a propriedade Id foi gerada abaixo da propriedade Duracao. Para facilitar a visualização desse campo, vamos colocá-lo antes da propriedade Titulo. Além disso, substituiremos o internal set por apenas set:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    public int Id { get; set; }
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+}
+```
+
+Não precisamos nos preocupar em colocar a anotação [Required], pois é o nosso próprio sistema que insere esse ID, não um usuário.
+
+Vamos salvar todas as alterações e reexecutar nossa aplicação. Ao reiniciá-la, perderemos a nossa listagem de filmes novamente, então vamos enviar alguns dados pelo Postman, mais uma vez:
+
+```csharp
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 115
+}
+```
+
+```csharp
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 120
+}
+```
+
+```csharp
+{
+    "Titulo" : "Star Wars",
+    "Genero" : "Aventura",
+    "Duracao" : 120
+}
+```
+
+Em seguida, vamos fazer uma requisição GET para verificar a listagem. Como resultado, notaremos que agora cada filme tem um ID:
+
+```json
+[
+    {
+        "id": 0,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 115
+    },
+    {
+        "id": 1,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 2,
+        "titulo": "Star Wars",
+        "genero": "Aventura",
+        "duracao": 120
+    }
+]
+```
+
+Buscando por ID  
+Agora, conseguimos diferenciar nossos filmes pelo ID. O próximo passo é desenvolver uma maneira de recuperar um elemento pelo ID, independentemente do seu título, para ter um retorno único!
+
+No controlador, já temos um POST para fazer a inserção de recursos e um GET para recuperar todos os filmes cadastrados no sistema. Que verbo utilizaremos agora para recuperar um filme só? Será que podemos repetir o GET?
+
+Podemos, porém com algumas condições! Antes de nos aprofundar nessa questão, vamos desenvolver um método de busca por ID.
+
+Ao final do controlador, vamos criar o método RecuperaFilmePorId(), inicialmente com retorno do tipo void. Assim como recebemos o filme por parâmetro no método AdicionaFilmes(), agora receberemos o ID:
+
+```csharp
+// ...
+public void RecuperaFilmePorId(int id)
+{
+
+}
+```
+
+Em seguida, utilizaremos o LINQ para fazer uma solução bem elegante. Com o método .FirstOfDefault(), buscaremos o primeiro resultado cujo ID é igual ao recebido via parâmetro:
+
+```csharp
+// ...
+public void RecuperaFilmePorId(int id)
+{
+        return filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Assim, para cada elemento da lista filmes, verificaremos se seu ID é igual ao ID recebido por parâmetro. Se for igual, esse filme será retornado. Porém, se iterarmos por toda a lista e não encontrarmos nenhum elemento que preencha esse requisito, retornaremos o valor default (padrão) — nesse caso, nulo.
+
+Posicionando o cursor sobre a palavra return nesse método, pressionaremos "Alt + Enter" e selecionaremos "Corrigir tipo de retorno":
+
+```csharp
+// ...
+public Filme? RecuperaFilmePorId(int id)
+{
+        return filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Note que o Visual Studio indicou o tipo de retorno como Filme?, com um ponto de interrogação ao final, porque o Filme pode ser nulo. Sabemos que, caso não haja nenhum filme com o ID informado, o retorno será nulo, então vamos manter o ponto de interrogação. Se o removêssemos, estaríamos assumindo que o retorno nunca será nulo.
+
+Por fim, faremos a indicação do verbo GET:
+
+```csharp
+// ...
+[HttpGet]
+public Filme? RecuperaFilmePorId(int id)
+{
+        return filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Agora, tanto o método RecuperaFilmes() quando o método RecuperaFilmePorId() usam o verbo GET. Ao receber uma requisição GET em /filmes, como nosso sistema saberá qual deles acionar? A diferença está no recebimento do parâmetro id! Portanto, junto do verbo HttpGet, vamos informar que ele receberá o parâmetro id:
+
+```csharp
+// ... 
+[HttpGet("{id}")]
+public Filme? RecuperaFilmePorId(int id)
+{
+        return filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Quando passarmos um ID no GET, o sistema executará o RecuperaFilmePorId(). Do contrário, o método RecuperaFilmes() será acionado.
+
+Sendo assim, será feito um bind automaticamente e o valor passado na requisição será passado como parâmetro ao método.
+
+Testando  
+Vamos reiniciar nossa aplicação e popular nossa lista com dois filmes, usando o Postman para enviar requisições com os seguintes dados:
+
+```csharp
+{
+    "Titulo" : "Star Wars",
+    "Genero" : "Aventura",
+    "Duracao" : 120
+}
+```
+
+```csharp
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 120
+}
+```
+
+Em seguida, enviaremos uma requisição GET para verificar os itens cadastrados. Como resultado, temos a seguinte lista:
+
+```json
+[
+    {
+        "id": 0,
+        "titulo": "Star Wars",
+        "genero": "Aventura",
+        "duracao": 120
+    },
+    {
+        "id": 1,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    }
+]
+```
+
+Para recuperar o filme com ID igual a 1, basta realizar uma requisição GET com o parâmetro 1:
+
+```csharp
+https://localhost:7106/filme/1
+```
+
+Ao pressionar o botão "Send", o retorno no painel inferior do Postman será o filme "Planeta dos Macacos", cujo ID é 0:
+
+```csharp
+{
+    "id": 1,
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Conseguimos adicionar um novo critério de busca! Agora, é possível pesquisar filmes a partir de seu ID e identificar os recursos do nosso sistema de maneira única!
+
+No entanto, vamos assumir que eventualmente nossa lista pode ficar bastante extensa, por exemplo, com milhares de filmes. Não é interessante que o usuário fique restrito a recuperar apenas um filme pelo ID ou carregar todos os filmes de uma vez. Na próxima aula, vamos pensar em alternativas de carregamento desses dados.
+
+### Aula 3: Faça como eu fiz: implementando a lógica
+
+A proposta desta atividade é prepararmos o código para retornar um Filme do nosso sistema baseado em seu id.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, abra a sua classe FilmeController.
+
+Na classe, escreveremos o esqueleto do método:
+
+```csharp
+public Filme RecuperaFilmesPorId()
+{
+
+}
+```
+
+Agora precisamos, de alguma maneira, receber a informação sobre que Filme queremos retornar, ou seja, seu id. Para isso, iremos recebê-lo por parâmetro.
+
+```csharp
+public Filme RecuperaFilmesPorId(int id)
+{
+
+}
+```
+
+Como estamos recuperando um recurso do sistema, por boas práticas devemos utilizar o verbo GET. Então, adicione a anotação necessária e informe que receberá o parâmetro id via url.
+
+```csharp
+[HttpGet("{id}")]
+public Filme RecuperaFilmesPorId(int id)
+{
+
+}
+```
+
+Por fim, retorne o elemento de nossa lista que possui o id correspondente.
+
+```csharp
+[HttpGet("{id}")]
+public Filme RecuperaFilmesPorId(int id)
+{
+ return filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Agora conseguimos retornar um filme baseado em seu id. Porém, será que fizemos o retorno da maneira mais clara possível para o usuário? E se o filme não existir no sistema? Vamos descobrir isso a seguir!
+
+### Aula 3: Parâmetros na requisição - Exercício
+
+Para recuperar informações de recursos de nosso sistema utilizamos o verbo GET. Com ele garantimos seguir o padrão arquitetural REST. Em diversos casos, precisamos enviar parâmetros em nossas requisições a fim de executar alguma operação.
+
+Selecione a opção que indica como enviar parâmetros por meio da requisição usando o GET.
+
+Alternativa correta:  
+Através da anotação [HttpGet("{param}")].
+
+> Podemos utilizar a própria anotação para isso.
+
+### Aula 3: Paginando resultados - Vídeo 3
+
+Transcrição  
+No início desta aula, o instrutor preenche a lista com 100 filmes, do ID 0 ao 99, para demonstrar possíveis problemas com bases de dados muito grandes. Se quiser, você pode reproduzir esse cenário no seu computador com várias requisições POST, mas isso não é obrigatório para acompanhar o curso.
+
+Atualmente, nosso sistema conta com apenas duas opções de carregamento de dados:
+
+- carregar um único filme, a partir de seu ID
+- carregar a lista completa de filmes de uma única vez
+
+Considerando uma base de dados vasta, poderíamos nos deparar com problemas de consumo de memória ou de vazamento de memória ao carregar todos os elementos ao mesmo tempo. Se estivéssemos usando uma máquina da AWS, por exemplo, precisaríamos aumentar custos com a memória para evitar essas questões!
+
+Em vez disso, seria interessante encontrar um meio-termo entre carregar apenas um filme ou todos eles simultaneamente. Podemos obter esse resultado com a paginação, um conceito bastante difundido em programação para Web.
+
+Paginação  
+A paginação nos permite retornar trechos da nossa lista, em lugar de sua totalidade. Para aplicar esse conceito no .NET, utilizaremos os métodos .Skip() e Take().
+
+O método Skip() indica quantos elementos da lista pular, enquanto o Take() define quantos serão selecionados. Vamos conferir na prática como eles funcionam, no método RecuperaFilmes():
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes()
+{
+    return filmes.Skip(50).Take(10);
+}
+```
+
+Com esse código, especificamos que queremos pular 50 elementos e, em seguida, selecionar 10 elementos. Vamos salvar essa alteração.
+
+Se reiniciássemos a aplicação, perderíamos os 100 filmes que inserimos na lista. Em vez disso, vamos utilizar o recurso de hot reload do .NET 6! No menu superior do Visual Studio, basta clicar no botão de recarga dinâmica com o símbolo de uma chama vermelha. Alternativamente, podemos usar o atalho "Alt + F10". Assim, recarregamos a aplicação dinamicamente e não perdemos os dados que cadastramos!
+
+Agora, ao realizar uma requisição GET para `https://localhost:7106/filme`, o retorno será uma lista dos filmes do ID 50 ao 59:
+
+```json
+[
+    {
+        "id": 50,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 51,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+
+// ...
+
+    {
+        "id": 59,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+]
+```
+
+Já reduzimos a quantidade de dados retornada ao usuário, evitando problemas de memória. O próximo passo é parametrizar o método RecuperaFilmes() para o usuário informar quantos elementos pular e quantos exibir.
+
+Parametrizando  
+No método RecuperaFilmes(), receberemos como parâmetros os números inteiros skip e take, que serão usados nos métodos Skip() e Take(), respectivamente:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes(int skip, int take)
+{
+        return filmes.Skip(skip).Take(take);
+}
+```
+
+Ao reexecutar dinamicamente a aplicação, surgirá uma caixa de diálogo explicando que a "recarga dinâmica não pode aplicar automaticamente suas alterações". Vamos clicar em "Recriar e Aplicar Alterações".
+
+Enviando uma requisição GET, o resultado será um erro, porque não definimos o valor de skip e take. É preciso explicitar que o próprio usuário informará esses dados, por meio da consulta (query). Para tanto, usaremos a anotação [FromQuery]:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes([FromQuery]int skip, 
+        [FromQuery]int take)
+{
+        return filmes.Skip(skip).Take(take);
+}
+```
+
+Vamos reexecutar dinamicamente a aplicação. No Postman, enviaremos uma requisição GET com os parâmetros skip e take. Basta adicionar um ponto de interrogação ao final da URL e informá-los, separados pelo símbolo "&":
+
+```csharp
+https://localhost:7106/filme?skip=10&take=5
+```
+
+O retorno será uma lista vazia, porque quando pressionamos o botão "Recriar e Aplicar Alterações" perdemos nossos dados. Para continuar nossos testes, precisamos inserir alguns filmes na lista, enviando 20 requisições com dados do filme "Planeta dos Macacos":
+
+```csharp
+{
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Depois, vamos repetir a última requisição GET. Dessa vez, o resultado será uma lista de filme com ID de 10 a 14, pois passamos por parâmeotro que queremos pular 10 elementos e selecionar 5:
+
+```csharp
+[
+    {
+        "id": 10,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 11,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 12,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 13,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+    {
+        "id": 14,
+        "titulo": "Planeta dos Macacos",
+        "genero": "Ação",
+        "duracao": 120
+    },
+]
+```
+
+Valores padrões  
+A seguir, vamos definir valores padrões para skip e take. Caso o usuário não informe quantos elementos pular, vamos assumir que o valor de skip é 0:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes([FromQuery]int skip = 0, 
+        [FromQuery]int take)
+{
+        return filmes.Skip(skip).Take(take);
+}
+```
+
+Quanto ao parâmetro take, vamos determinar que seu valor padrão é 50, pois é um número razoável de itens para serem carregados em memória. Vale lembrar que essa quantia depende do tipo de conteúdo que estamos carregando. É importante sempre fazer uma avaliação:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes([FromQuery]int skip = 0, 
+        [FromQuery]int take = 50)
+{
+        return filmes.Skip(skip).Take(take);
+}
+```
+
+Vamos fazer a recarga dinâmica novamente ("Alt + F10") e clicar em "Recriar e Aplicar Alterações". No Postman, vamos enviar 70 requisições POST para popular nossa lista. Em seguida, enviaremos uma requisição GET sem os parâmetros skip e take:
+
+```csharp
+https://localhost:7106/filme
+```
+
+No painel inferior do Postman, o retorno será uma lista de filmes do ID 0 ao 49, pois não pulamos nenhum elemento e selecionamos apenas 50.
+
+Por fim, podemos realizar uma requisição GET apenas com o parâmetro take, especificando o número 60:
+
+```csharp
+https://localhost:7106/filme?take=60
+```
+
+O retorno será uma lista dos filmes do ID 0 ao 59!
+
+Assim, conseguimos aplicar o conceito de paginação na nossa aplicação com os métodos Skip() e Take(). Agora, não precisamos mais carregar todas as instâncias de uma única vez. Em lugar disso, podemos informar quantos elementos queremos pular e quantos pretendemos recuperar. Caso nenhum valor seja passado, temos valores padrões definidos para esses parâmetros.
+
+Na sequência, vamos adequar nossa aplicação aos padrões REST.
+
+### Aula 3: Métodos de paginação - Exercício
+
+Vimos que é possível trabalhar com dois métodos nativos da plataforma .NET para atingir o objetivo de utilizar conceitos de paginação.
+
+Marque a opção que representa a chamada que pula 10 elementos e recupera 5.
+
+Resposta:
+
+```csharp
+filmes.Skip(10).Take(5);
+```
+
+> Com esta chamada é possível atingir o objetivo.
+
+### Aula 3: Padronizando o retorno - Vídeo 4
+
+Transcrição  
+Nesta aula, padronizaremos nossa aplicação a nível de REST.
+
+No Postman, vamos enviar uma requisição GET e buscar pelo filme com ID igual a 1:
+
+```csharp
+https://localhost:7106/filme/1
+```
+
+No painel inferior, temos o seguinte resultado:
+
+```csharp
+Status: 200 OK
+
+{
+    "id": 1,
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Posicionando o cursor sobre "200 OK", aparecerá um menu suspenso explicando o que esse status significa: "resposta padrão para requisições HTTP realizadas com sucesso", entre outras informações. Aparentemente, a resposta obtida ao receber uma resposta de uma consulta bem-sucedida está boa.
+
+Agora, vamos buscar por um filme com o ID que não consta na nossa lista, por exemplo, 1000:
+
+```csharp
+https://localhost:7106/filme/1000
+```
+
+O resultado mostrará o status, mas não terá nada o corpo da resposta:
+
+Status: 204 No Content
+
+Posicionando o cursor sobre "204 No Content", temos a explicação: "o servidor processou a requisição com sucesso, mas não retornou nenhum conteúdo".
+
+Essa resposta parece válida, porém há uma resposta mais semanticamente correta e aceita por quem consome APIs RESTful e não encontra o resultado procurado. Quando estamos navegando por sites e acessamos uma página que não é encontrada, recebemos o famoso 404 Not Found.
+
+Para exemplificar, vamos tentar entrar no site da Alura em uma página que não existe:
+
+```csharp
+https://www.alura.com.br/abc
+```
+
+No front-end, temos a mensagem "Acho que nos perdemos".
+
+Nessa página, vamos pressionar "F12" para abrir o menu de inspeção na lateral direita do navegador. Após abrir a aba "Console", vamos atualizar a página com a tecla "F5". Na primeira linha, recebemos o erro 404:
+
+```csharp
+GET https://www.alura.com.br/abc 404
+```
+
+Abrindo a aba "Network", vamos selecionar o item "abc" no início da lista à esquerda. No painel à direita, temos as seguintes informações da requisição:
+
+- Request URL: `https://www.alura.com.br/abc`
+- Request Method: GET
+- Status Code: 404
+
+Se acessarmos uma página que existe, receberíamos o status 200.
+
+Métodos NotFound() e Ok()  
+A seguir, vamos adequar nossa aplicação a este padrão, de modo a receber o status 404 quando algum recurso não for encontrado.
+
+No controlador, no método RecuperaFilmePorId(), não vamos mais simplesmente retornar o resultado do .FirstOfDefault(). Em vez disso, vamos salvar o retorno na variável filme:
+
+```csharp
+// ...
+[HttpGet("{id}")]
+public Filme? RecuperaFilmePorId(int id)
+{
+        var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+}
+```
+
+Em seguida, vamos desenvolver um bloco if. Se a variável filme for nula, significa que não encontramos o filme com o ID informado. Nesse caso, vamos retornar um NotFound():
+
+```csharp
+// ...
+[HttpGet("{id}")]
+public Filme? RecuperaFilmePorId(int id)
+{
+        var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+}
+```
+
+Se o filme for encontrado, retornamos um Ok(), passando o filme como parâmetro:
+
+```csharp
+// ...
+[HttpGet("{id}")]
+public Filme? RecuperaFilmePorId(int id)
+{
+        var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        return Ok(filme);
+}
+```
+
+Além disso, é necessário corrigir o tipo de retorno, pois passamos a retornar NotFound() ou Ok(), que são métodos do ControllerBase. Na assinatura do método, vamos substituir Filme? por IActionResult — resultado de uma ação da interface:
+
+```csharp
+// ...
+[HttpGet("{id}")]
+public IActionResult RecuperaFilmePorId(int id)
+{
+        var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        return Ok(filme);
+}
+```
+
+Vamos reexecutar nossa aplicação. No Postman, enviaremos algumas requisições POST para popular nossa lista de filmes novamente. Em seguida, faremos uma requisição GET, buscando um ID que existe na nossa base de dados:
+
+```csharp
+https://localhost:7106/filme/1
+```
+
+O resultado terá status 200, com os dados do filme:
+
+```csharp
+Status: 200 OK
+
+{
+    "id": 1,
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Depois, testaremos buscar por um ID que não existe na lista:
+
+```csharp
+https://localhost:7106/filme/1000
+```
+
+Agora, o retorno será um 404 Not Found:
+
+```csharp
+Status: 404 Not Found
+
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-6adc20b80b8ddcfb5e5bc0179527ab92-763762aad5622bdc-00"
+}
+```
+
+Na sequência, vamos adaptar os demais métodos da nossa aplicação.
+
+Outros cenários  
+O método RecuperaFilmes() possui dois cenários. Se tivermos filmes em memória, a resposta tem status 200 OK e obtemos a lista de filmes. Mas e se nossa lista estiver vazia?
+
+Vamos reexecutar nossa aplicação para limpar os dados em memória. Ao enviar um GET, continuamos obtendo status 200. A única diferença é que a lista está vazia:
+
+```csharp
+Status: 200 OK
+
+[]
+```
+
+Será que, nesse caso, seria interessante retornarmos um 404 também? Não, porque pedimos pela lista de filmes e recebemos a lista de filmes. Trata-se de uma lista vazia e não de um recurso que não foi encontrado.
+
+Quanto ao método AdicionaFilme(), vamos remover os dois Console.WriteLine(), pois já validamos e tudo está funcionando como esperado.
+
+Seguindo o REST, o padrão para requisições POST é retornar o objeto que foi criado ao usuário. No nosso caso, o filme que foi cadastrado. Além disso, devemos informar ao usuário o caminho em que ele pode encontrar esse filme que acaba de ser cadastrado.
+
+Ao final do método AdicionaFilme(), vamos retornar um CreatedAtAction():
+
+```csharp
+// ... 
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        filme.Id = id++;
+        filmes.Add(filme);
+        return CreatedAtAction();
+}
+```
+
+Seu primeiro parâmetro será o método utilizado para retornar o elemento que acabamos de criar. No nosso caso, o método RecuperaFilmePorId().
+
+O segundo parâmetro são os parâmetros que o RecuperaFilmePorId() precisa para retornar o elemento que acabamos de criar. No caso, é o ID do filme.
+
+O terceiro parâmetro é o objeto que foi criado:
+
+```csharp
+// ...
+[HttpPost]
+public void AdicionaFilme([FromBody] Filme filme)
+{
+        filme.Id = id++;
+        filmes.Add(filme);
+        return CreatedAtAction(nameof(RecuperaFilmePorId), 
+                new { id = filme.Id }, 
+                filme);
+}
+```
+
+Por fim, vamos corrigir o tipo de retorno do método AdicionaFilme(), substituindo void por IActionResult:
+
+```csharp
+// ...
+[HttpPost]
+public IActionResult AdicionaFilme([FromBody] Filme filme)
+{
+        filme.Id = id++;
+        filmes.Add(filme);
+        return CreatedAtAction(nameof(RecuperaFilmePorId), 
+                new { id = filme.Id }, 
+                filme);
+}
+```
+
+Vamos reexecutar nossa aplicação. No Postman, a enviar uma requisição POST, obtemos o status 201 Created e os dados do filme criado:
+
+```csharp
+Status: 201 Created
+{
+    "id": 0,
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Além disso, na aba "Headers" do painel inferior do Postman, agora temos o campo "Location" com a URL referente ao recurso criado:
+
+```csharp
+Location: https://localhost:7106/Filme/0
+```
+
+Realizando uma requisição GET para esse endereço, o retorno será o objeto que acabamos de criar:
+
+```csharp
+Status: 200 OK
+
+{
+    "id": 0,
+    "titulo": "Planeta dos Macacos",
+    "genero": "Ação",
+    "duracao": 120
+}
+```
+
+Conseguimos adequar nossa aplicação aos padrões REST. Futuramente, as pessoas que consumirem essa API entenderão que:
+
+- ao receber um status 201, algum recurso foi criado;
+- ao receber um status 200, a requisição foi bem-sucedida;
+- ao receber um status 404, o recurso não foi encontrado.
+
+Padronizando nossa API, tanto nosso código quantos nossos resultados são mais compreensíveis para outras pessoas que venham a trabalhar com eles.
+
+### Aula 3: Seguindo as boas práticas - Exercício
+
+Quando criamos um recurso novo no sistema através do verbo POST, há uma convenção do que deve ser retornado caso a requisição tenha sido efetuada com sucesso.
+
+Selecione a alternativa correspondente a esta convenção.
+
+Alternativa correta  
+201 (Created) e a localização de onde o recurso pode ser acessado no nosso sistema.
+
+> Além de informarmos que o recurso foi criado, é importante informarmos onde podemos localizá-lo.
+
+### Aula 3: Qual deve ser o retorno? - Exercício
+
+Enviamos uma requisição para a API procurando por um recurso específico. Porém, o recurso procurado não foi encontrado.
+
+Selecione o código que devemos retornar para o usuário quando obtemos o status de "não-encontrado".
+
+Resposta:
+404
+
+> 404 representa o famoso Not Found.
+
+### Aula 3: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- Como recuperar informações da API através da criação de actions.
+- O verbo GET visa retornar recursos da API.
+- Como enviar parâmetros através da URL de requisição.
+- Como filtrar recursos para retornar para o usuário utilizando LINQ.
+- Status 404 indica que um recurso não foi encontrado.
+- Como tornar nossos retornos mais enxutos através de conceitos de paginação.
+- Como aplicar paginação através dos métodos Skip() e Take().
+
+## Aula 4: Utilizando banco de dados
+
+### Aula 4: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api/tree/Aula-3) no ponto em que paramos na aula anterior.
+
+### Aula 4: Conectando ao banco de dados - Vídeo 1
+
+Transcrição  
+Inserimos os dados dos filmes na nossa aplicação e colocamos esses dados em memória.
+
+Tivemos que lidar com alguns problemas porque não tivemos uma comunicação bem efetiva com o banco de dados. Para resolver esse problema, precisamos começar a importar o que é necessário na nossa aplicação e fazer as devidas configurações para termos uma comunicação com o banco, pois precisamos ter mais robustez no nosso sistema.
+
+Para isso, precisaremos usar alguns pacotes. Vamos no menu superior em "Ferramentas > Gerenciador de Pacotes do NuGet > Gerenciar Pacotes do NuGet para a Solução". Será aberta uma nova aba e, dentro dela, clicaremos em "Procurar". No campo de pesquisa vamos procurar por "entity", que é o framework de persistência mais utilizado dentro do .NET.
+
+Utilizaremos o Microsoft.EntityFrameworkCore na versão 6.0.10, que é a versão estável mais recente durante a gravação desse vídeo.
+
+Após clicar em "Microsoft.EntityFrameworkCore", deixaremos marcadas as caixas de seleção de "Projeto" e de "FilmesAPI". Em seguida, clicaremos em "Instalar" para começar o processo de instalação.
+
+Faremos também o download de Microsoft.EntityFrameworkCore.Tools na versão 6.0.10 e deixando marcadas as caixas de seleção de "Projeto" e de "FilmesAPI".
+
+Se você usa Linux pode ver a atividade "Para Saber Mais: pacotes Nuget no Linux" para instalar pacotes do Nuget utilizando o Linux.
+
+Instalados os pacotes Microsoft.EntityFrameworkCore e Microsoft.EntityFrameworkCore.Tools vamos configurar a forma como usaremos o mapeamento entre a nossa aplicação e o banco de dados.
+
+Qual será o contexto que teremos para acessar esse banco?
+
+Se começaremos a mexer com a parte de persistência e acesso a dados, é recomendado criarmos uma pasta responsável pela questão do acesso ao banco. Então, no gerenciador de soluções, clique com o botão direito do mouse em cima do nome do nosso projeto "FilmesApi", adicionaremos uma nova pasta chamada "Data".
+
+Com um clique do botão direito do mouse sobre a pasta "Data" vamos adicionar uma classe chamada FilmeContext.cs que será responsável por fazer esse contexto entre nossa aplicação e o banco de dados.
+
+Essa classe recém-criada é um contexto de banco de dados, como especificar isso e garantir que isso vai acontecer?
+
+Assim como a classe Controller estende de ControllerBase, no caso do FilmeContext precisamos informar que ele vai estender de DbContext.
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+namespace FilmesApi.Data
+{
+    public class FilmeContext : DbContext
+    {
+
+    }
+
+}
+```
+
+Vamos inserir um construtor dessa classe. Podemos usar o atalho para a sintaxe de construtor, escrevendo ctor e pressionando "Tab" duas vezes.
+
+```csharp
+namespace FilmesApi.Data
+{
+    public class FilmeContext : DbContext
+    {
+        public FilmeContext()
+        {
+
+        }
+    }
+}
+```
+
+Esse construtor vai receber uma configuração, as opções de acesso ao banco desse contexto. Como parâmetro de FilmeContext vamos inserir (DbContextoOptions`<FilmeContext>` opts), "opts" como abreviação de "options". Mas não faremos a utilização dele especificamente dentro desse construtor, faremos a passagem dessas opções para o construtor da classe que estamos estendendo, que é o próprio DbContext.
+
+```csharp
+namespace FilmesApi.Data
+{
+    public class FilmeContext : DbContext
+    {
+        public FilmeContext(DbContextoOptions<FilmeContext> opts)
+            : base(opts)
+        {
+
+        }
+    }
+
+}
+```
+
+A parte do nosso construtor já foi resolvida, agora precisamos criar a propriedade que vai dar acesso aos filmes da nossa base de dados.
+
+Para isso, criaremos um public DbSet`<Filme>` Filmes {get; set;}, vai ser um conjunto de dados do nosso banco e o nome da propriedade será Filmes porque ela vai conter os filmes que teremos na nossa base.
+
+Como o editor está indicando erro em `<Filme>`, vamos pressionar com o cursor em cima dele o atalho "Alt + Enter" para fazer o import desse modelo.
+
+```csharp
+public DbSet<Filme> Filmes {get; set;}
+```
+
+Perfeito. Já declaramos o FilmeContext e o construtor, e criamos a propriedade. Mas falta o seguinte: como saberemos onde conectar? Onde está o banco de dados?
+
+No início do curso fizemos o download do MySQL, criamos também usuário e senha. Precisamos colocar isso na aplicação de alguma maneira. Como a aplicação vai se autenticar no banco e saber onde ele está? É isso que resolveremos agora.
+
+Primeiro, vamos adicionar essa informação no appsettings.json. Adicionaremos o campo "ConnectionStrings" e dentro desse campo teremos "FilmeConnection" indicando o servidor ao qual queremos nos conectar, o usuário e a senha, são diversas informações que colocaremos agora à frente do "FilmeConnection":.
+
+Qual servidor utilizaremos? Ele está rodando na nossa máquina, então server=localhost. Qual o banco de dados que queremos utilizar? O database=filme. Quando criamos o usuário e a senha definimos como root, user=root e password=root.
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "FilmeConnection": "server=localhost;database=filme;user=root;password=root"
+  }
+}
+```
+
+Fizemos as definições do servidor, do banco de dados, do usuário e senha. Mas ainda falta um detalhe. Em qual momento vamos carregar essa informação da ConnectionStrings na aplicação?
+
+A classe que define o que queremos fazer no momento de construção da aplicação é o Program.cs. Então no Program.cs vamos utilizar o builder.Services e adicionar uma conexão ao banco de dados com builder.Services.AddDbContext`<FilmeContext>`.
+
+```csharp
+using FilmesApi.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<FilmeContext>
+```
+
+Em seguida, definiremos quais as opções para conectar a esse banco. Com essas opções quero utilizar SQL. Mas ao escrever opts => opts.use não aparece na caixa de autocompletar a opção "useMySQL" porque estamos dependendo de uma outra dependência.
+
+Precisamos baixar a biblioteca do MySQL. Vamos para a aba que abrimos no começo do vídeo, aba de "Gerenciar Pacotes do NuGet para a Solução" e vamos pesquisar por "mysql".
+
+Usaremos a Pomelo.EntityFrameworkCore.MySql, a versão 6.0.2 com as caixas de seleção para "Projeto" e "FilmesApi" selecionadas vamos clicar em "Instalar".
+
+Por fim, voltando ao Program.cs vamos inserir o UseMySql, agora temos acesso a ele. E passaremos como parâmetro dele o builder.Configuration pegando a ConnectionStrings e a string de conexão que queremos pegar é a FilmeConnection.
+
+```csharp
+using FilmesApi.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<FilmeContext>(opts =>
+ opts.UseMySql(builder.Configuration.GetconnectionString("FilmeConnection")));
+```
+
+A partir desse momento, como estamos usando a biblioteca da Pomelo, ele recebe um parâmetro adicional. Então, caso você esteja habituado a usar o Entity Framework diretamente, ou tem usado as versões anteriores do .NET sem a Pomelo, o que você precisa fazer agora é passar um outro parâmetro importante que é a versão do servidor que ele vai utilizar. Então, o segundo parâmetro que passaremos é ServerVersion com o AutoDetect para ele mesmo detectar qual versão vai utilizar com essa ConnectionString.
+
+```csharp
+using FilmesApi.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<FilmeContext>(opts =>
+ opts.UseMySql(builder.Configuration.GetconnectionString("FilmeConnection"), ServerVersion.AutoDetect(connectionString));
+```
+
+Como estamos passando a connectionString duas vezes, podemos criar na linha acima uma var connectionString e passar a connectionString como parâmetro.
+
+```csharp
+using FilmesApi.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("FilmeConnection");
+
+builder.Services.AddDbContext<FilmeContext>(opts =>
+    opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+```
+
+Perfeito. Nós fizemos a definição do FilmeContext, como vamos nos conectar e acessar o banco, fizemos toda a questão de autenticação através do Program.cs.
+
+Agora precisamos verificar como vamos gerar esses dados efetivamente dentro do banco. Como vamos começar a substituir o que já temos por acesso ao banco efetivamente?
+
+Faremos isso no próximo vídeo. Até mais!
+
+### Aula 4: Para saber mais: pacotes Nuget no Linux
+
+Como foi dito em vídeo, a proposta desta atividade será ilustrar como instalar pacotes do NUGET utilizando o Linux como ambiente de desenvolvimento.
+
+1 - Será necessário acessar o diretório de seu arquivo .csproj através do comando cd. Por exemplo, cd caminho/do/projeto/.
+
+![alt text](image.png)
+
+2- Execute os comandos para instalar os pacotes necessários:
+
+dotnet add package Microsoft.EntityFrameworkCore --version 6.0.10
+
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 6.0.10
+
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 6.0.2
+
+![alt text](image-1.png)
+
+Pronto! Conseguimos fazer a instalação dos pacotes.
+
+### Aula 4: Papel do DbContext - Exercício
+
+Recentemente, vimos que utilizar o DbContext é uma das principais maneiras de acessar o banco de dados.
+
+Marque a alternativa que apresenta uma grande vantagem de utilizar esse recurso.
+
+Resposta:  
+Abstrair a lógica de acesso ao banco de dados.
+
+> Dessa maneira, nosso esforço de acessar o banco de dados é reduzido.
+
+### Aula 4: Gerando a primeira migration - Vídeo 2
+
+Transcrição
+Nós já definimos como vamos nos conectar com o banco e qual será o contexto. Mas tem um detalhe importante: precisamos informar como o modelo FilmesApi.Models.Filme que temos na nossa aplicação será mapeado para uma tabela de banco de dados, já que estamos usando o MySQL que é um SGPD relacional, como faremos isso?
+
+No arquivo Filme.cs temos algo que vai nos ajudar nisso. As anotações de Required já valem muito também para o banco porque informam que são campos obrigatórios que devemos ter.
+
+Mas já temos o nosso id no começo do código de Filme.cs. Como informar que esse id deve ser, por exemplo, uma chave que vai identificar esse campo dentro do campo de dados? Basta inserir a chave [Key] e também informar que esse campo é Required.
+
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Key]
+    [Required]
+    public int Id { get; set; }
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+}Copiar código
+Mas tem um problema que abordaremos mais adiante, se esse campo é Required como vamos passá-lo para o usuário? Em breve trataremos disso.
+
+Agora, precisamos informar que o .NET deve fazer o mapeamento desse Filme que tem os campos duração, gênero, título e id para o banco de dados. Para isso, existe um comando bem útil e interessante que vamos usar agora no console do gerenciador de pacotes. Para acessá-lo vamos no menu "Ferramentas > Gerenciador de Pacotes do NuGet > Console do Gerenciador de Pacotes" e será aberto um console na área inferior da tela.
+
+Nesse console vamos executar o comando Add-Migration. Esse comando vai gerar uma migração de dados da nossa aplicação para o banco. Então vamos colocar CriandoTabelaDeFilme:
+
+Add-Migration CriandoTabelaDeFilmeCopiar código
+Precisamos ter essa tabela criada no banco de dados para conseguirmos armazenar dados lá.
+
+Ao executarmos o comando acima ele vai buildar todo o nosso código. Note que ele criou uma pasta chamada "Migration" com um arquivo com o nome "CriandoTabelaDeFilme" e um arquivo chamado FilmeContextModelSnapshot.cs, em breve entenderemos do que isso se trata.
+
+Repare que no código do arquivo 20221016170122_CriandoTabelaDeFilme.cs ele gerou uma classe que faz o processo de converter a informação do nosso modelo de filme para uma tabela no banco de dados.
+
+código de 20221016170122_CriandoTabelaDeFilme.cs
+
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace FilmesApi.Migrations;
+
+public partial class CriandoTabelaDeFilme : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AlterDatabase()
+            .Annotation("MySql:CharSet", "utf8mb4");
+
+        migrationBuilder.CreateTable(
+            name: "Filmes",
+            columns: table => new
+            {
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                Titulo = table.Column<string>(type: "longtext", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Genero = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Duracao = table.Column<int>(type: "int", nullable: false)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_Filmes", x => x.Id);
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
+    }
+
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: "Filmes");
+    }
+}Copiar código
+Mas você pode se perguntar se poderíamos ter feito isso manualmente. Sim, poderíamos, mas seria um trabalho desnecessário dado que é possível criar o código dessa conversão de maneira automática.
+
+Após gerar essa migração, devemos aplicar essa mudança efetivamente no banco de dados.
+
+Vamos abrir o MySQL Workbench e entrar na conexão que temos Local Instance MySQL80.
+
+Agora vamos mostrar quais são as bases de dados que efetivamente temos no nosso SGBD.
+
+Ao executarmos a query
+
+show databases;Copiar código
+Ele retorna que temos as seguintes tabelas;
+
+information
+mysql
+performance
+sys
+Ele ainda não tem o banco de dados de filmes que criamos. Então, precisamos criar esse banco junto com as tabelas que usaremos. Para fazer isso, agora que temos a migration gerada, vamos digitar o seguinte comando no console do gerenciador de pacotes:
+
+Update-DatabaseCopiar código
+Com esse comando ele vai pegar todas as configurações de conexão que já definimos e aplicar nesse banco de dados. Após executarmos esse comando, vamos voltar ao MySQL Workbench e executarmos novamente o comando show databases; o banco de dados filme estará listado.
+
+Agora vamos executar o comando use filme;. E em seguida faremos o comando show tables. Ele vai exibir duas tabelas, uma de migração gerada pelo próprio .Net e a tabela de filmes.
+
+Tables_in_filme
+efmigrationhistory
+filmes
+Podemos usar o comando describe filmes para exibir a composição dessa tabela.
+
+describe filmes;Copiar código
+Field	Type	Null	Key	Default	Extra
+Id	int	NO	PRI		auto_increment
+Titulo	longtext	NO			
+Genero	varchar(50)	NO			
+Duracao	int	NO			
+A chave primária é o id e ele já faz automaticamente a definição de que o id é autoincrementado. Então, não precisamos nos preocupar em ficar criando id para o filme. A conexão do Entity vai ser responsável por fazer isso.
+
+Recapitulando, o que fizemos foi criar o banco de dados e tabelas automaticamente através dos comandos do .NET com o Entity Framework.
+
+Agora precisamos analisar como usaremos esse contexto, que nós criamos, para inserir e consultar os dados do nosso banco.
+
+A partir de agora teremos mais robustez na nossa aplicação e poderemos pensar em como realizar outras operações dentro da base de dados.
+
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
