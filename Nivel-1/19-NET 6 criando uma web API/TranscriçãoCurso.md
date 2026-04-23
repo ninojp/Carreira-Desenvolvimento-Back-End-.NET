@@ -2406,13 +2406,14 @@ Abstrair a lógica de acesso ao banco de dados.
 
 ### Aula 4: Gerando a primeira migration - Vídeo 2
 
-Transcrição
+Transcrição  
 Nós já definimos como vamos nos conectar com o banco e qual será o contexto. Mas tem um detalhe importante: precisamos informar como o modelo FilmesApi.Models.Filme que temos na nossa aplicação será mapeado para uma tabela de banco de dados, já que estamos usando o MySQL que é um SGPD relacional, como faremos isso?
 
 No arquivo Filme.cs temos algo que vai nos ajudar nisso. As anotações de Required já valem muito também para o banco porque informam que são campos obrigatórios que devemos ter.
 
 Mas já temos o nosso id no começo do código de Filme.cs. Como informar que esse id deve ser, por exemplo, uma chave que vai identificar esse campo dentro do campo de dados? Basta inserir a chave [Key] e também informar que esse campo é Required.
 
+```csharp
 using System.ComponentModel.DataAnnotations;
 
 namespace FilmesApi.Models;
@@ -2430,14 +2431,19 @@ public class Filme
     [Required]
     [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
     public int Duracao { get; set; }
-}Copiar código
+}
+```
+
 Mas tem um problema que abordaremos mais adiante, se esse campo é Required como vamos passá-lo para o usuário? Em breve trataremos disso.
 
 Agora, precisamos informar que o .NET deve fazer o mapeamento desse Filme que tem os campos duração, gênero, título e id para o banco de dados. Para isso, existe um comando bem útil e interessante que vamos usar agora no console do gerenciador de pacotes. Para acessá-lo vamos no menu "Ferramentas > Gerenciador de Pacotes do NuGet > Console do Gerenciador de Pacotes" e será aberto um console na área inferior da tela.
 
 Nesse console vamos executar o comando Add-Migration. Esse comando vai gerar uma migração de dados da nossa aplicação para o banco. Então vamos colocar CriandoTabelaDeFilme:
 
-Add-Migration CriandoTabelaDeFilmeCopiar código
+```csharp
+Add-Migration CriandoTabelaDeFilme
+```
+
 Precisamos ter essa tabela criada no banco de dados para conseguirmos armazenar dados lá.
 
 Ao executarmos o comando acima ele vai buildar todo o nosso código. Note que ele criou uma pasta chamada "Migration" com um arquivo com o nome "CriandoTabelaDeFilme" e um arquivo chamado FilmeContextModelSnapshot.cs, em breve entenderemos do que isso se trata.
@@ -2446,6 +2452,7 @@ Repare que no código do arquivo 20221016170122_CriandoTabelaDeFilme.cs ele gero
 
 código de 20221016170122_CriandoTabelaDeFilme.cs
 
+```csharp
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -2484,7 +2491,9 @@ public partial class CriandoTabelaDeFilme : Migration
         migrationBuilder.DropTable(
             name: "Filmes");
     }
-}Copiar código
+}
+```
+
 Mas você pode se perguntar se poderíamos ter feito isso manualmente. Sim, poderíamos, mas seria um trabalho desnecessário dado que é possível criar o código dessa conversão de maneira automática.
 
 Após gerar essa migração, devemos aplicar essa mudança efetivamente no banco de dados.
@@ -2495,31 +2504,44 @@ Agora vamos mostrar quais são as bases de dados que efetivamente temos no nosso
 
 Ao executarmos a query
 
-show databases;Copiar código
+```csharp
+show databases;
+```
+
 Ele retorna que temos as seguintes tabelas;
 
-information
-mysql
-performance
-sys
+- information
+- mysql
+- performance
+- sys
+
 Ele ainda não tem o banco de dados de filmes que criamos. Então, precisamos criar esse banco junto com as tabelas que usaremos. Para fazer isso, agora que temos a migration gerada, vamos digitar o seguinte comando no console do gerenciador de pacotes:
 
-Update-DatabaseCopiar código
+```csharp
+Update-Database
+```
+
 Com esse comando ele vai pegar todas as configurações de conexão que já definimos e aplicar nesse banco de dados. Após executarmos esse comando, vamos voltar ao MySQL Workbench e executarmos novamente o comando show databases; o banco de dados filme estará listado.
 
 Agora vamos executar o comando use filme;. E em seguida faremos o comando show tables. Ele vai exibir duas tabelas, uma de migração gerada pelo próprio .Net e a tabela de filmes.
 
-Tables_in_filme
-efmigrationhistory
-filmes
+- Tables_in_filme
+- efmigrationhistory
+- filmes
+
 Podemos usar o comando describe filmes para exibir a composição dessa tabela.
 
-describe filmes;Copiar código
-Field	Type	Null	Key	Default	Extra
-Id	int	NO	PRI		auto_increment
-Titulo	longtext	NO			
-Genero	varchar(50)	NO			
-Duracao	int	NO			
+```csharp
+describe filmes;
+```
+
+|Field|Type|Null|Key|Default|Extra|
+|-----|----|----|---|-------|-----|
+|Id|int|NO|PRI||auto_increment|
+|Titulo|longtext|NO||||
+|Genero|varchar(50)|NO||||
+|Duracao|int|NO||||
+
 A chave primária é o id e ele já faz automaticamente a definição de que o id é autoincrementado. Então, não precisamos nos preocupar em ficar criando id para o filme. A conexão do Entity vai ser responsável por fazer isso.
 
 Recapitulando, o que fizemos foi criar o banco de dados e tabelas automaticamente através dos comandos do .NET com o Entity Framework.
@@ -2528,7 +2550,589 @@ Agora precisamos analisar como usaremos esse contexto, que nós criamos, para in
 
 A partir de agora teremos mais robustez na nossa aplicação e poderemos pensar em como realizar outras operações dentro da base de dados.
 
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
+### Aula 4: Para saber mais: migrations no Linux
+
+A proposta desta atividade é ilustrar como gerar suas migrations utilizando o Linux como ambiente de desenvolvimento.
+
+1 - Será necessário acessar o diretório de seu arquivo .csproj através do comando cd. Por exemplo, cd caminho/do/projeto/.
+
+![alt text](image-2.png)
+
+2 - Execute o comando para instalar o dotnet ef tools:
+
+> dotnet tool install --global dotnet-ef
+
+3 - Execute o comando de criação de migration:
+
+> dotnet ef migrations add FilmeMigration
+
+4 - Aplique as mudanças no banco de dados:
+
+> dotnet ef database update
+
+Pronto! Agora já podemos gerar as migrations no Linux.
+
+### Aula 4: A importância das migrations - Exercício
+
+Entendemos que migrations possuem um importante papel em possibilitar o mapeamento de dados para o banco.
+
+Marque as opções com as principais vantagens da utilização de migrations neste primeiro cenário de utilização.
+
+Respostas:  
+Gerar o banco e tabelas de maneira programática.
+
+> Com isso, não precisamos nos preocupar em detalhes de utilização do banco em questão.
+
+A possibilidade de conferir se o que vamos criar no banco está conforme esperamos.
+
+> Ao gerar a migration, um código C# é criado, representando as operações que serão executadas no banco.
+
+### Aula 4: Realizando operações no banco - Vídeo 3
+
+Transcrição  
+Agora, no código de FilmeController.cs, vamos remover a parte de lista que criamos manualmente. Para em seguida fazer a conexão e utilização do banco de dados.
+
+Podemos apagar este trecho de código de lista que está abaixo de public class FilmeController : ControllerBase:
+
+```csharp
+private static List<Filme> filmes = new List<Filme();
+private static int id = 0;
+```
+
+Após apagar o trecho acima, a IDE vai indicar alguns pontos de erro porque não existe mais a lista de filmes nem o id que criamos manualmente.
+
+O que queremos fazer agora? Queremos fazer com que o nosso controlador utilize o contexto que será responsável por acessar o banco de dados e conectar a aplicação e os dados do banco.
+
+A partir de agora estamos falando que nosso controlador de filme depende da funcionalidade e da injeção do nosso contexto.
+
+Para fazer a injeção de dependência basta definir o campo, será o private FilmeContext _context e com o cursor em cima de_context podemos usar o atalho "Alt + Enter" e na lista que vai aparecer vamos selecionar "Gerar construtor" para gerar o código do construtor.
+
+```csharp
+public FilmeController(FilmeContext context)
+    {
+        _context = context;
+    }
+```
+
+A partir de agora ele vai fazer a injeção de dependência e o _context será uma instância do contexto que vamos utilizar.
+
+Podemos utilizar o _context em cada um dos métodos que já temos. Apagaremos o código filmes.Id = id++; filmes.Add(filme;), não precisamos mais delas. E usaremos_context.Filmes.Add(filme);.
+
+```csharp
+public FilmeController(FilmeContext context)
+    {
+        _context = context;
+    }
+
+[HttpPost]
+
+public IActionResult AdicionarFilme([FromBody]) Filme filme)
+{
+    _context.Filmes.Add(filme);
+    return CreatedAction(nameof(RecuperaFilmePorId),
+      new { id = filme.Id },
+      filme);
+}
+```
+
+É isso. Em breve veremos se isso vai funcionar. Agora, no HttpGet vamos retornar a nossa lista de filmes inserindo return _context.Filmes.Skip(skip).Take(take);
+
+```csharp
+[HttpGet]
+public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, 
+    [FromQuery] int take = 50)
+{
+    return _context.Filmes.Skip(skip).Take(take);
+}
+```
+
+Por fim, vamos também fazer, no bloco de código de HttpGet("{id}")] inserir _context.Filmes:
+
+```csharp
+[HttpGet("{id}")]
+public IActionResult RecuperaFilmePorId(int id)
+{
+var filme = _context.Filmes
+    .FirstOrDefault(filme => filme.Id == id);
+if (filme == null) return NotFound();
+return Ok(filme);
+}
+```
+
+E ainda falta um detalhe no AdicionaFilme, porque estamos fazendo a adição de um filme no nosso banco, mas depois de adicionar precisamos confirmar que essa operação foi realizada, precisamos salvar essas alterações.
+
+Para isso, usaremos o comando _context.SaveChanges().
+
+```csharp
+[HttpPost]
+public IActionResult AdicionaFilme(
+    [FromBody] Filme filme)
+{
+    _context.Filmes.Add(filme);
+    _context.SaveChanges();
+    return CreatedAtAction(nameof(RecuperaFilmePorId),
+        new { id = filme.Id },
+        filme);
+}
+```
+
+Antes de executar nosso código, vamos para o código de Filmecontext.cs e vamos deixar o cursor em cima da palavra Data da linha namespace FilmesApi.Data para converter em namespace com escopo de arquivo vamos pressionar o atalho "Alt + Enter" e selecionar a opção "Converter em namespace com escopo de arquivo".
+
+Podemos fazer o mesmo procedimento com o Migrations de namespace FilmesApi.Migrations nos arquivos CriandoTabeladeFilme e FilmeContextModelSnapshot.
+
+Agora podemos salvar nossos arquivos e executar o projeto clicando no ícone "Play".
+
+Em seguida, vamos abrir o Postman e criar um filme.
+
+```csharp
+POST http://localhost:7106/filme
+
+{
+    "Titulo" : "Planeta dos Macacos",
+    "Genero" : "Ação",
+    "Duracao" : 120
+}
+```
+
+Ao clicarmos no botão "Send" ele retornou um 201 Created, o caminho criado <http://localhost:7106/Filme/1> e no body retornou o os campos que acabamos de criar.
+
+Vamos cadastrar mais um filme:
+
+```csharp
+{
+    "Titulo" : "Senhor dos anéis",
+    "Genero" : "Fantasia",
+    "Duracao" : 270
+}
+```
+
+E ele também foi cadastrado corretamente.
+
+Consultando filmes  
+Na outra aba do Postman vamos realizar o método GET, colocaremos a URL do filme Planeta dos Macacos: `http://localhost:7106/Filme/1`. Ao clicar em "Send" ele retornou no body e informou 200 OK:
+
+Agora vamos fazer uma consulta para um filme que não existe, usando o id 100, <http://localhost:7106/Filme/100>. Ele retornou 404 Not Found.
+
+```csharp
+{
+    "Type" : "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title" : "Not Found",
+    "status" : 404,
+    "traceId": "00-cad7f13203e646873116c8d21d1cf85b-92ec65f70b0d17e2-00"
+}
+```
+
+Agora vamos procurar pelo filme O senhor dos Anéis, o id 2. `http://localhost:7106/Filme/2`. Retornou corretamente. E podemos pesquisar todos os filmes cadastrados inserindo a URL `http://localhost:7106/Filme/`.
+
+Agora vamos voltar na IDE e reiniciar a aplicação para garantir que esses dados estão sendo salvos. E ao pesquisar novamente no Postman veremos que os dados continuam aparecendo.
+
+Além disso, podemos consultar as informações que estão na coluna de filmes no MySQL Workbench, usando o comando:
+
+```csharp
+select * from filmes;
+```
+
+Id Titulo Genero Duracao
+1 Planeta dos macacos Ação 120
+2 O senhor dos anéis Fantasia 270
+
+Os dados apareceram corretamente. Estamos inserindo e armazenando os dados no banco de dados.
+
+Lembram que comentei com você que quando criamos o filme estamos recebendo FromBody o filme , mas não passamos nenhum id. Estamos passando apenas as outras informações.
+
+Tem algumas questões que passamos a questionar. Será que o nosso modelo Filme.cs está coerente? Para o banco sim, mas para o parâmetro que estamos recebendo para o usuário adicionar esse dado no banco não está tão coerente.
+
+Porque o usuário não precisa daber do id, por mais que não esteja passando isso é um campo que está dentro do modelo recebido pelo envio do usuário. Então, precisamos nos atentar a isso: essa é a melhor maneira de receber parâmetros de requisições que vamos inserir no banco?
+
+Falaremos mais sobre isso nos próximos vídeos. Até mais!
+
+### Aula 4:  DbContext para escrita - Exercício
+
+Vimos que através do DbContext podemos realizar diversas operações no banco. Uma delas é a de escrita. Utilizando .NET 6, precisamos utilizar a sintaxe correta para adicionar um objeto mapeado no banco por meio do DbContext e salvar esta operação.
+
+Marque a opção que corresponde a esta sintaxe.
+
+Alternativa correta  
+_context.Filmes.Add(filme);  
+_context.SaveChanges();
+
+> Dessa maneira estamos adicionando o objeto ao banco e salvando o resultado da operação.
+
+### Aula 4: Faça como eu fiz: utilizando o DbContext
+
+A proposta desta atividade é migrarmos nosso código para que possamos utilizar o DbContext e persistir nossos dados em um banco. Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, abra a sua classe FilmeController.
+
+Na classe, criaremos o atributo e o inicializaremos através do construtor:
+
+```csharp
+private FilmeContext _context;
+
+public FilmeController(FilmeContext context)
+{
+    _context = context;
+}
+```
+
+Agora é necessário substituirmos a utilização da lista em memória para o DbContext em nosso método AdicionaFilme().
+
+```csharp
+[HttpPost]
+public IActionResult AdicionaFilme(
+    [FromBody] Filme filme)
+{
+    _context.Filmes.Add(filme);
+    _context.SaveChanges();
+    return CreatedAtAction(nameof(RecuperaFilmePorId),
+        new { id = filme.Id },
+        filme);
+}
+```
+
+Para nosso método RecuperaFilmes, a substituição será simples:
+
+```csharp
+[HttpGet]
+public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+    [FromQuery] int take = 50)
+{
+    return _context.Filmes.Skip(skip).Take(take);
+}
+```
+
+Por fim, altere o método RecuperaFilmePorId():
+
+```csharp
+[HttpGet("{id}")]
+public IActionResult RecuperaFilmePorId(int id)
+{
+    var filme = _context.Filmes
+        .FirstOrDefault(filme => filme.Id == id);
+    if (filme == null) return NotFound();
+    return Ok(filme);
+}
+```
+
+Agora faça o teste em seu ambiente e tente fazer inserções e leituras de recursos em seu banco de dados. Através da utilização do EntityFramework, todo o processo estará robusto e estável.
+
+### Aula 4: Utilizando DTOs - Vídeo 4
+
+Transcrição  
+Agora vamos dar uma atenção ao parâmetro que estamos recebendo em AdicionaFilme([FromBody] Filme filme). Porque nesse momento estamos recebendo uma informação que, na verdade, diz respeito ao banco de dados.
+
+Podemos ver no modelo Filme.cs que ele tem a propriedade de id, tem o Maxlength também sendo utilizado. Mas qual é o problema de nosso usuário enviar esse modelo de filme se atualmente está funcionando?
+
+Acontece que não é uma prática muito boa deixarmos o nosso modelo de banco muito exposto, principalmente na nossa camada de controlador. Porque essa é uma informação interna.
+
+Já comentamos que não importa como vamos tratar os dados, só importa que o usuário deve seguir um padrão de regras para se comunicar com a API. No caso, a informação do modelo de banco de dados é uma informação que não deveria estar tão exposta assim.
+
+Não é necessário que a informação que o usuário está enviando tenha um id, ou o Maxlength que, no fim das contas, esse Maxlength especifica o tamanho máximo de qual é o tamanho que deve ser alocado para a string do campo de gênero no banco de dados que está como varchar(50).
+
+Mas, como vamos receber um filme sem efetivamente receber um filme?
+
+Uma boa prática nesse caso é criar classes que vão instanciar objetos que são responsáveis por trafegar dados em diferentes camadas. Como, por exemplo, a camada de apresentação, o HttpPost, que é onde o usuário interage com nossa aplicação, e esse dado vai ser trafegado, por exemplo, para uma camada de persistência que é onde vamos gravar o dado no banco.
+
+Como usar o DTO (Data Transfer Object)  
+Agora vamos criar uma classe que vai ser bem parecida com a classe de Filme, mas vai conter apenas as validações que devem ser feitas a partir do que o usuário vai mandar e das informações que o usuário vai mandar efetivamente.
+
+Vamos criar uma nova pasta dentro da pasta "Data" chamada "Dtos". Dentro da pasta "Dtos" vamos criar uma nova classe chamada CreateFilmeDto. Usaremos o create em inglês para manter o padrão do CRUD (Create, Read, Update e Delete); o filme porque esse é o nome do nosso modelo; e Dto para indicar que é um Data Transfer Object.
+
+Agora vamos copiar o seguinte trecho de Filme.cs e colar no CreateFilmeDto:
+
+```csharp
+[Key]
+[Required]
+public int Id { get; set; }
+[Required(ErrorMessage = "O título do filme é obrigatório")]
+public string Titulo { get; set; }
+[Required(ErrorMessage = "O gênero do filme é obrigatório")]
+[MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+public string Genero { get; set; }
+[Required]
+[Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+public int Duracao { get; set; }
+```
+
+Primeiro, vamos usar o atalho "Alt + Enter" em cima do termo "Data" do namespace FilmesApi.Data.Dtos para converter em namespace com escopo de arquivo.
+
+Vamos tirar a propriedade de id porque o usuário não precisa enviar id. Comentei com você que o MaxLength é usado para definir a alocação do tamanho da string no banco de dados. Mas qual seria a notação mais aconselhada a fim apenas de validação?
+
+Existe a StringLength, que faz esse mesmo papel mas sem o poder de fazer alocação de memória dentro do banco de dados, tornando também o nosso código mais semântico.
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos;
+
+public class CreateFilmeDto
+{
+[Required(ErrorMessage = "O título do filme é obrigatório")]
+public string Titulo { get; set; }
+[Required(ErrorMessage = "O gênero do filme é obrigatório")]
+[StringLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+public string Genero { get; set; }
+[Required]
+[Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+public int Duracao { get; set; }
+}
+```
+
+Agora, precisamos voltar ao nosso controlador e informar que não vamos mais receber um Filme e sim um CreateFilmeDto.
+
+```csharp
+[HttpPost]
+public IActionResult AdicionaFilme(
+[FromBody] CreateFilmeDto filmeDto)
+```
+
+Como receberemos um filmeDto, precisamos converter as informações do filmeDto em um filme. Porque o _context guarda um filme no banco de dados.
+
+A maneira mais simples para fazer isso seria criar um filme manualmente, Filme filme = new Filme e ir passando parâmetro por parâmetro, mas isso seria mais trabalhoso.
+
+Existe uma maneira de fazer isso de forma bem mais simples e prática utilizando a lib AutoMapper. Vamos selecionar o menu "Ferramentas > Gerenciador de Pacotes do NuGet > Gerenciar Pacotes do NuGet para a Solução".
+
+No campo de pesquisa vamos procurar por "mapper" e vamos instalar o AutoMapper na sua versão 12.0.0. Instalaremos também o AutoMapper.Extension.Microsoft.dependencyInjection também a versão 12.0.0.
+
+A ideia é que o AutoMapper faça mapeamento automático de um DTO para um filme. Já que são duas classes que possuem as mesmas propriedades. Essa ferramenta conseguirá fazer isso de maneira implícita sempre que precisarmos mapear parâmetro por parâmetro.
+
+Primeiro, vamos adicionar o AutoMapper ao Program.cs.
+
+```csharp
+builder.Services.
+AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+```
+
+A partir disso, estamos usando o AutoMapper. Agora, precisamos informar para o AutoMapper o que ele deve fazer. Vamos criar uma nova classe para informar isso para o AutoMapper.
+
+Teremos um perfil específico do AutoMapper que chamaremos de "profile". Vamos adicionar uma nova pasta ao projeto chamada "Profile" e dentro dessa pasta adicionaremos uma nova classe chamada FilmeProfile.cs. Nesta classe teremos o construtor e o CreateMap, que usaremos para conseguirmos fazer o mapeamento.
+
+```csharp
+using AutoMapper;
+using FilmesApi.Data.Dtos;
+using FilmesApi.Models;
+
+namespace FilmesApi.Profiles;
+
+public class FilmeProfile : Profile
+{
+public FilmeProfile()
+{
+CreateMap<CreateFilmeDto, Filme>();
+}
+}
+```
+
+Por fim, precisamos chamar o AutoMapper no controlador. Primeiro, vamos declarar um campo para o AutoMapper.
+
+```csharp
+private FilmeContext _context;
+private IMapper _mapper;
+```
+
+Vamos usar o atalho "Alt + Enter" sobre _mapper e o parâmetro ao construtor. Em seguida, vamos inserir a linha que fará referência ao AutoMapper. Filme filme = _mapper.Map<Filme>(filmeDto);.
+
+```csharp
+public FilmeController(FilmeContext context, IMapper mapper)
+{
+_context = context;
+_mapper = mapper;
+}
+
+[HttpPost]
+public IActionResult AdicionaFilme(
+[FromBody] CreateFilmeDto filmeDto)
+{
+Filme filme = _mapper.Map<Filme>(filmeDto);
+_context.Filmes.Add(filme);
+_context.SaveChanges();
+return CreatedAtAction(nameof(RecuperaFilmePorId),
+new { id = filme.Id },
+filme);
+}
+```
+
+Pronto. Agora podemos executar nosso código e testar uma inserção no Postman. Tudo continua funcionando corretamente. Tornamos o nosso código um pouco mais bem escrito, pois não estamos mais expondo informações desnecessárias.
+
+Estamos começando a dar passos importantes dentro do nosso projeto. Nós criamos os nossos DTOs para a parte de criação. E para a parte de leitura? Será que devemos retornar o modelo diretamente? Ainda faltam as operações também, como atualizar e remover um filme? Veremos isso nos próximos vídeos.
+
+### Aula 4: Por que DTOs? - Exercício
+
+DTOs trazem diversas vantagens relacionadas a organização de código. Além disso, utilizando DTOs, conseguimos ter um maior controle em nossas requisições e respostas. Por quê?
+
+Marque a opção que melhor explique como os DTOs colaboram para o controle de respostas e requisições.
+
+Alternativa correta  
+Com DTOs podemos definir os parâmetros enviados de maneira isolada do nosso modelo do banco de dados.
+
+> Há parâmetros que não precisamos enviar, como por exemplo o id. Outro fator é que não estamos mais o nosso modelo do banco de dados.
+
+## Aula 5: Atualizando e removendo
+
+### Aula 5: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api/tree/Aula-4) no ponto em que paramos na aula anterior.
+
+### Aula 5: Atualizando dados com PUT - Vídeo 1
+
+Transcrição  
+Agora vamos implementar operações de atualização e deleção seguindo os padrões de utilização dos DTOs.
+
+Para isso, vamos criar um novo método responsável pela atualização de um filme. Repetiremos o mesmo comportamento que temos feito, public IActionResult AtualizaFilme(). E se vamos atualizar um filme precisamos saber qual filme vamos atualizar e quais informações queremos atualizar.
+
+Vamos receber o id do filme, que é a maneira que vamos identificar o filme que vamos atualizar e receber quais são os campos que serão alterados. Basta seguirmos a mesma receita que fizemos no CreateFilmeDto. Podemos criar uma cópia do arquivo CreateFilmeDto.cs e nomeá-la como UpdateFilmeDto.cs e neste arquivo alterar o nome da classe para public class UpdateFilmeDto.
+
+Nesse contexto, a nossa CreateFilmeDto e a UpdateFilmeDto são idênticas, só mudamos o nome da classe.
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos;
+
+public class UpdateFilmeDto
+{
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [StringLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+}
+```
+
+Porém, por mais que estejamos causando uma repetição de código, temos finalidades diferentes para essas classes Claro que, dependendo do contexto, conseguiríamos aglutinar isso em uma única classe. Mas a fim de manter uma separação efetiva de responsabilidade de cada uma dessas classes, vamos mantê-las separadas.
+
+Agora, vamos voltar para FilmeController.cs inserir o UpdateFilmeDto:
+
+```csharp
+public IActionResult AtualizaFilme(int id,
+ [FromBody] UpdateFilmeDto filmeDto)
+ {
+
+ }
+```
+
+Se vamos atualizar um recurso dentro do nosso sistema, temos duas maneiras de fazer esse tipo de atualização. Existem dois verbos que servem para isso: PUT e PATCH. Nós vamos usar o PUT.
+
+```csharp
+[HttpPut("{id}")]
+  public IActionResult AtualizaFilme(int id,
+   [FromBody] UpdateFilmeDto filmeDto)
+     {
+
+     }
+```
+
+Vamos recuperar um filme do banco de dados a partir do id recebido, se esse filme for igual a nulo vamos retornar um NotFound. Se não, vamos atualizar esse filme que recebemos com as informações do filme novo. Usaremos o _mapper.Map(filmeDto, filme para fazer o mapeamento do filme a partir do filmeDto. Por fim, vamos salvar as atualizações com _context.SaveChanges().
+
+```csharp
+[HttpPut("{id}")]
+public IActionResult AtualizaFilme(int id,
+    [FromBody] UpdateFilmeDto filmeDto)
+{
+var filme = _context.Filmes.FirstOrDefault(
+    filme => filme.Id == id);
+if (filme == null) return NotFound();
+_mapper.Map(filmeDto, filme);
+_context.SaveChanges();
+}
+```
+
+Nós não fizemos nenhuma alteração manual, pegamos o filme direto e alteramos os campos desse filme. Não precisamos criar um objeto novo nem fazer uma nova inserção. Alteramos o valor do objeto que pegamos do nosso banco.
+
+Por fim, devemos retornar um status code. Mas qual é o status code que devemos usar ao fazer uma atualização de um recurso dentro do nosso banco?
+
+O tipo de código que geralmente utilizamos ao fazer alguma alteração em algum recurso é o NoContent(), vamos adicioná-lo no fim do bloco de código.
+
+```csharp
+[HttpPut("{id}")]
+public IActionResult AtualizaFilme(int id,
+[FromBody] UpdateFilmeDto filmeDto)
+{
+var filme = _context.Filmes.FirstOrDefault(
+    filme => filme.Id == id);
+if (filme == null) return NotFound();
+_mapper.Map(filmeDto, filme);
+_context.SaveChanges();
+        return NoContent();
+}
+```
+
+Agora falta especificar no arquivo FilmeProfile.cs que precisamos também fazer map de um UpdateFilmeDto para um Filme:
+
+```csharp
+public class FilmeProfile : Profile
+{
+    public FilmeProfile()
+    {
+        CreateMap<CreateFilmeDto, Filme>();
+        CreateMap<UpdateFilmeDto, Filme>();
+    }
+}
+```
+
+Já podemos iniciar novamente a aplicação e voltar ao Postman na aba que está fazendo uma requisição POST.
+
+Vamos cadastrar um filme novo com um erro no campo título, em vez de "Avatar" vou colocar "Avatarz" com um "Z" no final. E o gênero vou colocar "comédia".
+
+```csharp
+{
+    "Titulo": "Avatarz",
+    "Genero": "Comédia",
+    "Duracao": 100
+
+}
+```
+
+Para inserir vamos clicar em "Send". Na outra aba do Postman, que está fazendo uma requisição GET, vamos fazer a leitura a partir do endereço que foi dado no campo "Location": https://localhost:7106/Filme/6.
+
+Retornou corretamente no body:
+
+```csharp
+{
+    "id": 6,
+    "Titulo": "Avatarz",
+    "Genero": "Comédia",
+    "Duracao": 100
+
+}
+```
+
+Agora precisamos alterar para corrigir as informações inseridas.
+
+Abriremos uma nova aba do Postman na qual selecionaremos o método PUT para a URL do filme que cadastramos: `https://localhost:7106/Filme/6`, selecionaremos a opção "Raw" e em seguida selecionaremos a opção de texto JSON. Podemos inserir as informações corretas no corpo:
+
+```csharp
+{
+    "Titulo": "Avatar",
+    "Genero": "Ação",
+    "Duracao": 130
+
+}
+```
+
+Ao executarmos, ele dará um retorno de 204 No Content e se fizermos novamente a consulta do filme 6 com GET `https://localhost:7106/Filme/6` as informações aparecerão corrigidas:
+
+```csharp
+{
+    "Titulo": "Avatar",
+    "Genero": "Ação",
+    "Duracao": 130
+
+}
+```
+
+Seguindo as boas práticas de receber os dados através do DTO, converter isso em nosso modelo fazendo as devidas alterações, conseguimos criar um método de atualização de um filme. Está funcionando corretamente e sem muitos mistérios.
+
+Recapitulando, nós finalizamos o processo de atualização. Nos próximos vídeos trataremos a questão de como ter o nosso DTO de leitura, que não será muito mistério. Além disso, falta fazer a operação de deleção.
+
+### Aula 5:  - Vídeo 2
+### Aula 5:  - Vídeo 3
+### Aula 5:  - Vídeo 4
+### Aula 5:  - Vídeo 5
+### Aula 5:  - Vídeo 6
+### Aula 5:  - Vídeo 7
