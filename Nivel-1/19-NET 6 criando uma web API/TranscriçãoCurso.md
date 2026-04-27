@@ -3130,9 +3130,530 @@ Seguindo as boas práticas de receber os dados através do DTO, converter isso e
 
 Recapitulando, nós finalizamos o processo de atualização. Nos próximos vídeos trataremos a questão de como ter o nosso DTO de leitura, que não será muito mistério. Além disso, falta fazer a operação de deleção.
 
-### Aula 5:  - Vídeo 2
-### Aula 5:  - Vídeo 3
-### Aula 5:  - Vídeo 4
-### Aula 5:  - Vídeo 5
-### Aula 5:  - Vídeo 6
-### Aula 5:  - Vídeo 7
+### Aula 5: Características do PUT - Exercício
+
+Desafio proposto pela Luri, a IA da Alura.
+
+Recentemente vimos que é possível atualizar um recurso no banco de dados utilizando o verbo PUT e fazendo a interface com o banco através do Entity. Para manter o padrão REST, qual deverá ser o código de retorno ao executar a operação de atualização com sucesso?
+
+Resposta:  
+return NoContent();
+204 No Content
+
+### Aula 5: Atualizando dados com PATCH - Vídeo 2
+
+Transcrição   
+Nós acabamos de implementar o nosso PUT, mas ele tem uma peculiaridade. Repare que, para atualizar o nosso filme precisamos passar todo um UpdateFilmeDto para podermos atualizar.
+
+Vejamos um exemplo. Digamos que, no Postman, vou cadastrar o filme "Avatar" com a letra "Z" no final e com seu gênero e duração corretos.
+
+```csharp
+{
+    "Titulo": "Avatarz",
+    "Genero": "Ação",
+    "Duracao": 140
+
+}
+```
+
+No momento em que clicar em "Send" será salvo com o nome errado.
+
+Se eu quisesse atualizar esse filme com o PUT precisaria passar o objeto inteiro contendo o gênero e a duração também. Seria necessário mandar todas as informações mesmo querendo alterar apenas um campo. Isso não é tão prático.
+
+Método PATCH  
+Para alterar apenas um campo existe o verbo http PATCH. Vamos inserir no FilmeController.cs o bloco de código para o [HttpPatch]. Para facilitar, podemos copiar e colar o bloco de código de AtualizaFilme() e fazer as alterações necessárias. Este será o método AtualizaFilmeParcial().
+
+Aqui também precisaremos receber um id, que será o id do filme que queremos atualizar. Mas não vamos receber um [FromBody] UpdateFilmeDto, vamos receber outra coisa que por enquanto não sabemos o que é, vamos deixar uma interrogação por enquanto.
+
+```csharp
+[HttpPatch("{id}")]
+    public IActionResult AtualizaFilmeParcial(int id, <?>)
+    {
+        var filme = _context.Filmes.FirstOrDefault(
+            filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        _mapper.Map(filmeDto, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+```
+
+O comportamento, a princípio, será o mesmo. Precisamos receber e ver qual é o filme. Caso não encontre retornaremos um NotFound e a partir daí as coisas vão mudar um pouco.
+
+O primeiro passo é o seguinte: para conseguirmos aplicar mudanças parciais em JSONs no nosso código, precisaremos de uma biblioteca para nos auxiliar.
+
+No gerenciador de pacotes do NuGet para a Solução vamos pesquisar por "Newtonsoft" e selecionaremos o Microsoft.AspNetCore.Mvc.NewtonsoftJson vamos instalar a versão 6.0.10 no nosso projeto.
+
+Agora, no Program.cs, vamos adicionar o Newtonsoft na seção de builder:
+
+```csharp
+builder.Services.AddControllers().AddNewtonsoftJson();
+
+//código omitido
+```
+
+Voltando ao FilmeController.cs, no bloco de código de AtualizaFilmeParcial, vamos receber um patch, um JSON parcial contendo o que queremos mudar, JSONPatchDocument:
+
+```csharp
+[HttpPatch("{id}")]
+    public IActionResult AtualizaFilmeParcial(int id, JSONPatchDocument<UpdateFilmeDto> patch)
+    {
+        var filme = _context.Filmes.FirstOrDefault(
+            filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        _mapper.Map(filmeDto, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+```
+
+Esse JSONPatchDocument vai ser referente a um UpdateFilmeDto, ou seja, ele vai conter uma ou mais informações respectivas a um filme que queremos atualizar parcialmente, vamos chamá-lo de patch, que é a operação que queremos realizar.
+
+Se o filme que queremos atualizar não existir, retornaremos o NotFound. Se não, precisamos verificar se a informação que estamos recebendo no patch é válida.
+
+Teremos que converter o filme que pegamos no banco para um UpdateFilmeDto para aplicar nossas regras de validação alterando esse DTO e caso ele seja válido vamos convertê-lo de volta para um filme.
+
+Vamos ter um filmeParaAtualizar e vamos converter para um UpdateFilmeDto o filem que acabamos de recuperar.
+
+Se a mudança que estamos tentando aplicar for aplicada ao nosso filmeParaAtualizar e ele contiver um ModelState válido, faremos a mudança convertendo de volta para um filme. Se não foir válido, vamos descartar e dar um erro de validação.
+
+Se não conseguirmos validar o modelo de FilmeParaAtualizar vamos retornar um ValidationProblem(ModelState).
+
+Se tudo correr bem e não retornarmos um problema de validação, podemos mapear o filmeParaAtualizar para um filme, salvar as mudanças e retornar NoContent().
+
+```csharp
+    var filmeParaAtualizar = _mapper.Map<UpdateFilmeDto>(filme);
+
+    patch.ApplyTo(filmeParaAtualizar, ModelState);
+
+    if (!TryValidateModel(filmeParaAtualizar))
+    {
+        return ValidationProblem(ModelState);
+    }
+    _mapper.Map(filmeParaAtualizar, filme);
+    _context.SaveChanges();
+    return NoContent();
+}
+```
+
+Agora, precisamos adicionar uma nova linha no FilmeProfile.cs que permite que façamos essa conversão de um Filme para um UpdateFilmeDto:
+
+```csharp
+    public FilmeProfile()
+    {
+        CreateMap<CreateFilmeDto, Filme>();
+        CreateMap<UpdateFilmeDto, Filme>();
+        CreateMap<Filme, UpdateFilmeDto>();
+    }
+```
+
+Agora podemos executar novamente a aplicação e voltar na aba do Postman para realizar o método PATCH. Vamos atualizar corrigindo o nome do filme passando apenas o título, não queremos passar gênero e duração de novo porque essas informações já estão certas. Faremos o método PATCH, e abaixo do endereço da URL selecionaremos as opções "raw" e "JSON".
+
+Método PATCH
+
+```csharp
+https://localhost:7106/Filme/9
+```
+
+No corpo da requisição precisamos passar qual é a operação que queremos realizar. No caso é uma operação de replace, "substituição" em inglês. Colocaremos o caminho do campo que será atualizado, "/titulo". E, por fim, qual valor queremos colocar nesse campo, "Avatar".
+
+```csharp
+[
+    {
+        "op": "replace",
+        "path": "/titulo",
+        "value": "Avatar"
+    }
+]
+```
+
+Podemos clicar em "Send" e teremos a resposta 204 No Content.
+
+Se executarmos a pesquisa pelo filme que atualizamos, veremos que está corrigido.
+
+Método GET
+
+```csharp
+https://localhost:7106/Filme/9
+```
+
+Body:
+
+```csharp
+{
+    "id": 9,
+    "titulo": "Avatar",
+    "genero": "Ação",
+    "duracao": 140
+}
+```
+
+Podemos atualizar também o gênero e a duração se quisermos. Basta inserir seus respectivos caminhos no campo path inserindo genero ou /duracao.
+
+Então, agora podemos fazer a atualização parcial dos campos, sem passar o objeto inteiro.
+
+Nos próximos vídeos veremos como resolver a questão de como vamos deletar os dados e como finalizar o DTO de leitura, quais benefícios podemos ter quanto a isso.
+
+### Aula 5: Características do PATCH- Exercício
+
+O PATCH é uma outra alternativa de verbo HTTP usado para atualizar recursos em nossa base.
+
+Marque a alternativa que explica corretamente qual é a principal diferença dele para o verbo PUT.
+
+Resposta:  
+O verbo PATCH permite atualizações parciais.
+
+> Não é necessário enviar o objeto completo. Apenas os campos que serão atualizados.
+
+### Aula 5: Deletando filmes - Vídeo 3
+
+Transcrição  
+Agora vamos fazer a operação de deleção e também criar o nosso ReadFilmeDto.
+
+Vamos escrever método DeletaFilme(). Para deletar um filme basta recebermos o id. Para deletar usaremos o verbo httpDelete.
+
+```csharp
+[HttpDelete("{id}")]
+public IActionResult DeletaFilme(int id)
+{
+    var filme = _context.Filmes.FirstOrDefault(
+        filme => filme.Id == id);
+    if (filme == null) return NotFound();
+    _context.Remove(filme);
+    _context.SaveChanges();
+    return NoContent();
+}
+```
+
+A princípio nosso operação de deleção está feita. não precisamos de um DTO para ela, mas vamos colocar aqui o DTO da nossa operação de leitura.
+
+No gerenciador de soluções, vamos clicar com o botão direito na pasta "Dtos" e selecionar "Adicionar > Classe...". Nomearemos essa nova classe de ReadFilmeDto.cs.
+
+Essa classe será parecida com o UpdateFilmesDto, mas não precisamos mais das strings nem vamos validar nada no retorno. Qual seria uma informação que podemos gerar que só pertence ao escopo do DTO, por exemplo, mas não pertence ao Filme?
+
+Uma informação relevante seria, por exemplo, a hora da consulta. Um DateTime com o horário em que esse recurso foi consultado, DateTime HoraDaConsulta { get; set; } = DateTime.Now.
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos
+{
+    public class ReadFilmeDto
+    {
+        public string Titulo { get; set; }
+        public string Genero { get; set; }
+        public int Duracao { get; set; }
+        public DateTime HoraDaConsulta { get; set; } = DateTime.Now;
+    }
+}
+```
+
+Então, o valor padrão de HoraDaConsulta será o DateTime.Now.
+
+Em seguida, no RecuperaFilmePorId do FilmeController em vez de simplesmente reotrnar o filme vamos utilizar o nosso mapper.Map`<ReadFilmeDto>`(filme).
+
+```csharp
+[HttpGet("{id}")]
+public IActionResult RecuperaFilmePorId(int id)
+{
+    var filme = _context.Filmes
+        .FirstOrDefault(filme => filme.Id == id);
+    if (filme == null) return NotFound();
+    var filmeDto = _mapper.Map<ReadFilmeDto>(filme);
+    return Ok(filmeDto);
+}
+```
+
+E no Recuperafilmes podemos retornar um _mapper.Map. Queremos mapear para uma lista de ReadFilmeDto o nosso context.Filmes.
+
+```csharp
+[HttpGet]
+public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+    [FromQuery] int take = 50)
+{
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
+}
+```
+
+Agora vamos inserir no FilmeProfile um CreateMap de um Filme para um ReadFilmeDto.
+
+```csharp
+public class FilmeProfile : Profile
+{
+    public FilmeProfile()
+    {
+        CreateMap<CreateFilmeDto, Filme>();
+        CreateMap<UpdateFilmeDto, Filme>();
+        CreateMap<Filme, UpdateFilmeDto>();
+        CreateMap<Filme, ReadFilmeDto>();
+    }
+}
+```
+
+Podemos executar nossa aplicação e testar no Postman as requisições POST, GET e PATCH que criamos.
+
+Por fim, vamos fazer uma requisição DELETE no id 11.
+
+```csharp
+https://localhost:7106/Filme/11
+```
+
+Ao clicarmos em "Send" ele retornou um 204 No Content.
+
+Tudo funcionando corretamente. Fizemos todas as operação de criar, ler, atualizar e remover. Inclusive, não estamos expondo informações de implementação para as camadas externas. Mas o que mais podemos fazer? Veremos na próxima aula.
+
+### Aula 5: Verbo de remoção - Exercício
+
+Durante o curso vimos diversos verbos HTTP, como o POST (para criar um recurso), o GET (para fazer leitura de recursos) e o PUT/PATCH (para atualização de recursos).
+
+Marque a opção com o verbo utilizado quando queremos apagar um recurso.
+
+Resposta:  
+Delete
+
+> Esse é o verbo utilizado no padrão REST.
+
+### Aula 5: Faça como eu fiz: removendo filmes
+
+Nesta atividade, implementaremos o comportamento de remoção em nossa API para poder deletar dados de filmes que não quisermos mais na base do nosso projeto.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, abra a classe FilmeController. Vamos começar escrevendo o esqueleto de nosso método de remoção.
+
+```csharp
+[HttpDelete("{id}")]
+public IActionResult DeletaFilme(int id)
+{
+
+}
+```
+
+Utilizaremos o DbContext para efetuar a remoção. Porém, antes precisamos verificar a existência do filme:
+
+```csharp
+[HttpDelete("{id}")]
+public IActionResult DeletaFilme(int id)
+{
+            var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme == null)
+            {
+                return NotFound();
+            }
+}
+```
+
+Caso exista, devemos apagá-lo do banco e salvar as alterações:
+
+```csharp
+[HttpDelete("{id}")]
+public IActionResult DeletaFilme(int id)
+{
+            var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(filme);
+            _context.SaveChanges();
+            return NoContent();
+
+}
+```
+
+Dessa maneira, é possível remover dados do sistema. O processo como um todo está bastante simples devido ao código de acesso ao banco e operações estarem devidamente encapsulados através do EntityFramework.
+
+### Aula 5: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- O verbo PUT pode ser utilizado quando queremos atualizar algum recurso no sistema.
+- O verbo PATCH também pode ser utilizado para atualizações, porém de maneira parcial.
+- Apesar do verbo PATCH não exigir a passagem completa do objeto a ser atualizado, exige uma configuração mais complexa.
+- O verbo DELETE deve ser utilizado quando queremos deletar um recurso no sistema.
+- Quando um recurso é atualizado ou removido com sucesso, devemos retornar status 204 (No Content).
+
+## Aula 6: Documentando com Swagger
+
+### Aula 6: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api/tree/Aula-5) no ponto em que paramos na aula
+
+### Aula 6: Documentando a API - Vídeo 1
+
+Transcrição  
+O que falta para terminarmos?
+
+Uma coisa que vimos no início do curso foi a tela do Swagger, passamos rapidamente por ele. Ao acessarmos o endereço `https://localhost:7106/swagger` veremos que o swagger está mais populado. Está mostrando vários /filme na categoria de filmes, que correspondem aos métodos que nós criamos:
+
+- POST /Filme
+- GET /Filme
+- GET /Filme/{id}
+- PUT /Filme/{id}
+- PATCH /Filme/{id}
+- DELETE /Filme/{id}
+
+Temos o POST que cria um filme, o GET que recupera todos os filmes, o GET que recupera filme por id, o PUT e o PATCH que atualizam de maneiras diferentes e o DELETE.
+
+Conseguimos inclusive fazer as operações pelo Swagger, com os valores padrões que ele usa a partir dos valores que definimos no cabeçalho dos nossos métodos. E no momento em que executamos, clicando em "Execute", as operações são realizadas e conseguimos ver tudo funcionando normalmente, em alguns aspectos é bem parecido com o Postman.
+
+Mas a grande vantagem do Swagger é que com ele conseguimos documentar o funcionamento da API. Pessoas que forem utilizar acessando a página do Swagger conseguem ver por exemplo quais são os endpoints disponíveis, qual verbo o endpoint espera para funcionar e fazer determinada operação. Conseguimos validar de maneira visual tudo o que fizemos.
+
+Vamos voltar ao código da classe FilmeController e podemos colocar ainda mais informação nos nossos métodos, por exemplo, se quisermos fazer uma documentação em cima do AdicionaFilme(). É possível definir uma informação de como o método se comporta a nível de parâmetro, o que ele retorna, o que ele espera, quais são os campos que ele vai utilizar, etc.
+
+Vamos colar acima do [HttpPost] um trecho do que podemos fazer aqui para documentar o método AdicionaFilme() como comentário seguindo o padrão XML:
+
+```csharp
+/// <summary>
+/// Adiciona um filme ao banco de dados
+/// </summary>
+/// <param name="filmeDto">Objeto com os campos necessários para criação de um filme</param>
+/// <returns>IActionResult</returns>
+/// <response code="201">Caso inserção seja feita com sucesso</response>
+```
+
+Esse trecho tem um resumo sobre o método AdicionaFilme(), ele adiciona um filme ao banco de dados. Qual parâmetro ele recebe? Recebe um filmeDto, que é um objeto com os campos necessários para criação de um filme. Ele retorna uma IActionResult, a resposta que ele dá é 201, caso a inserção seja feita com sucesso.
+
+Além disso, conseguimos falar qual é o tipo de retorno desse método. Vamos inserir que ele produz uma resposta do tipo StatusCodes 201Created.
+
+```csharp
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public IActionResult AdicionaFilme(
+        [FromBody] CreateFilmeDto filmeDto)
+```
+
+Em seguida, precisamos alterar a nossa chamada do método AddSwagger() em nossa classe Program.cs. Vamos colar no builder.Services.AddSwaggerGen() esse texto que já deixei pronto para nós:
+
+```csharp
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+```
+
+Estamos definindo qual é a informação da API que estamos documentando. O título é "FilmesAPI", a versão é "v1", estamos usando libs internas para pegar o contexto atual e gerar um arquivo XML e temos um caminho baseado no arquivo que estamos gerando e um BaseDirectory baseado no contexto da aplicação que estamos executando. E, por fim, permitimos a execução de comentários XML com esse caminho que estamos criando.
+
+Um último detalhe que também precisamos, é alterar o `<PropertyGroup>` no arquivo FilmesApi.csproj.
+
+Para abrir o FilmesApi.csproj basta ir ao painel gerenciador de soluções e clicar duas vezes em FilmesApi. Vamos incluir a instrução de `<GenerateDocumentationFile>` como true.
+
+```csharp
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+```
+
+Ao reiniciar nossa aplicação sem depurar e voltar na tela de Swagger, no momento em que atualizarmos essa página veremos os comentários de documentação que fizemos.
+
+Vamos finalizar por aqui. Vimos como é possível tornar a nossa API ainda mais documentada e de fácil acesso para as pessoas que vão utilizá-la.
+
+Até a próxima!
+
+### Aula 6: Configurando o Swagger - Exercício
+
+Recentemente, vimos que a fim de gerar a documentação de nossa API, devemos adicionar a injeção do Swagger em nosso Program, segundo a convenção .NET 6. Confira:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+//código omitido
+```
+
+De acordo com o código escrito, de que forma devemos adicionar o Swagger?
+
+Resposta:  
+builder.Services.AddSwaggerGen(c => //código omitido);
+
+> Dessa maneira é possível adicionar o Swagger ao nosso projeto.
+
+### Aula 6: Faça como eu fiz: documentando com Swagger
+
+Chegou a hora de configurar o Swagger, uma aplicação open source que auxilia pessoas desenvolvedoras a criar, documentar e consumir APIs REST. Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+De início, precisamos colocar nossas informações acerca do método AdicionaFilme() em nossa classe FilmeController como comentário seguindo o padrão XML:
+
+```csharp
+/// <summary>
+    /// Adiciona um filme ao banco de dados
+    /// </summary>
+    /// <param name="filmeDto">Objeto com os campos necessários para criação de um filme</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public IActionResult AdicionaFilme(
+        [FromBody] CreateFilmeDto filmeDto)
+    {
+    //código omitido
+```
+
+Em seguida, precisamos alterar a nossa chamada do método AddSwagger() em nossa classe Program.cs:
+
+```csharp
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+```
+
+Por fim, altere seu `<PropertyGroup>` no arquivo FilmesApi.csproj:
+
+```csharp
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+```
+
+Com isso, nosso método AdicionaFilme() estará devidamente documentado, informando os parâmetros recebidos, tipo de resposta e padrões implementados. Como desafio, faça sua própria documentação para os métodos de leitura, atualização e escrita!
+
+### Aula 6: Projeto final do curso
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api/tree/Aula-6) completo implementado durante as aulas.
+
+### Aula 6: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- Documentar a API é de grande valia tanto para quem vai desenvolver quanto para quem vai consumi-la.
+- Como configurar o Swagger em nossa classe Program.cs.
+- Como documentar métodos através de XML.
+- O Swagger auxilia o processo de entendimento sobre uma rota, seus parâmetros e retornos.
+
+### Aula 6: Conclusão - Vídeo
+
+Transcrição  
+Parabéns por chegar até aqui!
+
+Durante esse curso vimos como abrir comunicação para o mundo externo, a partir da nossa aplicação, com os Controllers.
+
+Vimos como definir uma rota, como definir um controller da nossa API, as extensões que devemos fazer, a utilização do construtor para fazer injeção de dependência, a criação das actions, que usamos com diferentes verbos HTTP: HttpPost para criar recursos dentro do sistema; HttpGet para recuperar dados e para passar alguma informação.
+
+Além disso, vimos como fazer a paginação para não retornar muitas informações de uma só vez. Também vimos como atualizar um recurso dentro do nosso sistema, com o verbo HttpPut vimos que podemos fazer uma busca a partir de um ID e alterar esse recurso dentro do nosso sistema.
+
+Também vimos como fazer uma atualização de maneira parcial com o verbo HttpPatch, passando um ID e utilizando um JSON para fazer a alteração da maneira que precisarmos, sem passar outras informações que talvez não devam ser atualizadas nesse caso.
+
+Por fim, vimos como deletar com o verbo HttpDelete. Fizemos a parte de recuperar a informação e deletar usando o Entity Framework para fazer comunicação com o banco de dados que utilizamos localmente.
+
+Vimos também boas práticas de como usar DTOs. Como criar DTOs para criação, para leitura, conseguimos utilizar informações que não necessariamente estarão no banco de dados, mas conseguiremos informar esses dados em tempo de execução.
+
+Vimos também como configurar a aplicação através do appsettings.json. Como informações que serão carregadas em tempo de execução ou no momento de inicialização da nossa aplicação.
+
+Vimos bastante coisa nesse curso, mas ainda temos muita coisa pela frente. Nos encontramos num próximo curso. Espero que você tenha aproveitado.
+
+Até mais!
