@@ -1930,11 +1930,909 @@ Por que criamos uma sessão se ela só tem um ID e um DTO vazio? Agora que geram
 
 Na sequência, vamos relacionar a sessão com a entidade do filme.
 
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 7
+### Aula 3: Revisando o AutoMapper - Exercício
 
+A fim de criarmos um mapeamento automático entre nossas diferentes classes, podemos utilizar o AutoMapper. De qual classe nós devemos estender, no contexto de polimorfismo, para que tenhamos um perfil de mapeamento definido?
+
+Alternativa correta  
+Profile
+
+> Essa classe deve ser estendida para que possamos mapear nossos campos.
+
+### Aula 3: Relacionando Filme e Sessão - Vídeo 2
+
+Transcrição  
+Enquanto uma sessão de cinema apresenta apenas um filme, esse mesmo filme pode ser exibido em muitas sessões! Trata-se de um relacionamento de um para muitos ou um para N, também representado por 1:N. Em outras palavras, um filme pode ter uma ou muitas sessões, enquanto uma sessão terá somente um filme.
+
+Para entender melhor essa dinâmica, vamos montar um diagrama de filmes e sessões:
+
+Diagrama de filmes e sessões. Na parte superior, há três retângulos dispostos horizontalmente. Da esquerda para a direita: "Filme A", "Filme B" e "Filme C". Na parte inferior, há outros três retângulos dispostos horizontalmente. Da esquerda para a direita: "Sessão A", "Sessão B" e "Sessão C".
+
+Por exemplo, o filme A pode se relacionar simultaneamente com a sessão A e a sessão B, enquanto o filme B se relaciona com a sessão C:
+
+Mesmo diagrama de filmes e sessões. Agora, uma reta liga "Filme A" e "Sessão A". Outra reta liga "Filme A" e "Sessão B". Outra reta liga "Filme B" e "Sessão C".
+
+Note que a relação pode ter múltiplas saídas do filme em direção às sessões, mas cada sessão só pode ter uma saída em direção a um filme. No caso, o filme A tem duas sessões diferentes, já o filme C tem apenas uma sessão. Ou seja, um filme pode ter uma ou muitas sessões, enquanto uma sessão deve ter somente um filme.
+
+Indicando relações com Entity  
+Para que uma sessão saiba que filme está cadastrado para ser exibido, utilizaremos o ID. Então, vamos usar o Entity para gerar esse relacionamento de um para muitos entre um filme e uma sessão.
+
+Em nosso modelo Sessao.cs, vamos inserir o campo FilmeId com o atributo [Required]. Desse modo, estaremos explicitando que haverá uma relação entre um filme e uma sessão:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Sessao
+    {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public int FilmeId { get; set; }
+    }
+}
+```
+
+Em resumo, uma sessão só pode existir no banco de dados, se ela tiver o ID de um filme já criado e associado a ela.
+
+Além disso, vamos adicionar a propriedade virtual Filme para indicar ao Entity que essa relação está sendo estabelecida:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Sessao
+    {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public int FilmeId { get; set; }
+        public virtual Filme Filme { get; set; }
+    }
+}
+```
+
+Na classe Filme, será preciso cadastrar o ID da sessão para instanciar um filme? A relação de dependência nesse relacionamento de um para muitos está apenas do lado da sessão, então não é preciso! Afinal, se a criação de um filme dependesse do ID de uma sessão e a criação de uma sessão dependesse do ID de um filme, teríamos um loop em que não conseguiríamos criar nem um nem outro.
+
+Portanto, em Filme.cs, apenas informaremos a relação de um filme com uma sessão. Como temos a possibilidade de ter uma ou muitas sessões, utilizaremos o tipo ICollection`<Sessao>` para a propriedade virtual que chamaremos de sessoes:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models;
+
+public class Filme
+{
+    [Key]
+    [Required]
+    public int Id { get; set; }
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+    public virtual ICollection<Sessao> Sessoes { get; set; }
+}
+```
+
+Gerando uma migration  
+A seguir, vamos fazer um teste. No menu superior do Visual Studio, vamos acessar "Ferramentas > Gerenciador de pacotes do NuGet > Console do Gerenciador de Pacotes".
+
+No terminal, vamos gerar uma migration com o seguinte comando:
+
+```csharp
+Add-Migration "Sessao e Filme"
+```
+
+Na sequência, analisaremos o arquivo resultante para entender o que está sendo feito a nível de banco de dados:
+
+```csharp
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace FilmesApi.Migrations
+{
+    public partial class SessaoeFilme : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Sessoes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FilmeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sessoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sessoes_Filmes_FilmeId",
+                        column: x => x.FilmeId,
+                        principalTable: "Filmes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessoes_FilmeId",
+                table: "Sessoes",
+                column: "FilmeId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Sessoes");
+        }
+    }
+}
+```
+
+A partir da linha 13, estamos criando no banco de dados a tabela "Sessoes", cujos campos são Id e FilmeId. A chave primária (primary key) é o ID, enquanto a chave estrangeira (foreign key) é o ID de um filme. Ou seja, para que a sessão exista, é preciso ter um filme atrelado a ela.
+
+No terminal, vamos executar o seguinte comando:
+
+```csharp
+Update-Database
+```
+
+Finalizado esse processo, iniciaremos o projeto sem depurar ("Ctrl + F5") e abrir o Postman. Primeiramente, vamos preparar uma requisição POST para cadastrar um filme. A URL será a seguinte:
+
+```csharp
+https://localhost:7106/filme
+```
+
+Dado que os campos obrigatórios são título, gênero e duração, enviaremos o seguinte objeto:
+
+```csharp
+{
+    "Titulo" : "Alura Filme",
+    "Genero" : "Aventura",
+    "Duracao" : 120
+}
+```
+
+Por fim, pressionaremos o botão "Send", à direita da URL. Para nos certificar de que o cadastro foi bem-sucedido, podemos enviar uma requisição GET para essa mesma URL e verificar a listagem. No caso, temos apenas um filme, cujo ID é igual a 1.
+
+Em seguida, vamos criar uma sessão. Em uma nova aba, enviaremos um POST para a seguinte URL:
+
+```csharp
+https://localhost:7106/sessao
+```
+
+Assim como as requisições anteriores, vamos acessar a aba "Body" abaixo da URL e selecionar "raw". Mais à direita dessa linha, há um campo dropdown em que é necessário especificar a opção "JSON". Vamos informar o seguinte objeto:
+
+```csharp
+{
+    "FilmeID" : 1
+}
+```
+
+Ao pressionar o botão "Send", vamos receber o status "500 Internal Error" e uma mensagem de que não estamos informando o FilmeId! Esse erro ocorre porque não passamos o ID no nosso DTO de criação!
+
+Vamos voltar ao Visual Studio, abrir o arquivo CreateSessaoDTO.cs e inserir a propriedade FilmeId:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos
+{
+    public class CreateSessaoDto
+    {
+        public int FilmeId { get; set; }
+    }
+}
+```
+
+Após salvar essa alteração, vamos reiniciar nossa aplicação. Voltando ao Postman, pressionaremos o botão "Send" novamente para cadastrar uma sessão. Dessa vez, o processo será bem-sucedido:
+
+```csharp
+Status: 201 Created
+
+{
+    "id": 2,
+    "filmeId": 1,
+    "filme": null
+}
+```
+
+Podemos enviar uma requisição GET para /sessao. No retorno, teremos apenas uma sessão:
+
+```csharp
+Status: 200 OK
+
+[
+    }
+        "id": 2
+    }
+]
+```
+
+Ao enviar um GET para /filme, ainda não constará as sessões desse filme. Mais adiante, trabalharemos nesse ponto.
+
+### Aula 3: Faça como eu fiz: modificando os modelos
+
+Chegou a hora de estabelecer o relacionamento 1:n entre um Filme e uma Sessao. A ideia da atividade é modificar nossos modelos atuais a fim de informar ao Entity o relacionamento.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Para isso, primeiramente altere a classe Filme para:
+
+```csharp
+public class Filme
+{
+    [Key]
+    [Required]
+    public int Id { get; set; }
+    [Required(ErrorMessage = "O título do filme é obrigatório")]
+    public string Titulo { get; set; }
+    [Required(ErrorMessage = "O gênero do filme é obrigatório")]
+    [MaxLength(50, ErrorMessage = "O tamanho do gênero não pode exceder 50 caracteres")]
+    public string Genero { get; set; }
+    [Required]
+    [Range(70, 600, ErrorMessage = "A duração deve ter entre 70 e 600 minutos")]
+    public int Duracao { get; set; }
+    public virtual ICollection<Sessao> Sessoes { get; set; }
+}
+```
+
+Em seguida, será necessário fazer o processo de maneira parecida na classe Sessao:
+
+```csharp
+public class Sessao
+{
+    [Key]
+    [Required]
+    public int Id { get; set; }
+    public virtual Filme Filme { get; set; }
+    public int FilmeId { get; set; }
+}
+```
+
+Para gerar uma Sessão agora informaremos um FilmeId no momento de criação. Altere a classe CreateSessaoDto:
+
+```csharp
+ public class CreateSessaoDto
+    {
+        [Required]
+        public int FilmeId { get; set; }
+    }
+```
+
+Por fim, não esqueça de gerar e aplicar as migrations com os comandos Add-Migrations e Update-Database.
+
+### Aula 3: Características do relacionamento - Exercício
+
+Através do código escrito anteriormente, foi possível estabelecer um relacionamento 1:n entre um Filme e uma Sessão em nosso sistema. Por qual motivo esse relacionamento recebe o nome de “um para muitos”?
+
+Resposta correta  
+Pois em nosso sistema um Filme se relaciona com uma ou muitas sessões enquanto uma Sessão se relaciona com um e somente um Filme.
+
+> Esse é o motivo que dá nome ao tipo de relacionamento.
+
+### Aula 3: Relacionando Cinema e Sessão - Vídeo 3
+
+Transcrição  
+Vamos relacionar a sessão e o cinema.
+
+Fazendo uma analogia com o mundo real, sabemos que uma sessão é exibida em somente um cinema. Não é possível assistir a uma sessão em dois lugares diferentes ao mesmo tempo. Quanto ao cinema, ele pode ter uma ou múltiplas sessões em exibição. Ou seja, novamente se trata de um relacionamento de um para muitos (1:N):
+
+Diagrama de relacionamentos entre sessão, cinema e banco de dados. Na parte superior esquerda, há um retângulo denominado "Sessão". Na parte inferior esquerda, há um retângulo denominado "Cinema". À esquerda, há um ícone de banco de dados. Uma seta aponta de "Sessão" até "Banco de Dados". Outra seta aponta de "Cinema" até "Banco de Dados". Uma reta conecta "Sessão" e "Cinema". À esquerda de "Cinema" está escrito o número 1. À esquerda de "Sessão" está escrito "n".
+
+Será que a relação entre sessão e cinema se comportará de maneira semelhante ao relacionamento entre sessão e filme? Para responder à essa questão, vamos montar um diagrama novamente:
+
+Diagrama de cinemas e sessões. Na parte superior, há três retângulos dispostos horizontalmente. Da esquerda para a direita: "Cinema A", "Cinema B" e "Cinema C". Na parte inferior, há outros três retângulos dispostos horizontalmente. Da esquerda para a direita: "Sessão A", "Sessão B" e "Sessão C". Uma reta liga "Cinema A" a "Sessão A". Outra reta liga "Cinema A" e "Sessão B". Outra reta liga "Cinema B" a "Sessão C".
+
+Por exemplo, o cinema A pode estar exibindo a sessão A e a sessão B. Já o cinema B pode estar exibindo a sessão C. Em resumo, um cinema pode ter uma ou múltiplas sessões, enquanto uma sessão só pode estar vinculado a um único cinema.
+
+Mais uma vez, utilizaremos o ID para saber que cinema está exibindo determinada sessão.
+
+Modelos  
+Em Sessao.cs, vamos criar uma propriedade do tipo inteiro chamada CinemaId, com o atributo [Required]. Além disso, vamos inserir uma propriedade virtual:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Sessao
+    {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public int FilmeId { get; set; }
+        public virtual Filme Filme { get; set; }
+        [Required]
+        public int CinemaId { get; set; }
+        public virtual Cinema Cinema { get; set; }
+    }
+}
+```
+
+Em Cinema.cs, criaremos a propriedade virtual Sessoes cujo tipo será uma coleção de sessões:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Cinema
+    {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "O campo de nome é obrigatório.")]
+        public string Nome { get; set; }
+        public int EnderecoId { get; set; }
+        public virtual Endereco Endereco { get; set; }
+        public virtual ICollection<Sessao> Sessoes { get; set; }
+    }
+}
+```
+
+Migration  
+No menu superior do Visual Studio, vamos selecionar "Ferramentas > Gerenciador de Pacotes do NuGet > Console do Gerenciador de Pacotes". No terminal, vamos gerar a migration com o seguinte comando:
+
+```csharp
+Add-Migration "Sessao e Cinema"
+```
+
+Finalizado o processo, vamos analisar o arquivo resultante:
+
+```csharp
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace FilmesApi.Migrations
+{
+    public partial class SessaoeCinema : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "CinemaId",
+                table: "Sessoes",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessoes_CinemaId",
+                table: "Sessoes",
+                column: "CinemaId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Sessoes_Cinemas_CinemaId",
+                table: "Sessoes",
+                column: "CinemaId",
+                principalTable: "Cinemas",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+        }
+
+        // trecho de código omitido
+
+    }
+}
+```
+
+A partir da linha 11, acrescenta-se uma coluna chamada "CinemaId" na tabela "Sessoes". Essa coluna é do tipo inteiro e não pode ser nula, pois usamos o atributo [Required].
+
+A partir da linha 18, cria-se um índice para fazer o mapeamento. A partir da linha 23, adiciona-se uma chave estrangeira, de modo que a coluna "CinemaId" se refere diretamente a um ID necessariamente presente na tabela de cinemas.
+
+No terminal, vamos atualizar o banco de dado com o seguinte comando:
+
+```csharp
+Update-Database
+```
+
+Ocorrerá um erro e receberemos a mensagem de que não foi possível atualizar uma linha, pois houve um erro com uma chave estrangeira:
+
+Cannot add or update a child row: a foreign key constraint fails (`filme`. `#sql-16b0_48`, CONSTRAINT `FK_Sessoes_Cinemas_CinemaId` FOREIGN KEY (`CinemaId`) REFERENCES `cinemas` (`Id`) ON DELETE CASCADE)
+
+Para verificar o que aconteceu, vamos abrir o MySQL Workbench e fazer uma consulta na tabela de sessões, que estamos tentando atualizar:
+
+```csharp
+select * from sessoes;
+```
+
+|Id|FilmeId|CinemaId|
+|---|---|---|
+|2|1|0|
+
+Repare que temos o valor 0 na coluna "CinemaId". Vamos checar a nossa tabela de cinemas:
+
+```csharp
+select * from cinemas;
+```
+
+|Id|Nome|EnderecoId|
+|---|---|---|
+|1|Alura Cinemas|1|
+|3|Alura Cinemas Outro|2|
+
+Não temos um cinema com ID igual a 0 — encontramos o erro! A mensagem de erro que recebemos indica que a atualização não foi bem-sucedida porque a foreign key adicionada na tabela de sessões (com valor igual a zero) não existe na tabela dominante dessa relação, no caso, a tabela de cinemas.
+
+Existem algumas formas de resolver esse cenário. A primeira delas seria simplesmente ter um cinema previamente cadastrado com ID igual a zero. A segunda seria permitir a nulidade do campo CinemaId. Nós não conseguimos realizar a operação porque, em Sessao.cs, a propriedade CinemaId tem o atributo [Required].
+
+Campo nulo  
+Antes de aplicar essa segunda opção em nosso projeto, vamos retornar nossa aplicação para o estado anterior para resolvermos esse problema de forma apropriada.
+
+Como a atualização do banco de dados não ocorreu na maneira esperada, o primeiro passo será remover a última migration, que foi parcialmente realizada, com o seguinte comando:
+
+```csharp
+Remove-Migration
+```
+
+No MySQL Workbench, vamos fazer uma nova consulta à tabela de sessões:
+
+```csharp
+select * from sessoes
+```
+
+|Id|FilmeId|CinemaId|
+|---|---|---|
+|2|1|0|
+
+A coluna "CinemaId" ainda consta na tabela. Vamos removê-la, pois logo vamos recriá-la com um valor apropriado:
+
+```csharp
+alter table sessoes drop column CinemaId;
+```
+
+Para nos certificar de que a coluna foi removida, podemos fazer uma nova consulta à tabela de sessões:
+
+```csharp
+select * from sessoes
+```
+
+|Id|FilmeId|
+|2|1|
+
+Assim, a aplicação voltou ao estado anterior.
+
+Na sequência, voltaremos ao Visual Studio e abriremos o arquivo Sessao.cs. Vamos remover a anotação [Required] da propriedade CinemaId. Para permitir que o valor dessa propriedade seja nulo (nullable), acrescentaremos um ponto de interrogação logo após o int:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Sessao
+    {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public int FilmeId { get; set; }
+        public virtual Filme Filme { get; set; }
+        public int? CinemaId { get; set; }
+        public virtual Cinema Cinema { get; set; }
+    }
+}
+```
+
+No terminal, vamos gerar a migration novamente:
+
+```csharp
+Add-Migration "Sessao e Cinema"
+```
+
+Terminado o processo, vamos analisar o arquivo resultante:
+
+```csharp
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace FilmesApi.Migrations
+{
+    public partial class SessaoeCinema : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "CinemaId",
+                table: "Sessoes",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessoes_CinemaId",
+                table: "Sessoes",
+                column: "CinemaId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Sessoes_Cinemas_CinemaId",
+                table: "Sessoes",
+                column: "CinemaId",
+                principalTable: "Cinemas",
+                principalColumn: "Id");
+        }
+
+        // trecho de código omitido
+
+    }
+}
+```
+
+Diferentemente da outra vez, agora adicionamos a coluna "CinemaId" com nullable: true (linha 15).
+
+A seguir, vamos atualizar o banco de dados:
+
+```csharp
+Update-Database
+```
+
+Dessa vez, não haverá nenhuma falha. No MySQL Workbench, consultaremos a tabela de sessões mais uma vez:
+
+```csharp
+select * from sessoes
+```
+
+|Id|FilmeId|CinemaId|
+|---|---|---|
+|2|1|NULL|
+
+Agora, temos uma sessão com ID do cinema nulo e conseguiríamos fazer operações de inserção e leitura nessa tabela, passando um FilmeId e um CinemaId.
+
+Refinamento do retorno  
+Nos arquivos ReadFilmeDto.cs e ReadCinemaDto.cs, vamos acrescentar informações das sessões de um filme e das sessões de um cinema. Esse processo será semelhante ao que fizemos com cinemas e endereços anteriormente.
+
+Em ReadFilmeDto.cs, criaremos a propriedade Sessoes, do tipo `ICollection:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos
+{
+    public class ReadFilmeDto
+    {
+        public string Titulo { get; set; }
+        public string Genero { get; set; }
+        public int Duracao { get; set; }
+        public DateTime HoraDaConsulta { get; set; } = DateTime.Now;
+        public ICollection<ReadSessaoDto> Sessoes { get; set; }
+    }
+}
+```
+
+Repetiremos o processo em ReadCinemaDto.cs:
+
+```csharp
+namespace FilmesApi.Data.Dtos
+{
+    public class ReadCinemaDto
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public ReadEnderecoDto Endereco { get; set; }
+        public ICollection<ReadSessaoDto> Sessoes { get; set; }
+    }
+}
+```
+
+Além disso, é preciso fazer o mapeamento. Vamos abrir o arquivo CinemaProfile.cs e relembrar como fizemos o mapeamento de endereços:
+
+```csharp
+using AutoMapper;
+using FilmesApi.Data.Dtos;
+using FilmesApi.Models;
+
+namespace FilmesApi.Profiles
+{
+    public class CinemaProfile : Profile
+    {
+        public CinemaProfile()
+        {
+            CreateMap<CreateCinemaDto, Cinema>();
+            CreateMap<Cinema, ReadCinemaDto>()
+                .ForMember(cinemaDto => cinemaDto.Endereco, 
+                    opt => opt.MapFrom(cinema => cinema.Endereco))
+            CreateMap<UpdateCinemaDto, Cinema>();
+        }
+    }
+}
+```
+
+Ao mapear um Cinema para um ReadCinemaDto, para um membro de endereço, selecionamos o valor do modelo do banco de dados. Para mapear as sessões, basta copiar esse trecho e adaptá-lo:
+
+```csharp
+using AutoMapper;
+using FilmesApi.Data.Dtos;
+using FilmesApi.Models;
+
+namespace FilmesApi.Profiles
+{
+    public class CinemaProfile : Profile
+    {
+        public CinemaProfile()
+        {
+            CreateMap<CreateCinemaDto, Cinema>();
+            CreateMap<Cinema, ReadCinemaDto>()
+                .ForMember(cinemaDto => cinemaDto.Endereco, 
+                    opt => opt.MapFrom(cinema => cinema.Endereco))
+                .ForMember(cinemaDto => cinemaDto.Sessoes,
+                    opt => opt.MapFrom(cinema => cinema.Sessoes));
+            CreateMap<UpdateCinemaDto, Cinema>();
+        }
+    }
+}
+```
+
+Repetiremos o processo no arquivo FilmeProfile.cs. Para tornar o código mais semântico, apenas substituiremos a variável cinemaDto por filmeDto e a variável cinema por filme:
+
+```csharp
+using AutoMapper;
+using FilmesApi.Data.Dtos;
+using FilmesApi.Models;
+
+namespace FilmesApi.Profiles;
+
+public class FilmeProfile : Profile
+{
+    public FilmeProfile()
+    {
+        CreateMap<CreateFilmeDto, Filme>();
+        CreateMap<UpdateFilmeDto, Filme>();
+        CreateMap<Filme, UpdateFilmeDto>();
+        CreateMap<Filme, ReadFilmeDto>()
+           .ForMember(filmeDto => filmeDto.Sessoes,
+                   opt => opt.MapFrom(filme => filme.Sessoes));
+    }
+}
+```
+
+Como já temos o arquivo SessaoProfile.cs, que faz o mapeamento de uma Sessao para uma ReadSessaoDto, nosso projeto deve continuar funcionando sem problemas.
+
+Por fim, em CreateSessaoDto.cs, criaremos a propriedade CinemaId:
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Data.Dtos
+{
+    public class CreateSessaoDto
+    {
+        public int FilmeId { get; set; }
+        public int CinemaId { get; set; }
+    }
+}
+```
+
+Salvas todas as alterações, vamos iniciar nossa aplicação sem depurar ("Ctrl + F5").
+
+Testes  
+No Postman, vamos criar um filme, um endereço, um cinema e uma sessão. Depois, faremos uma leitura tanto do filme quanto do cinema, para validar se tudo está funcionando como esperado.
+
+Para criar o filme, enviaremos um POST para /filme. No corpo da requisição, mandaremos o seguinte objeto:
+
+```json
+{
+    "Titulo" : "Alura Filme - Teste",
+    "Genero" : "Aventura",
+    "Duracao" : 120
+}
+```
+
+Ao pressionar o botão "Send", temos o seguinte retorno:
+
+```json
+Status: 201 Created
+
+{
+    "id": 2,
+    "titulo": "Alura Filme - Teste",
+    "genero": "Aventura",
+    "duracao": 120,
+    "sessoes": null
+}
+```
+
+Para inserir um endereço, enviaremos uma requisição POST para /endereco com o seguinte objeto:
+
+```json
+{
+    "Logradouro" : "Rua das Couves - Teste",
+    "Numero" : 600
+}
+```
+
+Como retorno, teremos um endereço com ID igual a 3:
+
+```json
+Status: 201 Created
+{
+    "id": 3,
+    "logradouro": "Rua das Couves - Teste",
+    "numero": 600,
+    "cinema": null
+}
+```
+
+Para criar um cinema, enviaremos um POST para /cinema. No corpo da requisição, mandaremos um objeto com o ID do endereço que acabamos de criar:
+
+```json
+{
+    "Nome" : "Alura Cinema - Teste",
+    "EnderecoId" : 3
+}
+```
+
+O retorno:
+
+```json
+Status: 201 Created
+
+{
+    "nome": "Alura Cinema - Teste",
+    "enderecoId": 3
+}
+```
+
+Note que o ID do cinema recém-criado não aparece no retorno. Para consultar essa informação, podemos fazer uma requisição GET para /cinema e checar o ID de "Alura Cinema - Teste". No caso, seu valor é 5.
+
+Para criar uma sessão, enviaremos uma requisição POST para /sessao. No objeto JSON, informaremos o ID do cinema que acabamos de criar:
+
+```json
+{
+    "FilmeId" : 2,
+    "CinemaId" : 5
+}
+```
+
+Como retorno, temos uma sessão com ID igual a 3:
+
+Status: 201 Created
+
+```json
+{
+    "id": 3,
+    "filmeId": 2,
+    "filme": null,
+    "cinemaId": 5,
+    "cinema": null
+}
+```
+
+Com todos esses recursos criados, agora vamos enviar uma requisição GET para /cinema. Ao final da listagem de cinemas, encontraremos o seguinte objeto:
+
+```json
+{
+    "id": 5,
+    "nome": "Alura Cinema - Teste",
+    "endereco": {
+        "id": 3,
+        "logradouro": "Rua das Couves - Teste",
+        "numero": 600
+    },
+    "sessoes": [
+        {
+            "id": 3
+        }
+    ]
+}
+```
+
+Na chave "sessoes", temos listada a sessão de ID 3 que acabamos de criar!
+
+Agora, ao enviar uma requisição GET para filme, receberemos um status "500 Internal Server Error" com uma mensagem de erro explicando que não foi possível mapear Filme para ReadFilmeDto. Em outras palavras, ocorreu um problema na conversão de um EntityQueryable para um List.
+
+Vamos voltar ao Visual Studio, abrir o arquivo FilmeController.cs e analisar o método RecuperaFilmes() para entender o que aconteceu:
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+    [FromQuery] int take = 50)
+{
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
+}
+
+// ...
+```
+
+Estamos fazendo um mapeamento de uma lista de Filme para um ReadFilmeDto. Contudo, o trecho _context.Filmes.Skip().Take() retorna um Queryable!
+
+Apesar de ambos List e Queryable implementarem o INumerable, trata-se de tipos diferentes, por isso, nosso código está alegando um erro. Para converter esse Queryable em uma lista, usaremos o método ToList():
+
+```csharp
+// ...
+[HttpGet]
+public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+    [FromQuery] int take = 50)
+{
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+}
+// ...
+```
+
+Após salvar essa alteração, vamos iniciar a aplicação sem depurar ("Ctrl + F5") e reenviar a última requisição, isto é, o GET para /filme. No retorno, ao final da listagem de filmes, teremos o "Alura Filme - Teste" com a sessão de ID 3:
+
+```csharp
+{
+    "titulo": "Alura Filme - Teste",
+    "genero": "Aventura",
+    "duracao": 120,
+    "horaConsulta": "2022-12-20T12:15:23.0943757-03:00",
+    "sessoes": [
+        {
+            "id": 3
+        }
+    ]
+}
+```
+
+Criamos os vínculos entre filmes, sessões e cinemas e já conseguimos fazer a leitura dessas informações de maneira fácil e dinâmica! Para tanto, foi necessário empregar algumas manipulações de dados e as devidas conversões com o AutoMapper.
+
+## Aula 4: Relacionamento n:n
+
+### Aula 4: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api-2/tree/Aula-3) no ponto em que paramos na aula anterior.
+
+### Aula 4: Relacionando Filme e Cinema - Vídeo 1
+
+Transcrição
+Chegou o momento de fazer o relacionamento entre um cinema e um filme.
+
+Como vai funcionar se fizermos uma analogia ao mundo real?
+
+Um filme pode ser exibido em uma sessão que acontece em um ou muitos cinemas. E um cinema pode exibir, também através de uma sessão, um ou muitos filmes.
+
+Então, nesse caso, de um lado temos muitos e do outro também temos muitos.
+
+Esse tipo de relacionamento em que um filme pode estar em um ou muitos cinemas e um cinema pode exibir um ou muitos filmes é um relacionamento de N para N (N:N), ou seja, de muitos para muitos.
+
+Diagrama representando a conexão entre tabela Cinema e tabela Filme no banco de dados. Retângulo representando Cinema, Retângulo representando Filme e um ícone de Banco de Dados conectados por uma seta em formato triangular. Ao lado de cada retângulo uma letra "n".
+
+Como isso vai funcionar no Entity com o C Sharp?
+
+Agora podemos ter diversas combinações entre Filme A, Filme B, Filme C e Cinema A, Cinema B, Cinema C. Já que não temos a exigência de ter a saída de uma relação para outra. Pode ter várias saindo para muitas e várias recebendo muitas.
+
+Diagrama de filmes e sessões. Na parte superior, há três retângulos dispostos horizontalmente. Da esquerda para a direita: "Filme A", "Filme B" e "Filme C". Na parte inferior, há outros três retângulos dispostos horizontalmente. Da esquerda para a direita: "Cinema A", "Cinema B" e "Cinema C". Filme A está ligado por retas a Cinema A e Cinema B; Filme B está ligado por retas a Cinema B e Cinema C; Filme C está ligado por retas a Cinema A.
+
+Faz sentido utilizar o ID?
+
+Vamos pensar. Nesse cenário que estamos vendo, se o Filme A está conectado com o Cinema A e com o Cinema B, como guardaríamos esses dois IDs dentro do Filme A para que soubéssemos onde ele está sendo exibido?
+
+Precisamos ter uma maneira prática e coesa de garantir essas informações.
+
+A boa notícia é que para estabelecer esse relacionamento entre filmes e cinemas precisaremos de uma tabela de relacionamento.
+
+Dentro dessa tabela de relacionamento teremos, por exemplo, a informação de que temos um relacionamento entre um Filme de D1 e um Cinema de D2, um Filme de D2 e um Cinema de D3, etc.
+
+Teremos um par de dados nessa tabela de relacionamento que será responsável por armazenar essas informações como chave dessa tabela. Para garantir que não tenhamos relacionamentos repetidos e que tenhamos a informação de todos esses pares que estão sendo criados.
+
+Parando pra pensar, já temos uma tabela que vai nos auxiliar nesse relacionamento: a tabela de Sessão.
+
+Então, de maneira indireta, conforme construirmos o relacionamento de 1 para N entre Filme e Sessão e de 1 para N entre Cinema e Sessão acabaremos construindo a relação de muitos para muitos entre um filme e um cinema.
+
+Três retângulos organizados horizontalmente e conectados por retas. Retângulo "Filme" está conectado ao retângulo "Sessão" que está conectado ao retângulo "Cinemas". Sobre o retângulo "Filme" temos  o número 1, sobre o retângulo "Sessão" duas letras "n" e sobre o retângulo "Cinemas" o número 1.
+
+Vamos partir do que já temos no nosso código e, sem muito esforço, vamos construir esse relacionamento entre um cinema e um filme utilizando a tabela de sessão como tabela de relacionamento entre esses dois.
+
+Esse vídeo foi mais teórico, para sabermos como já avançamos nesse relacionamento sem nem saber diretamente. E no próximo vídeo faremos esse relacionamento de acordo com a nossa teoria.
+
+### Aula 4:  - Vídeo 2
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
+### Aula 4:  - Vídeo 7

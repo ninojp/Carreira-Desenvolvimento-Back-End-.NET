@@ -14,4 +14,6 @@ public class Cinema
     public int EnderecoId { get; set; }
     //relação de um para um, onde um cinema tem um endereço e um endereço pertence a um cinema
     public virtual Endereco Endereco { get; set; }
+
+    public virtual ICollection<Sessao> Sessoes { get; set; }
 }
