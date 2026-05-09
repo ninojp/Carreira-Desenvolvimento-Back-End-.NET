@@ -2789,7 +2789,7 @@ Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cur
 
 ### Aula 4: Relacionando Filme e Cinema - Vídeo 1
 
-Transcrição
+Transcrição  
 Chegou o momento de fazer o relacionamento entre um cinema e um filme.
 
 Como vai funcionar se fizermos uma analogia ao mundo real?
@@ -2830,9 +2830,635 @@ Vamos partir do que já temos no nosso código e, sem muito esforço, vamos cons
 
 Esse vídeo foi mais teórico, para sabermos como já avançamos nesse relacionamento sem nem saber diretamente. E no próximo vídeo faremos esse relacionamento de acordo com a nossa teoria.
 
-### Aula 4:  - Vídeo 2
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
-### Aula 4:  - Vídeo 7
+### Aula 4: Características do relacionamento - Exercício
+
+Nós já vimos que aos poucos, construímos um relacionamento n:n entre um Filme e um Cinema através da entidade Sessão. Esse relacionamento recebe o nome de “muitos para muitos”.
+
+Marque a opção que demonstre o motivo de chamarmos o relacionamento desta forma.
+
+Alternativa correta  
+Pois em nosso sistema um Filme se relaciona com um ou muitos Cinemas e vice-versa. Além disso, temos uma entidade de Sessão construída para armazenar esse relacionamento.
+
+> Esse é o motivo que dá nome ao tipo de relacionamento.
+
+### Aula 4: Relacionando com ModelBuilder - Vídeo 2
+
+Transcrição  
+Antes de começarmos a prática, vamos validar que sabemos o que deve ser feito.
+
+A ideia é que filme e cinema estejam relacionados através da tabela de sessão.
+
+Então, teremos as tabelas Filme, Sessão e Cinema. A tabela Sessão será alterada para armazenar como identificador um par de dados composto pelos ID de Filme e de Cinema.
+
+Filme  
+Id  
+1  
+2
+
+Sessão  
+Id
+(1,1)  
+(1,2)  
+(2,2)  
+
+Cinema  
+Id  
+1  
+2
+
+O que podemos deduzir ao observar a tabela Sessão?
+
+Com o par (1,1) podemos deduzir que o filme 1 está sendo exibido no cinema 1. Com o par (1,2) deduzimos que o filme 1 está sendo exibido no cinema 2, e assim por diante.
+
+Só para validar que realmente entendemos, podemos afirmar que o filme 2 não está sendo exibido pelo cinema 1, porque não temos o par (2,1) na tabela Sessão.
+
+Agora que já entendemos, vamos voltar ao código do nosso projeto.
+
+Para começar, vamos abrir a classe Sessao. E se observarmos a migração de Sessão e Filme que já foi executada, o que aconteceu aqui? Nós criamos a sessão fazendo uma referência ao filme. Criamos um index para isso. No caso, uma SQL acaba fazendo isso para nós.
+
+```csharp
+migrationBuilder.CreateIndex(
+    name: "IX_Sessoes_FilmeId",
+    table: "Sessoes",
+    column: "FilmeId");
+}
+```
+
+Mas tem uma diferença entre essa criação de índice e a outra que foi feita a partir do momento em que criamos a referência ao CinemaId.
+
+```csharp
+migrationBuilder.AddForeignKey(
+    name: "FK_Sessoes_Cinemas_CinemaId",
+    table: "Sessoes",
+    column: "FilmeId",
+    principalTable: "Cinemas",
+    principalColumn: "Id");
+}
+```
+
+No momento em que criamos a Sessao, o FilmeId não podia ser nulo e o CinemaId podia ser nulo.
+
+```csharp
+{
+public class Sessao
+{
+[Key]
+[Required]
+public int Id { get; set; }
+[Required]
+public int FilmeId { get; set; }
+public virtual Filme Filme { get; set; }
+public int? CinemaId { get; set; }
+public virtual Cinema Cinema { get; set; }
+}
+}
+```
+
+Então, para evitar qualquer conflito a nível de nulidade com nosso índice, precisamos retirar o required de FilmeId e adicionar o sinal de interrogação em seu int para manter FilmeId e CinemaId com restrições iguais. Agora, os dois poderão ser nulos:
+
+```csharp
+{
+    public class Sessao
+    {
+                [Key]
+                [Required]
+        public int Id { get; set; }
+        public int? FilmeId { get; set; }
+        public virtual Filme Filme { get; set; }
+        public int? CinemaId { get; set; }
+                public virtual Cinema Cinema { get; set; }
+    }
+}
+```
+
+Em seguida, vamos limpar o banco de dados com o comando:
+
+```csharp
+drop database filme;
+```
+
+Agora podemos acessar o Console do Gerenciador de Pacotes no caminho do menu "Ferramentas > Gerenciador de Pacotes do NuGet > Console do Gerenciador de Pacotes".
+
+Vamos executar, no Console do Gerenciador de Pacotes, o comando para adicionar a migration.
+
+```csharp
+Add-Migration "FilmeId Nulo"
+```
+
+Depois que ele gerar a migração para nós podemos executar o seguinte comando no console:
+
+```csharp
+Update-Database
+```
+
+Ele executou, fez as devidas alterações no nosso banco de dados. Agora precisamos estabelecer o relacionamento entre um filme e um cinema com uma chave composta pelos seus respectivos IDs dentro de uma sessão.
+
+Como faremos isso, não precisaremos mais do ID que definimos anteriormente no modelo de Sessao. Podemos apagar as linhas referentes ao ID e deixaremos assim:
+
+```csharp
+{
+    public class Sessao
+    {
+
+        public int? FilmeId { get; set; }
+        public virtual Filme Filme { get; set; }
+        public int? CinemaId { get; set; }
+                public virtual Cinema Cinema { get; set; }
+    }
+}
+```
+
+Agora, no FilmeContext.cs, vamos fazer a definição de como será construído o relacionamento entre sessão e cinema, sessão e filme, e como esse ID será montado de maneira composta. Vamos escrever esse relacionamento como código.
+
+Colocaremos o protected override porque faremos a sobrescrita de um método que já vem no nosso DbContext.
+
+```csharp
+protected override void OnModelCreating(ModelBuilder builder)
+{
+
+}
+```
+
+Dentro do escopo desse OnModelCreating definiremos que o builder terá a entidade Sessao, que terá como chave HasKey a definição de que para cada sessao será criada uma chave composta com sessao.FilmeId e sessão.CinemaId.
+
+```csharp
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Sessao>()
+            .HasKey(sessao => new { sessao.FilmeId, sessao.CinemaId });
+                        
+}
+```
+
+Agora, precisamos estabelecer o relacionamento entre as entidades. Uma sessão vai ter um cinema, esse cinema vai ter uma ou mais sessões e essa sessão terá como chave estrangeira o id do cinema.
+
+```csharp
+ builder.Entity<Sessao>()
+ .HasOne(sessao => sessao.Cinema)
+ .WithMany(cinema => cinema.Sessoes)
+ .HasForeignKey(sessao => sessao.CinemaId);
+```
+
+Agora vamos repetir esse mesmo processo para o relacionamento entre sessão e filme:
+
+```csharp
+ builder.Entity<Sessao>()
+ .HasOne(sessao => sessao.Filme)
+ .WithMany(filme => filme.Sessoes)
+ .HasForeignKey(sessao => sessao.FilmeId);
+```
+
+Nosso código ficará assim:
+
+```csharp
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Sessao>()
+            .HasKey(sessao => new { sessao.FilmeId, sessao.CinemaId });
+
+        builder.Entity<Sessao>()
+            .HasOne(sessao => sessao.Cinema)
+            .WithMany(cinema => cinema.Sessoes)
+            .HasForeignKey(sessao => sessao.CinemaId);
+
+        builder.Entity<Sessao>()
+            .HasOne(sessao => sessao.Filme)
+            .WithMany(filme => filme.Sessoes)
+            .HasForeignKey(sessao => sessao.FilmeId);
+}
+```
+
+E, para podermos gerar a migration a partir disso, precisamos deixar nosso código compilável. Será que ele está compilável? Vamos recompilar nossa solução clicando no menu "Compilação > Compilar Solução".
+
+Ele está indicando alguns problemas na lista de erros. Por exemplo, no SessaoController, no AdicionaSessao, como não existe mais o atributo sessao.Id o RecuperaSessoesPorId quebrou.
+
+Precisamos informar que não teremos mais sessão.Id e sim um FIlme.Id e ou Cinema.Id.
+
+Antes de darmos continuidade no AdicionaSessao, vamos ver como vai ficar no RecuperaSessoesPorId. Já que estamos lidando com a chamada desse método.
+
+A partir de agora, no HttpGet de RecuperaSessoesPorId vamos receber um filmeId e um cinemaId
+
+```csharp
+[HttpGet("{filmeId}/{cinemaId}")]
+ public IActionResult RecuperaSessoesPorId(int filmeId, int cinemaId)
+```
+
+E vamos substituir o parâmetro de _context.Sessoes.FirstOrDefault. Onde está sessao.Id == id deixaremos (sessao => sessao.FilmeId == filmeId && sessao.CinemaId == cinemaId).
+
+```csharp
+[HttpGet("{filmeId}/{cinemaId}")]
+public IActionResult RecuperaSessoesPorId(int filmeId, int cinemaId)
+{
+    Sessao sessao = _context.Sessoes.FirstOrDefault(sessao => sessao.FilmeId == filmeId && sessao.CinemaId == cinemaId);
+    if (sessao != null)
+    {
+        ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
+
+        return Ok(sessaoDto);
+    }
+    return NotFound();
+}
+```
+
+Agora, voltando ao AdicionaSessao, ficou mais fácil entender o que vamos colocar no AdicionaSessao. Passaremos um filmeId que será igual a sessao.filmeId, e pasaremos um cinemaId que será igual sessao.CinemaId.
+
+```csharp
+[HttpPost]
+public IActionResult AdicionaSessao(CreateSessaoDto dto)
+{
+    Sessao sessao = _mapper.Map<Sessao>(dto);
+    _context.Sessoes.Add(sessao);
+    _context.SaveChanges();
+    return CreatedAtAction(nameof(RecuperaSessoesPorId), new { filmeId = sessao.FilmeId, cinemaId = sessao.CinemaId }, sessao);
+}
+```
+
+Um último detalhe: no ReadSessaoDto não vamos mais exibir o Id, pois não o temos mais. Será exibido FilmeId e CinemaId.
+
+```csharp
+namespace FilmesApi.Data.Dtos
+{
+    public class ReadSessaoDto
+    {
+        public int FilmeId { get; set; }
+        public int CinemaId { get; set; }
+    }
+}
+```
+
+Agora podemos fazer o teste para verificar se está tudo funcionando corretamente. Vamos clicar no ícone de play (Iniciar sem depurar) do menu superior.
+
+O console indica que está funcionando corretamente, a aplicação foi compilada.
+
+Agora vamos no console do gerenciador de pacotes NuGet e vamos executar o comando para adicionar a migração "Cinema e Filme".
+
+```csharp
+Add-Migration "Cinema e Filme"
+```
+
+Ele vai buildar e gerar a nossa migration.
+
+```csharp
+Update-Database
+```
+
+Está atualizando o nosso banco de dados.
+
+Agora vamos executar a aplicação e abriremos o Postman para cadastrar um novo filme:
+
+```csharp
+POST <https://localhost:7106/filme>
+
+{
+    "Titulo": "Alura Filme - Teste",
+    "Genero": "Aventura",
+    "Duracao": 120
+}
+```
+
+Vamos clicar em "Send". Nosso banco estará vazio, vai gerar um filme de id 1. Em seguida, vamos cadastrar um endereço:
+
+```csharp
+POST <https://localhost:7106/endereço>
+
+{
+    "Logradouro": "Rua das Couves - Teste",
+    "Numero": "600"
+}
+```
+
+Cadastraremos também um cinema:
+
+```csharp
+POST <https://localhost:7106/cinema>
+
+{
+    "Nome": "Alura Cinema - Teste",
+    "EnderecoId": 1
+}
+```
+
+E, por fim, uma sessão com FilmeId 1 e CinemaId 1:
+
+```csharp
+POST <https://localhost:7106/sessao>
+
+{
+    "FilmeId": 1,
+    "CinemaId": 1
+}
+```
+
+Se tentarmos fazer um GET em /cinema, veremos que que o cinema de id 1 tem a sessão que acabamos de cadastrar. E se dermos um GET em /filme e em /sessao também teremos essa informação.
+
+Perfeito! Conseguimos estabelecer o relacionamento que queríamos.
+
+Precisamos avançar um pouco mais e entender algumas questões como, por exemplo, como funcionaria a deleção de um endereço no nosso sistema? Será que podemos deletar um endereço dado que um cinema depende do endereço para existir?
+
+### Aula 4: Sobrescrevendo o OnModelCreating - Exercício
+
+Anteriormente, vimos que relacionamentos também podem ser definidos através de código escrito diretamente em nosso DbContext. Como podemos, através do builder do método OnModelCreating(), definir as características de uma entidade Sessao?
+
+Resposta correta  
+builder.Entity`<Sessao>`()
+
+> Essa é a sintaxe correta para definição de uma entidade.
+
+### Aula 4: Tipos de deleção - Vídeo 3
+
+Transcrição  
+Agora vamos entender algumas questões de deleção dentro do nosso projeto.
+
+O que acontece se, no Postman, tentarmos deletar o endereço de ID 1?
+
+Vamos executar uma requisição DELETE na URL
+
+```csharp
+https://localhost:7106/endereco/1
+```
+
+Ao clicarmos em "Send" teremos um status 204 - No Content. A princípio, a operação foi bem-sucedida.
+
+Mas ao executar um GET em/sessao vemos que a nossa sessão também foi apagada. Então, apagamos o endereço, que apagou nosso cinema, que apagou a nossa sessão.
+
+Essa deleção causou um efeito cascata.
+
+Essa deleção do tipo cascata é o tipo de deleção padrão configurado dentro do .NET com o Entity.
+
+Como evitar que isso aconteça futuramente?
+
+Vamos voltar ao código do nosso projeto e analisar o seguinte cenário: no momento em que fazemos a definição do nosso modelo, o que estamos falando é que esse modelo será deletado se ele for deletado em cascata.
+
+Para modificar isso, devemos fazer uma alteração em FilmeContext.cs.
+
+Vamos definir qual é o tipo de deleção que queremos.
+
+Para evitar a deleção em cascata ao deletarmos um endereço, vamos definir o relacionamento entre um endereço e um cinema a partir do código do OnModelCreating. No OnDelete vamos informar que queremos comportamento restrito.
+
+```csharp
+ builder.Entity<Endereco>()
+ .HasOne(endereco => endereco.Cinema)
+ .WithOne(cinema => cinema.Endereco)
+.OnDelete(DeleteBehavior.Restrict);
+```
+
+Agora podemos abrir o console do gerenciador de pacotes e executar o comando:
+
+```csharp
+Add-Migration "Delete restrict"
+```
+
+Em seguida, executaremos o seguinte comando para atualizar o banco de dados:
+
+```csharp
+Update-Database
+```
+
+Agora podemos voltar ao Postman e realizar algumas operações novamente.
+
+### Aula 4: Desabilitando o cascade - Exercício
+
+Anteriormente vimos que o padrão do Entity Framework é utilizar o tipo de deleção CASCADE. O problema dessa deleção em nosso cenário atual é que ao deletar um Endereço em nosso sistema, um eventual Cinema associado também será deletado.
+
+Selecione a opção que define como podemos mudar esse comportamento para rejeitar essa operação.
+
+Resposta correta  
+Devemos usar o comportamento Restrict.
+
+> Dessa maneira, a deleção será rejeitada em caso de dependência entre entidades.
+
+### Aula 4: Faça como eu fiz: removendo o cascade
+
+Chegou a hora de verificar e alterar o comportamento padrão de deleção em nosso sistema a fim de evitar deleções em cascata indesejadas.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Para isso, adicione a seguinte chamado dentro do método OnModelCreating na classe FilmeContext:
+
+```csharp
+builder.Entity<Endereco>()
+            .HasOne(endereco => endereco.Cinema)
+            .WithOne(cinema => cinema.Endereco)
+            .OnDelete(DeleteBehavior.Restrict);
+```
+
+Por fim, não esqueça de gerar e aplicar as migrations com os comandos Add-Migrations e Update-Database.
+
+### Aula 4: Para saber mais: outros tipos de deleção
+
+O Entity provê diferentes comportamentos que podem ser utilizados no momento de deleção de alguma entidade no banco. Esses diferentes tipos podem ser [consultados na documentação oficial](https://learn.microsoft.com/pt-br/ef/core/saving/cascade-delete).
+
+### Aula 4: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- Que um relacionamento n:n cria um vínculo entre muitas e muitas entidades.
+- Como criar e customizar relacionamentos através do método OnModelCreating().
+- Um relacionamento n:n pode ser composto por dois relacionamentos 1:n através de uma tabela auxiliar.
+- Deleções em cascata são perigosas, pois podem apagar todos os dados de determinado fluxo em cadeia.
+- Como alterar o comportamento de deleção padrão através do DbContext.
+
+## Aula 5: Efetuando consultas
+
+### Aula 5: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api-2/tree/Aula-4) no ponto em que paramos na aula anterior.
+
+### Aula 5: Consultas com RAW SQL - Vídeo 1
+
+Transcrição  
+Chegou o momento de validar se tudo o que fizemos está fazendo sentido. Para isso, realizaremos consultas.
+
+A primeira consulta envolverá o relacionamento 1 para 1 entre o nosso cinema e o Endereco. Ele foi o primeiro que criamos e também o mais simples.
+
+Neste caso, qual consulta podemos realizar? A ideia é parametrizar os retornos do RecuperaCinemas() para que possamos filtrar cinemas que possuem determinado id de endereço, por exemplo. Portanto, queremos passar esse EnderecoId e retornar qualquer cinema que possuí-lo.
+
+Se voltarmos ao Postman, veremos dois cinemas cadastrados. Faremos um get em <https://localhost:7106/cinema>" no qual veremos que recém-cadastramos um terceiro: "Alura Cinema", com o EnderecoId de valor 3.
+
+```csharp
+{
+    "Nome" : "Alura Cinema",
+    "EnderecoId" : 3
+}
+```
+
+Se dermos um post em "https://localhost:7106/endereco", o Postman retornará os endereços que cadastramos, entre eles "Rua Alura", que pertence ao id 3:
+
+```csharp
+{
+// Código omitido
+
+    {
+    "id" : 3,
+    "logradouro" : "Rua Alura",
+    "numero" : 1200
+    }
+}
+```
+
+Temos um cinema registrado na "Rua das Couves" e outro na "Rua Alura". Como passamos um id para buscar cinemas que possuem um determinado EnderecoId? Primeiro devemos alterar a estrutura do controlador.
+
+Vimos anteriormente como parametrizar e passar informações via requisição utilizando skip e take para a paginação. Faremos algo parecido.
+
+Retornaremos ao Visual Studio e acessaremos o arquivo CinemaController.cs, onde buscaremos o bloco de public IEnumerable`<ReadCinemaDto>` RecuperaCinemas(). Dentro dos parênteses, adicionaremos um [FromQuery] que será um int enderecoId.
+
+Esse enderecoId pode ser informado ou não, portanto em casos negativos vamos considerá-lo como valor nulo. Para isso adicionaremos uma interrogação no int, tranformando-o em int? e atribuindo a enderecoId o valor null.
+
+```csharp
+namespace FilmesApi.Controllers
+{
+
+// Código omitido
+
+    public class CinemaController : ControllerBase
+    {
+
+// Código omitido
+
+        [HttpGet]
+        public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+        {
+            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+        }
+// Código omitido
+    }
+// Código omitido
+}
+```
+
+No interior das chaves de RecuperaCinemas(), adicionaremos um if(enderecoId == null) seguido de um bloco de chaves. Recortaremos a linha return _mapper.Map`<List<ReadCinemaDto>>`(_context.Cinemas.ToList()) e colaremos entre as chaves deste if.
+
+```csharp
+public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+{
+    if(enderecoId == null)
+    {
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+    }
+}
+```
+
+O context nos permite realizar alguns tipos de operações no banco, entre elas a execução de uma query SQL. Para realizar essa query, adicionaremos abaixo do bloco de chaves de if um return com o comando _context.Cinemas.FromSqlRaw().
+
+```csharp
+public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+{
+    if(enderecoId == null)
+    {
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+    }
+    return _context.Cinemas.FromSqlRaw()
+}
+```
+
+Entre os parênteses desta query adicionaremos, entre aspas duplas, a consulta que queremos realizar. Adicionaremos o comando SQL abaixo para que, nos casos em que o valor de EnderecoId forem iguais ao id que estamos recebendo, consultarmos dentro da tabela cinemas os valores de Id, nome e EnderecoId.
+
+SELECT Id, Nome, EnderecoId FROM cinemas where cinemas.EnderecoId = enderecoId
+Precisamos interpolar o valor do enderecoId para usá-lo dentro da string. Para isso, adicionaremos um $ à esquerda do comando SQL, fora das aspas duplas, e envolveremos o enderecoId em chaves.
+
+```csharp
+$"SELECT Id, Nome, EnderecoId FROM cinemas where cinemas.EnderecoId = {enderecoId}"
+```
+
+Observação: Já que se trata de um comando SQL puro (ou Raw SQL), utilizamos o sinal = e não ==.
+
+Abaixo podemos consultar o código completo do if.
+
+```csharp
+public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+{
+    if(enderecoId == null)
+    {
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+    }
+    return _context.Cinemas.FromSqlRaw($"SELECT Id, Nome, EnderecoId FROM cinemas where cinemas.EnderecoId = {enderecoId}");
+}
+```
+
+A condicional que criamos trabalhará com a seguinte lógica:
+
+Se o enderecoId for igual a null, retornaremos o _mapper.Map`<List<ReadCinemaDto>>`(_context.Cinemas.ToList()). Caso contrário, retornaremos uma busca de cinemas com determinado enderecoId.
+Precisamos também mapear a busca para um `<ReadCinemaDto>` assim como estávamos fazendo antes, já que o nosso retorno será um Enumerable de `<ReadCinemaDto>` e não somente um Cinema.
+
+Para isso, adicionaremos no return um _mapper.Map`<List<ReadCinemaDto>>`(). Recortaremos o comando _context.Cinemas.FromSqlRaw() e toda a busca SQL e o colaremos entre os parênteses desse Map.
+
+```csharp
+public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+{
+    if(enderecoId == null)
+    {
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+    }
+    return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.FromSqlRaw($"SELECT Id, Nome, EnderecoId FROM cinemas where cinemas.EnderecoId = {enderecoId}"));
+}
+```
+
+Para realizarmos esse mapeamento específico, precisamos realizar um passo já abordado anteriormente: já que o _context.cinemas retorna um queryable, temos que convertê-lo para uma lista, adicionando à direita dos parênteses da query um .ToList().
+
+```csharp
+public IEnumerable<ReadCinemaDto> RecuperaCinemas([FromQuery] int? enderecoId = null)
+{
+    if(enderecoId == null)
+    {
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+    }
+    return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.FromSqlRaw($"SELECT Id, Nome, EnderecoId FROM cinemas where cinemas.EnderecoId = {enderecoId}").ToList());
+}
+```
+
+Executaremos o código e voltaremos ao Postman para ver o resultado. Realizaremos uma busca selecionando GET e digitando o comando `https://localhost:7106/cinema?enderecoid=2`.
+
+Com o id 2, o sistema retornará somente o cinema "Alura Cinema - Teste".
+
+```csharp
+[
+    {
+        "id": 2,
+        "nome": "Alura Cinema - Teste",
+        "endereco": {
+            "id": 2,
+            "logradouro": "Rua das Couves - Teste",
+            "numero": 600
+        },
+        "sessoes": [
+            {
+                "filmeId": 2,
+                "cinemaId": 2,
+            }
+        ]
+    }
+]
+```
+
+Se informarmos o id 3, será retornado somente o "Alura Cinema".
+
+```csharp
+[
+    {
+        "id": 3,
+        "nome": "Alura Cinema",
+        "endereco": {
+            "id": 3,
+            "logradouro": "Rua Alura",
+            "numero": 1200
+        },
+        "sessoes": []
+    }
+]
+```
+
+Com esses testes, constatamos que tudo está funcionando. Já conseguimos realizar consultas utilizando o nosso próprio parâmetro de enderecoId que referencia uma outra tabela.
+
+Contudo, será que conseguimos realizar ações mais elaboradas? Como, por exemplo, relacionar uma entidade com a outra a partir do relacionamento de sessão? Como isso vai funcionar?
+
+Além disso, será que precisamos entender a sintaxe SQL para realizar consultas? A resposta é não! Existe uma maneira mais fácil de realizá-las.
+
+Conseguimos realizar a nossa primeira consulta. A seguir, realizaremos outra mais complexa. Até lá!
+
+### Aula 5:  - Vídeo 2
+### Aula 5:  - Vídeo 3
+### Aula 5:  - Vídeo 4
+### Aula 5:  - Vídeo 5
+### Aula 5:  - Vídeo 6
