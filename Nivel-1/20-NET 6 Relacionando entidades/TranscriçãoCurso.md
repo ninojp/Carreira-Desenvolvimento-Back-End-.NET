@@ -3309,7 +3309,6 @@ Esse enderecoId pode ser informado ou não, portanto em casos negativos vamos co
 ```csharp
 namespace FilmesApi.Controllers
 {
-
 // Código omitido
 
     public class CinemaController : ControllerBase
@@ -3457,8 +3456,372 @@ Além disso, será que precisamos entender a sintaxe SQL para realizar consultas
 
 Conseguimos realizar a nossa primeira consulta. A seguir, realizaremos outra mais complexa. Até lá!
 
-### Aula 5:  - Vídeo 2
-### Aula 5:  - Vídeo 3
-### Aula 5:  - Vídeo 4
-### Aula 5:  - Vídeo 5
-### Aula 5:  - Vídeo 6
+### Aula 5: Consultando com SQL - Exercício
+
+Anteriormente, vimos que é possível efetuar consultas em nosso banco através da escrita de código SQL diretamente em nosso código C#. Um método permite a passagem de parâmetro de SQL puro para execução no banco.
+
+Selecione a alternativa que corresponde a este método.
+
+Resposta correta  
+FromSqlRaw()
+
+> Esse é o método designado.
+
+### Aula 5: Consultas com LINQ - Vídeo 2
+
+Transcrição  
+E se quisermos recuperar apenas os filmes de determinado cinema? Vamos realizar essa consulta.
+
+Retornando ao Visual Studio, se verificarmos o nosso modelo de Filme, no arquivo Filme.cs, veremos que dentro dele não há nenhuma referência ao Cinema. Temos apenas a nossa tabela de sessões, localizada na penúltima linha do arquivo, entre as chaves de Filme.
+
+```csharp
+public class Filme
+{
+// Código omitido
+
+    public virtual ICollection<Sessao> Sessoes { get; set; }
+}
+```
+
+Veremos como realizar esta consulta sem precisar escrever códigos SQL diretamente.
+
+Voltaremos ao arquivo FilmeController.cs. Se queremos filtrar pelo nome do cinema, por exemplo, precisamos passar via FromQuery um parâmetro nomeCinema do tipo string que pode ser nula ou não, e que portanto receberá um ?. Ela representará o nome do cinema, e o seu valor padrão será igual a null.
+
+Adicionaremos esse parâmetro como o último da lista, entre os parênteses de public IEnumerable`<ReadFilmeDto>` RecuperaFilmes().
+
+```csharp
+public class FilmeController : ControllerBase
+{
+// Código omitido
+    public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+        [FromQuery] int take = 50,
+        [FromQuery] string? nomeCinema = null)
+// Código omitido
+}
+```
+
+Abaixo desses parênteses, entre as chaves do método, copiaremos a linha de return abaixo que retorna a nossa paginação.
+
+```csharp
+public IEnumerable<ReadFilmeDto> RecuperaFilmes(// Código omitido)
+
+{
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+}
+```
+
+Adicionaremos um if(nomeCinema == null) seguido de um bloco de chaves, dentro do qual adicionaremos o código copiado. Temos agora dois returns iguais, um dentro das chaves de if e outro fora.
+
+```csharp
+public IEnumerable<ReadFilmeDto> RecuperaFilmes(// Código omitido)
+{
+    if(nomeCinema == null) 
+    {
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+    }
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+}
+```
+
+A condicional que criamos aplicará a seguinte lógica:
+
+se o nomeCinema for nulo, retornaremos o padrão com a nossa paginação. Caso contrário, retornaremos a mesma informação, desta vez aplicando o critério de filtro através do nome do cinema, já que este não será nulo.
+No return localizado abaixo das chaves de if nós mapeamos os meus Filmes para uma lista de ReadFilmeDto, a partir do _context, realizando a devida paginação através do comando _context.Filmes.Skip(skip).Take(take).ToList(). Para adicionar o filtro neste código, substituiremos o .ToList() pelo comando .Where(). Entre os seus parênteses, adicionaremos o comando abaixo:
+
+```csharp
+filme => filme.Sessoes.Any(sessao => sessao.Cinema.Nome == nomeCinema)
+```
+
+O Where() pede por um critério. O comando acima, por sua vez, implementa o seguinte critério:
+
+quaisquer sessoes que exibirem este filme devem possuir um nome igual ao nomeCinema que estamos informando.
+Por fim, à direita dos parênteses de Where() adicionaremos um .ToList().
+
+Abaixo temos o código completo da nossa condicional.
+
+```csharp
+public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+[FromQuery] int take = 50,
+[FromQuery] string? nomeCinema = null)
+{
+    if(nomeCinema == null) 
+    {
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+    }
+    return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).Where(filme => filme.Sessoes.Any(sessao => sessao.Cinema.Nome == nomeCinema)). ToList());
+
+}
+```
+
+Criamos uma consulta mais rebuscada e sem nenhuma linha de SQL. Utilizamos apenas o LINQ — a própria sintaxe do C Sharp.
+
+Vamos entender o que o nosso segundo return está fazendo?
+
+```csharp
+return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).Where(filme => filme.Sessoes.Any(sessao => sessao.Cinema.Nome == nomeCinema)));
+```
+
+Pedimos um mapeamento para uma lista de ReadFilmeDto, onde cada filme passado deve possuir uma sessão. Se esta possuir um cinema com um nome igual ao nome recebido como parâmetro, recuperaremos esse filme e aplicaremos nele a paginação junto ao mapeamento.
+
+Testaremos o código, selecionando o botão "Iniciar Sem Depurar" na barra de tarefas superior do Visual Studio, ou pressionando o atalho "Ctrl + F5". Voltaremos ao Postman, onde selecionaremos o método post. Em seguida, cadastraremos na aba Body os três filmes abaixo para que seja possível efetuar um teste mais preciso.
+
+Filme 1:
+
+```csharp
+{
+    "titulo": "Alura 1 - O início",
+    "genero": "Ficção",
+    "duracao": 120,
+}
+```
+
+Filme 2:
+
+```csharp
+{
+    "titulo": "Alura 2 - O retorno",
+    "genero": "Drama",
+    "duracao": 120,
+}
+```
+
+Filme 3:
+
+```csharp
+{
+    "titulo": "Alura 3 - A volta dos que não foram",
+    "genero": "Comédia",
+    "duracao": 230,
+}
+```
+
+Após clicarmos no botão "Send", será gerado um id para cada filme.
+
+```csharp
+{
+    "id": 3,
+    "titulo": "Alura 1 - O início",
+    "genero": "Ficção",
+    "duracao": 120,
+}
+{
+    "id": 4,
+    "titulo": "Alura 2 - O retorno",
+    "genero": "Drama",
+    "duracao": 120,
+}
+{
+    "id": 5,
+    "titulo": "Alura 3 - A volta dos que não foram",
+    "genero": "Comédia",
+    "duracao": 230,
+}
+```
+
+Para testar o código, daremos um get no local `https://localhost:7106/filme` para recuperar os filmes que temos cadastrados. O retorno pode ser consultado abaixo, onde temos cinco filmes: "Alura 1 - O início", "Alura 2 - O retorno", "Alura 3 - A volta dos que não foram" e dois “Alura Filme - Teste”.
+
+```csharp
+[
+    {
+        "titulo": "Alura Filme - Teste",
+        "genero": "Aventura",
+        "duracao": 120,
+        "horaDaConsulta": "2022-12-21T20:54:18.5738183-03:00",
+        "sessoes": []
+    },
+    {
+        "titulo": "Alura Filme - Teste",
+        "genero": "Aventura",
+        "duracao": 120,
+        "horaDaConsulta": "2022-12-21T20:54:18.575749-03:00",
+        "sessoes": [
+            {
+                "filmeId": 2,
+                "cinemaId": 2
+            }
+        ]
+    },
+    {
+        "titulo": "Alura 1 - O início",
+        "genero": "Ficção",
+        "duracao": 120,
+        “horaDaConsulta”: “2022-12-21T20:54:18.5777217-03:00”,
+        “sessoes”: []
+},
+{
+        "titulo": "Alura 2 - O retorno",
+        "genero": "Drama",
+        "duracao": 120,
+“horaDaConsulta”: “2022-12-21T20:54:18.5791199-03:00”,
+        “sessoes”: []
+},
+{
+    "titulo": "Alura 3 - A volta dos que não foram",
+    "genero": "Comédia",
+    "duracao": 230,
+“horaDaConsulta”: “2022-12-21T20:54:18.580782-03:00”,
+        “sessoes”: []
+}
+]
+```
+
+Daremos um get no local `https://localhost:7106/cinema` para recuperar os cinemas cadastrados. Ele retornará nossos cinemas "" que possui o id 1, “Alura Cinema - Teste” com o id 2 e "Alura Cinema" com o id 3.
+
+Vamos colocar os três filmes cadastrados no cinema "Alura Cinema" que possui o id 3. Para isso criaremos uma sessão executando um post em `https://localhost:7106/sessao`.
+
+Na aba Body cadastraremos uma sessão com um FilmeId que receberá o id 3, correspondente ao filme "Alura 1 - O início", e um CinemaId que receberá também o id 3, este pertencente ao cinema "Alura Cinema".
+
+```csharp
+{
+    "FilmeId": 3,
+    "CinemaId": 3
+}
+```
+
+Clicaremos em "Send" e geraremos a sessão. Em seguida, faremos o mesmo processo para outras duas sessões que receberão os dados abaixo, respectivamente:
+
+```csharp
+"FilmeId":4 e "CinemaId": 3;
+"FilmeId":5 e "CinemaId": 3.
+Se executarmos um get nos nossos filmes através do local https://localhost:7106/filme, veremos que os três novos filmes possuem sessões cadastradas no "Alura Cinema", de id 3.
+
+// Código omitido
+
+    {
+        "titulo": "Alura 1 - O início",
+        "genero": "Ficção",
+        "duracao": 120,
+        “horaDaConsulta”: “2022-12-21T20:54:18.5777217-03:00”,
+        “sessoes”: [
+            {
+                "filmeId": 3,
+                "cinemaId": 3
+            }
+        ]
+},
+{
+        "titulo": "Alura 2 - O retorno",
+        "genero": "Drama",
+        "duracao": 120,
+“horaDaConsulta”: “2022-12-21T20:54:18.5791199-03:00”,
+        “sessoes”: [
+            {
+                "filmeId": 4,
+                "cinemaId": 3
+            }
+        ]
+},
+{
+    "titulo": "Alura 3 - A volta dos que não foram",
+    "genero": "Comédia",
+    "duracao": 230,
+“horaDaConsulta”: “2022-12-21T20:54:18.580782-03:00”,
+        “sessoes”: [
+            {
+                "filmeId": 5,
+                "cinemaId": 3
+            }
+        ]
+    }
+]
+```
+
+Se quisermos recuperar somente os filmes do cinema de id 3, o retorno deverá incluir somente os três filmes recém-cadastrados, e não os "Alura Filme - Teste" que cadastramos anteriormente.
+
+Faremos um get no local `https://localhost:7106/filme` informando um nomeCinema que será igual ao "Alura Cinema".
+
+Antes de realizar o get, precisamos resolver um problema: o nome "Alura Cinema" possui um espaço. Para realizar a passagem de parâmetro via URL de maneira prudente, precisamos realizar um Encoding apropriado deste caractere.
+
+Para isso, copiaremos o nome "Alura Cinema" e buscaremos no Google um site para Encoding de URLs.
+
+Observação: Encoding, ou codificação de caracteres, serve para transformar caracteres em códigos que possam ser interpretados pelo computador.
+
+Em seu interior, no campo de texto editável localizado na parte superior da tela, colaremos o nome do nosso cinema e clicaremos no botão "Encode", localizado abaixo desse campo.
+
+Copiaremos o resultado gerado no campo editável abaixo do botão. Nele é possível ver a representação do espaço na URL: %20.
+
+```csharp
+Alura%20Cinema
+```
+
+Retornaremos ao Postman, onde colaremos o conteúdo devolvido pelo site de encoding junto ao local que estávamos digitando.
+
+```csharp
+https://localhost:7106/filme?nomeCinema=Alura%20Cinema
+```
+
+Executaremos este get pressionando "Send". No retorno, veremos somente os três cinemas recém- cadastrados, assim como solicitado. Se retirarmos o filtro por nome de cinema, veremos no retorno os cinco filmes que temos cadastrados no sistema.
+
+Agora é possível realizar consultas de forma elaborada, relacionando diferentes tabelas através da tabela intermediária de sessão, e utilizando apenas C Sharp, sem precisar escrever nenhuma linha de código SQL.
+
+Nos vemos no próximo vídeo. Até lá.
+
+### Aula 5: Consultando com LINQ - Exercício
+
+Outra possibilidade de efetuar consultas é através da utilização do LINQ. Um método bem importante que podemos utilizar é saber se determinada condição é satisfeita ou não através de uma lógica booleana.
+
+Marque a opção com o método que podemos utilizar para isso.
+
+Resposta correta  
+Any()
+
+> Esse é o método procurado.
+
+### Aula 5: Faça como eu fiz: consultas LINQ
+
+Chegou a hora de efetuar consultas no banco sem utilizar código SQL diretamente em nosso controlador. Para isso, utilizaremos o LINQ.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Para isso, altere seu método RecuperarFilmes na classe FilmeController:
+
+```csharp
+[HttpGet]
+    public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery] int skip = 0,
+        [FromQuery] int take = 50,
+        [FromQuery] string? nomeCinema = null)
+    {
+        if(nomeCinema == null)
+        {
+            return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+        }
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).Where(filme => filme.Sessoes
+                .Any(sessao => sessao.Cinema.Nome == nomeCinema)).ToList());
+
+    }
+```
+
+Pronto! Agora já podemos fazer consultas no nosso banco de dados usando o LINQ.
+
+### Aula 5: Projeto final do curso
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/dotnet-api-2/tree/Aula-5) completo implementado durante as aulas.
+
+### Aula 5: O que aprendemos?
+
+Nessa aula aprendemos:
+
+- Como efetuar consultas com SQL diretamente em nosso código através do método FromSqlRaw().
+- Como efetuar consultas através do LINQ.
+- Realizar consultas complexas através do relacionamento de entidades.
+- Os métodos Where() e Any() facilitam a criterização de uma consulta.
+
+### Aula 5: Conclusão - Vídeo
+
+Transcrição 
+Parabéns por chegar até aqui! Finalizamos este curso com bastante conteúdo novo colocado em prática.
+
+Partimos do ponto em que tínhamos o conceito de Filme. A partir daí, realizamos as etapas abaixo:
+
+- inserimos o Endereco, a partir do qual conseguimos realizar a inserção e deleção de endereços;
+- inserimos o Cinema através do qual inserimos cinemas com os seus respectivos endereços;
+- entendemos o relacionamento 1 para 1 (ou 1:1);
+- entendemos e implementamos a sessao, onde criamos a relação de 1 para N (ou 1:N) entre um filme e uma sessão, ou uma sessão e um cinema;
+- a partir disso, criamos a relação de N para N (ou N:N), ou seja, de muitos para muitos, entre um filme e um cinema;
+- com o método OnModelCreating da classe DbContext deixamos essas relações explícitas para o Entity através da criação de uma chave primária composta, da relação entre entidades e declarando quais seriam as chaves estrangeiras envolvidas;
+- no DbContext, vimos como mudar o comportamento padrão de deleção com o Entity, utilizando o modo Restrict no lugar do modo Cascade;
+- vimos que o DbContext permite a realização de consultas, as quais realizamos tanto em Raw SQL quanto de forma mais elaborada,a partir da utilização do LINQ, sem escrever códigos SQL.
+
+Finalizaremos este curso com todos esses conhecimentos adquiridos. Esperamos que tenha aproveitado bastante, e nos vemos na próxima. Até lá!
