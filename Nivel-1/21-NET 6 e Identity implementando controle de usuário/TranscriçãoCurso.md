@@ -84,7 +84,7 @@ Nesse vídeo, descobrimos que vamos utilizar o Identity, para que ele serve e po
 
 Nos próximos vídeos, vamos aprender o passo a passo de como configurar e definir uma pessoa usuária. Até mais.
 
-### Aula 1: Benefícios do Identity
+### Aula 1: Benefícios do Identity - Exercício
 
 No vídeo, vimos problemas que o Identity nos ajuda a resolver com relação à autenticação e autorização de usuários na nossa aplicação.
 
@@ -102,10 +102,10 @@ O Identity provê uma implementação para armazenar senhas/credenciais de manei
 
 ### Aula 1: Recebendo um usuário - Vídeo 3
 
-Transcrição
+Transcrição  
 Vamos criar um novo projeto com o mesmo processo feito nos cursos anteriores dessa formação. Por isso, os pré-requisitos são tão importantes. Vamos assumir que você já tenha instalado o Visual Studio.
 
-Criando um projeto com Visual Studio
+Criando um projeto com Visual Studio  
 Com o Visual Studio já aberto, vamos selecionar a última opção do menu "Introdução" para "Criar um projeto".
 
 Se o ambiente de desenvolvimento do Visual Studio já estiver aberto, você também pode pressionar "Ctrl+Shift+N" para criar um novo projeto.
@@ -118,7 +118,7 @@ Nas "informações adicionais", vamos deixar a estrutura como ".NET 6.0 (Suporte
 
 Atente-se ao uso do .NET 6. Não utilize .NET 5 ou 7. Com isso, evitamos quaisquer problemas de compatibilidade de alguma biblioteca (lib) defasada ou que ainda esteja em testes no .NET 7.
 
-Criando um novo controlador
+Criando um novo controlador  
 Agora, o Visual Studio vai fazer todo o processo de criação de um projeto e criar uma estrutura base de weather forecast (previsão do tempo). Contudo, não é isso que queremos.
 
 O começo desse projeto é fazer o cadastro de uma pessoa usuária em nosso sistema. Mas, antes de nos preocuparmos em como colocar a pessoa usuária no banco e fazer o controle de requisição, precisamos pensar em como criar, ter e modelar essa pessoa usuária.
@@ -127,6 +127,7 @@ Primeiro, vamos apagar permanentemente os arquivos WeatherForecastController.cs 
 
 Em seguida, vamos criar um novo controlador. Para isso, vamos clicar com o botão direito do mouse na pasta de "Controllers" e selecionar "Adicionar > Classe" (ou "Shift + Alt + C"). Vamos chamá-la de UsuarioController. Essa será a classe responsável por receber as requisições de criação de uma pessoa usuária.
 
+```csharp
 UsuarioController.cs:
 
 namespace UsuariosApi.Controllers
@@ -134,7 +135,9 @@ namespace UsuariosApi.Controllers
     public class UsuarioController
     {
     }
-}Copiar código
+}
+```
+
 Voltamos a frisar que já fizemos todo esse processo anteriormente de criação de controlador, modelo, AutoMapper, DTOs e afins. Estamos recapitulando brevemente para sem nos aprofundar. Caso você tenha dúvidas sobre algum tópico, sugerimos retornar nos cursos anteriores.
 
 Para criar um controlador, precisamos de anotações básicas como ApiController entre colchetes.
@@ -145,6 +148,7 @@ Não queremos utilizar esse AspNetCore.Components que aparece automaticamente na
 
 Vamos clicar em "Alt + Enter" em cima de ApiController para revelar context actions do ReSharper. Vamos escolher "using Microsoft.AspNetCore.Mvc" para utilizá-lo.
 
+```csharp
 using Microsoft.AspNetCore.Mvc;
 
 namespace UsuariosApi.Controllers
@@ -154,13 +158,16 @@ namespace UsuariosApi.Controllers
     public class UsuarioController
     {
     }
-}Copiar código
+}
+```
+
 Em seguida, nosso UsuarioController vai estender de ControllerBase.
 
 Por fim, o nosso controlador vai ter uma anotação de HttpPost entre colchetes dentro da classe. Já que estamos criando um recurso dentro do nosso sistema que vai ser o public IActionResult CadastraUsuario().
 
 Como ainda não vamos nos preocupar com a lógica de cadastramento, vamos escrever um throw new NotImplementedException() no IActionResult.
 
+```csharp
 using Microsoft.AspNetCore.Mvc;
 
 namespace UsuariosApi.Controllers
@@ -175,8 +182,10 @@ namespace UsuariosApi.Controllers
             throw new NotImplementedException();
         }
     }
-}Copiar código
-Criando um DTO
+}
+```
+
+Criando um DTO  
 Para poder receber efetivamente o que queremos criar, precisamos criar o nosso DTO.
 
 Dessa forma, clicamos na pasta "UsuariosApi" no projeto raiz com o botão direito do mouse para "Adicionar > Nova Pasta". Vamos criar a pasta "Data" que se refere a toda a parte de dados.
@@ -185,6 +194,7 @@ Em seguida, clicamos novamente com o botão direito "Adicionar > Nova Pasta" em 
 
 Dentro da pasta "Dtos", vamos adicionar uma nova classe chamada CreateUsuarioDto.
 
+```csharp
 CreateUsuarioDto.cs:
 
 namespace UsuariosApi.Data.Dtos
@@ -192,7 +202,9 @@ namespace UsuariosApi.Data.Dtos
     public class CreateUsuarioDto
     {
     }
-}Copiar código
+}
+```
+
 O que a criação da pessoa usuária vai ter? Como queremos criar uma pessoa usuária?
 
 Vamos ter alguns campos que a pessoa vai precisar passar. O Visual Studio sugere o ID, mas não usaremos esse campo.
@@ -203,6 +215,7 @@ Assim, a pessoa usuária vai ter um username, isto é, um nome de pessoa usuári
 
 Outra informação que queremos que seja obrigatória é a data de nascimento. Para isso, criamos outra propriedade pública do tipo DateTime chamada DataNascimento.
 
+```csharp
 using System.ComponentModel.DataAnnotations;
 
 namespace UsuariosApi.Data.Dtos
@@ -214,7 +227,9 @@ namespace UsuariosApi.Data.Dtos
         [Required]
         public DateTime DataNascimento { get; set; }
     }
-}Copiar código
+}
+```
+
 A nossa pessoa usuária também precisa de uma senha. Por isso, criamos mais uma propriedade obrigatória de acesso público do tipo string chamada Password. Você também pode chamar de Senha, como preferir.
 
 Contudo, precisamos explicitar que essa propriedade deve ser tratada como senha. Para isso, depois de required, devemos colocar a anotação DataType() seguido do tipo de data para a senha, DateType.Password.
@@ -229,9 +244,9 @@ Depois, queremos ter um campo de confirmação de senha. Note como o próprio Vi
 
 Com isso, temos um campo obrigatório que vai ser comparado com Password e devem ser iguais para que a validação seja bem feita.
 
+```csharp
     public class CreateUsuarioDto
     {
-
 // código omitido…
 
         [Required]
@@ -241,9 +256,12 @@ Com isso, temos um campo obrigatório que vai ser comparado com Password e devem
         [Compare("Password")]
         public string RePassword { get; set; }
     }
-}Copiar código
+}
+```
+
 Vamos voltar ao arquivo UsuarioController.cs. No nosso controlador, queremos receber o CreateUsuarioDto ao cadastrar um usuário. Por isso, em Cadastrausuario(), vamos passar CreateUsuarioDto como dto.
 
+```csharp
 UsuarioController.cs:
 
 using Microsoft.AspNetCore.Mvc;
@@ -251,22 +269,25 @@ using UsuariosApi.Data.Dtos;
 
 // código omitido…
 
-    public class UsuarioController : ControllerBase
-    {
+public class UsuarioController : ControllerBase
+{
 
-        [HttpPost]
-        public IActionResult CadastraUsuario(CreateUsuarioDto dto)
-        {
-            throw new NotImplementedException();
-        }
-    }Copiar código
-Convertendo DTO para modelo
+    [HttpPost]
+    public IActionResult CadastraUsuario(CreateUsuarioDto dto)
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Convertendo DTO para modelo  
 Além disso, no momento em que recebemos o DTO e implementamos a lógica de cadastro, vamos efetivamente converter esse DTO para uma pessoa usuária.
 
 Para isso, precisamos criar na nossa raiz "UsuariosApi" uma nova pasta de "Profiles".
 
 Vamos utilizar o AutoMapper para fazer a conversão de um DTO para um modelo. Então, vamos adicionar uma nova classe chamada UsuarioProfile dentro de "Profiles".
 
+```csharp
 UsuarioProfile.cs:
 
 namespace UsuariosApi.Profiles
@@ -274,7 +295,9 @@ namespace UsuariosApi.Profiles
     public class UsuarioProfile
     {
     }
-}Copiar código
+}
+```
+
 Como vamos utilizar AutoMapper, precisamos fazer a importação do pacote. Para isso, vamos selecionar no menu superior "Ferramentas > Gerenciador de Pacotes do NuGet > Gerenciar Pacotes do NuGet para a Solução".
 
 Em "Procurar" da nova aba, vamos clicar na barra de pesquisa (ou "Ctrl + L") e digitar "automapper". Vamos fazer a instalação da segunda opção "AutoMapper.Extensions.Microsoft.DependencyInjection".
@@ -291,6 +314,7 @@ No construtor, vamos ter uma chamada ao CreateMap de um CreateUsuarioDto para um
 
 Repare que usamos CreateUsuarioDto de Data.Dtos, mas onde está o nosso modelo de Usuario?
 
+```csharp
 using AutoMapper;
 using UsuariosApi.Data.Dtos;
 
@@ -303,14 +327,17 @@ namespace UsuariosApi.Profiles
             CreateMap<CreateUsuarioDto, Usuario>();
         }
     }
-}Copiar código
-Criando nosso modelo de pessoa usuária
+}
+```
+
+Criando nosso modelo de pessoa usuária  
 Vamos criar uma nova pasta chamada "Models" em "UsuariosApi". Dentro da pasta de "Models", vamos adicionar uma nova classe chamada Usuario.
 
 Como já explicamos, o Identity vai ser responsável por fazer todo esse controle de criação, identificação, cadastramento de senha no banco, criptografia, entre outros.
 
 Por isso, por enquanto nosso arquivo Usuario.cs vai estar vazio. Sem acrescentar nenhum campo. A ideia é que o Identity faça isso posteriormente.
 
+```csharp
 Usuario.cs:
 
 using Microsoft.AspNetCore.Identity;
@@ -320,22 +347,107 @@ namespace UsuariosApi.Models
     public class Usuario
     {
     }
-}Copiar código
+}
+```
+
 Agora, vamos voltar no arquivo UsuarioProfile.cs. Vamos apertar "Alt + Enter" na classe de destino Usuario do CreateMap para fazer a importação no namespace.
 
+```csharp
 UsuarioProfile.cs:
 
 using AutoMapper;
 using UsuariosApi.Data.Dtos;
 using UsuariosApi.Models;
 
-// código omitido…Copiar código
+// código omitido…
+```
+
 Nesse momento, temos o nosso código compilável: o controlador que chama o nosso método, o DTO, o modelo e o profile.
 
 A ideia é utilizar o Identity para dar um formato mais amigável para a nossa estrutura, entendendo melhor o que precisamos fazer. Mas, já temos a estrutura base para receber uma pessoa usuária através de uma requisição. A partir daí, vamos aprender como cadastrar essa pessoa usuária no nosso sistema.
 
-### Aula 1:  - Vídeo 4
-### Aula 1:  - Vídeo 5
-### Aula 1:  - Vídeo 6
-### Aula 1:  - Vídeo 7
+### Aula 1: Faça como eu fiz: revisando controladores
+
+Nesta atividade, abordaremos um pouco do conteúdo dos cursos anteriores a fim de construir uma estrutura base para a futura criação de um usuário: criação de controladores, profiles, modelos e DTOs.
+
+Opinião do instrutor
+
+Inicialmente, crie um projeto web api .NET 6 com o Visual Studio. Ao criar, apague as classes e controladores que já vêm por padrão, exceto a classe Program e os arquivos de configuração.
+
+Em seguida, na pasta Controllers, crie o UsuarioController:
+
+```csharp
+[ApiController]
+    [Route("[Controller]")]
+    public class UsuarioController : ControllerBase
+    {
+
+        [HttpPost]
+        public IActionResult CadastraUsuario(CreateUsuarioDto dto)
+        {
+            throw new NotImplementedException();
+        }
+    }
+```
+
+Na raiz do projeto, crie a pasta Data e, dentro dela, crie outra pasta chamada Dtos. Nessa pasta faremos o nosso CreateUsuarioDto:
+
+```csharp
+public class CreateUsuarioDto
+{
+    [Required]
+    public string Username { get; set; }
+    [Required]
+    public DateTime DataNascimento { get; set; }
+    [Required]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+    [Required]
+    [Compare("Password")]
+    public string RePassword { get; set; }
+}
+```
+
+Com o auxílio do nuget, instale a biblioteca AutoMapper.Extensions.Microsoft.DependencyInjection na versão 12.0.0. Depois, crie a pasta Profiles com a classe UsuarioProfile:
+
+```csharp
+public class UsuarioProfile : Profile
+{
+    public UsuarioProfile()
+    {
+        CreateMap<CreateUsuarioDto, Usuario>();
+    }
+}
+```
+
+Para finalizar, crie na raiz do projeto a pasta Models com a classe Usuario, inicialmente vazia:
+
+```csharp
+public class Usuario
+{
+}
+```
+
+### Aula 1: Comparando parâmetros - Exercício
+
+Anteriormente, criamos as classes necessárias para receber as requisições do cadastro de um Usuario em nosso sistema. A fim de garantir que o campo Password seja igual ao campo de RePassword, podemos utilizar uma anotação nativa do .NET.
+
+Qual é a anotação que podemos utilizar nesse caso?
+
+Alternativa correta  
+[Compare]
+
+> Essa anotação compara e avalia se dois campos são iguais.
+
+### Aula 1: O que aprendemos?
+
+Nessa aula, aprendemos:
+
+- O Identity é um sistema para criar, ler, atualizar e remover contas de usuários;
+- Podemos integrar o Identity com o Entity para armazenar os dados dos usuários;
+- O Identity é configurável para se adequar às necessidades da pessoa que está desenvolvendo;
+- Como comparar diferentes campos com a anotação [Compare].
+
+## Aula 2: Configurando o Identity
+
 ### Aula 1:  - Vídeo 8
