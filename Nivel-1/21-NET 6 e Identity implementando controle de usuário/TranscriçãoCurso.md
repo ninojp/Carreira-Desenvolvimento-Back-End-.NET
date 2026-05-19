@@ -2202,12 +2202,12 @@ Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cur
 
 ### Aula 4: Analisando o token - Vídeo 1
 
-Transcrição
+Transcrição  
 Executaremos nossa aplicação com as mudanças mais recentes.
 
 No Postman, iremos efetuar o login com o nome "david" e senha Senha123@" e a aplicação retornará um token.
 
-Se o copiarmos e colarmos em "Encoded" no KWT.io, receberemos o "username": e o "id" igual ao que temos no MySQL Workbench, além do campo que começa com "http://schemas.xmlsoap.org/ws e termina com "Dateofbirth":, mas é assim porque usamos ClaimTypes.DateOfBirth.
+Se o copiarmos e colarmos em "Encoded" no KWT.io, receberemos o "username": e o "id" igual ao que temos no MySQL Workbench, além do campo que começa com "`http://schemas.xmlsoap.org/ws` e termina com "Dateofbirth":, mas é assim porque usamos ClaimTypes.DateOfBirth.
 
 Por fim, o "exp" é o expiration time, ou seja, o tempo de expiração do token, e se passarmos o cursor do mouse por cima, iremos exibir a data e o horário que irá expirar, que é de dez minutos após a criação conforme estabelecemos em expires: DateTime.Now.AddMinutes(10).
 
@@ -2217,6 +2217,7 @@ Então conseguimos validar todas as informações. Também poderíamos adicionar
 
 using UsuariosApi.Models;
 
+```csharp
 namespace UsuariosApi.Services
 {
         internal class TokenService
@@ -2232,16 +2233,457 @@ namespace UsuariosApi.Services
              };
 
 //código omitido
-}Copiar código
+}
+```
+
 Se fizermos uma nova autenticação, esperarmos a aplicação reiniciar, retornar um token para o copiarmos e colarmos no JWT.io, teremos "loginTimestamp" sendo exibido em "Decoded".
 
 Então conseguimos garantir ou negar acesso a recursos da aplicação, validando se a pessoa usuária têm autorização baseada nessas informações contidas no token, como a verificação se é maior de idade ou não, por exemplo.
 
 Faremos isso a seguir.
 
-### Aula 4:  - Vídeo 2
-### Aula 4:  - Vídeo 3
-### Aula 4:  - Vídeo 4
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
+### Aula 4: Criando a política de acesso - Vídeo 2
 
+Transcrição  
+Para dar sentido à existência do token, iremos à pasta "Controllers" no VSCode e criaremos uma nova classe chamada AcessoController.
+
+Ela será definida com a annotation [ApiController] e a rota [Route("[Controller]")], e depois definiremos que se estende de ControllerBase.
+
+Dentro, colocaremos uma action escrevendo public IActionresult Get(), o qual retornará Ok() recebendo a mensagem "Acesso permitido!".
+
+Daremos uma condição de autorização com [Authorize] para o Get() para permitir o acesso ou não.
+
+```csharp
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace UsuariosApi.Controllers
+{
+    [ApiController]
+    [Route("[Controller]")]
+    public class AcessoController : ControllerBase
+    {
+        [HttpGet]
+        [Authorize]
+        public IActionResult Get() 
+        {
+            return Ok("Acesso permitido!");
+        }
+    }
+}
+```
+
+Retiraremos o namespace UsuariosApi.Authorization de Program.cs, executaremos a aplicação e faremos um acesso no Postman.
+
+Receberemos um erro 404 de "Não encontrado". De volta ao AcessoController.cs, retiraremos o [Authorize] e executaremos novamente para reenviarmos a requisição.
+
+Quando a aplicação terminar de "subir", teremos uma resposta "200 OK", como queríamos. Sem o [Authorize] a requisição passa, mas com ela não.
+
+Portanto, quando colocamos a condição de autorização, precisamos determinar quais elas são através de uma política de acesso.
+
+Para isso, bastará definirmos uma Policy em Authorize(), sendo igual a "IdadeMinima" em que todas as pessoas que quiserem acessar o endpoint, deverão cumprir essa apólice de idade mínima.
+
+Para criá-la, iremos ao Program.cs e teremos que definir e dizer como será cumprida. Nos serviços adicionados, iremos à aplicação e o próprio VSCode já deduzirá o que queremos fazer.
+
+Executaremos builder.Services.AddAuthorization(), a qual terá algumas options => definidas com a adição da addPolicy() de "IdadeMinima" e o meio de funcionamento através' do cumprimento do requisito.
+
+Em policy.AddRequirements() na linha seguinte após =>, passaremos uma classe IdadeMinima() que representará o requisito e receberá o valor de 18.
+
+```csharp
+//código omitido
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IdadeMinima", policy =>
+         policy.AddRequirements(new IdadeMinima(18))
+    );
+});
+//código omitido 
+```
+
+Com isso, adicionamos um requisito de idade mínima de dezoito anos, mas ainda teremos que criar essa classe.
+
+Em nossa raiz, criaremos uma nova pasta chamada "Authorization" que terá uma nova classe IdadeMinima.
+
+Dentro, teremos uma propriedade chamada Idade do tipo inteiro int, e quando a instanciarmos, atribuiremos a idade com o valor do parâmetro.
+
+```csharp
+using Microsoft.AspNetCore.Authorization;
+
+namespace UsuariosApi.Authorization
+{
+    public class IdadeMinima
+    {
+        public IdadeMinima(int idade)
+        {
+            Idade = idade;
+        }
+        public int Idade { get; set; }
+    }
+}
+```
+
+Na apólice de "IdadeMinima" no Program.cs, estamos adicionando um requisito representado por IdadeMinima contendo o parâmetro 18, então o valor de idade armazenado na instância da propriedade de Idade, é dezoito.
+
+Porém, não basta simplesmente criar a classe, ela precisa ser : IAuthorizationRequirement também. Em seguida, bastará apertarmos "Alt + Enter" para importarmos o modelo para que tudo funcione como queremos.
+
+A seguir, criaremos o critério de comparação entre a data de nascimento da pessoa usuária e a data atual para verificarmos se realmente é maior de dezoito anos.
+
+### Aula 4: Faça como eu fiz: idade mínima
+
+Agora vamos criar nosso requisito para que a idade do usuário seja validada. Nosso sistema aceitará o acesso apenas de usuários com idade maior ou igual a 18 anos.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, crie o controlador AcessoController em sua pasta de controladores. Não esqueça de anotar o método com [Authorize]:
+
+```csharp
+[ApiController]
+    [Route("[Controller]")]
+    public class AcessoController : ControllerBase
+    {
+        [HttpGet]
+        [Authorize(Policy = "IdadeMinima")]
+        public IActionResult Get() 
+        {
+            return Ok("Acesso permitido!");
+        }
+    }
+```
+
+Na classe Program, adicionaremos o conceito de autorização junto com o nosso requisito de acesso de IdadeMinima. Faremos isso antes de nossos AddScoped:
+
+```csharp
+//código omitido
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IdadeMinima", policy =>
+         policy.AddRequirements(new IdadeMinima(18))
+    );
+});
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<TokenService>();
+//código omitido
+```
+
+Para finalizar, crie uma pasta chamada Authorization na raiz do projeto e dentro dessa pasta crie a classe IdadeMinima. Além disso, implemente a interface IAuthorizationRequirement:
+
+```csharp
+public class IdadeMinima : IAuthorizationRequirement
+{
+    public IdadeMinima(int idade)
+    {
+        Idade = idade;
+    }
+
+    public int Idade { get; set; }
+}
+```
+
+### Aula 4: Adicionando autorização - Exercício
+
+Vimos que podemos definir que nossa aplicação usará recursos de autorização a fim de garantir que apenas usuários que cumpram determinado requisito possam acessar o sistema.
+
+Utilizando o nosso builder e a classe Program, temos o seguinte trecho de código:
+
+```csharp
+builder.AddAuthorization(options =>
+{
+    options.AddPolicy("IdadeMinima", policy =>
+         policy.AddRequirements(new IdadeMinima(18))
+    );
+});
+```
+
+Qual problema podemos identificar no código acima?
+
+Resposta correta  
+A chamada ao método de autorização deve incluir a propriedade Services.
+
+builder.Services.AddAuthorization()
+
+> Essa é a sintaxe correta para a utilização de autorização.
+
+### Aula 4: Validando a idade - Vídeo 3
+
+Transcrição  
+Nesta aula, escreveremos a lógica responsável por receber o token da pessoa usuária, validar se sua idade é maior ou menor de dezoito anos para desbloquear o acesso ou não.
+
+Para isso, criaremos uma classe chamada IdadeAuthorization dentro da pasta "Authorization", responsável por interceptar as informações do token e reconhecida como um gerenciador de acesso pelo .NET.
+
+Faremos a extensão de AuthorizationHandler que será respectivo a uma idade mínima com <IdadeMinima>. Se selecionarmos a extensão e apertarmos as teclas "Alt + Enter", o VSCode irá sugerir a implementação dessa classe abstrata já com o método HandleRequirementAsync.
+
+```csharp
+using Microsoft.AspNetCore.Authorization;
+
+namespace UsuariosApi.Authorization
+{
+    public class IdadeAuthorization : AuthorizationHandler<IdadeMinima>
+    {
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IdadeMinima requirement)
+        {
+            throw new NotImplementedException()]
+        }
+    }
+}
+```
+
+Para vermos se a data de nascimento é válida, conseguiremos acessar o recurso que está sendo protegido através do context.
+
+Recuperaremos nosso token no "Decoded" de JWT.io, e pegaremos a informação relativa ao dateofbirth.
+
+De volta ao IdadeAuthorization.cs no VSCode, criaremos a variável dataNascimentoClaim no lugar da exceção para recuperarmos as informações do usuário através de context seguido de .User.FindFirst() recebendo a claim => com o tipo claim.Type sendo igual a ClaimTypes.DateOfBirth.
+
+```csharp
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
+namespace UsuariosApi.Authorization
+{
+    public class IdadeAuthorization : AuthorizationHandler<IdadeMinima>
+    {
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IdadeMinima requirement)
+        {
+            var dataNascimentoClaim = context
+                .User.FindFirst(claim =>
+                claim.Type == ClaimTypes.DateOfBirth);
+        }
+    }
+}
+```
+
+Com essa informação, verificaremos se existe, e se não existir, o acesso será negado.
+
+Portanto, if() o DataNascimentoClaim for igual a null com == ou is, retornaremos Task.CompletedTask.
+
+Caso contrário, recuperaremos a data de nascimento e faremos a conversão para um DateTime com um tipo mais complexo ao invés de fazermos a operação através de strings.
+
+Então, a var dataNascimento será igual a Convert.ToDateTime() pegando o dataNascimentoClaim.value. Para calcularmos a idade da pessoa usuária, subtrairemos o ano de nascimento do ano atual para vermos se a diferença é maior ou menor de dezoito anos.
+
+Criaremos a variável idadeUsuario sendo igual a DateTime.Today.Year menos DataNascimento.Year.
+
+```csharp
+//código omitido
+
+            var dataNascimentoClaim = context
+                .User.FindFirst(claim =>
+                claim.Type == ClaimTypes.DateOfBirth);
+
+            if(dataNascimentoClaim is null)
+                return Task.CompletedTask;
+
+            var dataNascimento = Convert
+                .ToDateTime(dataNascimentoClaim.Value);
+
+            var idadeUsuario =
+                DateTime.Today.Year - dataNascimento.Year;
+        }
+    }
+}
+```
+
+Porém, temos uma situação que precisa de uma lógica para resolvermos.
+
+Se o aniversário de uma pessoa usuária for 31 de Dezembro e estivermos na metade do ano, significa que ela ainda não fez aniversário, e devemos levar isso em consideração no cálculo.
+
+Para resolvermos isso, faremos se if() nossa dataNascimento for maior do que DateTime.Today.addYear() contendo -idadeUsuario, significa que deveremos subtrair idadeUsuario-- em um.
+
+```csharp
+//código omitido
+
+            var idadeUsuario =
+                DateTime.Today.Year - dataNascimento.Year;
+
+            if (dataNascimento >
+                DateTime.Today.AddYears(-idadeUsuario))
+                idadeUsuario--;
+        }
+    }
+}
+```
+
+Revisando, se estivermos no dia 1 de Junho do ano de 2023 e a data de nascimento da pessoa for 31 de dezembro de 2000 por exemplo, e essa data vier depois do que a data atual, menos a idade do usuário em anos e a subtrairmos, DateTime.Today.AddYears(-idadeUsuario) será 1 de Junho de 2000.
+
+Como 31 de Dezembro de 2000 é maior do que 1 de Junho de 2000, significa que a data de nascimento desta pessoa ainda não chegou. A partir disso, subtrairemos um com idadeUsuario-- e a idade que seria calculada em vinte antes, passará a ser dezenove, corretamente.
+
+Concluindo, se a idadeUsuario for maior ou igual ao requirement que recebemos do via parâmetro do HandleRequirementAsync() seguido de .Idade que definimos como dezoito, concederemos o acesso.
+
+Na linha seguinte, escreveremos context.Suceed() com requirement dentro indicando que a condição foi satisfeita. Caso contrário, iremos simplesmente retornar Task.CompletedTask.
+
+```csharp
+//código omitido
+
+            if (dataNascimento >
+                DateTime.Today.AddYears(-idadeUsuario))
+                idadeUsuario--;
+
+            if (idadeUsuario >= requirement.Idade)
+                context.Succeed(requirement);
+
+            return Task.CompletedTask;
+
+        }
+    }
+}
+```
+
+Para testarmos, abriremos Program.cs e adicionaremos a informação builder.Services.addSingleton para injetarmos e fazer com que seja utilizado no escopo das nossas execuções e interceptações.
+
+Como queremos adicionar o nome do serviço que colocamos de IdadeAuthorization, colocaremos IAuthorizationHandler e IdadeAuthorization>().
+
+```csharp
+//código omitido
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddSingleton<IAuthorizationHandler, IdadeAuthorization>();
+
+builder.Services.AddControllers();
+
+//código omitido
+```
+
+Com isso, estamos fazendo a injeção de dependência de um IAuthorizationHandler que será de IdadeAuthorization>().
+
+Observando o AuthorizationHandler, ele já implementará a interface.
+
+Para testarmos, executaremos a aplicação e tentaremos fazer o envio de um token de usuário pelo Postman. Para fazermos a requisição para a aplicação enviando o token, bastará clicarmos na aba de "Authorization" no Postman, depois clicarmos na lista suspensa de "Type" abaixo para selecionarmos a opção "Bearer Token".
+
+Colocaremos o valor em Token e faremos o envio clicando em "Send", mas ainda teremos o erro 404.
+
+Para entendermos o que está acontecendo, recortaremos toda a lógica de validação no IdadeAuthorization.cs com "Ctrl + X" e executaremos novamente a aplicação para vermos se a lógica está sendo chamada efetivamente.
+
+Fazendo o envio novamente pelo Postman, receberemos "200 OK". Portanto, não estamos recuperando a informação do token.
+
+Fazendo o passo a passo, vamos executar a aplicação em modo depuração e tentaremos enviar a requisição novamente. Depois que a aplicação subir, veremos que o dataNascimentoClaim está nulo, então essa informação é null e estamos entrando em if() que termina a tarefa sem fornecer autorização à pessoa usuária.
+
+A seguir, escreveremos a lógica responsável pela autenticação via token para que consigamos recuperar as informações através do context que estamos lidando.
+
+### Aula 4: Utilizando handlers - Exercício
+
+Para que possamos interceptar as requisições a fim de validar os campos de um token, precisamos criar um handler.
+
+Como podemos criar um handler que valida o requisito IdadeMinima?
+
+Resposta correta  
+public class IdadeAuthorization : AuthorizationHandler`<IdadeMinima>`
+
+> Essa é a sintaxe correta para criação de um handler para IdadeMinima.
+
+### Aula 4: Autenticando via token - Vídeo 4
+
+Transcrição  
+Agora precisaremos explicitar na aplicação que vamos adicionar uma autenticação que será feita através do JWT bearer token.
+
+No VSCode, acessaremos "Ferramentas > gerenciador de Pacotes do NuGet > Gerenciar Pacotes do NuGet para a Solução..." e, no campo de busca, pesquisaremos por "kwtbearer" para instalarmos o pacote Microsoft.AspNetCore.Authentication.JwtBearer.
+
+No lado direito da tela, escolheremos a versão "6.0.14" e depois clicaremos em "Instalar", "Ok" e "I accept".
+
+Terminada a instalação, voltaremos ao código de Program.cs e, na linha 35, adicionaremos builder.Services.AddAuthentication(). Definiremos algumas options => de autenticação.
+
+A maneira padrão do nosso sistema será options.DefaultAuthenticateScheme através de JwtBearerDefaults com .AuthenticationScheme. Em seguida, iremos encadear com .AddAuthentication uma segunda parte.
+
+Fora das chaves ao final de AddAuthentication(), escreveremos .AddJwtBearerDefaults() e explicitaremos as configurações relativas a este.
+
+Definiremos as options => e, dentro das chaves, definiremos as validações do token com options.TokenValidationParameters com os parâmetros que iremos validar.
+
+Após o sinal de igualdade, escreveremos new TokenValidationParameters com a definição completa da Microsoft. Nas chaves seguintes, definiremos cada um dos campos.
+
+Primeiro, validaremos o ValidateIssuerSigningKey que é a validação da chave que geramos anteriormente, sendo igual a true. Depois, colocaremos outra confirmação que será a IssuerSigningKey igual a reutilização do SymmetricSecurityKey que estabelecemos em var chave do TokenService.cs usando Encoding.UTF8.GetBytes com a chave.
+
+A copiaremos e colaremos no new SymmetricSecurityKey do Program.cs, pois é a signing que estamos usando na validação.
+
+Em seguida, enviaremos a audiência com ValidateAudience igual a false. Feito isso, o próprio VSCode nos perguntará se queremos validar a audience que vem do token, o que ajuda a mitigar casos de ataque de redirecionamento, por exemplo.
+
+Depois, validaremos o ValidateIssuer também como falso, lembrando que ste curso não tem foco em segurança exatamente. Por fim, teremos o ClockSkew sendo igual a TimeSpan.Zero que fará o get ou set do skew do relógio, ou seja, o alinhamento do relógio para a validação de tempo do token, então estamos zerando.
+
+```csharp
+//código omitido
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ASHDA98H9ah9ha9H9A89n0f")),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+//código omitido
+```
+
+Com isso, rodaremos a aplicação e abriremos o Postman para fazermos o login novamente passando os parâmetros "Username ", "Password" e "RePassword" na aba "Body". Ao enviarmos, faremos a autenticação.
+
+Se abrirmos a aba "Authorization" e enviarmos o tipo "Bearer Token", teremos o erro de "404 Not Found". Para entendermos o que esta acontecendo, iremos ao debugger do VSCode abrindo IdadeAuthorization.cs para vermos se a lógica está sendo feita corretamente.
+
+Se tentarmos acessar clicando em "Send" no Postman novamente, repararemos que dataNascimentoClaim continuará como null, pois também precisaremos dizer que nossa aplicação está usando a autenticação escrevendo app.UseAuthentication(); após app.UseHttpsRedirection() ao final do código de Program.cs.
+
+Executaremos novamente no modo de saída de depuração, voltaremos ao Postman e enviaremos a requisição. No VSCode, repararemos que o dataNascimentoClaim tem um valor.
+
+Seguiremos pulando os métodos para chegarmos ao acesso permitido do controlador em AcessoController.cs, enquanto temos o status de "200 OK" no Postman.
+
+Para testarmos o caso contrário, mudaremos o usuário para "andre" ao invés de "romulo" no "Body" do Postman. Sua data de nascimento será "2018-01-01" e a senha será a mesma, e faremos para "`http://localhost:5212/usuario/Cadastro`" antes de enviarmos.
+
+Quando tivermos cadastrado, faremos o login de "andre" para pegarmos o token. Se tentarmos enviá-lo para a nossa aplicação, teremos novamente o "404 Not Found".
+
+Portanto, conseguimos visualizar sua data de nascimento em "Decoded" do JWT.io e fazer todo um sistema de acesso baseado em informações do token, além de o interceptarmos para aplicarmos nossa lógica.
+
+### Aula 4: Adicionando autenticação - Exercício
+
+De maneira análoga ao processo de adicionar autorização, também podemos adicionar autenticação em nossa aplicação com o método AddAuthentication.
+
+Como podemos informar que a autenticação utilizada será via token JWT?
+
+Resposta correta  
+builder.AddAuthentication( Trecho omitido ).AddJwtBearer( Trecho omitido )
+
+Dessa forma é possível informar que a nossa aplicação utilizará autenticação via token JWT.
+
+### Aula 4: O que aprendemos?
+
+Nessa aula, aprendemos:
+
+- Tokens JWT são utilizados para trafegar dados de maneira prática entre aplicações;
+- Como adicionar autorização com o método AddAuthorization();
+- Como adicionar autenticação com o método AddAuthentication();
+- Políticas de acesso podem ser usadas para restringir o acesso de usuários;
+- Podemos interceptar requisições a autorizá-las com um AuthorizationHandler.
+
+## Aula 5: Utilizando secrets
+
+### Aula 5: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/alura-identity/tree/Aula-4) no ponto em que paramos na aula anterior.
+
+### Aula 5: O problema de dados expostos - Vídeo 1
+
+Transcrição
+Para concluir o nosso projeto com elegância, precisamos levantar alguns questionamentos. Temos uma string de conexão com o banco (ConnectionStrings), que certamente terá um usuário e senha, além do nome do banco e do servidor com o qual estamos nos conectando.
+
+Por outro lado, temos a chave SymmetricSecurityKey usada para validar o token. Ela está presente no "Program" e também no "TokenService".
+
+O problema é que, se estivermos trabalhando com outras pessoas durante o desenvolvimento ou se quisermos fazer o commit do projeto em um repositório público, precisamos nos preocupar em não expor as credenciais do banco ou, a depender do projeto, as chaves de segurança.
+
+Isso pode ser relevante se usarmos um banco hosteado online ou um banco de dados na AWS, por exemplo. No caso da chave, se fizermos a alteração da chave, precisamos alterá-la nos dois arquivos ("Program" e "TokenService"). Se não fizermos isso, teremos uma inconsistência na execução da aplicação.
+
+Estes são alguns pontos que precisam ser resolvidos. Pense que, no caso do desenvolvimento de aplicações para informações sensíveis (tais como strings de conexão com banco ou chaves simétricas de validação com token), o .NET tem um conceito chamado Secrets.
+
+Os Secrets nos permitem fazer o armazenamento seguro de diversas informações para uma aplicação em desenvolvimento com ASP.NET Core.
+
+Na documentação, encontraremos a explicação sobre os Secrets no tópico Gerenciador de Segredos: trata-se de um recurso usado para armazenar dados confidenciais durante o desenvolvimento de um projeto. Com ele, essas informações sensíveis não ficam explícitas, funcionando de maneira similar à variável de ambiente.
+
+No próximo vídeo, aprenderemos a usar os Secrets. Eu te vejo lá!
+
+### Aula 5:  - Vídeo 2
+### Aula 5:  - Vídeo 3
+### Aula 5:  - Vídeo 4
+### Aula 5:  - Vídeo 5
+### Aula 5:  - Vídeo 6
