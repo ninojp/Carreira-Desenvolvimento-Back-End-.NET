@@ -1198,7 +1198,7 @@ Agora, precisamos do AutoMapper. Por isso, vamos apertar "Alt + Enter" para gera
 
 Também vamos usar "Alt + Enter" para gerar a variável _userManager, substituindo object por UserMagener de `<Usuario>`.
 
-Vamos dar um "Alt + Enter" novamente em _userManager. Dessa vez para gerar o construtor CadastroService(UserManager`<Usuario>`). Em seguida, vamos adicionar o IMapper como parâmetro do CadastroService(UserManager`<Usuario>`) ao dar "Alt + Enter" em _mapper.
+Vamos dar um "Alt + Enter" novamente em _userManager. Dessa vez para gerar o construtor CadastroService(UserManager`<Usuario>`). Em seguida, vamos adicionar o IMapper como parâmetro do CadastroService(UserManager`<Usuario>`) ao dar "Alt + Enter" em_mapper.
 
 A princípio nosso código está quase funcional. Basta dar um "Alt + Enter" em await na linha 23 para tornar o método Cadastra assíncrono - assim como fizemos anteriormente com o controlador.
 
@@ -1376,19 +1376,22 @@ Nessa aula, aprendemos:
 
 ## Aula 3: Logando um usuário
 
+### Aula 3: Projeto da aula anterior
+
 Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/alura-identity/tree/Aula-2) no ponto em que paramos na aula anterior.
 
 ### Aula 3: Efetuando o login - Vídeo 1
 
-Transcrição
+Transcrição  
 Anteriormente, fizemos o cadastro da pessoa usuária dentro do nosso sistema e agora vamos fazer o login. Já temos no banco de dados um usuário (username e um hash para a senha). Mas como vamos fazer a autenticação dessa pessoa na nossa aplicação?
 
 Arquivo UsuarioController.cs
 
 O primeiro passo é criarmos um novo meio para fazermos isso, já temos o nosso UsuarioController e podemos levantar algumas possibilidades.
 
-UsuarioController
+UsuarioController:
 
+```csharp
 // código omitido
 
    public class UsuarioController : ControllerBase
@@ -1408,30 +1411,36 @@ UsuarioController
             return Ok("Usuário cadastrado!");
         }
 
-// código omitidoCopiar código
+// código omitido
+```
+
 Dentro do nosso UsuarioController temos o CadastraUsuario e podemos adicionar um relacionado ao login ou podemos criar um controlador do zero. No nosso caso, vamos aproveitar a rota dentro desse controlador existente para incluirmos a nossa rota de login.
 
 No final do arquivo, adicionamos uma nova rota. Para isso escrevemos [Http] sem colocar o tipo ainda e na linha seguinte colocamos public IActionResult que será o nosso Login(){}. Nas chaves, fazemos o nosso comando efetivamente, vamos chamar os serviços para realizar o login: _loginService.Login().
 
 UsuarioController
 
+```csharp
 // código omitido
 
-                [Http]
-                public IActionResult Login() 
-                {
-                        _loginService.Login();
-                }
+[Http]
+public IActionResult Login() 
+{
+        _loginService.Login();
+}
 
-// código omitidoCopiar código
+// código omitido
+```
+
 Vamos analisar quais as outras possibilidades que podemos ter nesse cenário. No cadastroService podemos, por exemplo, alterar esse serviço para ele englobar esses tipos de operações que estamos realizando.
 
-Pode ser que o nosso CadastroService faça mais sentido ser renomeado para UsuarioService. Para tal, clicamos com o botão direito em CadastroService e escolhemos a opção "Rename"; e depois em _cadastroService trocamos para _usuarioService. Esse serviço vai fazer toda a parte de autenticação de cadastro dos nossos usuários.
+Pode ser que o nosso CadastroService faça mais sentido ser renomeado para UsuarioService. Para tal, clicamos com o botão direito em CadastroService e escolhemos a opção "Rename"; e depois em _cadastroService trocamos para_usuarioService. Esse serviço vai fazer toda a parte de autenticação de cadastro dos nossos usuários.
 
 Isso para mantermos a coerência, dado que agora dentro desse serviço, além de cadastro também vamos ter o login.
 
 UsuarioController
 
+```csharp
 // código omitido
 
     public class UsuarioController : ControllerBase
@@ -1443,35 +1452,43 @@ UsuarioController
             _usuarioService = cadastroService;
         }
 
-// código omitidoCopiar código
-Voltando ao login, ao invés de _loginService colocamos _usuarioService e dentro dele criamos o método. Em Login() recebemos LoginUsuarioDto dto.
+// código omitido
+```
+
+Voltando ao login, ao invés de _loginService colocamos_usuarioService e dentro dele criamos o método. Em Login() recebemos LoginUsuarioDto dto.
 
 UsuarioController
 
+```csharp
 // código omitido
 
-                [Http]
-                public IActionResult Login(LoginUsuarioDto dto) 
-                {
-                        _usuarioService.Login();
-                }
+[Http]
+public IActionResult Login(LoginUsuarioDto dto) 
+{
+        _usuarioService.Login();
+}
+// código omitido
+```
 
-// código omitidoCopiar código
 Agora precisamos criar esse dto. Para isso, vamos criar uma classe chamada de LoginUsuarioDto.cs dentro pasta de Dtos. Assim, somos redirecionados para o arquivo que acabamos de criar:
 
 LoginUsuarioDto.cs
 
+```csharp
 namespace UsuariosApi.Data.Dtos
 {
     public class LoginUsuarioDto
     {
 
     }
-}Copiar código
+}
+```
+
 Para fazermos a autenticação no nosso sistema, vamos precisar obrigatoriamente de um username e a senha (em inglês, password). Teclamos "Alt + Enter" logo acima de Required para importarmos.
 
 LoginUsuarioDto.cs
 
+```csharp
 using System.ComponentModel.DataAnnotations;
 
 namespace UsuariosApi.Data.Dtos
@@ -1483,40 +1500,47 @@ namespace UsuariosApi.Data.Dtos
         [Required]
         public string Password { get; set; }
     }
-}Copiar código
+}
+```
+
 Voltando ao arquivo UsuarioController, estamos recebendo um dto e o passamos dentro dos parênteses do nosso serviço no método Login().
 
 UsuarioController
 
+```csharp
 // código omitido
 
-                [Http]
-                public IActionResult Login(LoginUsuarioDto dto) 
-                {
-                        _usuarioService.Login(dto);
-                }
+[Http]
+public IActionResult Login(LoginUsuarioDto dto) 
+{
+        _usuarioService.Login(dto);
+}
+// código omitido
+```
 
-// código omitidoCopiar código
 Logo após, teclamos "Alt + Enter" em Login() e escolhemos a opção "Gerar método de 'Login'". Assim, será criado um método. Para ajustarmos podemos clicar em cima de Login() que vamos ser redirecionados para o arquivo com o método. Ao invés de interno (internal), desejamos que seja público (public).
 
 UsuarioService.cs
 
+```csharp
 // código omitido
+public void Login(LoginUsuarioDto dto)
+{
 
-        public void Login(LoginUsuarioDto dto)
-        {
+    throw new NotImplementedException();
 
-                        throw new NotImplementedException();
+}
+```
 
-                }Copiar código
-Agora, precisamos implementar. Como vai funcionar o login? Assim como temos o nosso _userManager, temos outro chamado de SignInManager. Podemos remover o conteúdo de dentro das chaves do trecho de código exibido anteriormente, e escrevemos _signInManager para fazer o login.
+Agora, precisamos implementar. Como vai funcionar o login? Assim como temos o nosso _userManager, temos outro chamado de SignInManager. Podemos remover o conteúdo de dentro das chaves do trecho de código exibido anteriormente, e escrevemos_signInManager para fazer o login.
 
 Teclando "Alt + Enter" com o cursor sobre o _signInManager, vamos escolher a opção "Gerar campo 'signInManager'". Isso para que possamos criar esses campos de forma mais rápida.
 
-Subindo o arquivo, dentro de UsuarioService ao invés de object ele será do tipo SignInManager<Usuario>, esse <Usuario> serve para representar que é respectivo a um usuário. Logo após, teclamos "Alt + Enter" em _signInManager e escolhemos a opção "Adicionar parâmetros ao 'UsuarioService(IMapper, UserManager<Usuario>)'". Isso para adicionarmos o parâmetro ao construtor.
+Subindo o arquivo, dentro de UsuarioService ao invés de object ele será do tipo SignInManager`<Usuario>`, esse `<Usuario>` serve para representar que é respectivo a um usuário. Logo após, teclamos "Alt + Enter" em _signInManager e escolhemos a opção "Adicionar parâmetros ao 'UsuarioService(IMapper, UserManager`<Usuario>`)'". Isso para adicionarmos o parâmetro ao construtor.
 
 UsuarioService.cs
 
+```csharp
 // código omitido
 
     public class UsuarioService
@@ -1525,7 +1549,9 @@ UsuarioService.cs
         private UserManager<Usuario> _userManager;
         private SignInManager<Usuario> _signInManager;
 
-// código omitidoCopiar código
+// código omitido
+```
+
 Agora vamos usar o SignInManager no método de Login(). Há um método específico que vamos usar, o PasswordSignInAsync(), que a partir do usuário e senha ele tenta realizar a autenticação.
 
 O primeiro parâmetro que passamos é o dto.username e o segundo parâmetro vai ser o dto.Password. Há um terceiro e quarto parâmetro que são do tipo boolean, sendo o terceiro um verdadeiro ou falso para isPersistente e o quarto para lockoutOnFailure.
@@ -1536,44 +1562,51 @@ E o lockoutOnFailure indica se a conta deve ser bloqueada se o sign in falhar. N
 
 UsuarioService.cs
 
+```csharp
 // código omitido
 
-        public void Login(LoginUsuarioDto dto)
-        {
+public void Login(LoginUsuarioDto dto)
+{
 
-                        _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+_signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
 
-                }Copiar código
-Entrando novamente no PasswordSignInAsync, ele nos retorna uma Task<SignInResult>. Se é uma task e desejamos pegar o resultado sabemos que devemos esperar (await) por esse resultado, por isso, colocamos await e depois tornamos o método login assíncrono (async).
+}
+```
+
+Entrando novamente no PasswordSignInAsync, ele nos retorna uma Task`<SignInResult>`. Se é uma task e desejamos pegar o resultado sabemos que devemos esperar (await) por esse resultado, por isso, colocamos await e depois tornamos o método login assíncrono (async).
 
 Para tal, teclamos "Ctrl + clique" e escolhemos a opção "Tornar método assíncrono". Logo após, antes do await colocamos var resultado =.
 
 UsuarioService.cs
 
+```csharp
 // código omitido
 
-        public async Task LoginAsync(LoginUsuarioDto dto)
-        {
+public async Task LoginAsync(LoginUsuarioDto dto)
+{
+    var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+}
+```
 
-                        var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
-
-                }Copiar código
 Agora, desejamos validar se a nossa operação foi executada com sucesso (fizemos isso anteriormente). Caso o resultado não seja bem sucedido, desejamos lançar uma new ApplicationException() com a mensagem "Usuário não autenticado!".
 
 UsuarioService.cs
 
+```csharp
 // código omitido
 
-        public async Task LoginAsync(LoginUsuarioDto dto)
-        {
-            var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+public async Task LoginAsync(LoginUsuarioDto dto)
+{
+var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
 
-            if (!resultado.Succeeded)
-            {
-                throw new ApplicationException("Usuário não autenticado!");
-            }
+if (!resultado.Succeeded)
+{
+    throw new ApplicationException("Usuário não autenticado!");
+}
 
-                }Copiar código
+}
+```
+
 Então recebemos o nosso dto e o transmitimos para o nosso serviço de login. E fazemos essa operação a partir do signInManager que vem do próprio Identity e, por fim, validamos se a operação foi feita com sucesso. Podemos salvar.
 
 No arquivo UsuarioController, podemos remover o Async de LoginAsync (que o VS Code colocou de forma automática) para mantermos o padrão. Depois podemos remover o Async do LoginAsync() do método de serviço no arquivo UsuarioService.
@@ -1584,51 +1617,631 @@ Usamos o post por fazer mais sentido passarmos os parâmetros de autenticação 
 
 UsuarioController
 
+```csharp
 // código omitido
 
-                [HttpPost]
-                public async Task<IActionResult> LoginAsync(LoginUsuarioDto dto) 
-                {
-                        await _usuarioService.Login(dto);
-                        return Ok("Usuário autenticado!");
-                }
+    [HttpPost]
+    public async Task<IActionResult> LoginAsync(LoginUsuarioDto dto) 
+    {
+            await _usuarioService.Login(dto);
+            return Ok("Usuário autenticado!");
+    }
 
-// código omitidoCopiar código
+// código omitido
+```
+
 Observe que temos dois HttpPost dentro do arquivo UsuarioController. Podemos diferenciá-los especificando para onde estão indo, por exemplo: [HttpPost("cadastro")]. E aplicamos a mesma lógica para o de login: [HttpPost("login")]. Logo após, salvamos a aplicação e no menu superior, clicamos em "Depurar" e depois em "Iniciar Sem Depurar".
 
-No Postman, estamos com o verbo post e o endereço http://localhost:5212/usuario, onde vamos acrescentar /cadastro no final: http://localhost:5212/usuario/cadastro. Como desejamos cadastro um usuário, no body preenchemos:
+No Postman, estamos com o verbo post e o endereço `http://localhost:5212/usuario`, onde vamos acrescentar /cadastro no final: `http://localhost:5212/usuario/cadastro`. Como desejamos cadastro um usuário, no body preenchemos:
 
+```csharp
 {
         "Username": "romulo",
         "DataNascimento": "1900-01-01",
         "Password": "Senha123@",
         "RePassword": "Senha123@"
-}Copiar código
+}
+```
+
 Em seguida clicamos no botão "Send".
 
 Observe que retornou o Status 200 OK, e a mensagem "Usuário cadastrado!".
 
-Para testar o login, vamos abrir mais uma aba no Postman com o verbo post e o endereço http://localhost:5212/usuario/login. No body passamos um raw e em text selecionamos JSON e preenchemos:
+Para testar o login, vamos abrir mais uma aba no Postman com o verbo post e o endereço <http://localhost:5212/usuario/login>. No body passamos um raw e em text selecionamos JSON e preenchemos:
 
+```csharp
 {
         "Username": "david",
         "Password": "Senha123@",
-}Copiar código
+}
+```
+
 Em seguida clicamos no botão "Send". Retornou o Status 200 OK, e à mensagem "Usuário autenticado!". Se colocarmos uma senha inválida, como:
 
+```csharp
 {
         "Username": "david",
         "Password": "Senha123123",
-}Copiar código
+}
+```
+
 E selecionamos "Send", temos a mensagem informando que o usuário não foi autenticado, com o Status 500 Internal Server Error. Com o login funcionando, como fazemos algo a partir dele? O que prova que o usuário foi autenticado no nosso sistema? Como realizamos operações a partir disso?
 
 Vamos entender melhor como fazer tudo isso nos próximos vídeos. Até mais!
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
-### Aula 3:  - Vídeo 6
-### Aula 3:  - Vídeo 7
-### Aula 3:  - Vídeo 8
+### Aula 3: Login com Identity - Exercício
+
+Para efetuar o login com o Identity, vimos que é possível utilizar a classe SignInManager. Utilizando esta classe, basta efetuar a chamada de apenas um método para logar utilizando usuário e senha.
+
+Marque a alternativa abaixo que contém o método responsável por efetuar login ao receber um usuário e senha.
+
+Resposta correta  
+PasswordSignInAsync()
+
+> Este método pertence à classe SignInManager e com ele é possível efetuar login utilizando usuário e senha.
+
+### Aula 3: Gerando o token - Vídeo 2
+
+Transcrição  
+A autenticação já está sendo feita, estamos validando se o usuário e senha existem e, com isso, retornamos uma operação bem sucedida ou não. Entretanto, como esse usuário autenticado consegue provar posteriormente que se autenticou de forma efetiva?
+
+Precisamos dar alguma possibilidade para o usuário confirmar essa autenticação, para que a pessoa usuária consiga realizar as operações dentro do nosso sistema. A forma mais comum de fazer isso atualmente é usando o JSON Web Tokens (JWT).
+
+JSON Web Tokens
+
+O JWT é uma forma padrão de transmitir, navegar ou armazenar de forma compactada e protegida objetos JSON entre as aplicações. Descendo um pouco a página da documentação, conseguimos visualizar um exemplo do que é esse JWT:
+
+Exemplo de encoded retirado da documentação:
+
+```csharp
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+Ou seja, o JWT é uma cadeia de caracteres codificada, sendo o conteúdo efetivo dessa cadeia de caracteres é o payload do lado direito da documentação.
+
+Exemplo de decoded retirado da documentação:
+
+```csharp
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}
+```
+
+Isso não é uma criptografia ponta a ponta, onde podemos inserir informações sensíveis, e sim um algoritmo de Encoding (em português, "codificar").
+
+A codificação não é utilizada para proteger dados sensíveis, dado que é fácil de reverter.
+
+No warning da documentação, temos um texto informando: "JWTs são credenciais que podem conceder acesso a recursos, cuidado onde você os cola! Não registramos tokens, todas as validações e depurações são feitas no lado do cliente.".
+
+UsuarioService.cs
+
+Voltando ao código, no arquivo UsuarioService.cs temos:
+
+```csharp
+// código omitido
+        public async Task Login(LoginUsuarioDto dto)
+        {
+            var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+
+            if (!resultado.Succeeded)
+            {
+                throw new ApplicationException("Usuário não autenticado!");
+            }
+     }
+    }
+}
+```
+
+Efetuamos o login, e no momento em que esse login não foi bem sucedido lançamos a exceção informando que o usuário não foi autenticado. Mas caso tenha sido bem sucedido, vamos gerar um token para essa pessoa usuária que conseguiu se autenticar e retornar posteriormente.
+
+Para gerarmos esse token precisamos ter um serviço, um _tokenService. com o método GenerateToken(). Isso após o comando if().
+
+```csharp
+_tokenService.GenerateToken();
+```
+
+Teclamos "Alt + Enter" com o cursor sobre o _tokenService e escolhemos a opção "Gerar campo '_tokenService'". Após isso, subindo o código temos esse campo gerado de forma automática dentro do nosso UsuarioService. Ao invés de object, esse campo será do tipo TokenService.
+
+UsuarioService.cs
+
+```csharp
+// código omitido
+
+    public class UsuarioService
+    {
+
+// código omitido
+
+        private TokenService _tokenService;
+
+// código omitido
+```
+
+Depois teclamos "Alt + Enter" no nome do campo para escolhermos a opção de adicionarmos o parâmetro ao construtor, sendo a opção "Adicionar parâmetros ao 'UsuarioService(IMapper, UserManager<Usuario>…)'". Analisando no construtor, temos o nosso tokenService adicionado:
+
+```csharp
+// código omitido
+
+        public UsuarioService(IMapper mapper, UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, TokenService tokenService)
+        {
+            _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
+        }
+// código omitido
+```
+
+Por fim, teclamos novamente "Alt + Enter" no nome da classe, e escolhemos a opção "Gerar class 'TokenService' no novo arquivo". Será gerado dentro da nossa pasta Services, sendo o arquivo TokenService.cs.
+
+Voltando ao trecho para gerar o token, como estamos gerando um token para um usuário, por isso, dentro dos parênteses do método colocamos usuario. E o que desejamos fazer dentro do TokenService? Gerar o nosso método. Para isso, mais uma vez teclamos "Alt + Enter" no nome do método GenerateToken() e escolhemos a opção "Gerar método 'GenerateToken'".
+
+UsuarioService.cs
+
+```csharp
+// código omitido
+        if (!resultado.Succeeded)
+        {
+            throw new ApplicationException("Usuário não autenticado!");
+        }
+        _tokenService.GenerateToken(usuario);
+     }
+    }
+}
+```
+
+Entrando no arquivo TokenService.cs, temos:
+
+TokenService.cs
+
+```csharp
+namespace UsuariosApi.Services
+{
+    internal class TokenService
+    {
+            internal void GenerateToken(object usuario)
+            {
+                    throw new NotImplementedExcepction();
+            }
+    }
+}
+```
+
+Já temos a assinatura do método como um object, que vamos alterar para Usuario. Logo após, teclamos "Alt + Enter" em Usuario e escolhemos a opção "using UsuariosApi.Models;" para usarmos o nosso modelo. E ao invés de internal void usamos public void no GenerateToken().
+
+Agora precisamos preencher esse token. Quais campos vamos inserir, o id, o username? Para fazermos isso, usamos um recurso de Claim (em português, "Reivindicação") do .NET. Podemos remover a linha throw new NotImplementedExcepction(); e colocar um array de claims Claim[] claims = new Claim[]{}.
+
+Dentro das chaves, colocamos uma reivindicação para o nome do usuário, então escrevemos new Claim("username", usuario.UserName), e aplicamos a mesma lógica para o id.
+
+TokenService.cs
+
+```csharp
+using UsuariosApi.Models;
+
+namespace UsuariosApi.Services
+{
+        internal class TokenService
+        {
+                public void GenerateToken(Usuario usuario)
+                {
+            Claim[] claims = new Claim[]
+            {
+                new Claim("username", usuario.UserName),
+                new Claim("id", usuario.Id)
+                        }
+                }
+        }
+}
+```
+
+Assim conseguimos adicionar diversas informações no nosso token, conforme desejamos. Estamos colocando para compreendermos como isso funciona, e para posteriormente quando tivermos alguma forma de autenticar e reconhecer dentro do nosso sistema, por exemplo, para permitir que somente pessoas usuárias autenticadas realizem determinadas operações, entendermos no token mesmo porque adicionamos essas informações.
+
+Para adicionarmos uma data de nascimento, podemos usar um recurso do .NET chamado de ClaimTypes. passando o tipo DateOfBirth. Na sequência, colocamos usuario.DataNascimento, perceba que ele já nos informa que não podemos atribuir um DateTime para um ClaimsIdentity. Por isso, colocamos no final .ToString().
+
+```csharp
+new Claim(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString()),
+```
+
+Assim, ficamos com:
+
+TokenService.cs
+
+```csharp
+using UsuariosApi.Models;
+
+namespace UsuariosApi.Services
+{
+internal class TokenService
+{
+        public void GenerateToken(Usuario usuario)
+        {
+    Claim[] claims = new Claim[]
+    {
+        new Claim("username", usuario.UserName),
+        new Claim("id", usuario.Id)
+                        new Claim(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString())
+                }
+        }
+}
+}
+```
+
+Estamos inserindo o conteúdo do nosso token (exemplo do payload da documentação), passando que a pessoa usuária terá um username, um id e uma data de nascimento. Inclusive, podemos ir na documentação e alterarmos o payload para:
+
+Exemplo de decoded retirado da documentação e alterado com os dados que desejamos:
+
+```csharp
+{
+  "username": "daniel",
+  "id": "959c987d-de0b-74aa-ac63-2a7642c1b969",
+  "DataNascimento": "1900-01-01"
+}
+```
+
+Assim, ficamos com o encoded:
+
+```csharp
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbmllbCIsImlkIjoiOTU5Yzk4N2QtZGUwYi03NGFhLWFjNjMtMmE3NjQyYzFiOTY5IiwiRGF0YU5hc2NpbWVudG8iOiIxOTAwLTAxLTAxIn0.cZumlhalPT9RZ31d4WgswnASkRLDNLT03SgLXn19EXE
+```
+
+Este seria o token gerado. Mas como fazemos isso com o .NET? Voltando ao código, temos as reivindicações e desejamos gerar um token.
+
+Mas antes disso, vamos ao gerenciador de pacotes clicando em "Ferramentas > Gerenciador de Pacotes do Nugets > Gerenciador de Pacotes do Nugets para a Solução…", ou usando o atalho "Ctrl + K, Ctrl + B".
+
+Isso para instalarmos um novo pacote chamado de "System.IdentityModel.Tokens.Jwt". Vamos instalar esse pacote na versão 6.27.0.
+
+Voltando ao código, para gerar o token após o fechamos das nossas reivindicações, vamos colocar var token = que receberá um new JwtSecurityToken() que conterá algumas informações (lembrando que precisamos sempre importar teclando "Alt + Enter").
+
+```csharp
+var token = new JwtSecurityToken
+(
+)
+```
+
+Dentro passamos as informações de expiração, passando a informação que a partir de agora (DateTime.Now) desejamos adicionar 10 minutos (AddMinutes(10)). Depois informamos as claims que são as que criamos anteriormente, e por fim, definimos as credenciais (signingCredentials).
+
+No entanto, como geramos essas signingCredentials? Acima do token, criamos mais um var chamado de signingCredentials que será igual a uma operação que precisamos realizar a partir de uma chave que vamos ter de geração para esse token.
+
+Por isso, vamos criar um var chave = new SymmetricSecurityKey() também. Essa nova chave que estamos criando, é gerada a partir de uma cadeia de caracteres que representam essa chave. Para tal, usamos dentro dos parênteses o Encoding.UTF8.GetBytes("") e teclamos uma sequência aleatória de caracteres "9ASHDA98H9ah9ha9H9A89n0f".
+
+Por enquanto, temos:
+
+TokenService.cs
+
+```csharp
+// código omitido
+var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ASHDA98H9ah9ha9H9A89n0f"));
+
+var signingCredentials = 
+
+var token = new JwtSecurityToken
+    (
+    expires: DateTime.Now.AddMinutes(10),
+    claims: claims,
+    signingCredentials: 
+    );
+    }
+}
+}
+```
+
+A partir dessa chave, geramos a signingCredentials que será igual a new SigningCredentials() passando a chave e o SecurityAlgorithms que desejamos usar, que no caso será o HmacSha256. logo após, dentro do token colocamos o signingCredentials.
+
+TokenService.cs
+
+```csharp
+// código omitido
+    var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ASHDA98H9ah9ha9H9A89n0f"));
+
+    var signingCredentials = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken
+        (
+        expires: DateTime.Now.AddMinutes(10),
+        claims: claims,
+        signingCredentials: signingCredentials
+        );
+        }
+}
+}
+```
+
+Com isso, temos o nosso token gerado. Precisamos ainda retornar esse token para a pessoa usuária e visualizar o seu conteúdo no JWT.io.
+
+Mas faremos isso nos próximos vídeos. Até mais!
+
+### Aula 3: A importância de tokens - Exercício
+
+Anteriormente, vimos a importância de utilizarmos um token no processo de login. Com ele, nosso processo de autenticação fica mais compreensível e real.
+
+Escolha a alternativa que apresenta uma vantagem quanto à utilização de tokens:
+
+Resposta correta  
+Com tokens, nosso usuário consegue comprovar sua identidade para a nossa aplicação.
+
+> Tokens são uma forma de identificar com quem estamos nos comunicando entre usuário e aplicação.
+
+### Aula 3: Retornando o token - Vídeo 3
+
+Transcrição  
+Para fazermos a nossa validação final, precisamos retornar o token. Se desejamos retornar o token que será uma string (cadeia de caracteres), podemos ir no arquivo TokenService e colocá-lo como público e ao invés de retornarmos um public void GenerateToken(), retornamos um public string GenerateToken().
+
+TokenService
+
+```csharp
+// código omitido
+namespace UsuariosApi.Services
+{
+        public class TokenService
+        {
+                public string GenerateToken(Usuario usuario)
+                {
+// código omitido
+```
+
+No final do arquivo, após o var token, colocamos o nosso retorno de fato. Podemos escrever return token; dado que ele é um JwtSecurityToken e precisamos convertê-lo para uma string. Para isso, colocamos new JwtSecurityTokenHandler() e passamos o método WriteToken() para um determinado token.
+
+TokenService.cs
+
+```csharp
+// código omitido
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+}
+```
+
+Ou seja, estamos informando que o token vai ser transformado em uma cadeia de caracteres e será devolvido.
+
+Agora, no arquivo UsuarioService no serviço de login, há um detalhe que deixamos pendente. O que desejamos, afinal, é a partir do usuário gerar um token para essa pessoa. Entretanto, não temos o usuário dentro, temos um resultado e recebemos um LoginUsuarioDto (que possui usuário e senha).
+
+UsuarioService
+
+```csharp
+// código omitido
+        public async Task Login(LoginUsuarioDto dto)
+        {
+            var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+
+            if (!resultado.Succeeded)
+            {
+                throw new ApplicationException("Usuário não autenticado!");
+            }
+                      _tokenService.GenerateToken();
+        }
+    }
+}
+```
+
+Mas como vamos pegar esse usuário? O dto não tem o id e nem a data de nascimento. Para isso, após o comando if() pegamos o usuário de uma forma que não seja convertendo a partir do dto, dado que ele não contém as informações que precisamos.
+
+Vamos recuperar esse usuário usando o _signInManager dentro de uma variável chamada de usuario. Escrevemos var usuario = _signInManager e ao colocarmos o ponto, temos as diversas propriedades e métodos, dentre elas temos UserManager.
+
+Desejamos que este devolva uma lista de usuários, então colocamos .Users. Assim, o UserManager pega esse usuário e o primeiro usuário que aparecer (FirstOrDefault) onde o user que estamos buscando tenha o username normalizado precisa ser igual ao nosso dto.Username.ToUpper().
+
+UsuarioService.cs
+
+```csharp
+// código omitido
+
+
+            var usuario = _signInManager
+                .UserManager
+                .Users
+                .FirstOrDefault(user => user.NormalizedUserName == dto.Username.ToUpper());
+
+            _tokenService.GenerateToken();
+        }
+    }
+}
+```
+
+Estamos solicitando ao signInManager acessar o UserManager (gerenciador de usuários) e na lista de usuários (Users) você deve pegar o primeiro usuário (lembrando que temos a garantia de unicidade do username) em que o NormalizedUserName seja igual ao dto.Username.ToUpper().
+
+Dado que já conseguimos realizar a autenticação, significa que esse usuário de fato existe.
+
+Como desejamos fazer essa operação passando o nosso usuário, dentro do GenerateToken() passamos usuario. E vamos colocar o nosso token dentro de uma variável chamada de token e depois retornamos ele.
+
+UsuarioService.cs
+
+```csharp
+// código omitido
+            var token = _tokenService.GenerateToken(usuario);
+            return token;
+        }
+    }
+}
+```
+
+Agora o nosso método não será mais um async task. Teclamos "Alt + Enter" no return, e já nos sugere para corrigir o tipo de retorno. Subindo o código, com isso, retornamos uma tarefa de string.
+
+No nosso controlador ( UsuarioController ), antes do await colocamos var token = e depois alteramos a mensagem do retorno do login para token.
+
+UsuarioController
+
+```csharp
+// código omitido
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(LoginUsuarioDto dto)
+        {
+            var token = await _usuarioService.Login(dto);
+            return Ok(token);
+        }
+    }
+}
+```
+
+Voltando ao arquivo UsuarioService, nós colocamos o TokenService na linha 13, mas não o injetamos através do nosso Program.cs. Neste arquivo, podemos copiar e colar a linha que colocamos para o UsuarioService e alterar para:
+
+Program.cs
+
+```csharp
+builder.Services.AddScoped<TokenService>();
+```
+
+Para verificar se está funcionando, clicamos em "Depurar > Iniciar sem depurar", ou usamos o atalho "Ctrl + F5".
+
+No Postman, estamos com o verbo post e o endereço `http://localhost:5212/usuario/login`. No corpo, preenchemos para realizar o login com os seguintes dados:
+
+```csharp
+{
+  "Username": "david",
+  "Password": "Senha123@"
+}
+```
+
+Logo após clicamos no botão "Send". Observe que como retorno temos uma cadeia de strings:
+
+```csharp
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbmllbCIsImlkIjoiOTU5Yzk4N2QtZGUwYi03NGFhLWFjNjMtMmE3NjQyYzFiOTY5IiwiRGF0YU5hc2NpbWVudG8iOiIxOTAwLTAxLTAxIn0.cZumlhalPT9RZ31d4WgswnASkRLDNLT03SgLXn19EXE
+```
+
+Inclusive, conseguimos validar o conteúdo desse token no JWT, mas vamos fazer isso depois. Finalizamos esse vídeo cumprindo o nosso objetivo ao efetuarmos o login.
+
+Agora vamos explorar o conteúdo desse token e como interpretamos esse conteúdo para conseguirmos criar algumas imposições. Isso porque caso um usuário tente alguma operação, ele deve ter as informações contidas no token para aplicar determinada lógica.
+
+Estamos conseguindo retornar o token para a pessoa usuária, e no próximo vídeo vamos interpretar o token e validar o acesso do usuário em algumas circunstâncias.
+
+### Aula 3: Faça como eu fiz: preparando o retorno
+
+Chegou o momento de retornar o token gerado para o nosso usuário que está se autenticando. Com isso, o usuário terá como provar para o nosso sistema que está devidamente autenticado.
+
+Você colocou isso em prática? Vamos colocar a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar na “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Inicialmente, altere a classe TokenService para public e altere o retorno do método GenerateToken para string:
+
+```csharp
+public class TokenService
+    {
+        public string GenerateToken(Usuario usuario)
+        {
+            //código omitido
+        }
+    }
+```
+
+Em seguida, no método GenerateToken, retorne o token como uma string:
+
+```csharp
+public class TokenService
+    {
+        public string GenerateToken(Usuario usuario)
+        {
+            //código omitido
+    return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
+```
+
+No método Login de nossa classe UsuarioService, precisamos recuperar o Usuario do banco para que possamos passar para o nosso método de geração de token:
+
+```csharp
+public async Task<string> Login(LoginUsuarioDto dto)
+    {
+        var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+
+        if (!resultado.Succeeded)
+        {
+            throw new ApplicationException("Usuário não autenticado!");
+        }
+
+        var usuario = _signInManager
+            .UserManager
+            .Users
+            .FirstOrDefault(user => user.NormalizedUserName == dto.Username.ToUpper());
+
+        var token = _tokenService.GenerateToken(usuario);
+
+        return token;
+
+    }
+```
+
+Em nosso controlador UsuarioController, altere o método de login para retornar o token:
+
+```csharp
+[HttpPost("login")]
+    public async Task<IActionResult> LoginAsync(LoginUsuarioDto dto)
+    {
+        var token = await _usuarioService.Login(dto);
+        return Ok(token);
+    }
+```
+
+Por fim, torne o serviço TokenService injetável junto com o UsuarioService através de nossa classe Program:
+
+```csharp
+//código omitido
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<TokenService>();
+//código omitido
+```
+
+### Aula 3: Recuperando um usuário- Exercício
+
+Atualmente, nosso método de Login não tem informações sobre o Usuario. Porém, nosso método GenerateToken() depende das informações de um Usuario.
+
+Qual classe podemos utilizar para recuperar o modelo de um Usuario do banco de dados?
+
+Resposta correta  
+SignInManager
+
+> Essa classe nos provê acesso aos métodos de Login e recuperação de usuários.
+
+## Aula 4: Controle de acesso
+
+### Aula 4: Projeto da aula anterior
+
+Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cursos/alura-identity/tree/Aula-3) no ponto em que paramos na aula anterior.
+
+### Aula 4: Analisando o token - Vídeo 1
+
+Transcrição
+Executaremos nossa aplicação com as mudanças mais recentes.
+
+No Postman, iremos efetuar o login com o nome "david" e senha Senha123@" e a aplicação retornará um token.
+
+Se o copiarmos e colarmos em "Encoded" no KWT.io, receberemos o "username": e o "id" igual ao que temos no MySQL Workbench, além do campo que começa com "http://schemas.xmlsoap.org/ws e termina com "Dateofbirth":, mas é assim porque usamos ClaimTypes.DateOfBirth.
+
+Por fim, o "exp" é o expiration time, ou seja, o tempo de expiração do token, e se passarmos o cursor do mouse por cima, iremos exibir a data e o horário que irá expirar, que é de dez minutos após a criação conforme estabelecemos em expires: DateTime.Now.AddMinutes(10).
+
+Então conseguimos validar todas as informações. Também poderíamos adicionar outras caso quiséssemos com uma nova Claim() recebendo CliamTypes. com o país, e-mail e outros dados que tivermos das pessoas usuárias.
+
+É possível customizar, como passando "loginTimeStamp" por exemplo, indicando que deverá ser DateTime.UtcNow.ToString(). Portanto conseguiremos criar outros campos além do "username" e "id".
+
+using UsuariosApi.Models;
+
+namespace UsuariosApi.Services
+{
+        internal class TokenService
+        {
+                public void GenerateToken(Usuario usuario)
+                {
+            Claim[] claims = new Claim[]
+            {
+                new Claim("username", usuario.UserName),
+                new Claim("id", usuario.Id)
+                new Claim(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString()
+                new Claim("loginTimestamp", DateTime.UtcNow.ToString())
+             };
+
+//código omitido
+}Copiar código
+Se fizermos uma nova autenticação, esperarmos a aplicação reiniciar, retornar um token para o copiarmos e colarmos no JWT.io, teremos "loginTimestamp" sendo exibido em "Decoded".
+
+Então conseguimos garantir ou negar acesso a recursos da aplicação, validando se a pessoa usuária têm autorização baseada nessas informações contidas no token, como a verificação se é maior de idade ou não, por exemplo.
+
+Faremos isso a seguir.
+
+### Aula 4:  - Vídeo 2
+### Aula 4:  - Vídeo 3
+### Aula 4:  - Vídeo 4
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
+

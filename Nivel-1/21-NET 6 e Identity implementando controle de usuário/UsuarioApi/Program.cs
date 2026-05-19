@@ -5,13 +5,13 @@ using UsuarioApi.Models;
 using UsuarioApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
+//--------------------------------------------------------------------------------
 var conectString = builder.Configuration.GetConnectionString("UsuarioConnection");
 builder.Services.AddDbContext<UsuarioDbContext>(opts => {
         opts.UseSqlServer(conectString);
     });
-
+//-------------------------------------------------------------
 builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
 {
     // Configurações de senha mais permissivas para desenvolvimento
@@ -25,12 +25,12 @@ builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<UsuarioDbContext>()
     .AddDefaultTokenProviders();
-
+//--------------------------------------------------
 builder.Services.AddAutoMapper(config => { config.AddMaps(typeof(Program).Assembly); });
-
-builder.Services.AddScoped<CadastroService>();
 //builder.Services.AddTransient<CadastroService>();
 //builder.Services.AddSingleton<CadastroService>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<TokenService>();
 
 //================================================================================
 
