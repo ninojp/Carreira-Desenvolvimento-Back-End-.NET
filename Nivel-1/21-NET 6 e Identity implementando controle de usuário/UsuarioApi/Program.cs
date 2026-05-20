@@ -15,7 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 //AddTransient: Uma nova instância é criada cada vez que o serviço é solicitado. Isso é útil para serviços leves e sem estado, onde a criação de uma nova instância não tem um impacto significativo no desempenho.
 //AddSingleton: Uma única instância é criada e compartilhada por toda a aplicação. Isso é útil para serviços que mantêm estado global ou são caros de criar, mas deve ser usado com cuidado para evitar problemas de concorrência.
 //--------------------------------------------------------------------------------
-var conectString = builder.Configuration.GetConnectionString("UsuarioConnection");
+//var conectString = builder.Configuration.GetConnectionString("UsuarioConnection");
+var conectString = builder.Configuration["ConnectionStrings:UsuarioConnection"];
+
 builder.Services.AddDbContext<UsuarioDbContext>(opts => {
         opts.UseSqlServer(conectString);
     });
@@ -49,7 +51,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("kc34fdfHATR2jdfakl98koOTqXLofHG3dffsdfsdf2f")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SymmetricSecurityKey"])),
         ValidateIssuer = false,
         ValidateAudience = false,
         ClockSkew = TimeSpan.Zero

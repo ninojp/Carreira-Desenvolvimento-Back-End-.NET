@@ -2019,7 +2019,7 @@ UsuarioService
 
 Mas como vamos pegar esse usuário? O dto não tem o id e nem a data de nascimento. Para isso, após o comando if() pegamos o usuário de uma forma que não seja convertendo a partir do dto, dado que ele não contém as informações que precisamos.
 
-Vamos recuperar esse usuário usando o _signInManager dentro de uma variável chamada de usuario. Escrevemos var usuario = _signInManager e ao colocarmos o ponto, temos as diversas propriedades e métodos, dentre elas temos UserManager.
+Vamos recuperar esse usuário usando o _signInManager dentro de uma variável chamada de usuario. Escrevemos var usuario =_signInManager e ao colocarmos o ponto, temos as diversas propriedades e métodos, dentre elas temos UserManager.
 
 Desejamos que este devolva uma lista de usuários, então colocamos .Users. Assim, o UserManager pega esse usuário e o primeiro usuário que aparecer (FirstOrDefault) onde o user que estamos buscando tenha o username normalizado precisa ser igual ao nosso dto.Username.ToUpper().
 
@@ -2665,7 +2665,7 @@ Caso queira, você pode [baixar o projeto do curso](https://github.com/alura-cur
 
 ### Aula 5: O problema de dados expostos - Vídeo 1
 
-Transcrição
+Transcrição  
 Para concluir o nosso projeto com elegância, precisamos levantar alguns questionamentos. Temos uma string de conexão com o banco (ConnectionStrings), que certamente terá um usuário e senha, além do nome do banco e do servidor com o qual estamos nos conectando.
 
 Por outro lado, temos a chave SymmetricSecurityKey usada para validar o token. Ela está presente no "Program" e também no "TokenService".
@@ -2682,8 +2682,239 @@ Na documentação, encontraremos a explicação sobre os Secrets no tópico Gere
 
 No próximo vídeo, aprenderemos a usar os Secrets. Eu te vejo lá!
 
-### Aula 5:  - Vídeo 2
-### Aula 5:  - Vídeo 3
-### Aula 5:  - Vídeo 4
-### Aula 5:  - Vídeo 5
-### Aula 5:  - Vídeo 6
+### Aula 5: Entendendo secrets - Exercício
+
+Anteriormente, vimos que a plataforma .NET disponibiliza o conceito de secrets para que possamos utilizar em nossas aplicações.
+
+De acordo com a documentação, em qual dos cenários abaixo os secrets podem ajudar?
+
+Resposta correta  
+Armazenar informações confidenciais durante o desenvolvimento de um projeto.
+
+> Essa é a principal utilidade dos secrets.
+
+### Aula 5: Aplicando secrets ao projeto - Vídeo 2
+
+Transcrição  
+Como usaremos os Secrets? Primeiro, abriremos um Terminal na pasta do nosso projeto. Ao digitarmos "ls" e pressionarmos "Enter", identificaremos que estamos na raiz do projeto:
+
+> Authorization/ Migrations/ Program.cs UsuariosApi.csproj bin/  
+> Controllers/ Models/ Properties/ appsettings.Development.json obj/  
+> Data/ Profiles/ Services/ appsettings.json  
+> daniel.mastub@note-mastub MINGw64 ~/source/repos/usuarioApi/usuariosApi (Aula-5)
+
+Usaremos o comando "dotnet user-secrets init" para inicializar um Secret no nosso projeto.
+
+Voltando ao VS Studio, encontraremos um `<UserSecretsId>` no arquivo "UsuariosApi". Se observarmos o diretório da Microsoft, ele define alguns UserSecrets na região do "AppData" no Windows.
+
+Primeiro, criaremos um Secret para, em seguida, verificar o seu conteúdo. Em "Program.cs", moveremos o conteúdo da SymmetricSecurityKey para dentro de um Secret.
+
+Para fazer isso, executaremos o comando "dotnet user-secrets set" no Terminal. Queremos criar um segredo chamado "SymmetricSecurityKey" com o valor da chave "9ASHDA98H9ah9ha9H9A89n0f". A linha completa a ser digitada no Terminal é a seguinte:
+
+> $ dotnet user-secrets set "SymmetricSecurityKey" "9ASHDA98H9ah9ha9H9A89n0f"
+
+A mensagem exibida no Terminal será:
+
+> Successfully saved SymmetricSecurityKey = 9ASHDA98H9ah9ha9H9A89n0f to the secret store.
+
+Se abrirmos o Explorador de Arquivos do Windows, poderemos encontrar uma pasta com o arquivo "secrets.json" ao percorrermos o seguinte caminho: "Este Computador > OS (C:) > Users > daniel.mastub > AppData > Roaming > Microsoft > UserSecrets".
+
+Lembrando que esta é a sequência de pastas no computador do instrutor. Portanto, o nome de usuário será diferente na sua máquina.
+
+Abrindo o arquivo "secrets.json", encontraremos o conteúdo da chave gravado em uma variável que será lida posteriormente:
+
+```bash
+{
+    "SymmetricSecurityKey": "9ASHDA98H9ah9ha9H9A89n0f"
+}
+```
+
+E como fazemos isso com o banco? Do mesmo modo: digitando "dotnet user-secrets set" no Terminal. No entanto, no arquivo appsettings.json, repare que temos uma ConnectionString dentro da qual há um UsuarioConnection. Como indicaremos esse encadeamento de configurações?
+
+Primeiro, copiaremos e colaremos "ConnectionStrings" no Terminal, seguido de dois pontos e "UsuarioConnection". Tudo isso ficará entre aspas e sem espaços. Na sequência, colocamos o valor entre aspas. O resultado é o seguinte:
+
+> $ dotnet user-secrets set "ConnectionStrings:UsuarioConnection" "server=localhost;database=usuariodb;user=root;password=root"
+
+Após pressionar o "Enter", receberemos a mensagem abaixo:
+
+> Successfully saved ConnectionStrings:UsuarioConnection = server=localhost;database=usuariodb;user=root;password=root to the secret store.
+
+Se reabrirmos o arquivo "secrets.json" no Explorador de Arquivos, perceberemos que ele foi atualizado:
+
+```bash
+{
+    "SymmetricSecurityKey": "9ASHDA98H9ah9ha9H9A89n0f"
+    "ConnectionStrings:UsuarioConnection": "server=localhost;database=usuariodb;user=root;password=root"
+}
+```
+
+E como usaremos o conteúdo deste arquivo? Acessaremos essas informações por meio do campo de configuração do arquivo "Program.cs".
+
+Por isso, escreveremos builder.Configuration no lugar da chave de token presente no SymmetricSecurityKey, e indicaremos que desejamos obter a configuração chamada "SymmetricSecurityKey".
+
+```csharp
+// Trecho de código suprimido
+
+ValidateIssuerSigningKey = true,
+IssuerSigningKey = new SymmetricSecurityKey
+    (Encoding.UTF8.GetBytes(builder.Configuration
+    ["SymmetricSecurityKey"])),
+
+// Trecho de código suprimido
+```
+
+Faremos o mesmo para a ConnectionString:
+
+```csharp
+// Trecho de código suprimido
+
+var connString = builder.Configuration
+    ["SymmetricSecurityKey"];
+
+// Trecho de código suprimido
+```
+
+Copiaremos a configuração "ConnectionStrings:UsuarioConnection" do arquivo "secrets.json" e a colaremos entre os colchetes, substituindo o "SymmetricSecurityKey".
+
+```csharp
+// Trecho de código suprimido
+
+var connString = builder.Configuration
+    ["ConnectionStrings:UsuarioConnection"];
+
+// Trecho de código suprimido
+```
+
+Por fim, faremos o mesmo no arquivo "TokenService.cs". Criaremos um construtor para o TokenService(). Com ele, poderemos inicializar a nossa configuração a partir do _configuration do próprio .NET.
+
+Isso porque temos acesso via builder no "Program.cs", mas precisaremos fazer a injeção no "TokenService.cs".
+
+```csharp
+public TokenService()
+{
+        _configuration = configuration;
+}
+```
+
+Pressionando o atalho "CTRL + ." para resolver o erro em _configuration, clicaremos em "Gerar variável configuration" > "Gerar campo configuration".
+
+Com isso, surgira um objeto privado acima do public TokenService(). Substituiremos a palavra object por IConfiguration:
+
+```csharp
+private IConfiguration _configuration;
+```
+
+Logo abaixo, acrescentaremos o parâmetro IConfiguration configuration ao TokenService(). O resultado é o seguinte:
+
+```csharp
+private IConfiguration _configuration;
+
+public TokenService(IConfiguration configuration)
+{
+        _configuration = configuration;
+}
+
+```
+
+Em seguida, desceremos até o Encoding e substituiremos a chave "9ASHDA98H9ah9ha9H9A89n0f" por _configuration["SymmetricSecurityKey"], resultando em:
+
+```csharp
+var chave = new SymmetricSecurityKey
+    (Encoding.UTF8.GetBytes(_configuration
+    ["SymmetricSecurityKey"]));
+```
+
+Agora, executaremos a aplicação para validar o fluxo. Clicaremos no botão "Iniciar Sem Depurar" no topo da interface do VS Code ou pressionaremos o atalho "Ctrl + F5" no Windows ou "Option + Command + Enter" no Mac.
+
+Faremos o cadastro de um usuário novo atualizando o Post para <http://localhost:5212/usuario/Cadastro> e cadastraremos o "Username": "paulo", que também nasceu em 2018 e tem a mesma senha dos usuários anteriores.
+
+Clicaremos no botão "Send" para fazer o cadastro e, em seguida, alteraremos o Post para <http://localhost:5212/usuario/login>, clicando em "Send" na sequência.
+
+Obteremos um token na parte inferior da interface. Por fim, vamos validá-lo copiando e colando o token na área de acesso. Obteremos o status "404 Not Found" porque a data de nascimento está em "2018-01-01". Se tentarmos fazer o login com algum usuário mais velho, como o "david", obteremos o status "200 OK".
+
+Com isso, conseguimos retirar todas as informações sensíveis do código e as movemos para uma variável que será lida no momento da execução. Nos vemos na próxima!
+
+### Aula 5: Faça como eu fiz: o primeiro secret
+
+Com a utilização de secrets, conseguimos remover diversos dados sensíveis de dentro de um arquivo que pode ser compartilhado com outras pessoas. Assim, os dados estarão presentes apenas localmente em sua máquina.
+
+Agora é com você! Coloque a mão na massa e verifique se ficou com alguma dúvida. Se sim, você pode clicar em “Opinião do instrutor” e conferir passo a passo como isso foi feito.
+
+Opinião do instrutor
+
+Agora nossa proposta é criar e popular, ou seja, preencher com dados o nosso primeiro secret. Este secret será responsável por armazenar os nossos dados de e-mail, que até então estão expostos em um arquivo de configuração.
+
+Inicialmente, acesse o diretório do projeto UsuariosApi através do seu terminal e execute o comando dotnet user-secrets init. Seu arquivo .csproj deverá adicionar um trecho parecido com:
+
+```xml
+<PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>4374b8ab-3c14-4292-93e3-a5f8be4a4749</UserSecretsId>
+  </PropertyGroup>
+```
+
+Agora, iremos popular o secret com as informações que estão atualmente presentes em nosso arquivo appsettings.json. Execute:
+
+```bash
+dotnet user-secrets set “SymmetricSecurityKey” “<chave-super-secreta>”
+dotnet user-secrets set “ConnectionStrings:UsuarioConnection” “server=localhost;database=usuariodb;user=root;password=root”
+```
+
+Por fim, não esqueça de utilizar os secrets através da classe Configuration:
+
+```csharp
+var connString = builder.Configuration["ConnectionStrings:UsuarioConnection"];
+
+builder.Services.AddDbContext<UsuarioDbContext>
+    (opts =>
+    {
+        opts.UseMySql(connString, ServerVersion.AutoDetect(connString));
+    });
+```
+
+### Aula 5: Aplicando secrets ao projeto - Exercício
+
+Anteriormente, aprendemos o que são secrets e como podemos criá-los para armazenar dados sensíveis e utilizá-los em ambiente de desenvolvimento.
+
+Selecione a alternativa com o comando utilizado para a criação de um secret:
+
+Resposta correta  
+dotnet user-secrets set `<chave> <valor>`
+
+Por meio deste comando, criaremos um secret com determinada chave e valor informados.
+
+### Aula 5: Projeto final do curso
+
+Caso queira, você pode [baixar aqui o projeto completo](https://github.com/alura-cursos/alura-identity/tree/Aula-5) implementado neste curso.
+
+### Aula 5: O que aprendemos?
+
+Nessa aula, aprendemos:
+
+- Expor dados sensíveis em arquivos versionados/compartilhados pode acarretar em vazamento de dados;
+- Não devemos deixar para tirar informações sensíveis antes de versionar os nossos arquivos, pois isso é arriscado;
+- O .NET, através de secrets, possui uma maneira de carregar dados sem a necessidade de colocá-los em arquivos de configuração;
+- Como criar e colocar informações em secrets através do comando dotnet user-secrets.
+
+### Aula 5: Conclusão - Vídeo
+
+Transcrição  
+Parabéns por chegar até aqui! Traremos agora um resumo do que aprendemos durante este curso.
+
+Descobrimos como criar Políticas de Autorização por meio dos Controllers que abordamos em cursos anteriores. Elas nos permitem determinar como será o acesso de parte da nossa aplicação. Abordamos como a autorização pode ser implementada usando, por exemplo, o AuthorizationHandlerContext, que contém as informações trafegadas da requisição.
+
+Falamos de como fazer o cálculo de idade dentro do token, como coletar essas informações e liberar ou não o acesso por meio do "Program".
+
+Descobrimos como adicionar o Identity por meio da sintaxe do próprio .NET 6, padronizada com um builder no "Program".
+
+Também criamos um Handler de autorização (AuthorizationHandler) e como fazer a parte de Criação de Autenticação. No nosso caso, fizemos essa criação por meio de um token. Também falamos de como preparar os parâmetros para que o token seja validado e usado de maneira correta na aplicação.
+
+Fizemos tudo isso para que, ao fim do curso, conseguíssemos criar um conceito de autorização baseado na idade, ou seja, a partir do campo da data de nascimento.
+
+Com isso, não criamos um campo fixo que precisa ser atualizado pela pessoa usuária, mas criamos um campo que se atualiza a partir do momento atual. Com essa política, conseguimos barrar ou permitir o acesso via Controller.
+
+Também falamos da Utilização dos Secrets, ou seja, como podemos limpar as informações sensíveis em um ambiente de desenvolvimento. Por exemplo, a nossa chave simétrica estava visível quando criamos o nosso token. Posteriormente, conseguimos isolar essa informação no Secret.
+
+Para finalizar, discutimos como utilizar o userManager e o signManager para validar se a pessoa usuária está no sistema. Além disso, também compreendemos como o Identity pode nos auxiliar.
+
+Espero que você tenha aproveitado este curso. Nos vemos na próxima!
