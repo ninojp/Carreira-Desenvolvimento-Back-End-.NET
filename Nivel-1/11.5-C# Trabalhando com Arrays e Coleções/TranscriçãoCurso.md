@@ -1069,7 +1069,6 @@ void TestaArrayDeContasCorrentes()
         new ContaCorrente(874, "4456668-B"),
         new ContaCorrente(874, "7781438-C")
     }
-
     for(int i = 0; i < listaDeContas.Length; i++)
     {
         ContaCorrente contaAtual = listaDeContas[i];
@@ -2438,9 +2437,1542 @@ Nessa aula, você aprendeu:
 
 Você pode [baixar o zip do projeto da aula](https://github.com/alura-cursos/Array_Collections_C/archive/refs/heads/aula02.zip) ou acessar o link do [repositório no GitHub](https://github.com/alura-cursos/Array_Collections_C/tree/aula02)!
 
-### Aula 3:  - Vídeo 1
-### Aula 3:  - Vídeo 2
-### Aula 3:  - Vídeo 3
-### Aula 3:  - Vídeo 4
-### Aula 3:  - Vídeo 5
+### Aula 3: Generic e List - Vídeo 1
+
+Anteriormente, definimos _listaDeContas do tipo ArrayList, que é uma classe que pertence ao namespace System.Collections. A vantagem do ArrayList é que ela engloba uma série de métodos e propriedades comuns a arrays'. Como estamos trabalhando com um array de objetos, então com ArrayList conseguimos adicionar as contas-correntes.
+
+Na implementação do nosso sistema, desenvolvemos métodos CadastrarConta() e ListarContas(), que correspondem às opções 1 e 2 no menu da nossa aplicação.
+
+Para melhorar a visualização do código, podemos clicar no símbolo "-" ou "+" à direita do número da linha para retrair ou expandir alguns métodos.
+
+Na aula anterior, para verificar a listagem de contas, primeiro tivemos que criar uma conta. Para evitar esse retrabalho de cadastrar contas todas as vezes que precisarmos testar a aplicação, vamos definir uma lista padrão. Ao criar o ArrayList na linha 117, já passaremos 3 elementos:
+
+```csharp
+ArrayList _listaDeContas = new ArrayList() {
+    new ContaCorrente(95, "123456-X") {Saldo=100},
+    new ContaCorrente(95, "951258-X") {Saldo=200},
+    new ContaCorrente(94, "987321-W") {Saldo=60}
+};
+```
+
+Assim, invocamos o construtor e passamos, entre chaves, os saldos de cada conta. Vamos salvar e executar a aplicação para testar. Digitaremos 2 para listar as contas. Pressionando "Enter", veremos cada uma das 3 contas. O código está funcionando.
+
+A seguir, vamos focar no método CadastrarConta(). Após informar todos os dados, o comando _listaDeContas.Add(conta) na linha 210 adicionará a nova conta ao ArrayList. Para fazer um teste, na linha seguinte adicionaremos uma string a _listaDeContas:
+
+```csharp
+void CadastrarConta()
+{
+
+// trecho de código omitido
+
+    _listaDeContas.Add(conta);
+    _listaDeContas.Add("Olá Mundo");
+
+    Console.WriteLine("... Conta cadastrada com sucesso! ...");
+    Console.ReadKey();
+}
+```
+
+Vamos salvar as alterações e rodar a aplicação, clicando no play na parte superior do Visual Studio. Digitaremos 1 para cadastrar uma conta e passaremos os seguintes dados:
+
+```csharp
+Número da conta: 96
+Número da Agência: 96
+Saldo inicial: 100
+Titular: André
+CPF: 111111
+Profissão: Dev
+```
+
+Veremos a mensagem de que o cadastro foi realizado com sucesso. Não vamos encerrar a aplicação ainda! Sabemos que, na linha 210, adicionamos a conta ao ArrayList; na linha 211, adicionamos a string "Olá Mundo" ao ArrayList; e, na linha 213, retornamos a mensagem de sucesso. Vamos voltar ao menu da aplicação e digitar 2 para listar as contas.
+
+Veremos a primeira conta e pressionaremos "Enter" para ver as contas seguintes. Após a quarta conta, ao apertar "Enter", ocorrerá um erro. Podemos examiná-lo no foreach, na linha 168 de Program.cs. Nesse laço, estamos extraindo itens do tipo ContaCorrente de _listaDeContas, porém encontramos uma string e não foi possível fazer a conversão para ContaCorrente, então nos deparamos com essa exceção.
+
+Em outras palavras, ao listar as contas-correntes, o programa não sabe lidar com itens que não são do tipo ContaCorrente, porém nada nos impede de adicionar itens que não são do tipo ContaCorrente à lista, como uma string. Precisamos corrigir isso.
+
+Em CadastrarConta(), vamos posicionar o mouse sobre o método .Add(), na linha 210, e verificaremos que ele recebe um parâmetro do tipo object. Sabemos que object é uma superclasse do C# da qual todas classes herdam — uma string é um object, um int é object, as classes ContaCorrente e Cliente também são objects!
+
+Disponibilizaremos um material extra na plataforma sobre a classe object do C#, nessa formação.
+
+Então, é interessante usarmos um mecanismo que nos permita adicionar apenas objetos do tipo ContaCorrente na nossa lista. Felizmente, o .NET já conta com esse recurso.
+
+Na definicação da nossa _listaDeContas, a partir da linha 117, utilizaremos a classe List<>, que é uma classe genérica. Sendo assim, ao criá-la, nós especificaremos o seu tipo:
+
+```csharp
+List<ContaCorrente> _listaDeContas = new List<ContaCorrente>() {
+    new ContaCorrente(95, "123456-X") {Saldo=100},
+    new ContaCorrente(95, "951258-X") {Saldo=200},
+    new ContaCorrente(94, "987321-W") {Saldo=60}
+};
+```
+
+A classe List<> também é uma coleção de objetos, a diferença é que ela é genérica. Então, utilizamos o recurso Generics, que é o uso do símbolo de menor (<), seguido do tipo e do símbolo de maior (>).
+
+Também teremos material extra especificamente sobre o Generics.
+
+Note que, com o Generics, conseguimos parametrizar a definição em relação ao objeto ou definir uma classe. Veremos que, na linha 211 onde adicionamos uma string à _listaDeContas, passamos a ter um erro, pois agora só conseguimos adicionar objetos do tipo ContaCorrente. Se posicionarmos o mouse sobre .Add nessa linha, podemos verificar que o método só recebe parâmetros do tipo ContaCorrente.
+
+Como não queremos adicionar a string "Olá Mundo", vamos remover a linha 211 do nosso código e salvar o projeto.
+
+Portanto, estamos usando uma classe genérica da própria biblioteca de classes do .NET. Essa classe nos permite trabalhar com outros tipos de objetos. No caso, definimos que a _listaDeContas recebe somente objetos do tipo ContaCorrente. Essa prática também é interessante por uma questão de segurança, pois sabemos que nossa lista receberá somente contas-correntes.
+
+Para testar, vamos rodar o projeto, clicando no play na parte superior do Visual Studio. Digitaremos 2 para listar as contas e, pressionando "Enter" algumas vezes, não teremos problemas para visualizar a lista. Voltando ao menu, digitaremos 1 para cadastrar uma conta e informaremos os seguintes dados:
+
+```csharp
+Número da conta: 147
+Número da Agência: 258
+Saldo inicial: 96
+Titular: André
+CPF: 11111
+Profissão: Dev
+```
+
+Veremos a mensagem de cadastro realizado com sucesso. Voltando ao menu, digitaremos 2 para ver a listagem novamente, dessa vez com uma conta a mais. Nosso código está funcionando como esperado.
+
+Desse modo, usamos a classe List<> para restringir a adição de objetos à lista. As coleções das bibliotecas do .NET contêm recursos, por exemplo, de adição e remoção de itens da lista, bem como uma série de propriedades úteis para manipular um array de objetos. Essas facilidades tornam as coleções mais vantajosas do que uma maneira mais tradicional de criar uma lista de objetos, como um array.
+
+Na utilização da classe List<>, estamos trabalhando com Generics, um recurso que permite trabalhar com classes e métodos sem definir explicitamente o tipo de retorno ou o tipo daquela determinada classe.
+
+Ao final do arquivo Program.cs, a partir da linha 216, vamos criar uma classe genérica:
+
+```csharp
+public class Generica<T>
+{
+    public void MostrarMensagem (T t)
+    {
+        Console.WriteLine ($"Exibindo (t)");
+    }
+}
+```
+
+Em Generica`<T>`, usamos o `<T>` como padrão. Nessa classe, temos um método que recebe T e exibimos uma mensagem no console de acordo com esse elemento genérico. Antes da definição da classe, vamos criar um objeto, passando o tipo que queremos trabalhar, no caso, int:
+
+```csharp
+Generica<int> teste1 = new Generica<int>();
+
+public class Generica<T>
+{
+    public void MostrarMensagem (T t)
+    {
+        Console.WriteLine ($"Exibindo (t)");
+    }
+}
+```
+
+Em seguida, podemos usar o método MostrarMensagem() de teste1, passando como parâmetro o valor 10, que será o T:
+
+```csharp
+Generica<int> teste1 = new Generica<int>();
+teste1.MostrarMensagem(10);
+
+public class Generica<T>
+{
+    public void MostrarMensagem (T t)
+    {
+        Console.WriteLine ($"Exibindo (t)");
+    }
+}
+```
+
+Ao posicionar o mouse sobre .MostrarMensagem(), é possível verificar que esse método recebe um inteiro, ou seja, o tipo da classe que definimos ao criar o objeto.
+
+A título de testes, vamos criar outro objeto genérico, dessa vez do tipo string:
+
+```csharp
+Generica<int> teste1 = new Generica<int>();
+teste1.MostrarMensagem(10);
+
+Generica<string> teste2 = new Generica<string>();
+teste2.MostrarMensagem("Olá mundo!");
+
+public class Generica<T>
+{
+    public void MostrarMensagem (T t)
+    {
+        Console.WriteLine ($"Exibindo {t}");
+    }
+}
+```
+
+Vamos comentar a chamada a AtendimentoCliente() na linha 123, para realizar nossos testes sem percorrer o código que não nos interessa no momento. Vamos salvar e executar o projeto. Como resultado, veremos "Exibindo 10" e "Exibindo Olá mundo!".
+
+Assim, criamos uma classe genérica de exemplo para compreender o dinamismo que obtemos ao utilizar o Generics, que é um recurso bastante interessante, pois permite que reaproveitemos código ao utilizar o C#.
+
+Na sequência, testaremos outros métodos e propriedades da classe List<>.
+
+### Aula 3: Usando o List - Exercício
+
+Neste momento, Esther e Cleber estão fazendo programação em par para a manutenção do sistema bytebank_ATENDIMENTO, e iniciaram uma conversa sobre a opção de mudar o tipo da lista de conta corrente de ArrayList para List. Com relação às vantagens desta mudança, o que podemos afirmar. Marque as opções corretas:
+
+Selecione 3 alternativas:
+
+Resposta correta:  
+Com a utilização de generics problemas relacionados à conversão de objetos inseridos ou recuperados da lista são reduzidos, pois especificamos o tipo da lista.
+
+> Com a utilização do generics temos maior segurança pois diminuímos a probabilidade de conversões de tipos em tempo de execução.
+
+Resposta correta:  
+Podemos iterar sobre a lista (List) da mesma forma que percorremos um array de um tipo primitivo.
+
+> A classe ListT possibilita iterar sobre seus elementos como um array usando estruturas como for, while e foreach.
+
+Resposta correta:  
+Utilizando a classe List com generics, temos a disposição todos os comportamentos e propriedades de ArrayList e ainda conseguimos ter uma lista tipada para aceitar somente elementos do tipo definido entre <> na definição da lista de objetos.
+
+> A classe ListT é uma versão genérica da classe ArrayList e disponibiliza os comportamentos e propriedades comuns a uma lista de objetos.
+
+### Aula 3: Para saber mais: Generics
+
+O Generics é um recurso da linguagem que permite que possamos personalizar métodos, classes, interfaces e estruturas, podendo inclusive diminuir retrabalho e maximizar o desempenho de uma aplicação proporcionando uma segurança de tipos.
+
+Desde a versão 2.0 do .NET Framework a plataforma traz esta feature, usando generics conseguimos deixar a definição do tipo para o momento que precisamos de determinado elemento no nosso código, o que em resumo é dizer que a classe ou método possa trabalhar com qualquer tipo. Ok, mas como é isso na prática? Vamos a um exemplo:
+
+```csharp
+  public class MinhaClasseGenerica<T>
+    {
+        public T PropriedadeGenerica { get; set; }
+        public void ExibirDados(T t)
+        {
+            Console.WriteLine($"Dado Informado = {t.ToString()}");
+            Console.WriteLine($"Tipo = {t.GetType()}");
+        }  
+
+    }
+```
+
+Note que a classe possui um parâmetro `<T>` que será substituído pela tipo de quando criamos um objeto desta classe, veja:
+
+```csharp
+MinhaClasseGenerica<string> objGenerico = new MinhaClasseGenerica<string>();
+objGenerico.ExibirDados("Olá mundo!");
+
+MinhaClasseGenerica<int> objGenerico2 = new MinhaClasseGenerica<int>();
+objGenerico2.ExibirDados(3);
+
+Pessoa andre = new Pessoa() { Idade = 18, Nome = "André" };
+MinhaClasseGenerica<Pessoa> objGenerico3 = new MinhaClasseGenerica<Pessoa>();
+objGenerico3.ExibirDados(andre);
+
+public class Pessoa
+{
+    public string Nome { get; set; }
+    public int Idade { get; set; }
+
+    public override string ToString()
+    {
+        return $"Nome = {this.Nome} com Idade = {this.Idade}";
+    }
+}
+```
+
+Vamos executar e teremos a seguinte saída no console:
+
+Imagem
+
+Os genéricos oferecem uma série de vantagens como:
+
+- Diminuição de ocorrer erros de conversão de tipos em tempo de execução.
+- Melhora no desempenho, os tipos de coleções que usam generics geralmente executam melhor para armazenar e manipular tipos de valor.
+- Redução do consumo de memória pois não executam operação de Boxing (converter explicitamente um tipo de valor em um objeto).
+
+Para saber ainda mais sobre os recursos e vantagens na utilização de generics fica a recomendação da [documentação oficial da Microsoft Generics in .NET](https://docs.microsoft.com/pt-br/dotnet/standard/generics/).
+
+### Aula 3: Métodos disponíveis - Vídeo 2
+
+Anteriormente, compreendemos do que trata o Generics e utilizamos a classe genérica List<> da biblioteca do .NET para trabalhar com listas de objetos genéricos. Entre as linhas 117 e 121 de Program.cs, definimos que _listaDeContas receberá somente objetos do tipo ContaCorrente e também fizemos alguns testes, criando uma classe Generica`<T>`, a partir da linha 216 do nosso código. Nesta aula, vamos desvendar outros recursos e métodos disponíveis na classe List<>.
+
+De início, vamos comentar as linhas de código da linha 216 em diante, referentes aos testes com Generics. Basta selecionarmos essas linhas e pressionar "Ctrl + k + C". Podemos também retrair esse trecho, clicando no símbolo de "-" no canto esquerda da linha 216.
+
+Para estudar alguns métodos da classe List<>, vamos criar duas listas genéricas de objetos, a partir da linha 230:
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+```
+
+Assim, temos _listaDeContas2 que contém três objetos do tipo ContaCorrente cujos finais são respectivamente A, B e C. Já a listaDeContas3 contém outros três objetos com finais E, F e G.
+
+Digitando _listaDeContas2 e adicionando um ponto, temos acesso às propriedades e métodos disponíveis dessa classe de objetos, por exemplo: Add, Clear, Remove, Contains, Append, entre outros métodos para consultar a coleção. O primeiro que testaremos é o AddRange, que adiciona uma lista ao final de outra:
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+_listaDeContas2.AddRange(_listaDeContas3);
+```
+
+No caso, estamos adicionaremos _listaDeContas3 ao range de listaDeContas2. Em seguida, da linha 246 a 249, acrescentaremos um laço for para percorrer a _listaDeContas2 e exibir todos os seus elementos no console:
+
+```csharp
+// código anterior omitido
+
+_listaDeContas2.AddRange(_listaDeContas3);
+
+for (int i = 0; i < _listaDeContas2.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+}
+```
+
+Com AddRange(), adicionamos 3 itens à _listaDeContas2, portanto o resultado esperado é que sejam exibidos 6 elementos. Ao salvar e executar o projeto, veremos o retorno esperado: 6 contas, com finais de A a G.
+
+Outro método interessante da classe List<> é o GetRange(), para extrair uma lista de outra. Como já vimos em outros cursos na Alura, o prefixo get serve para "pegar" um elemento. Ao final do nosso código, na linha 251, criaremos uma variável chamada range que receberá _listaDeContas3.GetRange(0, 1):
+
+```csharp
+var range = _listaDeContas3.GetRange(0, 1);
+```
+
+O método GetRange requer dois parâmetros (o index e o count) que representam o início e o fim do trecho que queremos extrair. No caso, do 0 ao 1. Assim, range será a lista resultante dessa extração. Em seguida, vamos percorrer o range com uma estrutura for:
+
+```csharp
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+```
+
+Antes de testar, vamos comentar o laço for que percorre _listaDeContas2, pois não queremos que esse trecho seja executado no momento:
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+
+_listaDeContas2.AddRange(_listaDeContas3);
+
+//for (int i = 0; i < _listaDeContas2.Count; i++)
+//{
+//    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+//}
+
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+```
+
+Vamos salvar e executar a aplicação, clicando no play na parte superior do Visual Studio. Como resultado, veremos a conta no índice 0 cujo final é a letra E. Trata-se de uma lista que possui apenas um elemento extraído de _listaDeContas3.
+
+Já aprendemos a usar o AddRange() e o GetRange(). A seguir, aplicaremos um método que inverte a ordem de uma lista, o Reverse(). Após adicionar o range na linha 244, vamos aplicar o Reverse():
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+
+_listaDeContas2.AddRange(_listaDeContas3);
+_listaDeContas2.Reverse();
+
+//for (int i = 0; i < _listaDeContas2.Count; i++)
+//{
+//    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+//}
+
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+```
+
+Em seguida, vamos descomentar o laço for para percorrermos a _listaDeContas2 exibindo seus elementos, assim podemos checar se a ordem foi invertida, de fato. Para descomentar um trecho, basta selecioná-lo e pressionar "Ctrl + K + U":
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+
+_listaDeContas2.AddRange(_listaDeContas3);
+_listaDeContas2.Reverse();
+
+for (int i = 0; i < _listaDeContas2.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+}
+
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+```
+
+Por fim, comentaremos o laço que percorre range, para que o programa ignore esse trecho por enquanto:
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+
+_listaDeContas2.AddRange(_listaDeContas3);
+_listaDeContas2.Reverse();
+
+for (int i = 0; i < _listaDeContas2.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+}
+
+//var range = _listaDeContas3.GetRange(0, 1);
+//for (int i = 0; i < range.Count; i++)
+//{
+//    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+//}
+```
+
+Para testar, vamos salvar e pressionar o play na parte superior do Visual Studio. O resultado será uma lista de 6 contas, de G a A — ou seja, na ordem invertida da lista original.
+
+Feito esse teste, vamos descomentar novamente o laço que percorre range. Para separar algumas informações e deixar nosso código mais organizado, incluiremos um Console.WriteLine("\n\n") para fazer uma quebra de duas linhas, após o laço for que exibe os itens da _listaDeContas2:
+
+```csharp
+List<ContaCorrente> _listaDeContas2 = new List<ContaCorrente>()
+{
+    new ContaCorrente(874, "5679787-A"),
+    new ContaCorrente(874, "4456668-B"),
+    new ContaCorrente(874, "7781438-C")
+};
+
+List<ContaCorrente> _listaDeContas3 = new List<ContaCorrente>()
+{
+    new ContaCorrente(951, "5679787-E"),
+    new ContaCorrente(321, "4456668-F"),
+    new ContaCorrente(719, "7781438-G")
+};
+
+_listaDeContas2.AddRange(_listaDeContas3);
+_listaDeContas2.Reverse();
+
+for (int i = 0; i < _listaDeContas2.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+}
+
+Console.WriteLine("\n\n");
+
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+```
+
+A seguir, veremos como funciona o método Clear(), responsável por "limpar" uma lista. Pularemos mais duas linhas com Console.WriteLine("\n\n") e utilizaremos o Clear()na _listaDeContas3:
+
+```csharp
+// código anterior omitido
+
+_listaDeContas2.AddRange(_listaDeContas3);
+_listaDeContas2.Reverse();
+
+for (int i = 0; i < _listaDeContas2.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas2[i].Conta}]");
+}
+
+Console.WriteLine("\n\n");
+
+var range = _listaDeContas3.GetRange(0, 1);
+for (int i = 0; i < range.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{range[i].Conta}]");
+}
+
+Console.WriteLine("\n\n");
+
+_listaDeContas3.Clear();
+for (int i = 0; i < _listaDeContas3.Count; i++)
+{
+    Console.WriteLine($"Indice[{i}] = Conta [{_listaDeContas3[i].Conta}]");
+}
+```
+
+Assim, a partir da linha 262, esvaziamos a _listaDeContas3 com o método Clear() e, na sequência, percorremos essa lista. Ou seja, como se trata de uma lista vazia, espera-se que nada seja exibido no console. Ao salvar e rodar o projeto, veremos o resultado do primeiro for (uma lista de 6 elementos, de G a A); o resultado do segundo for, exibindo o range; e depois não temos mais nada, visto que usamos o Clear() na _listaDeContas3.
+
+Então, neste vídeo, aprendemos que a classe List<> tem uma série de métodos compartilhados com outras classes de coleções ( como o AddRange, o GetRange e o Clear) que são muitos úteis para manipular listas de objetos.
+
+Na sequência, daremos prosseguimento ao desenvolvimento da nossa aplicação, criando mais recursos e trabalhando com exceções.
+
+### Aula 3: Desafio: o elemento existe?
+
+Agora que você já viu algumas das vantagens da utilização da classe genérica List, te propomos um desafio, imagine o seguinte cenário: Seu sistema recebe diariamente uma lista de nomes e você precisa verificar se existe um nome específico, por exemplo “Anakin Wayne”. Use para testes a seguinte lista:
+
+```csharp
+List<string> nomesDosEscolhidos = new List<string>()
+{
+    "Bruce Wayne",
+    "Carlos Vilagran",
+    "Richard Grayson",
+    "Bob Kane",
+    "Will Farrel",
+    "Lois Lane",
+    "General Welling",
+    "Perla Letícia",
+    "Uxas",
+    "Diana Prince",
+    "Elisabeth Romanova",
+    "Anakin Wayne"
+};
+```
+
+Este é um exercício opcional e te desafiamos a criar um método que recebe uma lista de nomes e o nome de verificação e retorne se foi encontrado ou não.
+
+Opinião do instrutor
+
+Opções  
+Agora apresentamos uma possível solução para o desafio proposto:
+
+```charp
+bool VerificaNomes(List<string> nomesDosEscolhidos,string escolhido)
+{
+    return nomesDosEscolhidos.Contains(escolhido);
+}
+```
+
+### Aula 3: Alternativa: List - Exercício
+
+Após a refatoração do código mudando de ArrayList para List Cleber e Esther tem a necessidade de implementar uma função que implemente a exclusão da lista do array de objetos, para isso eles implementaram o seguinte método definido como LimpaLista(). Qual das implementações abaixo realmente limpam a lista de objetos. Marque a opção correta:
+
+Selecione uma alternativa:
+
+Resposta correta:  
+
+```csharp
+void LimparLista()
+{
+    _listaDeContas.Clear();
+}
+```
+
+> Para remoção de todos os itens de uma coleção List o método a ser usado é o Clear().
+
+### Aula 3: Para saber mais: outras Coleções
+
+Na biblioteca de classes do .NET para trabalharmos com coleções além das já mencionadas Array, ArrayList e List temos uma série de collection igualmente interessante para usarmos no desenvolvimento de nossas aplicações. Abaixo vamos listar mais algumas:
+
+SortedList, nesta coleção trabalhamos com itens ordenados por um conjunto de chave-valor. Algumas características:
+
+- Utilizada para ordenarmos itens sem muito esforço.
+- Podemos procurar por uma chave específica.
+
+A classe SortedList também possui uma versão que aceita generics e fica no namespace System.Collections.Generic. Um exemplo:
+
+```csharp
+SortedList<int,string> times = new SortedList<int,string>();
+times.Add(0, "Flamengo");
+times.Add(1, "Santos");
+times.Add(2, "Juventus");
+
+foreach (var item in times.Values)
+{
+    Console.WriteLine(item);
+}
+```
+
+**Stack**, esta coleção implementa o conceito de pilha, onde os elementos mais novos são adicionados no topo da pilha, e devem ser retirados nesta ordem. Esta classe também possui uma versão genérica. Exemplo de utilização:
+
+```csharp
+Stack<string> minhaPilhaDeLivros = new Stack<string>();
+minhaPilhaDeLivros.Push("Harry Porter e a Ordem da Fênix");
+minhaPilhaDeLivros.Push("A Guerra do Velho.");
+minhaPilhaDeLivros.Push("Protocolo Bluehand");
+minhaPilhaDeLivros.Push("Crise nas Infinitas Terras.");
+```
+
+Para encontrarmos o livro que está no topo da pilha usando o método Peek, para remove-lo usamos o método Pop:
+
+```csharp
+Console.WriteLine(minhaPilhaDeLivros.Peek());// Retorna o elemento do topo.
+Console.WriteLine(minhaPilhaDeLivros.Pop()); //Remove o elemento do topo
+```
+
+**Queue**, esta coleção por sua vez implementa o conceito de fila, onde os elementos mais antigos são os primeiros a serem removidos. Para adicionar um elemento na fila usamos o método Enqueue:
+
+```csharp
+Queue<string> filaAtendimento = new Queue<string>();
+filaAtendimento.Enqueue("André Silva");
+filaAtendimento.Enqueue("Lou Ferrigno");
+filaAtendimento.Enqueue("Gal Gadot");
+```
+
+Similar ao método Pop para a fila temos o método Dequeue para remover um objeto da fila. Exemplo:
+
+```csharp
+filaAtendimento.Dequeue();//Remove o primeiro elemento da fila.
+```
+
+HashSet, focado em alta performance esta coleção não aceita valores duplicados, para adicionar elementos temos também disponível o método Add:
+
+```csharp
+HashSet<int> _numeros = new HashSet<int>();
+_numeros.Add(0);
+_numeros.Add(1);
+_numeros.Add(1);
+_numeros.Add(1);
+```
+
+Para saber quantos elementos a coleção _numeros possui podemos usar a propriedade Count:
+
+```csharp
+Console.WriteLine(_numeros.Count);// a saída é 2.
+```
+
+Para exibirmos o conteúdo podemos percorrer a coleção usando um foreach:
+
+```csharp
+foreach (var item in _numeros)
+{
+    Console.WriteLine(item);
+}
+```
+
+Para saber mais sobre as outras coleções do .NET deixamos a recomendação de acesso a documentação da Microsoft Coleções (C#)
+
+### Aula 3: Tratando exceções - Vídeo 3
+
+Já estudamos alguns métodos da classe List<> e o Generics. Antes de voltarmos para o desenvolvimento da nossa aplicação do ByteBank, vamos fazer uma rápida organização do nosso código, pois ele está ficando extenso. Por enquanto, não apagaremos nada, porque podemos usar esses exemplos como referências. Em vez disso, comentaremos as partes que não queremos executar e usaremos as regions para melhorar a visualização.
+
+A partir da linha 216 até o final do arquivo, fizemos nossos testes — começando com a classe Generica e terminando com o método Clear(). Primeiramente, vamos elipsar todos os trechos possíveis desses testes, clicando no símbolo de "-" na parte esquerda das linhas. Em seguida, vamos comentar essa parte do código. Como Generica`<T>`já está comentada, vamos selecionar a partir da linha 230 até o final e usar o atalho "Ctrl + K + C".
+
+Agora, utilizaremos o recurso das regions. Na linha 216, antes de Generica`<int>` teste1, digitaremos #region Exemplos de uso do List. Ao final desse trecho de testes, na linha 268, digitaremos #endregion. Na sequência, podemos minimizar toda essa "região" (da linha 217 a 268), clicando no símbolo de "-" no canto esquerdo da linha 216.
+
+Com essa region retraída, vamos recortar a linha 216 ("Ctrl + X") e colá-la na linha 117 ("Ctrl + V"). Assim, o código fica mais organizado: em Program.cs, temos as regions "Exemplos Arrays em C#" e "Exemplos de uso do List" minimizadas e comentadas no início do arquivo e, na sequência, o código da nossa aplicação do ByteBank. Podemos usar esses exemplos para consultas, mas eles não influenciam na execução do programa. Também será possível removê-los facilmente ao final do projeto, caso nos interesse.
+
+Rearranjado nosso projeto, vamos descomentar a chamada a AtendimentoCliente() na linha 177, salvar as alterações e pressionar play na parte do Visual Studio. Veremos o menu com as 6 opções (já implementamos as duas primeiras). Sem digitar nenhuma opção, vamos apenas pressionar o "Enter".
+
+A aplicação quebrará, ocorrerá uma exceção. Quando trabalhamos com uma interface com interação com o usuário, é essencial atentarmos a como a aplicação reagirá, caso o usuário digite uma opção inválida, por exemplo. Então, a seguir, utilizaremos um recurso que já aprendemos em outros cursos dessa formação: as exceções.
+
+Vamos parar a execução da nossa aplicação, pressionando o quadrado vermelho (stop) na barra superior do Visual Studio, e abrir o Gerenciador de Soluções, clicando nele na aba lateral à direita da IDE. Criaremos algumas classes para tratar exceções.
+
+Clicando com o botão direito sobre a solução bytebank_ATENDIMENTO, selecionaremos "Adicionar > Nova Pasta" e a nomearemos "bytebank.Exceptions". Todas as classes que criarmos para tratar exceções ficarão nesse diretório, assim mantemos a organização e facilitamos futuras manutenções.
+
+Ainda no Gerenciador de Soluções, clicaremos com o botão direito do mouse sobre o diretório bytebank.Exceptions e selecionaremos "Adicionar > Classe...". Na parte inferior da nova janela, chamaremos essa classe de ByteBankException.cs e clicaremos no botão "Adicionar". Abrindo o arquivo ByteBankException.cs, já temos uma estrutura padrão pronta. Vamos apagar o conteúdo da classe:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace bytebank_ATENDIMENTO.bytebank.Exceptions
+{
+
+}
+```
+
+Na sequência, dentro do bloco do namespace, digitaremos "Exception" e pressionaremos a tecla "Tab" duas vezes para gerar automaticamente uma classe de exceção que herda de Exception. Esse code snippet é bastante útil para desenvolvedores que utilizam o Visual Studio.
+
+Dentro dessa classe, já existe uma série de construtores. O primeiro não recebe parâmetros; o segundo recebe uma mensagem e a repassa para a classe base; e o terceiro recebe uma mensagem e outra exceção interna, e também as repassa para a classe base. Além disso, também é permitida uma exceção que recebe uma serialização info e context.
+
+De início, vamos mudar o nome dessa classe de MyException para ByteBankException, lembrando de modificar todas as ocorrências desse nome:
+
+```csharp
+namespace bytebank_ATENDIMENTO.bytebank.Exceptions
+{
+    [Serializable]
+    public class ByteBankException : Exception
+    {
+        public ByteBankException() { }
+        public ByteBankException(string message) : base(message) { }
+        public ByteBankException(string message, Exception inner) : base(message, inner) { }
+        protected ByteBankException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+}
+```
+
+Assim, criamos uma classe para tratar exceções de maneira genérica, global.
+
+Voltando ao arquivo Program.cs, no método AtendimentoCliente(), precisamos verificar quais trechos de código são passíveis de gerar exceções. Quando o usuário digita uma opção (linha 196), é possível que ocorra uma exceção, bem como quando invocamos algum método dentro do switch. Então, a seguir, faremos um controle de exceções bem genérico.
+
+Para facilitar a visualização, primeiro vamos minimizar o laço while, clicando no símbolo "-" na linha 182. Ao elipsar esse trecho, o método AtendimentoCliente() parecerá ter apenas 2 linhas, porém vale lembrar que minimizamos parte dele:
+
+```csharp
+void AtendimentoCliente()
+{
+    char opcao = '0';
+    while(opcao!=6)
+}
+```
+
+Para não gerar confusão na leitura dos blocos de código transcritos no restante desta aula, utilizaremos a seguinte estrutura para representar o laço while que foi minimizado:
+
+```csharp
+while(opcao!=6)
+{
+  // trecho de código omitido
+}
+```
+
+Antes da variável opcao, digitaremos try e pressionareos a tecla "Tab" duas vezes para gerar automaticamente uma estrutura básica do try/catch. Vamos mover o char e o while para dentro do bloco try:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while(opcao!=6)
+        {
+            // trecho de código omitido
+        }
+    }
+    catch (Exception)
+    {
+        throw;
+    };
+```
+
+Ou seja, tentaremos executar o código contido no try e, caso ocorra uma exceção, ela será capturada no catch. Quando ocorrer um erro, vamos gerar um ByteBankException, que chamaremos de excecao:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while(opcao!=6)
+        {
+            // trecho de código omitido
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        throw;
+    };
+```
+
+O Visual Studio alegará um erro na linha 214, pois é preciso importar um namespace. Basta posicionarmos o cursor sobre ByteBankException, pressionar "Ctrl + ." e selecionar "using bytebank_ATENDIMENTO.bytebank.Exceptions".
+
+Na sequência, modificaremos o segundo construtor presente no arquivo ByteBankException.cs. Antes de enviar a mensagem à classe base, vamos fazer uma concatenação:
+
+```csharp
+namespace bytebank_ATENDIMENTO.bytebank.Exceptions
+{
+    [Serializable]
+    public class ByteBankException : Exception
+    {
+        public ByteBankException() { }
+        public ByteBankException(string message) : base("Aconteceu uma Exceção -> "+ "message) { }
+        public ByteBankException(string message, Exception inner) : base(message, inner) { }
+        protected ByteBankException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+}
+```
+
+Voltando ao Program.cs, vamos alterar o bloco catch. Em lugar do throw, digitaremos "CW" e pressionamores a tecla "Tab" duas vezes para gerar um estrutura de Console.WriteLine(). Exibiremos uma mensagem por meio de uma interpolação de strings:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while(opcao!=6)
+        {
+            // trecho de código omitido
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    };
+```
+
+Ainda não terminamos de tratar as exceções! Vamos expandir o laço while que minimizamos anteriormente e construir uma estrutura try/catch para lidar com o Console.ReadLine(), na linha 199, que também é passível de gerar exceções.
+
+Vamos mover o Console.ReadLine() para dentro do try. Trabalharemos com uma exceção genérica, também chamada excecao e lançaremos um ByteBankException:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+```
+
+Assim, caso uma exceção seja gerada nesse trecho, estaremos passando adiante uma exceção ByteBankException que será capturada pelo catch na linha 222, que então exibirá a mensagem.
+
+Vamos salvar essas alterações e testar a aplicação, clicando no play na parte superior do Visual Studio. Uma vez renderizado o menu, vamos pressionar a tecla "Enter" (sem digitar nenhuma opção) para forçar um erro. A exceção será capturada e veremos a mensagem no console: "Index was outside the sounds of the array".
+
+Então, neste vídeo, começamos a tratar exceções. Essa etapa é imprescindível quando trabalhamos com usuários, para que a aplicação esteja preparada para usos inesperados do programa, como a inserção de uma valor errado. Sabendo de antemão alguns dos problemas possíveis, podemos tratá-los e impedir que a aplicação quebre e pare de funcionar.
+
+Na sequência, implementaremos as funcionalidades de remoção, ordenação e pesquisa de contas no aplicativo do ByteBank.
+
+### Aula 3: Faça como eu fiz: ByteBankException
+
+Estamos desenvolvendo uma aplicação que necessita da interação do usuário e isso pode ocasionar situações excepcionais como por exemplo o gerente de contas apertar enter sem digitar a opção desejada, como ações como essa são possíveis de ser previstas podemos tratá-las para que o sistema não gere algum erro e feche para o usuário.Vamos recorrer ao tratamento de exceções que é suportada pelo C#. Então, colocando a mão na massa vamos praticar criando um classe para as exceções do projeto?
+
+Opinião do instrutor
+
+Para iniciar vamos no gerenciador de soluções vamos criar um novo diretório e adicionar nossa classe de exceção ByteBankException:
+
+Imagem
+
+A classe terá a seguinte codificação:
+
+```csharp
+[Serializable]
+    public class ByteBankException : Exception
+    {
+        public ByteBankException() { }
+        public ByteBankException(string message) : base("Aconteceu uma Exceção -> " + message) { }
+        public ByteBankException(string message, Exception inner) : base("Aconteceu uma Exceção -> "+ message, inner) { }
+        protected ByteBankException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+```
+
+Com a classe ByteBankException definida podemos agora identificar os pontos que podem gerar exceções e usando a estrutura try…catch tratarmos os possíveis erros, por exemplo no métodoAtendimentoCliente:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===        ATENDIMENTO      ===");
+            Console.WriteLine("=== 1 - Cadastrar Contas    ===");
+            Console.WriteLine("=== 2 - Listar Contas       ===");
+            Console.WriteLine("=== 3 - Remover Contas      ===");
+            Console.WriteLine("=== 4 - Ordenar Contas      ===");
+            Console.WriteLine("=== 5 - Pesquisar Contas    ===");
+            Console.WriteLine("=== 6 - Sair do sistema     ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n");
+            Console.Write("Digite a Opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+
+               throw new ByteBankException(excecao.Message);
+            }
+            
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarConta();
+                    break;
+                case '6':
+                    EncerrarAplicacao();
+                    break;
+                default:
+                    Console.WriteLine("Opção não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+
+        Console.WriteLine($"{excecao.Message}"); ;
+    }    
+}
+```
+
+Pronto! Lembre-se de continuar praticando bastante e se desafiando sempre.
+
+### Aula 3: O que aprendemos?
+
+Nessa aula, você aprendeu:
+
+- A utilizar uma lista genérica de objetos utilizando a classe List, que permite a tipagem de uma lista de objetos e que permite a redução da probabilidade de erros de conversão para a manipulação da lista;
+- Sobre métodos disponíveis pela classe List que dinamiza a manipulação de lista de objetos;
+- A criar uma classe para tratar as exceções da aplicação e que se faz necessária uma vez que a aplicação em desenvolvimento tem uma interface de interação com o usuário.
+
+## Aula 4: Manipulando a lista
+
+### Aula 4: Projeto da aula anterior
+
+Você pode [baixar o zip do projeto da aula](https://github.com/alura-cursos/Array_Collections_C/archive/refs/heads/aula03.zip) ou acessar o link do [repositório no GitHub!](https://github.com/alura-cursos/Array_Collections_C/tree/aula03)
+
+### Aula 4: Removendo contas da lista - Vídeo 1
+
+Vamos continuar a manipular nossa lista e a desenvolver novas funcionalidades para nossa aplicação do ByteBank. Já implementamos o CadastrarContas() e o ListarContas(), nosso próximo passo é criar o método de remoção de contas — a opção 3 do nosso menu.
+
+No Program.cs, no método AtendimentoCliente(), criaremos o caso 3 dentro do switch:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                case '3':
+                    RemoverContas();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+```
+
+No case 3, invocamos o método RemoverContas() que ainda não existe. Vamos clicar sobre RemoverContas() na linha 217, pressionar "Ctrl + ." e selecionar "Gerar método 'RemoverContas'". O Visual Studio gerará uma estrutura base desse método a partir da linha 232, vamos adaptá-lo a seguir:
+
+```csharp
+void RemoverContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===      REMOVER CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Informe o número da Conta: ");
+    string numeroConta = Console.ReadLine();
+    ContaCorrente conta = null;
+    foreach (var item in _listaDeContas)
+    {
+        if (item.Conta.Equals(numeroConta))
+        {
+            conta = item;
+        }
+    }
+    if (conta!=null)
+    {
+        _listaDeContas.Remove(conta);
+        Console.WriteLine("... Conta removida da lista! ...");
+    }
+    else
+    {
+        Console.WriteLine(" ... Conta para remoção não encontrada ...");
+    }
+    Console.ReadKey();
+}
+```
+
+De início, RemoverContas() limpará a tela e exibirá um cabeçalho, informando que estamos na área de remoção de contas. Será solicitado ao usuário que digite o número da conta a ser removida e o valor inserido ficará armazenado em numeroConta. Além disso, a variável conta do tipo ContaCorrente será criada, inicialmente com valor nulo.
+
+Com foreach, vamos percorrer os itens da _listaDeContas. Caso encontremos uma conta-corrente cujo número é igual ao digitado pelo usuário, atribuiremos esse item à variável conta. Caso contrário (se não encontrarmos uma conta com o mesmo número), a variável conta continuará com valor nulo.
+
+Após o foreach, se conta não for nulo, realizaremos a remoção da conta-corrente da _listaDeContas, na linha 251, e exibiremos uma mensagem confirmando a operação. Se conta for nulo, quer dizer que não encontramos a conta-corrente e mostramos um aviso no console.
+
+Por fim, temos o Console.ReadKey(), que aguarda que pressionemos qualquer tecla para continuar o processamento.
+
+Vamos salvar e testar a aplicação. No menu, primeiramente vamos listar as contas-correntes, escolhendo a opção 2. Veremos que existem 3 contas (duas com final X e outra com final W). Voltando ao menu, digitaremos 3 e informaremos o seguinte número de conta: 987321-W. Pressionando "Enter", a operação de remoção será realizada com sucesso.
+
+Na sequência, tentaremos remover uma conta que não existe. No menu, digitaremos 3 novamente e informaremos a seguinte conta: 888. Pressionando "Enter", veremos a mensagem de que a conta não foi encontrada. Nossa aplicação está funcionando como esperado.
+
+Portanto, neste vídeo, implementamos a remoção de contas na nossa aplicação do ByteBank, invocando o método Remove() da _listaDeContas (na linha 251). Assim como aprendemos anteriormente que podemos adicionar elementos com .Add() e .AddRange(), agora temos também a possibilidade de removê-los de listas.
+
+Na sequência, continuaremos implementando as funcionalidades do menu do nosso programa de atendimento. No próximo vídeo, faremos a ordenação da nossa lista.
+
+### Aula 4: Faça como eu fiz: removendo conta
+
+Umas das funcionalidades requeridas pelo sistema de atendimento que estamos desenvolvendo é simular a operação que encerramento de uma conta, para isso desenvolvemos um método que exclui uma determinada conta de nossa lista em memória.Então chegou a hora de praticar, implemente o método que excluirá uma conta com base em seu número.
+
+Opinião do instrutor
+
+Para iniciar vamos definir no menu a opção de remoção da conta, no switch do método AtendimentoCliente:
+
+Imagem
+
+Agora vamos a implementação do método RemoverConta:
+
+```csharp
+void RemoverConta()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===      REMOVER CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Informe o número da conta: ");
+    string numeroConta = Console.ReadLine();
+    ContaCorrente conta = null;
+    foreach (ContaCorrente item in listaDeContas)
+    {
+        if (item.Conta.Equals(numeroConta))
+        {
+            conta = item;
+        }
+    }
+    if(conta != null)
+    {
+        _listaDeContas.Remove(conta);
+        Console.WriteLine("... Conta removida da lista! ...");
+    }
+    else {
+        Console.WriteLine(" ... Conta para remoção não encontrada ...");
+    }  
+    
+    Console.ReadKey();
+}
+```
+
+Pronto! Lembre-se de continuar praticando bastante e se desafiando sempre a implementar outras funcionalidades a nossa aplicação.
+
+### Aula 4: Ordenando a lista - Vídeo 2
+
+Acabamos de implementar a função de remoção de contas, a opção 3 do método AtendimentoCliente(). Agora, vamos focar na funcionalidade de ordenar contas. Começaremos criando o case 4 no switch. Ele invocará o método OrdenarContas() que ainda não existe, porém o criaremos na sequência:
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                case '3':
+                    RemoverContas();
+                    break;
+                case '4':
+                    OrdenarContas();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+```
+
+Vamos posicionar o cursor do mouse sobre OrdenarContas() na linha 219, pressionar "Ctrl + ." e selecionar "Gerar método 'OrdenarContas'". O Visual Studio gerará automaticamente uma estrutura base entre as linhas 234 e 237. Abaixo dela, temos os métodos RemoverContas(), ListarContas() e CadastrarConta() em que trabalhamos anteriormente. Podemos mantê-los minumizados.
+
+Vamos modificar OrdenarContas(). A classe List<> possui uma série de métodos, inclusive um responsável pela ordenação da lista, chamado Sort():
+
+```csharp
+void OrdenarContas()
+{
+    _listaDeContas.Sort();
+    Console.WriteLine("... Lista de Contas ordenadas ...");
+    Console.ReadKey();
+}
+```
+
+Se posicionarmos o mouse sobre o método .Sort(), é possível ler uma breve explicação: ele ordena uma lista por meio de comparações. Ou seja, podemos usar esse método sempre que precisarmos ordenar ou classificar um grupo de elementos. Portanto, em OrdenarContas(), o programa ordenará a lista, exibirá uma mensagem de confirmação e esperará que o usuário pressiona qualquer tecla para voltar ao menu principal.
+
+Vamos salvar e executar o projeto, clicando no play na parte superior do Visual Studio. Primeiro, vamos digitar 2 para listar a contas e veremos 3 contas, na seguinte ordem: a conta do Henrique (123456-X), a conta do Pedro (951258-X) e a conta da Marisa (987321-W).
+
+Voltando ao menu, digitaremos 4 para ordenar a lista e ocorrerá um erro. Veremos que há uma exceção sem tratamento, na linha 236: System.InvalidOperationException. Note que há uma exceção interna que menciona a interface IComparable. Por padrão, o "i" maiúsculo indica uma interface.
+
+Em outras palavras, houve uma falha na comparação de dois elementos da nossa lista de objetos. Esse problema acontece porque _listaDeContas é uma lista tipada (do tipo ContaCorrente) e precisamos que o objeto ContaCorrente possua um método interno que permita ao método .Sort ordenar os elementos do array.
+
+Então, vamos implementar a interface IComparable na linha 3 do arquivo ContaCorrente.cs:
+
+```csharp
+public class ContaCorrente:IComparable<ContaCorrente>
+```
+
+O trecho IComparable`<ContaCorrente>` ficará sublinhado em vermelho, indicando um erro. Vamos posicionar o cursor sobre ele, pressionar "Ctrl + ." e selecionar "Implementar a interface". Entre as linhas 114 e 118, será criado o método CompareTo(), que recebe ContaCorrente? other. Vamos substituir other por outro.
+
+Note que há uma interrogação ao final de ContaCorrente. Isso quer dizer que esse método pode receber um objeto nulo. A seguir, vamos implementar o método para fazer a comparação:
+
+```csharp
+public int CompareTo(ContaCorrente? outro)
+{
+    if (outro==null)
+    {
+        return 1;
+    }
+    else
+    {
+        return this.Numero_agencia.CompareTo(outro.Numero_agencia);
+    }
+}
+```
+
+Se o argumento recebido for nulo, retornaremos 1 (em breve, entenderemos o porquê). Do contrário, faremos uma comparação. Como o CompareTo() retorna um int, optamos por ordenar segundo os números das agências das contas. Vamos salvar as alterações e voltar ao arquivo Program.cs.
+
+Para testar, clicaremos no play na parte superior o Visual Studio. Digitaremos 2 para listar os elementos: a conta Henrique (123456-X), a conta do Pedro (951258-X) e a conta da Marisa (987321-W). Essas são as 3 contas que definimos e inserimos na _listaDeContas por padrão, entre as linhas 172 e 176 de Program.cs.
+
+Voltando ao menu da aplicação, digitaremos 4 para ordenar a lista e veremos uma mensagem de confirmação da operação. Dessa vez, não ocorreu nenhum problema. Podemos pressionar "Enter" para voltar para o menu e encerrar o programa.
+
+Então, vamos recapitular: implementamos a interface IComparable à classe ContaCorrente e, dessa forma, conseguimos escrever o método CompareTo() para compararmos elementos. Os objetos da classe ContaCorrente serão ordenados a partir do número da agência. Para utilizar o método .Sort() da classe List<>, é necessário que a classe daquele conjunto de objetos tenham a interface IComparable implementada.
+
+Por fim, para entender por que retornamos 1 quando o parâmetro é nulo, vamos abrir a documentação da interface IComparable. No tópico "Retorno", há uma tabela explicando os significados dos retornos:
+
+|Valor|Significado|
+|---|---|
+|Menor que zero|Esta instância precede obj na ordem de classificação.|
+|Zero|Esta instância ocorre na mesma posição que obj na ordem de classificação.|
+|Maior que zero|Esta instância segue obj na ordem de classificação.|
+
+Conseguimos implementar a ordenação de contas. Na sequência, vamos desenvolver a opção 5 do menu: pesquisar contas.
+
+### Aula 4: Ordenando o Array de Objetos - Exercício
+
+Vimos que para a utilização do método Sort da classe List é necessário a implementação da interface IComparable, para a classe que define o tipo da lista Sabendo disso, marque as opções verdadeiras com relação a esta interface:
+
+Selecione 2 alternativas:
+
+Alternativa correta.  
+Quando é executado o método de ordenação Sort da classe List para uma coleção de objetos, onde a classe que tipifica a lista não implementa a interface IComparable é gerada uma exceção do tipo System.InvalidOperationException: 'Failed to compare two elements in the array.
+
+> A exceção gerada na utilização do método Sort em um tipo que não implementa o IComparable é System.InvalidOperationException.'
+
+Alternativa correta.  
+A implementação da interface IComparable, obriga a classe a codificar o método CompareTo para que definir a ordenação ou classificação de objetos quando em uma lista.
+
+> A classe deve implementar o método CompareTo definida na interface IComparable.
+
+### Aula 4: Para saber mais: outras Interfaces para coleções
+
+A biblioteca de classes do .NET é rica em recursos que podemos utilizar em conjunto com as coleções dos namespaces System.Collections e System.Collections.Generic e para isso a plataforma em sua biblioteca traz uma série de interfaces que nos ajudam a manipular essas coleções, abaixo algumas delas:
+
+|Interface|Breve descrição|
+|---|---|
+|IList|Contrato que define os principais métodos e propriedades de uma lista como por exemplo: Insert,Item,Contains e Remove.|
+|ICollection|É a interface que define a enumeração, sincronização e tamanho para todas as coleções.|
+|IComparer|Define a forma de como comparar dois objetos.|
+|IDictionary|Devolve um conjunto baseado em chave-valor e possibilita a adição e remoção de itens.|
+
+Para saber mais sobre as outras interfaces para manipulação de coleções do .NET deixamos a recomendação de acesso a [documentação da Microsoft Coleções (C#)](https://docs.microsoft.com/pt-br/dotnet/csharp/programming-guide/concepts/collections)
+
+### Aula 4: Criando uma pesquisa - Vídeo 3
+
+Vamos desenvolver mais uma funcionalidade do nosso aplicativo de atendimento. No dia a dia do ByteBank, os clientes vão demandar informações sobre suas contas e o gerente precisará consultá-las por meio desse aplicativo, então implementaremos a seguir a funcionalidade de pesquisa.
+
+Em Program.cs, no método AtendimentoCliente(), criaremos o case 5 para invocar PesquisarContas():
+
+```csharp
+void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                case '3':
+                    RemoverContas();
+                    break;
+                case '4':
+                    OrdenarContas();
+                    break;
+                case '5':
+                    PesquisarContas();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+```
+
+Como o método PesquisarContas() ainda não existe, vamos clicar sobre ele na linha 223, pressionar "Ctrl + ." e selecionar "Gerar método 'PesquisarContas'" para gerar automaticamente uma estrutura base, a partir da linha 238. Em seguida, vamos adaptá-lo:
+
+```csharp
+void PesquisarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===    PESQUISAR CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Deseja pesquisar por (1) NUMERO DA CONTA ou (2)CPF TITULAR ? ");
+    switch (int.Parse(Console.ReadLine()))
+}
+```
+
+De início, temos o cabeçalho indicando a área do programa em que estamos. Para um sistema de pesquisa tanto pelo número da conta quanto pelo CPF, utilizaremos um switch. O primeiro método invocado no switch é o Console.ReadLine(). O retorno dele será uma string, que será encaminhada para o Parse() que, por sua vez, converterá essa string no inteiro que será usado no switch.
+
+Na sequência, vamos implementar os cases:
+
+```csharp
+void PesquisarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===    PESQUISAR CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Deseja pesquisar por (1) NUMERO DA CONTA ou (2)CPF TITULAR ? ");
+    switch (int.Parse(Console.ReadLine()))
+    {
+        case 1:
+                {
+                    Console.Write("Informe o número da Conta: ");
+                    string _numeroConta = Console.ReadLine();
+                    ContaCorrente consultaConta = ConsultaPorNumeroConta(_numeroConta);
+                    Console.ReadKey();
+                    break;
+                }
+        case 2:
+                {
+                    Console.Write("Informe o CPF do Titular: ");
+                    string _cpf = Console.ReadLine();
+                    ContaCorrente consultaCpf = ConsultaPorCPFTitular(_cpf);
+                    Console.ReadKey();
+                    break;
+                }
+        default:
+            Console.WriteLine("Opção não implementada.");
+            break;
+    }
+}
+```
+
+Note que, no menu principal, usamos os cases com um char. Dessa vez, estamos utilizando um int.
+
+No case1, solicitaremos o número da conta. Armazenaremos o valor digitado na variável _numeroConta, que será informada ao método ConsultaPorNumeroConta().
+
+No case 2, solicitaremos o CPF do usuário. Armazenaremos o valor digitado na variável _cpf, que será informada ao método ConsultaPorCPFTitular().
+
+Os métodos ConsultaPorNumeroConta() e ConsultaPorCPFTitular() ainda não existem. Vamos clicar sobre o primeiro, na linha 252, pressionar "Ctrl + ." e selecionar "Gerar método 'ConsultaPorNumeroConta'". Repetiremos o processo para ConsultaPorCPFTitular(), na linha 260.
+
+Em seguida, modificaremos esses métodos:
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{
+    ContaCorrente conta = null;
+    for (int i = 0; i < _listaDeContas.Count; i++)
+    {
+        if (_listaDeContas[i].Titular.Cpf.Equals(cpf))
+        {
+            conta = _listaDeContas[i];
+        }
+    }
+    return conta;
+}
+
+ContaCorrente ConsultaPorNumeroConta(string? numeroConta)
+{
+    ContaCorrente conta = null;
+    for (int i = 0; i < _listaDeContas.Count; i++)
+    {
+        if (_listaDeContas[i].Conta.Equals(numeroConta))
+        {
+            conta = _listaDeContas[i];
+        }
+    }
+
+    return conta;
+}
+```
+
+Em resumo, esses dois métodos percorrerão a lista de contas-correntes em busca de um item que possua o CPF ou número da conta correspondente ao valor informado pelo usuário.
+
+Em ConsultaPorCPFTitular(), criamos uma variável conta inicialmente nula. Com for, percorremos o _listaDeContas, verificando se algum elemento tem CPF igual ao passado como parâmetro. Caso haja correspondência, retornaremos a variável conta com a referência dessa conta-corrente. O código em ConsultaPorNumeroConta()é muito parecido, com exceção da verificação que será feita pelo número da conta, em vez do CPF. Note que ambos métodos utilizam o .Equals(), pois tanto o número da conta quanto o CPF são do tipo string.
+
+Voltando ao trecho entre a linha 172 e 176, notaremos que, ao definir as 3 contas iniciais da nossa lista padrão, não atribuímos CPFs a elas. Vamos consertar esse ponto:
+
+```csharp
+List<ContaCorrente> _listaDeContas = new List<ContaCorrente>(){
+    new ContaCorrente(95, "123456-X"){Saldo=100,Titular = new Cliente{Cpf="11111",Nome ="Henrique"}},
+    new ContaCorrente(95, "951258-X"){Saldo=200,Titular = new Cliente{Cpf="22222",Nome ="Pedro"}},
+    new ContaCorrente(94, "987321-W"){Saldo=60,Titular = new Cliente{Cpf="33333",Nome ="Marisa"}}
+};
+```
+
+Dessa forma, na propriedade Titular de cada uma das contas, criamos um novo Cliente com seu respectivo nome e CPF. Vamos salvar e testar a aplicação, clicando no play na parte superior do Visual Studio.
+
+Após o console ser renderizado, digitaremos 5 para pesquisar uma conta. Em seguida, escolheremos a opção 1, para realizar a consulta partindo do número da conta e informaremos: 123456-X. A pesquisa foi realizada, não ocorreu nenhum erro, porém não recebemos nenhuma mensagem em retorno.
+
+Vamos testar também a consulta por CPF. No menu principal, digitaremos 5. Em seguida, escolheremos 2 e informaremos: 11111. Novamente, a pesquisa será realizada com sucesso, porém nenhum dado será exibido ao usuário.
+
+Voltando ao código, veremos que não colocamos nenhum comando para exibir as informações que foram pesquisadas! Como todas as classes herdam de object, podemos recorrer a um de seus métodos chamado .ToString(). No arquivo ContaCorrente.cs, após a propriedade TotalDeContasCriadas, vamos redefinir o método .ToString():
+
+```csharp
+public override string ToString()
+{
+
+    return  $" === DADOS DA CONTA === \n" +
+                    $"Número da Conta : {this.Conta} \n" +
+                    $"Número da Agência : {this.Numero_agencia} \n" +
+                    $"Saldo da Conta: {this.Saldo} \n" +
+                    $"Titular da Conta: {this.Titular.Nome} \n" +
+                    $"CPF do Titular  : {this.Titular.Cpf} \n" +
+                    $"Profissão do Titular: { this.Titular.Profissao}\n\n";
+}
+```
+
+Com override, estamos redefinindo o método ToString() da classe ContaCorrente, de modo que retornaremos os dados da conta em questão. Ademais, note que usamos o \n para gerar quebras de linhas. Vamos salvar essas alterações e voltar ao arquivo Program.cs.
+
+Para exibir os dados pesquisados, usaremos o Console.WriteLine() no case 1 e no case 2 do método PesquisarContas(), invocando ToString() na conta retornada:
+
+```csharp
+void PesquisarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===    PESQUISAR CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Deseja pesquisar por (1) NUMERO DA CONTA ou (2)CPF TITULAR ? ");
+    switch (int.Parse(Console.ReadLine()))
+    {
+        case 1:
+                {
+                    Console.Write("Informe o número da Conta: ");
+                    string _numeroConta = Console.ReadLine();
+                    ContaCorrente consultaConta = ConsultaPorNumeroConta(_numeroConta);
+                    Console.WriteLine(consultaConta.ToString());
+                    Console.ReadKey();
+                    break;
+                }
+        case 2:
+                {
+                    Console.Write("Informe o CPF do Titular: ");
+                    string _cpf = Console.ReadLine();
+                    ContaCorrente consultaCpf = ConsultaPorCPFTitular(_cpf);
+                    Console.WriteLine(consultaCpf.ToString());
+                    Console.ReadKey();
+                    break;
+                }
+        default:
+            Console.WriteLine("Opção não implementada.");
+            break;
+    }
+}
+```
+
+Vamos salvar e testar. No menu da aplicação, digitaremos 5. Depois, escolheremos a opção 2 e informaremos o CPF 11111. Dessa vez, veremos os dados da conta com esse CPF! Há apenas um pequeno problema: o nome do titular não está aparecendo, porque deixamos de inserir um valor no campo Nome. No arquivo Cliente.cs, vamos consertar esse deslize:
+
+```csharp
+public string Nome
+{
+        get
+        {
+            return _nome;
+        }
+        set
+        {
+            if (value.Length < 3)
+            {
+                Console.WriteLine("Nome do titular precisa ter pelo menos 3 caracteres.");
+            }
+                _nome = value;
+        }
+}
+```
+
+Vamos salvar as alterações e rodar a aplicação novamente. Digitaremos 5 e, em seguida, escolheremos a opção 2. Vamos informar o CPF 11111. Nosso código está funcionando como esperado agora. Conseguimos implementar o método de consulta.
+
+Assim, as funcionalidades básicas de cadastro, listagem, remoção, ordenação e pesquisa de contas estão implementadas. Na sequência, falta apenas desenvolvermos a última função de saída do sistema e melhorarmos o código de maneira geral. Podemos, por exemplo, otimizar as nossas consultas.
+
+### Aula 4: O que aprendemos?
+
+Nessa aula, você aprendeu:
+
+- Sobre a interface IComparable, que deve ser implementada pelo tipo de classe que irá tipificar uma lista genérica para usarmos o método Sort;
+- Como utilizar o método Remove da classe lista para remoção de um elemento do array de objetos;
+- Como implementar a interface de forma tipada IComparable e o método CompareTo para fazer a ordenação da lista de contas correntes;
+- A criar um algoritmo de busca simples para encontrar um objeto no array de contas correntes.
+
+### Aula 4:  - Vídeo 5
+### Aula 4:  - Vídeo 6
 
