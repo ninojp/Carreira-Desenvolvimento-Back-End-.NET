@@ -3973,6 +3973,789 @@ Nessa aula, você aprendeu:
 - Como implementar a interface de forma tipada IComparable e o método CompareTo para fazer a ordenação da lista de contas correntes;
 - A criar um algoritmo de busca simples para encontrar um objeto no array de contas correntes.
 
-### Aula 4:  - Vídeo 5
-### Aula 4:  - Vídeo 6
+## Aula 5: LINQ
 
+### Aula 5: Projeto da aula anterior
+
+Você pode [baixar o zip do projeto](https://github.com/alura-cursos/Array_Collections_C/archive/refs/heads/aula04.zip) da aula ou acessar o [link do repositório](https://github.com/alura-cursos/Array_Collections_C/tree/aula04) no GitHub!
+
+### Aula 5: Usando Where - Vídeo 1
+
+Anteriormente, criamos duas formas de consultas de contas: por CPF e por número da conta-corrente. Os códigos desses dois métodos são bastante similares. Também redefinimos o método ToString() na classe ContaCorrente para exibirmos as informações da conta após a pesquisa.
+
+Como essa redefinição, podemos repensar o método ListarContas() (linhas 339 a 364) que construímos em aulas passadas, no Program.cs. Nele, há um foreach que exibe os dados de cada conta da lista. Vamos substituir parte dele por uma chamada ao ToString, mantendo a versão atual comentada para referência:
+
+```csharp
+void ListarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===     LISTA DE CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    if (_listaDeContas.Count <= 0)
+    {
+        Console.WriteLine("... Não há contas cadastradas! ...");
+        Console.ReadKey();
+        return;
+    }
+    foreach (ContaCorrente item in _listaDeContas)
+    {
+    //Console.WriteLine("===  Dados da Conta  ===");
+    //Console.WriteLine("Número da Conta : " + item.Conta);
+    //Console.WriteLine("Saldo da Conta : " + item.Saldo);
+    //Console.WriteLine("Titular da Conta: " + item.Titular.Nome);
+    //Console.WriteLine("CPF do Titular  : " + item.Titular.Cpf);
+    //Console.WriteLine("Profissão do Titular: " + item.Titular.Profissao);
+        Console.WriteLine(item.ToString());
+        Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        Console.ReadKey();
+    }
+}
+```
+
+Dessa forma, utilizamos o método ToString em cada item da _listaDeContas. Essa modificação reduz as linhas de código executadas pela aplicação, melhorando o projeto. Vamos salvar e testar a aplicação, clicando no play na parte superior do Visual Studio. Digitaremos 2 para listar as contas-correntes e veremos que o aplicativo continua a funcionar normalmente.
+
+Vale lembrar que estamos trabalhando com dados em memória, então nossa lista de objetos existe enquanto o programa está rodando. Ao fechá-lo, a lista é descartada.
+
+Agora, vamos voltar à consulta por CPF do titular. Nós já entendemos como encontrar um elemento na lista, percorrendo-a com for, while ou foreach. Na sequência, estudaremos uma maneira mais fácil de realizar esse processo.
+
+De início, vamos comentar o conteúdo do método ConsultaPorCPFTitular():
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{
+    //ContaCorrente conta = null;
+    //for (int i = 0; i < _listaDeContas.Count; i++)
+    //{
+    //    if (_listaDeContas[i].Titular.Cpf.Equals(cpf))
+    //    {
+    //        conta = _listaDeContas[i];
+    //    }
+    //}
+    //return conta;
+}
+```
+
+Atualmente, nossa lista é pequena (apenas 3 elementos), contudo ela pode crescer consideravelmente. Imagine que ela poderia ser alimentada por uma fonte de dados e pode ter milhões de contas! Nesse caso, percorrer item a item não seria interessante, em questão de performance.
+
+Nesses cenários, o C# conta com uma linguagem para consultar uma lista de objetos. Ao final de ConsultaPorCPFTitular(), vamos digitar _listaDeContas seguido de um ponto, para acessar os métodos e as propriedades disponíveis. Entre eles, encontremos o Where(), um método que se estende da classe Linq.
+
+O LINQ (Language Integrated Query) é uma linguagem que permite consultas em uma fonte de dados, como uma lista de objetos (a _listaDeContas, por exemplo), um banco de dados ou um arquivo .xml, por exemplo.
+
+Dentro do Where(), vamos escrever uma expressão lambda:
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{
+    //ContaCorrente conta = null;
+    //for (int i = 0; i < _listaDeContas.Count; i++)
+    //{
+    //    if (_listaDeContas[i].Titular.Cpf.Equals(cpf))
+    //    {
+    //        conta = _listaDeContas[i];
+    //    }
+    //}
+    //return conta;
+    _listaDeContas.Where(conta => conta.Titular.Cpf == cpf).FirstOrDefault();
+}
+```
+
+Nessa expressão lambda, primeiramente criamos uma variável chamada conta. Para toda conta, queremos retornar (dentro da nossa lista) uma conta-corrente cujo CPF do titular seja igual ao valor informado como parâmetro (ou seja, cpf). Além disso, .FirstOrDefault() define que o resultado deve ser o primeiro ou o default.
+
+Sendo assim, invocando o Where() na _listaDeContas, o retorno será um objeto do tipo ContaCorrente. Já que ConsultaPorCPFTitular() também retorna uma ContaCorrente, basta acrescentarmos o return na linha 284:
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{
+    //ContaCorrente conta = null;
+    //for (int i = 0; i < _listaDeContas.Count; i++)
+    //{
+    //    if (_listaDeContas[i].Titular.Cpf.Equals(cpf))
+    //    {
+    //        conta = _listaDeContas[i];
+    //    }
+    //}
+    //return conta;
+    return _listaDeContas.Where(conta => conta.Titular.Cpf == cpf).FirstOrDefault();
+}
+```
+
+A expressão Where() ficará sublinhada em amarelo, mas não precisamos nos preocupar: trata-se de um aviso, não um erro. Mais adiante, corrigiremos esses alertas.
+
+Vamos salvar e executar o projeto para testar. A aplicação será renderizada e digitaremos 5 para consultar as contas-correntes. Em seguida, vamos optar pela opção 2 e informar o CPF 11111. Veremos o retorno desejado, o programa está funcionando normalmente.
+
+Em resumo, estamos usando a expressão Where() que nos permitirá filtrar elementos de uma lista, de acordo com um expressão lambda. O resultado é um código mais otimizado: sintetizamos 9 linhas em uma só!
+
+A seguir, aplicaremos a mesma lógica para o método ConsultaPorNumeroConta():
+
+```csharp
+ContaCorrente ConsultaPorNumeroConta(string? numeroConta)
+{
+    //ContaCorrente conta = null;
+    //for (int i = 0; i < _listaDeContas.Count; i++)
+    //{
+    //    if (_listaDeContas[i].Conta.Equals(numeroConta))
+    //    {
+    //        conta = _listaDeContas[i];
+    //    }
+    //}
+    //
+    //return conta;
+    return _listaDeContas.Where(conta => conta.Conta == numeroConta).FirstOrDefault();
+}
+```
+
+Desse modo, redefinimos nossos dois tipos de consulta e otimizamos o código, reduzindo o número de linhas executadas pelo programa. Ainda há trabalho por fazer, podemos melhorar o projeto e tratar os alertas que estão aparecendo.
+
+Neste vídeo, refizemos a funcionalidade de pesquisa usando um método genérico Linq, que é uma forma de operar um objeto em uma coleção de dados — seja um array em memória um banco de dados, um arquivo .xml, entre outros. As coleções possuem uma série de métodos de extensão, um deles é o Where() que usamos para filtrar um objeto dentro de uma lista.
+
+Na sequência, nos aprofundaremos no estudo sobre LINQ e escreveremos uma consulta Linq.
+
+### Aula 5: Faça como eu fiz: Where
+
+Nesta aula começamos refatorando o código das nossas consultas por número da conta e cpf do titular e para isso fizemos o uso de métodos LINQ um deles o where que aplica a filtragem dos dados diretamente na coleção usando uma expressão lambda. Com o intuito de praticar refaça a consulta ConsultaPorCPFTitular usando o método Where.
+
+Opinião do instrutor
+
+Retornando ao método ConsultaPorCPFTitular e ConsultaPorNumeroConta, estamos usando um for para percorrer todo o vetor, porém temos a disposição para as listas alguns métodos de consulta, vamos ver o Where:
+
+Vamos reescrever esses métodos de consulta usando o método Where:
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{
+    ContaCorrente conta = null;
+    for (int i = 0; i < _listaDeContas.Count; i++)
+    {
+       if (_listaDeContas[i].Titular.Cpf.Equals(cpf))
+        {
+            conta = _listaDeContas[i];
+        }
+    }
+
+    return conta;   
+}
+```
+
+Refatorando o método:
+
+```csharp
+ContaCorrente ConsultaPorCPFTitular(string? cpf)
+{  
+    return _listaDeContas.Where(conta=>conta.Titular.Cpf == cpf).FirstOrDefault();
+}
+```
+
+Note que como parâmetro do método where é passada uma expressão conhecida como Lambda que vai conter o modo de filtragem. No C# toda expressão lambda usa o operador =>.
+
+Poderiamos traduzir este código como: “ Lista retorne qual ´Qual a conta que possui o CPF do titular igual ao passado como parâmetro? E me retorne a primeira ocorrência ou o valor padrão.”
+
+Com essa construção a pesquisa de uma conta com base no cpf ficou mais enxuta e elegante. Além de economizarmos linhas de código.
+
+Legal! Continue praticando bastante e se desafiando como forma de fixar os conceitos aprendidos na aula.
+
+### Aula 5: Uma nova pesquisa - Vídeo 2
+
+Na aula anterior, terminamos de criar as consultas por CPF e por número da conta. Podemos minimizar todas as funções do Program.cs, pois chegou uma nova demanda do diretor do ByteBank: precisamos desenvolver uma consulta pelo número da agência.
+
+Portanto, no método PesquisarContas(), adicionaremos o case 3 ao switch, referente à pesquisa por número da agência:
+
+```csharp
+private void PesquisarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===    PESQUISAR CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Deseja pesquisar por (1) NÚMERO DA CONTA ou (2)CPF TITULAR ou " +
+        " (3) Nº AGÊNCIA : ");
+    switch (int.Parse(Console.ReadLine()))
+    {
+        case 1:
+            {
+                Console.Write("Informe o número da Conta: ");
+                string _numeroConta = Console.ReadLine();
+                ContaCorrente consultaConta = ConsultaPorNumeroConta(_numeroConta);
+                Console.WriteLine(consultaConta.ToString());
+                Console.ReadKey();
+                break;
+            }
+        case 2:
+            {
+                Console.Write("Informe o CPF do Titular: ");
+                string _cpf = Console.ReadLine();
+                ContaCorrente consultaCpf = ConsultaPorCPFTitular(_cpf);
+                Console.WriteLine(consultaCpf.ToString());
+                Console.ReadKey();
+                break;
+            }
+        case 3:
+            {
+                Console.Write("Informe o Nº da Agência: ");
+                int _numeroAgencia = int.Parse(Console.ReadLine());
+                var contasPorAgencia = ConsultaPorAgencia(_numeroAgencia);
+
+                Console.ReadKey();
+                break;
+            }
+        default:
+            Console.WriteLine("Opção não implementada.");
+            break;
+    }
+```
+
+Note que também incrementamos o Console.WriteLine() na linha 79, para que o usuário saiba que agora há três maneiras de realizar a consulta.
+
+Como o método ConsultaPorAgencia() ainda não existe, posicionaremos o cursor sobre ele na linha 103, pressionaremos "Ctrl + ." e selecionaremos "Gerar método 'ConsultaPorAgencia'". Uma estrutura base será criada a partir da linha 115, o parâmetro recebido será um int e o retorno esperado é um object, pois definimos a variável contasPorAgencia, na linha 103, com var (um retorno implícito). ConsultaPorAgencia() retornará uma lista de contas-correntes.
+
+A seguir, modificaremos esse método. Vamos utilizar outro recurso do LINQ e escreveremos essa consulta manualmente, de modo que perceberemos que a sintaxe é muito parecida com a linguagem SQL. Disponibilizaremos materiais extras sobre SQL na plataforma.
+
+A princípio, vamos declarar uma var chamada consulta que receberá o código da consulta entre parênteses:
+
+```csharp
+private List<ContaCorrente> ConsultaPorAgencia(int numeroAgencia)
+    {
+        var consulta = (
+
+        )
+    }
+```
+
+Com a cláusula from, indicaremos a origem dos dados. O where será responsável por filtrar apenas as contas cujo número da agência seja igual ao valor digitado pelo usuário. Caso sejam encontradas contas que correspondam a esse filtro, faremos o select para retorná-las. Em seguida, transformaremos esse resultado em uma lista, através do método .ToList(). Por fim, colocamos o return consulta:
+
+```csharp
+private List<ContaCorrente> ConsultaPorAgencia(int numeroAgencia)
+    {
+        var consulta = (
+                             from conta in _listaDeContas
+                             where conta.Numero_agencia == numeroAgencia
+                             select conta).ToList();
+        return consulta;
+    }
+```
+
+Sendo assim, a pesquisa será realizada, porém o resultado ainda não será exibido. Nos cases 1 e 2 de PesquisarContas(), usamos o método ToString() de ContaCorrente para mostrar o resultado no console. Dessa vez, nosso retorno é uma lista de objetos ContaCorrente, então não conseguiremos usar o ToString diretamente nele. Em vez disso, vamos criar um método para percorrer uma lista passada como parâmetro e, dentro dele, poderemos usar o ToString em cada uma das contas.
+
+Primeiramente, vamos incluir o método ExibirListaDeContas() no case 3:
+
+```csharp
+private void PesquisarContas()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===    PESQUISAR CONTAS     ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.Write("Deseja pesquisar por (1) NÚMERO DA CONTA ou (2)CPF TITULAR ou " +
+        " (3) Nº AGÊNCIA : ");
+    switch (int.Parse(Console.ReadLine()))
+    {
+        case 1:
+            {
+                Console.Write("Informe o número da Conta: ");
+                string _numeroConta = Console.ReadLine();
+                ContaCorrente consultaConta = ConsultaPorNumeroConta(_numeroConta);
+                Console.WriteLine(consultaConta.ToString());
+                Console.ReadKey();
+                break;
+            }
+        case 2:
+            {
+                Console.Write("Informe o CPF do Titular: ");
+                string _cpf = Console.ReadLine();
+                ContaCorrente consultaCpf = ConsultaPorCPFTitular(_cpf);
+                Console.WriteLine(consultaCpf.ToString());
+                Console.ReadKey();
+                break;
+            }
+        case 3:
+            {
+                Console.Write("Informe o Nº da Agência: ");
+                int _numeroAgencia = int.Parse(Console.ReadLine());
+                var contasPorAgencia = ConsultaPorAgencia(_numeroAgencia);
+                ExibirListaDeContas(contasPorAgencia);
+                Console.ReadKey();
+                break;
+            }
+        default:
+            Console.WriteLine("Opção não implementada.");
+            break;
+    }
+```
+
+Em seguida, clicaremos sobre ele, pressionaremos "Ctrl + ." e selecionaremos "Gerar método 'ExibirListaDeContas'". A partir da linha 116, vamos adaptá-lo:
+
+```csharp
+private void ExibirListaDeContas(List<ContaCorrente> contasPorAgencia)
+{
+    if (contasPorAgencia == null)
+    {
+        Console.WriteLine(" ... A consulta não retornou dados ...");
+    }
+    else
+    {
+        foreach (var item in contasPorAgencia)
+        {
+            Console.WriteLine(item.ToString());
+        }
+    }
+}
+```
+
+Assim, ExibirListaDeContas() receberá uma lista de contas-correntes como parâmetro. Se contasPorAgencia for nulo, exibiremos uma mensagem informativa no console. Do contrário, com uma estrutura foreach, vamos percorrer contasPorAgencia. Para cada item da lista (isto é, para cada objeto ContaCorrente), invocaremos o método ToString.
+
+Vamos salvar a aplicação e testar, pressionando o play na parte superior do Visual Studio. Após compilar e renderizar a aplicação, digitaremos 5 para pesquisar contas e, depois, escolheremos a opção 3 para consultar através do número da agência. Em seguida, informaremos o número da agência: 95. Como esperado, veremos duas contas listadas.
+
+No momento, não é exibida a profissão do titular, porque não cadastramos essa informação no array.
+
+Recapitulando: nesta aula, desenvolvemos uma nova consulta, utilizando um recurso do LINQ cuja sintaxe é dividida em três partes principais. O from define a origem dos dados, o where determina o filtro e o select seleciona o objeto daquela coleção. No nosso caso, também usamos o método ToList() para transformar o resultado em uma lista. Esse recurso é bastante interessante para consultarmos coleções de objetos usando C#.
+
+### Aula 5: Encontrando um cliente - Exercício
+
+Esther e Cleber estão fazendo pair programming, para definir uma consulta LINQ a uma coleção de dados de Pessoas. A fonte de dados que eles estão usando é um List`<Pessoa>` em memória. Marque a opção correta que retornará uma Pessoa com base no email informado (que é único por pessoa).
+
+Selecione 2 alternativas:
+
+Alternativa correta.  
+
+```csharp
+Pessoa? ConsultaCliente(List<Pessoa> _pessoas, string _email)
+{
+    return _pessoas.Where(x=>x.Email.Equals(_email)).FirstOrDefault();
+}
+```
+
+> A sintaxe de consulta LINQ utilizando métodos e expressão lambda está correta.
+
+Alternativa correta.  
+
+```csharp
+Pessoa? ConsultaCliente(List<Pessoa> _pessoas, string _email)
+{
+    return (from pessoa in _pessoas
+            where pessoa.Email == _email
+            select pessoa).FirstOrDefault();
+}
+```
+
+> A sintaxe de consulta LINQ está correta, definindo a origem (from), o filtro (where) e a seleção (select), de forma única usando o .FirstOrDefault();.
+
+### Aula 5: Para saber mais: LINQ
+
+O LINQ ( Language Integrated Query), é uma linguagem para manipulação de dados que nos foi apresentado no .NET Framework 3.0 e tem por objetivo possibilitar que os programas desenvolvidos na plataforma .NET consigam selecionar dados a partir de origens diversas desde um array, bancos de dados relacionais e até arquivos XML.
+
+Na utilização do LINQ podemos usar duas formas:
+
+Sintaxe de consulta: muito similar as consultas utilizadas em bancos relacionais como SQL e a operação de consulta é dividida em 3 cláusulas: from define a origem dos dados, o where para aplicação dos filtros e do select para a seleção dos dados, veja o exemplo abaixo:
+
+```csharp
+List<Cliente> clientes = new List<Cliente>(){
+          new Cliente(){Nome="José",Cpf="10855522299",Profissao="Dev"},
+          new Cliente(){Nome="Maria",Cpf="10477722299",Profissao="Enfermeira"},
+          new Cliente(){Nome="Rose",Cpf="10966622299",Profissao="Analista"},
+          new Cliente(){Nome="Caio",Cpf="10355722299",Profissao="Entregador"},
+          new Cliente(){Nome="Elisa",Cpf="10967422299",Profissao="Motorista"},
+          new Cliente(){Nome="João",Cpf="10778122299",Profissao="Atleta"}
+};
+
+Cliente? ConsultaCliente(List<Cliente> _clientes, string _cpf)
+{
+
+    return (from cliente in _clientes
+            where cliente.Cpf == _cpf
+            select cliente).FirstOrDefault();
+
+}
+```
+
+Outra possibilidade é utilizar métodos LINQ , a maioria de extensão, que permite uma instrução mais concisa, veja o exemplo anterior usando método:
+
+```csharp
+Cliente? ConsultaCliente2(List<Cliente> _clientes, string _cpf) { 
+
+    return _clientes.Where(x => x.Cpf == _cpf).FirstOrDefault();
+
+}
+```
+
+Para saber mais sobre utilização do LINQ deixamos a recomendação de acesso a documentação da Microsoft;
+
+- [Introdução a consultas LINQ (C#)](https://docs.microsoft.com/pt-br/dotnet/csharp/programming-guide/concepts/linq/introduction-to-linq-queries)
+- [Curso Entity LinQ parte 1: crie queries poderosas em C#](https://cursos.alura.com.br/course/linq-c-sharp)
+- [Curso Entity LinQ parte 2: Store Procedures e consultas com o LinQPad](https://cursos.alura.com.br/course/linq-c-sharp-parte-2)
+
+### Aula 5: Desafio: usando a sintaxe de consulta
+
+Agora que você viu como criar uma consulta usando a sintaxe de consulta do LINQ, te desafiamos a reescrever a consulta ConsultaPorNumeroConta usando essa sintaxe. E ai? aceita o desafio?
+
+Lembre-se este é mais um exercício opcional, mas a prática constante vai lhe ajudar a fixar os conteúdos estudados.
+
+Opinião do instrutor
+
+Agora apresentamos uma possível solução para o desafio proposto:
+
+```csharp
+private ContaCorrente ConsultaPorNumeroConta(string? numeroConta)
+{
+    return (from conta in _listaDeContas
+            where conta.Conta.Equals(numeroConta)
+            select conta).FirstOrDefault();
+}
+```
+
+### Aula 5: Melhorando o código #1 - Vídeo 3
+
+Estamos finalizando nossa aplicação. Já implementamos suas principais funcionalidades: cadastro, listagem, remoção, ordenação e pesquisa de contas — como podemos checar no método AtendimentoCliente() no arquivo Program.cs. Falta apenas a função de saída do sistema.
+
+O nosso código está funcionando como esperado, porém o arquivo Program.cs está bastante extenso. Para melhorar nosso projeto e facilitar futuras manutenções, vamos encapsular as funcionalidades de atendimento em uma classe, organizando também um namespace específico. No Gerenciador de Soluções, na lateral direita do Visual Studio, clicaremos com o botão direito do mouse sobre nosso projeto bytebank_ATENDIMENTO e selecionaremos "Adicionar > Nova Pasta". Vamos nomeá-la "bytebank.Atendimento".
+
+Para criar uma classe nesse novo diretório, clicaremos com o botão direito nele e selecionaremos "Adicionar > Classe...". Na parte inferior da nova janela que se abriu, daremos à classe o nome "ByteBankAtendimento.cs".
+
+Em seguida, vamos recortar do Program.cs e colar na classe ByteBankAtendimento todo o código referente ao atendimento, desde a definição da nossa lista com 3 contas padrões (a coleção em memória) até o final do arquivo.
+
+A seguir, precisamos fazer alguns ajustes em ByteBankAtendimento.cs. Primeiro, vamos remover a chamada ao método AtendimentoCliente(), pois ela será feita a partir de Program.cs.
+
+Por ser uma classe nova, é preciso importar novamente os namespaces para que as localizações de ContaCorrente e Cliente, por exemplo, sejam reconhecidas. Basta clicarmos sobre os elementos sublinhados em vermelho, pressionar "Ctrl + ." e fazer a importação.
+
+Além disso, podemos remover quaisquer linhas comentadas, já que não serão executadas pelo programa. Também podemos minimizar os métodos para tornar a visualização mais simples.
+
+Seguindo as boas práticas e outras recomendações relativas a orientações a objetos, é interessante que a _listaDeContas seja um campo privado para ser acessível somente pelos métodos dessa própria classe:
+
+```csharp
+// código anterior omitido
+
+private List<ContaCorrente> _listaDeContas = new List<ContaCorrente>(){
+    new ContaCorrente(95, "123456-X"){Saldo=100,Titular = new Cliente{Cpf="11111",Nome ="Henrique"}},
+    new ContaCorrente(95, "951258-X"){Saldo=200,Titular = new Cliente{Cpf="22222",Nome ="Pedro"}},
+    new ContaCorrente(94, "987321-W"){Saldo=60,Titular = new Cliente{Cpf="33333",Nome ="Marisa"}}
+};
+
+// código posterior omitido
+Deixamos os demais métodos como private também, exceto o AtendimentoCliente(). Ele precisa ser público para podermos acessá-lo pelo Program.cs:
+
+
+Copiar
+// código anterior omitido
+
+public void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                case '3':
+                    RemoverContas();
+                    break;
+                case '4':
+                    OrdenarContas();
+                    break;
+                case '5':
+                    PesquisarContas();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+// código posterior omitido
+```
+
+Das linhas 1 a 7, temos as importações. Note que as últimas 5 importações têm o tom esmaecido, meio apagado, o que signifca que não estão sendo utilizadas. Vamos removê-las e manter apenas as necessárias, que são: bytebank.Modelos.Conta e bytebank_ATENDIMENTO.bytebank.Exceptions.
+
+Em seguida, vamos checar os alertas que estão aparecendo no nosso código. Por exemplo, no método AtendimentoCliente(), na linha em que atribuimos um valor a opcao, há em destaque sublinhado em verde. Passando o mouse sobre esse trecho, veremos uma descrição: "CS8602 Desreferência de uma referência possivelmente nula". Trata-se de um recurso relativamente recente do .NET que diz respeito aos nullables. Em resumo, essa operação pode retornar um valor nulo para a variável, que não foi definida como um tipo anulável.
+
+Esse destaque aparece para nós porque, na configuração do projeto, foram habilitadas essas labels, ou seja, esses alertas que nos ajudam como desenvolvedores a encontrar pontos de atenção. Para ver essa configuração, vamos dar um clique duplo no nome do nosso projeto bytebank_ATENDIMENTO, no Gerenciador de Soluções à direita.
+
+Dessa forma, abriremos o arquivo bytebank_ATENDIMENTO.csproj, onde temos a definição do executável, a versão do .NET, a habilitação de importações implícitas e a habilitação do Nullable. Então, caso esses alertas sejam um incômodo, uma solução é fazer a desabilitação deles, usando o termo disable:
+
+```csharp
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+</Project>
+```
+
+No nosso caso, é interessante deixarmos habilitado, pois esses aviso não interferem no código e funcionam como um lembrete de pontos a tratar no futuro. Outra solução é informarmos que queremos ignorar esses alertas nessa classe em específico. Basta inserirmos #nullable disable antes da definição da classe:
+
+```csharp
+namespace bytebank_ATENDIMENTO.bytebank.Atendimento
+{
+#nullable disable
+internal  class ByteBankAtendimento
+{
+    // trecho de código omitido
+}
+```
+
+Na sequência, vamos implementar a funcionalidade de saída do sistema, a opção 6 do menu. Começaremos incluindo o case '6' ao switch:
+
+```csharp
+public void AtendimentoCliente()
+{
+    try
+    {
+        char opcao = '0';
+        while (opcao != '6')
+        {
+            Console.Clear();
+            Console.WriteLine("===============================");
+            Console.WriteLine("===       Atendimento       ===");
+            Console.WriteLine("===1 - Cadastrar Conta      ===");
+            Console.WriteLine("===2 - Listar Contas        ===");
+            Console.WriteLine("===3 - Remover Conta        ===");
+            Console.WriteLine("===4 - Ordenar Contas       ===");
+            Console.WriteLine("===5 - Pesquisar Conta      ===");
+            Console.WriteLine("===6 - Sair do Sistema      ===");
+            Console.WriteLine("===============================");
+            Console.WriteLine("\n\n");
+            Console.Write("Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
+
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+                case '2':
+                    ListarContas();
+                    break;
+                case '3':
+                    RemoverContas();
+                    break;
+                case '4':
+                    OrdenarContas();
+                    break;
+                case '5':
+                    PesquisarContas();
+                    break;
+                case '6':
+                    EncerrarAplicacao();
+                    break;
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
+        }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
+    }
+}
+```
+
+Clicaremos sobre EncerrarAplicacao() na linha 64, pressionaremos "Ctrl + ." e selecionaremos "Gerar método 'EncerrarAplicacao'". Em seguida, vamos modificar a estrutura base que foi gerada automaticamente:
+
+```csharp
+private void EncerrarAplicacao()
+{
+    Console.WriteLine("... Encerrando a aplicação ...");
+    Console.ReadKey();
+}
+```
+
+Trata-se de um método bastante simples: será exibida uma mensagem de que a aplicação será encerrada e esperaremos que o usuário digite qualquer tecla para finalizar o programa.
+
+### Aula 5: Melhorando o código #2 - Vídeo 4
+
+A seguir, vamos nos atentar a um ponto de melhoria no método CadastrarConta(): atualmente, ao iniciar o processo de cadastro, o gerente de contas deve informar o número da nova conta, no entanto, o ideal é que esse valor seja gerado automaticamente. Como o C# conta com ferramentas para automatizar esse processo, vamos implementá-las.
+
+Nosso objetivo é que, ao criar uma instância de ContaCorrente, ela mesma gere automaticamente seu número. Atualmente, nosso construtor (no arquivo ContaCorrente.cs) recebe como parâmetros o número da agência e o número da conta. Então, abaixo dele, vamos definir um novo construtor que recebe somente o número da agência:
+
+```csharp
+public ContaCorrente(int numero_agencia)
+{
+    Numero_agencia = numero_agencia;
+    Conta = Guid.NewGuid().ToString().Substring(0, 8);
+    Titular = new Cliente();
+    TotalDeContasCriadas += 1;
+}
+```
+
+De início, atribuímos o parâmetro recebido à propriedade Numero_agencia, assim como no construtor anterior.
+
+Em seguida, Conta (a propriedade da classe ContaCorrente) utiliza a estrutura Guid. Ao invocar NewGuid(), criaremos uma sequência alfanumérica aleatória que será transformada numa string da qual extrairemos uma substring, da posição 0 a 8.
+
+No restante do construtor, continuamos fazendo o mesmo do construtor anterior: definimos uma nova instância de Cliente no titular e incrementamos o TotalDeContasCriadas.
+
+Agora, vamos ajustar a classe ByteBankAtendimento. Visto que o número da conta será gerado automaticamente, não precisamos mais solicitar essa informação ao usuário, então vamos remover as linhas 230 e 231. Consequentemente, ao invocar o construtor de ContaCorrente, deixaremos de passar numeroConta:
+
+```csharp
+private void CadastrarConta()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===   CADASTRO DE CONTAS    ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.WriteLine("=== Informe dados da conta ===");
+    Console.Write("Número da Agência: ");
+    int numeroAgencia = int.Parse(Console.ReadLine());
+    ContaCorrente conta = new ContaCorrente(numeroAgencia);
+
+    // trecho de código omitido
+}
+```
+
+Após instanciarmos uma ContaCorrente, podemos exibir o número gerado para essa nova conta, com uma interpolação de string:
+
+```csharp
+private void CadastrarConta()
+{
+    Console.Clear();
+    Console.WriteLine("===============================");
+    Console.WriteLine("===   CADASTRO DE CONTAS    ===");
+    Console.WriteLine("===============================");
+    Console.WriteLine("\n");
+    Console.WriteLine("=== Informe dados da conta ===");
+    Console.Write("Número da Agência: ");
+    int numeroAgencia = int.Parse(Console.ReadLine());
+    ContaCorrente conta = new ContaCorrente(numeroAgencia);
+    Console.WriteLine($"Número da conta [NOVA] : {conta.Conta}");
+    Console.Write("Informe o saldo inicial: ");
+    conta.Saldo = double.Parse(Console.ReadLine());
+
+    Console.Write("Infome nome do Titular: ");
+    conta.Titular.Nome = Console.ReadLine();
+
+    Console.Write("Infome CPF do Titular: ");
+    conta.Titular.Cpf = Console.ReadLine();
+
+    Console.Write("Infome Profissão do Titular: ");
+    conta.Titular.Profissao = Console.ReadLine();
+
+    _listaDeContas.Add(conta);
+
+    Console.WriteLine("... Conta cadastrada com sucesso! ...");
+    Console.ReadKey();
+}
+```
+
+Depois, o usuário segue preenchendo os demais dados, como fazia antes. Vamos salvar essas alterações e partir para o arquivo Program.cs, onde precisamos instanciar a classe ByteBankAtendimento e invocar o método AtendimentoCliente(). Vale lembrar que devemos importar o namespace correspondente:
+
+```csharp
+using bytebank.Modelos.Conta;
+using bytebank_ATENDIMENTO.bytebank.Atendimento;
+using bytebank ATENDIMENTO.bytebank.Exceptions;
+
+Console.WriteLine("Boas Vindas ao ByteBank, Atendimento.");
+
+new ByteBankAtendimento().AtendimentoCliente();
+```
+
+Podemos, inclusive, remover as importações que não estão mais sendo utilizadas, deixando esse arquivo com apenas 3 linhas:
+
+```csharp
+using bytebank_ATENDIMENTO.bytebank.Atendimento;
+Console.WriteLine("Boas Vindas ao ByteBank, Atendimento.");
+new ByteBankAtendimento().AtendimentoCliente();
+```
+
+Vamos salvar todas as alterações e rodar a aplicação, pressionando play na parte superior do Visual Studio. Como teste, vamos cadastrar uma conta, escolhendo a opção 1 e informando os seguintes dados:
+
+```csharp
+Número da Agência: 15
+Saldo inicial: 120
+Nome do Titular: André Silva
+CPF do Titular: 1012236524
+Profissão: Dev
+```
+
+Note que após informar o número da agência, é exibida a sequência alfanumérica que corresponde ao número da conta gerada! O cadastro será realizado com sucesso. Em seguida, no menu, digitaremos 2 para realizar a listagem e veremos todas as contas do ByteBank, inclusive a que acabamos de cadastrar. O aplicativo está funcionando exatamente como esperado.
+
+Ao longo do desenvolvimento da nossa aplicação, procurando respeitar as boas práticas de programação, dando nomes significativos para nossas variáveis e coleções, o que torna a leitura e interpretação do código mais simples e rápida. Durante a refatoração, organizamos o código e separamos responsabilidades, ações também importantes para facilitar futuras manutenções. Ainda podemos aprimorar o projeto (tratando mais exceções, por exemplo), contudo faremos esse trabalho paulatinamente até chegar ao código que queremos.
+
+Por fim, vale lembrarmos que neste vídeo aprendemos a usar mais um recurso do .NET: a estrutura Guid, que gera uma sequência alfanumérica aleatória.
+
+### Aula 5: Para saber mais: Guid
+
+O Globally Unique Identifier, mais conhecido como GUID, ele representa um identificador global exclusivo ele é utilizado para as situações que precisamos de uma sequência única que não se repita para toda uma aplicação.
+
+O Guid é um número inteiro de 128 bits que pode gerar ao em torno de 5.316.911.983.139.663.491.615.228.241.121.400.000 combinações possíveis, muita coisa não é mesmo?
+
+Uma representação de um guid df0d718c-06f1-4f22-8628-f825fc1d43e5, no C# temos a struct Guid que permite criar e manipular guids, veja um exemplo:
+
+> Console.WriteLine(Guid.NewGuid().ToString());// saída 826890ce-6206-4144-817c-0c3879d77fae
+
+Para saber mais sobre utilização da struct Guid deixamos a recomendação de acesso a [documentação da Microsoft Guid Estrutura (C#)](https://docs.microsoft.com/pt-br/dotnet/api/system.guid?view=net-6.0)
+
+### Aula 5: Projeto final do curso
+
+Você pode [baixar o zip do projeto](https://github.com/alura-cursos/Array_Collections_C/archive/refs/heads/aula05.zip) da aula ou acessar o link do [repositório no GitHub!](https://github.com/alura-cursos/Array_Collections_C/tree/aula05)
+
+### Aula 5: Conclusão - Vídeo
+
+Parabéns por concluir mais um curso na plataforma da Alura! Recomendamos que assista aos vídeos quantas vezes precisar para fixar o conteúdo, realize todas as atividades disponíveis nas aulas e pratique bastante!
+
+Em caso de dúvidas, você pode recorrer ao fórum do curso, onde é possível sanar suas dúvidas, bem com ajudar seus colegas.
+
+Neste treinamento, aprendemos mais sobre o Visual Studio Community, a IDE que usamos ao longo de toda essa formação de C# e orientação a objetos. Estudamos também como utilizar interfaces disponibilizadas pela plataforma .NET. Na classe ContaCorrente, por exemplo, utilizamos a interface IComparable que permite que uma coleção de objetos possa ser ordenada ou classificada.
+
+Nesse projeto, pudemos compreender o que são coleções de objetos, o que são arrays e as similaridades entre esses dois conceitos. Por exemplo, na classe ByteBankAtendimento, definimos _listaDeContas do tipo List<> (uma classe da biblioteca .NET) e, usando o Generics, determinamos que essa lista receberia somente objetos do tipo ContaCorrente. Dessa forma, entendemos que o Generics é uma forma de parametrizarmos uma classe ou um método. Além disso, percebemos que o uso de classes como List<> é muito vantajoso, pois já têm disponibilizados uma série de métodos e funcionalidades (como adição, remoção e consulta) que dão dinamismo e agilidade no desenvolvimento de listas e coleções com C#.
+
+Assim, desenvolvemos uma aplicação console em que é possível cadastrar, listar, remover, ordenar e pesquisar contas-correntes. Executando nosso projeto, podemos digitar 1 para cadastrar uma conta e informar os seguintes dados:
+
+```bash
+Número da Agência: 58
+Saldo inicial: 96
+Titular: André
+CPF: 1123536
+Profissão: Dev C#
+```
+
+Uma vez que o cadastro é realizado com sucesso, voltamos ao menu e podemos listar todas as contas do ByteBank selecionando a opção 2. Vale lembrar que já temos 3 contas padrões cadastradas no nosso sistema. Para fazer uma pesquisa, é possível escolher a opção 5 no menu da aplicação. Em seguida, vamos escolher 3 e consultar contas-correntes cujo número da agência é igual a 94. Como resultado, veremos a lista que corresponde à busca. Tudo está funcionando como esperado.
+
+Por fim, podemos digitar 6 para encerrar a aplicação.
+
+Não se esqueça de avaliar o curso e comentar sobre sua experiência estudando conosco, apontando formas como podemos melhorar. Até a próxima!
