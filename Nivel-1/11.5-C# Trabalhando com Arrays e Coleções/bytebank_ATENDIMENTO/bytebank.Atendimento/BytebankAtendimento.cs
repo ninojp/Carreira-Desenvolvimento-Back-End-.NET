@@ -262,8 +262,9 @@ internal class BytebankAtendimento
         Console.Write("Informe o saldo inicial: ");
         conta.Saldo = double.Parse(Console.ReadLine());
 
-        Console.Write("Infome nome do Titular: ");
-        conta.Titular.Nome = Console.ReadLine();
+        //Erro aqui...
+        //Console.Write("Infome nome do Titular: ");
+        //conta.Titular.Nome = Console.ReadLine();
 
         Console.Write("Infome CPF do Titular: ");
         conta.Titular.Cpf = Console.ReadLine();
